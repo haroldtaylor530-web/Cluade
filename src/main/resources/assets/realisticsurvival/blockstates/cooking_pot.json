@@ -1,31 +1,58 @@
 {
   "variants": {
-    "water=0": {
+    "on_campfire=false,water=0": {
       "model": "realisticsurvival:block/cooking_pot"
     },
-    "boiled=false,water=1": {
+    "boiled=false,on_campfire=false,water=1": {
       "model": "realisticsurvival:block/cooking_pot_1_dirty"
     },
-    "boiled=true,water=1": {
+    "boiled=true,on_campfire=false,water=1": {
       "model": "realisticsurvival:block/cooking_pot_1_clean"
     },
-    "boiled=false,water=2": {
+    "boiled=false,on_campfire=false,water=2": {
       "model": "realisticsurvival:block/cooking_pot_2_dirty"
     },
-    "boiled=true,water=2": {
+    "boiled=true,on_campfire=false,water=2": {
       "model": "realisticsurvival:block/cooking_pot_2_clean"
     },
-    "boiled=false,water=3": {
+    "boiled=false,on_campfire=false,water=3": {
       "model": "realisticsurvival:block/cooking_pot_3_dirty"
     },
-    "boiled=true,water=3": {
+    "boiled=true,on_campfire=false,water=3": {
       "model": "realisticsurvival:block/cooking_pot_3_clean"
     },
-    "boiled=false,water=4": {
+    "boiled=false,on_campfire=false,water=4": {
       "model": "realisticsurvival:block/cooking_pot_4_dirty"
     },
-    "boiled=true,water=4": {
+    "boiled=true,on_campfire=false,water=4": {
       "model": "realisticsurvival:block/cooking_pot_4_clean"
+    },
+    "on_campfire=true,water=0": {
+      "model": "realisticsurvival:block/cooking_pot_lowered"
+    },
+    "boiled=false,on_campfire=true,water=1": {
+      "model": "realisticsurvival:block/cooking_pot_1_dirty_lowered"
+    },
+    "boiled=true,on_campfire=true,water=1": {
+      "model": "realisticsurvival:block/cooking_pot_1_clean_lowered"
+    },
+    "boiled=false,on_campfire=true,water=2": {
+      "model": "realisticsurvival:block/cooking_pot_2_dirty_lowered"
+    },
+    "boiled=true,on_campfire=true,water=2": {
+      "model": "realisticsurvival:block/cooking_pot_2_clean_lowered"
+    },
+    "boiled=false,on_campfire=true,water=3": {
+      "model": "realisticsurvival:block/cooking_pot_3_dirty_lowered"
+    },
+    "boiled=true,on_campfire=true,water=3": {
+      "model": "realisticsurvival:block/cooking_pot_3_clean_lowered"
+    },
+    "boiled=false,on_campfire=true,water=4": {
+      "model": "realisticsurvival:block/cooking_pot_4_dirty_lowered"
+    },
+    "boiled=true,on_campfire=true,water=4": {
+      "model": "realisticsurvival:block/cooking_pot_4_clean_lowered"
     }
   }
 }

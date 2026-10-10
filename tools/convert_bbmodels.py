@@ -196,4 +196,24 @@ for level in range(1, 5):
         m = convert(pot, POT_TEX, extra_elements=[surface], parent="minecraft:block/block")
         m["textures"]["water"] = f"{NS}:block/pot_water_{kind}"
         save_json(m, f"block/cooking_pot_{level}_{kind}")
+
+
+def lowered(model, dy=-9):
+    import copy
+    m = copy.deepcopy(model)
+    for e in m["elements"]:
+        e["from"][1] += dy
+        e["to"][1] += dy
+        if "rotation" in e:
+            e["rotation"]["origin"] = [e["rotation"]["origin"][0], e["rotation"]["origin"][1] + dy, e["rotation"]["origin"][2]]
+    return m
+
+
+import glob
+for path in glob.glob(os.path.join(A, "models", "block", "cooking_pot*.json")):
+    if path.endswith("_lowered.json"):
+        continue
+    with open(path) as f:
+        m = json.load(f)
+    save_json(lowered(m), "block/" + os.path.basename(path)[:-5] + "_lowered")
 print("converted")

@@ -37,22 +37,41 @@ public class CookingPotBlock extends Block {
     public static final IntegerProperty WATER = IntegerProperty.create("water", 0, 4);
     public static final BooleanProperty BOILED = BooleanProperty.create("boiled");
     public static final IntegerProperty HEAT = IntegerProperty.create("heat", 0, 3);
+    /** Sitting on a campfire: the model drops 9 pixels to rest on the logs. */
+    public static final BooleanProperty ON_CAMPFIRE = BooleanProperty.create("on_campfire");
     private static final VoxelShape SHAPE = Block.box(1, 0, 1, 15, 12, 15);
+    private static final VoxelShape SHAPE_LOWERED = Block.box(1, 0, 1, 15, 3, 15);
     private static final int TICK = 100;
 
     public CookingPotBlock(Properties properties) {
         super(properties);
-        registerDefaultState(stateDefinition.any().setValue(WATER, 0).setValue(BOILED, false).setValue(HEAT, 0));
+        registerDefaultState(stateDefinition.any().setValue(WATER, 0).setValue(BOILED, false).setValue(HEAT, 0).setValue(ON_CAMPFIRE, false));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(WATER, BOILED, HEAT);
+        builder.add(WATER, BOILED, HEAT, ON_CAMPFIRE);
     }
 
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return SHAPE;
+        return state.getValue(ON_CAMPFIRE) ? SHAPE_LOWERED : SHAPE;
+    }
+
+    @Override
+    public BlockState getStateForPlacement(net.minecraft.world.item.context.BlockPlaceContext context) {
+        BlockState below = context.getLevel().getBlockState(context.getClickedPos().below());
+        return defaultBlockState().setValue(ON_CAMPFIRE, below.is(BlockTags.CAMPFIRES));
+    }
+
+    @Override
+    protected BlockState updateShape(BlockState state, net.minecraft.world.level.LevelReader level, net.minecraft.world.level.ScheduledTickAccess ticks,
+            BlockPos pos, net.minecraft.core.Direction direction, BlockPos neighbourPos, BlockState neighbourState, RandomSource random) {
+        if (direction == net.minecraft.core.Direction.DOWN) {
+            state = state.setValue(ON_CAMPFIRE, neighbourState.is(BlockTags.CAMPFIRES));
+            if (state.getValue(WATER) > 0 && !state.getValue(BOILED)) ticks.scheduleTick(pos, this, TICK);
+        }
+        return state;
     }
 
     public static boolean isHeated(Level level, BlockPos pos) {
@@ -143,7 +162,7 @@ public class CookingPotBlock extends Block {
     @Override
     public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
         if (state.getValue(WATER) <= 0 || !isHeated(level, pos)) return;
-        double y = pos.getY() + 0.15 + state.getValue(WATER) * 0.15;
+        double y = pos.getY() + 0.15 + state.getValue(WATER) * 0.15 - (state.getValue(ON_CAMPFIRE) ? 0.5625 : 0.0);
         if (state.getValue(HEAT) > 0 && random.nextInt(3) == 0) {
             level.addParticle(ParticleTypes.BUBBLE_POP, pos.getX() + 0.25 + random.nextDouble() * 0.5, y, pos.getZ() + 0.25 + random.nextDouble() * 0.5, 0, 0.02, 0);
         }

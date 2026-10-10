@@ -84,7 +84,7 @@ public final class ClientSelfTest {
             }
             level.setBlockAndUpdate(base.offset(0, 0, 3), Blocks.CAMPFIRE.defaultBlockState().setValue(CampfireBlock.LIT, true));
             level.setBlockAndUpdate(base.offset(0, 1, 3), ModRegistry.COOKING_POT_BLOCK.get().defaultBlockState()
-                    .setValue(CookingPotBlock.WATER, 3).setValue(CookingPotBlock.BOILED, true));
+                    .setValue(CookingPotBlock.WATER, 3).setValue(CookingPotBlock.BOILED, true).setValue(CookingPotBlock.ON_CAMPFIRE, true));
             level.setBlockAndUpdate(base.offset(-2, 0, 2), ModRegistry.ROCK_BLOCK.get().defaultBlockState());
             level.setBlockAndUpdate(base.offset(2, 0, 2), ModRegistry.STICK_ON_GROUND.get().defaultBlockState());
             level.setBlockAndUpdate(base.offset(-1, 0, 4), ModRegistry.COOKING_POT_BLOCK.get().defaultBlockState()

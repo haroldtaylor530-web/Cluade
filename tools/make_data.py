@@ -213,10 +213,12 @@ def blockstate(name, obj):
 for name in ("rock", "stick_on_ground"):
     blockstate(name, {"variants": {"": [{"model": f"{NS}:block/{name}", "y": r} for r in (0, 90, 180, 270)]}})
 
-pot_variants = {"water=0": {"model": f"{NS}:block/cooking_pot"}}
-for level in range(1, 5):
-    pot_variants[f"boiled=false,water={level}"] = {"model": f"{NS}:block/cooking_pot_{level}_dirty"}
-    pot_variants[f"boiled=true,water={level}"] = {"model": f"{NS}:block/cooking_pot_{level}_clean"}
+pot_variants = {}
+for low, suffix in (("false", ""), ("true", "_lowered")):
+    pot_variants[f"on_campfire={low},water=0"] = {"model": f"{NS}:block/cooking_pot{suffix}"}
+    for level in range(1, 5):
+        pot_variants[f"boiled=false,on_campfire={low},water={level}"] = {"model": f"{NS}:block/cooking_pot_{level}_dirty{suffix}"}
+        pot_variants[f"boiled=true,on_campfire={low},water={level}"] = {"model": f"{NS}:block/cooking_pot_{level}_clean{suffix}"}
 blockstate("cooking_pot", {"variants": pot_variants})
 
 w(f"{A}/items/rock.json", {"model": model("block/rock")})
