@@ -29,6 +29,7 @@ public class RealisticSurvivalClient {
         modBus.addListener(RealisticSurvivalClient::registerHud);
         NeoForge.EVENT_BUS.addListener(RealisticSurvivalClient::onClientTick);
         NeoForge.EVENT_BUS.addListener(RealisticSurvivalClient::onRightClickEmpty);
+        if (ClientSelfTest.enabled()) NeoForge.EVENT_BUS.addListener(ClientSelfTest::onClientTick);
     }
 
     private static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {

@@ -43,6 +43,18 @@ jobs:
           timeout 900 ./gradlew runSelftest --no-configuration-cache 2>&1 | tee selftest.log || true
           grep -q "SELFTEST PASS" selftest.log
 
+      - name: Client screenshots on a virtual screen
+        id: clienttest
+        if: steps.selftest.outcome == 'success'
+        continue-on-error: true
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq xvfb mesa-utils libgl1-mesa-dri > /dev/null
+          mkdir -p run-client/saves && cp -r run-selftest/world run-client/saves/test
+          printf 'onboardAccessibility:false\nskipMultiplayerWarning:true\njoinedFirstServer:true\ntutorialStep:none\nrenderDistance:4\nsimulationDistance:5\npauseOnLostFocus:false\nfullscreen:false\nsoundCategory_master:0.0\nguiScale:2\n' > run-client/options.txt
+          export LIBGL_ALWAYS_SOFTWARE=1
+          timeout 1200 xvfb-run -a -s "-screen 0 1280x720x24" ./gradlew runClienttest --no-configuration-cache 2>&1 | tee clienttest.log || true
+          grep -q "CLIENTTEST DONE" clienttest.log
+
       # Publish the result (log, jar, and once, the game's source for reference)
       # to the ci-output branch so it can be read without a GitHub login.
       - name: Publish result
@@ -52,8 +64,10 @@ jobs:
           cp build.log /tmp/out/ || true
           cp selftest.log /tmp/out/ 2>/dev/null || true
           cp run-selftest/logs/latest.log /tmp/out/server-latest.log 2>/dev/null || true
+          cp clienttest.log /tmp/out/ 2>/dev/null || true
+          cp run-client/screenshots/*.png /tmp/out/ 2>/dev/null || true
           cp build/libs/*.jar /tmp/out/ 2>/dev/null || true
-          echo "build=${{ steps.build.outcome }} selftest=${{ steps.selftest.outcome }} $GITHUB_SHA" > /tmp/out/STATUS
+          echo "build=${{ steps.build.outcome }} selftest=${{ steps.selftest.outcome }} clienttest=${{ steps.clienttest.outcome }} $GITHUB_SHA" > /tmp/out/STATUS
           if ! git ls-remote --exit-code origin refs/heads/mc-sources >/dev/null; then
             ls -la build/moddev/artifacts/ | tee /tmp/out/SOURCES || true
             JAR=$(ls -S build/moddev/artifacts/*.jar 2>/dev/null | grep -v sources | head -1)

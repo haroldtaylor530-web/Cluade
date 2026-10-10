@@ -70,6 +70,14 @@ neoForge {
             systemProperty 'realisticsurvival.selftest', 'true'
         }
 
+        // client that joins a test world on a virtual screen and takes screenshots (used by CI)
+        clienttest {
+            client()
+            gameDirectory = project.file('run-client')
+            systemProperty 'realisticsurvival.clienttest', 'true'
+            programArguments.addAll '--quickPlaySingleplayer', 'test'
+        }
+
         gameTestServer {
             type = "gameTestServer"
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
