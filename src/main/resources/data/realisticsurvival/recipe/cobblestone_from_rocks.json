@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "realisticsurvival:rock",
+    "realisticsurvival:rock",
+    "realisticsurvival:rock",
+    "realisticsurvival:rock"
+  ],
+  "result": {
+    "id": "minecraft:cobblestone",
+    "count": 1
+  }
+}

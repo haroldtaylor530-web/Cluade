@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#minecraft:is_taiga",
+  "features": "realisticsurvival:fallen_sticks",
+  "step": "vegetal_decoration"
+}

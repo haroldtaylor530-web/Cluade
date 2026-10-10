@@ -1,0 +1,22 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "realisticsurvival:block/stick_on_ground",
+        "y": 0
+      },
+      {
+        "model": "realisticsurvival:block/stick_on_ground",
+        "y": 90
+      },
+      {
+        "model": "realisticsurvival:block/stick_on_ground",
+        "y": 180
+      },
+      {
+        "model": "realisticsurvival:block/stick_on_ground",
+        "y": 270
+      }
+    ]
+  }
+}

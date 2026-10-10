@@ -1,5 +1,7 @@
 package com.harold.realisticsurvival;
 
+import com.harold.realisticsurvival.block.CookingPotBlock;
+import com.harold.realisticsurvival.block.GroundItemBlock;
 import com.harold.realisticsurvival.effect.BleedingEffect;
 import com.harold.realisticsurvival.effect.DysenteryEffect;
 import com.harold.realisticsurvival.effect.SimpleEffect;
@@ -38,6 +40,12 @@ import net.minecraft.world.item.equipment.EquipmentAsset;
 import net.minecraft.world.item.equipment.EquipmentAssets;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.attachment.AttachmentType;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
+import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -46,6 +54,7 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries;
 public final class ModRegistry {
     private static final String M = RealisticSurvival.MODID;
 
+    public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(M);
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(M);
     public static final DeferredRegister<MobEffect> EFFECTS = DeferredRegister.create(Registries.MOB_EFFECT, M);
     public static final DeferredRegister.Entities ENTITIES = DeferredRegister.createEntities(M);
@@ -109,7 +118,21 @@ public final class ModRegistry {
             "thrown_spear", ThrownSpear::new, MobCategory.MISC,
             b -> b.sized(0.5F, 0.5F).clientTrackingRange(4).updateInterval(20));
 
+    // ---- blocks -----------------------------------------------------------------------------
+    public static final DeferredBlock<GroundItemBlock> ROCK_BLOCK = BLOCKS.registerBlock("rock",
+            p -> new GroundItemBlock(p, Block.box(3, 0, 2, 9, 2, 11)),
+            p -> p.mapColor(MapColor.STONE).instabreak().noCollision().noOcclusion().sound(SoundType.STONE).pushReaction(PushReaction.DESTROY));
+    public static final DeferredBlock<GroundItemBlock> STICK_ON_GROUND = BLOCKS.registerBlock("stick_on_ground",
+            p -> new GroundItemBlock(p, Block.box(0, 0, 0, 16, 1, 16)),
+            p -> p.mapColor(MapColor.WOOD).instabreak().noCollision().noOcclusion().sound(SoundType.WOOD).pushReaction(PushReaction.DESTROY));
+    public static final DeferredBlock<CookingPotBlock> COOKING_POT_BLOCK = BLOCKS.registerBlock("cooking_pot",
+            CookingPotBlock::new,
+            p -> p.mapColor(MapColor.METAL).strength(1.5F).noOcclusion().sound(SoundType.METAL));
+
     // ---- items ------------------------------------------------------------------------------
+    public static final DeferredItem<BlockItem> ROCK = ITEMS.registerSimpleBlockItem("rock", ROCK_BLOCK);
+    public static final DeferredItem<BlockItem> COOKING_POT = ITEMS.registerSimpleBlockItem("cooking_pot", COOKING_POT_BLOCK);
+
     // early game
     public static final DeferredItem<Item> FLINT_SHARD = ITEMS.registerSimpleItem("flint_shard");
     public static final DeferredItem<Item> PLANT_FIBRE = ITEMS.registerSimpleItem("plant_fibre");
@@ -153,6 +176,7 @@ public final class ModRegistry {
             .build());
 
     public static void register(IEventBus bus) {
+        BLOCKS.register(bus);
         ITEMS.register(bus);
         EFFECTS.register(bus);
         ENTITIES.register(bus);

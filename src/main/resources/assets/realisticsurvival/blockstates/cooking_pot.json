@@ -1,0 +1,31 @@
+{
+  "variants": {
+    "water=0": {
+      "model": "realisticsurvival:block/cooking_pot"
+    },
+    "boiled=false,water=1": {
+      "model": "realisticsurvival:block/cooking_pot_1_dirty"
+    },
+    "boiled=true,water=1": {
+      "model": "realisticsurvival:block/cooking_pot_1_clean"
+    },
+    "boiled=false,water=2": {
+      "model": "realisticsurvival:block/cooking_pot_2_dirty"
+    },
+    "boiled=true,water=2": {
+      "model": "realisticsurvival:block/cooking_pot_2_clean"
+    },
+    "boiled=false,water=3": {
+      "model": "realisticsurvival:block/cooking_pot_3_dirty"
+    },
+    "boiled=true,water=3": {
+      "model": "realisticsurvival:block/cooking_pot_3_clean"
+    },
+    "boiled=false,water=4": {
+      "model": "realisticsurvival:block/cooking_pot_4_dirty"
+    },
+    "boiled=true,water=4": {
+      "model": "realisticsurvival:block/cooking_pot_4_clean"
+    }
+  }
+}

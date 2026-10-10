@@ -35,40 +35,7 @@ for name in TOOLS:
     w(f"{A}/models/item/{name}.json", {"parent": "minecraft:item/handheld", "textures": {"layer0": f"{NS}:item/{name}"}})
 
 
-def face(u0, v0, u1, v1):
-    return {"uv": [u0, v0, u1, v1], "texture": "#0"}
-
-
-def box(frm, to, part):
-    """part: shaft rows 0-4, binding rows 4-8, tip rows 8-16 of the 16x16 sheet."""
-    v0, v1 = {"shaft": (0, 4), "bind": (4, 8), "tip": (8, 16)}[part]
-    f = face(0, v0, 16, v1)
-    return {"from": frm, "to": to, "faces": {d: dict(f) for d in ("north", "east", "south", "west", "up", "down")}}
-
-
-# Placeholder 3D spear: long axis along X, tip pointing east (+X), 30 px long.
-SPEAR_ELEMENTS = [
-    box([-8, 7.5, 7.5], [15, 8.5, 8.5], "shaft"),
-    box([13, 7.25, 7.25], [16, 8.75, 8.75], "bind"),
-    box([16, 7.0, 7.5], [19, 9.0, 8.5], "tip"),
-    box([19, 7.5, 7.5], [21, 8.5, 8.5], "tip"),
-    box([21, 7.75, 7.75], [22, 8.25, 8.25], "tip"),
-]
-SPEAR_DISPLAY = {
-    "thirdperson_righthand": {"rotation": [0, -90, 60], "translation": [0, 5, 1], "scale": [0.9, 0.9, 0.9]},
-    "thirdperson_lefthand": {"rotation": [0, 90, -60], "translation": [0, 5, 1], "scale": [0.9, 0.9, 0.9]},
-    "firstperson_righthand": {"rotation": [0, -90, 30], "translation": [1.5, 3, 1], "scale": [0.7, 0.7, 0.7]},
-    "firstperson_lefthand": {"rotation": [0, 90, -30], "translation": [1.5, 3, 1], "scale": [0.7, 0.7, 0.7]},
-    "head": {"rotation": [0, 0, 45], "translation": [0, 10, 0]},
-}
-for mat in ("flint", "iron", "diamond"):
-    w(f"{A}/models/item/{mat}_spear.json", {
-        "credit": "Placeholder - replace with your Blockbench model (keep the tip pointing east / +X)",
-        "texture_size": [16, 16],
-        "textures": {"0": f"{NS}:item/{mat}_spear", "particle": f"{NS}:item/{mat}_spear"},
-        "elements": SPEAR_ELEMENTS,
-        "display": SPEAR_DISPLAY,
-    })
+# 3D spear models come from tools/convert_bbmodels.py (your Blockbench model)
 
 
 # ------------------------------------------------------------------ client item definitions (assets/<ns>/items)
@@ -236,3 +203,65 @@ for name, msg in DAMAGE.items():
     lang[f"death.attack.{NS}.{name}.player"] = msg
 w(f"{A}/lang/en_us.json", lang)
 print("data done")
+
+# ------------------------------------------------------------------ blocks: rocks, sticks, cooking pot
+def blockstate(name, obj):
+    w(f"{A}/blockstates/{name}.json", obj)
+
+
+for name in ("rock", "stick_on_ground"):
+    blockstate(name, {"variants": {"": [{"model": f"{NS}:block/{name}", "y": r} for r in (0, 90, 180, 270)]}})
+
+pot_variants = {"water=0": {"model": f"{NS}:block/cooking_pot"}}
+for level in range(1, 5):
+    pot_variants[f"boiled=false,water={level}"] = {"model": f"{NS}:block/cooking_pot_{level}_dirty"}
+    pot_variants[f"boiled=true,water={level}"] = {"model": f"{NS}:block/cooking_pot_{level}_clean"}
+blockstate("cooking_pot", {"variants": pot_variants})
+
+w(f"{A}/items/rock.json", {"model": model("block/rock")})
+w(f"{A}/items/cooking_pot.json", {"model": model("block/cooking_pot")})
+
+
+def loot(name, item):
+    w(f"{D}/{NS}/loot_table/blocks/{name}.json", {"type": "minecraft:block", "pools": [{
+        "rolls": 1, "entries": [{"type": "minecraft:item", "name": item}],
+        "conditions": [{"condition": "minecraft:survives_explosion"}]}]})
+
+
+loot("rock", ns("rock"))
+loot("stick_on_ground", "minecraft:stick")
+loot("cooking_pot", ns("cooking_pot"))
+
+shapeless("cobblestone_from_rocks", [ns("rock")] * 4, "minecraft:cobblestone")
+shaped("cooking_pot", ["I I", "III"], {"I": "minecraft:iron_ingot"}, "cooking_pot")
+
+# world generation: loose rocks everywhere, fallen sticks in wooded biomes
+def scatter(name, block, count, biomes_list):
+    w(f"{D}/{NS}/worldgen/configured_feature/{name}.json", {"type": "minecraft:simple_block", "config": {
+        "to_place": {"type": "minecraft:simple_state_provider", "state": {"Name": ns(block)}}}})
+    w(f"{D}/{NS}/worldgen/placed_feature/{name}.json", {"feature": ns(name), "placement": [
+        {"type": "minecraft:count", "count": count},
+        {"type": "minecraft:in_square"},
+        {"type": "minecraft:heightmap", "heightmap": "MOTION_BLOCKING_NO_LEAVES"},
+        {"type": "minecraft:block_predicate_filter", "predicate": {"type": "minecraft:all_of", "predicates": [
+            {"type": "minecraft:matching_blocks", "blocks": "minecraft:air"},
+            {"type": "minecraft:would_survive", "state": {"Name": ns(block)}}]}},
+        {"type": "minecraft:biome"}]})
+    for i, biomes in enumerate(biomes_list):
+        w(f"{D}/{NS}/neoforge/biome_modifier/{name}_{i}.json", {
+            "type": "neoforge:add_features", "biomes": biomes, "features": ns(name), "step": "vegetal_decoration"})
+
+
+scatter("loose_rocks", "rock", 2, ["#minecraft:is_overworld"])
+scatter("fallen_sticks", "stick_on_ground", 3, ["#minecraft:is_forest", "#minecraft:is_taiga", "#minecraft:is_jungle", "#minecraft:is_savanna"])
+
+with open(f"{A}/lang/en_us.json") as f:
+    lang = json.load(f)
+lang.update({
+    f"block.{NS}.rock": "Rock",
+    f"block.{NS}.stick_on_ground": "Fallen Stick",
+    f"block.{NS}.cooking_pot": "Cooking Pot",
+    f"message.{NS}.pot_boiling": "The water will boil if the pot sits on a lit campfire or fire.",
+})
+w(f"{A}/lang/en_us.json", lang)
+print("blocks done")

@@ -44,6 +44,14 @@ then damage). Too hot: heatstroke (weaker, thirstier, nausea, then damage).
 - Logs give 2 planks by hand instead of 4.
 - Mining and chopping make you hungrier and thirstier.
 
+**Loose rocks and fallen sticks** lie on the ground (rocks everywhere, sticks in forests,
+taigas, jungles and savannas). Punch them to pick them up. 4 rocks make a cobblestone, so you
+can make stone tools without a pickaxe.
+
+**Cooking pot** (5 iron ingots in a U). Put it on a lit campfire, fill it with a water
+bucket, water bottles or dirty cups, and after about 15 seconds the water boils clean (steam
+rises). Take clean water out with clay cups, a waterskin or bottles.
+
 **Spears.** Flint, iron and diamond. Stab with them (slow, longer reach), or hold right-click
 to wind up and release to throw. The longer the wind-up (up to a second), the harder the throw.
 Thrown spears can make targets bleed. Walk over a landed spear to pick it back up.

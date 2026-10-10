@@ -53,5 +53,9 @@
   "death.attack.realisticsurvival.hypothermia": "%1$s froze to death",
   "death.attack.realisticsurvival.hypothermia.player": "%1$s froze to death",
   "death.attack.realisticsurvival.bleeding": "%1$s bled out",
-  "death.attack.realisticsurvival.bleeding.player": "%1$s bled out"
+  "death.attack.realisticsurvival.bleeding.player": "%1$s bled out",
+  "block.realisticsurvival.rock": "Rock",
+  "block.realisticsurvival.stick_on_ground": "Fallen Stick",
+  "block.realisticsurvival.cooking_pot": "Cooking Pot",
+  "message.realisticsurvival.pot_boiling": "The water will boil if the pot sits on a lit campfire or fire."
 }
