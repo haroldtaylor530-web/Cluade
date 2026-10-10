@@ -43,15 +43,19 @@ jobs:
           cp build/libs/*.jar /tmp/out/ 2>/dev/null || true
           echo "${{ steps.build.outcome }} $GITHUB_SHA" > /tmp/out/STATUS
           if ! git ls-remote --exit-code origin refs/heads/mc-sources >/dev/null; then
-            SRC=$(find build ~/.gradle -name "*.jar" \( -path "*moddev*" -o -path "*neoform*" \) 2>/dev/null | grep -i "sources" | head -1)
-            echo "sources jar: $SRC" | tee /tmp/out/SOURCES
-            if [ -n "$SRC" ]; then
-              mkdir -p /tmp/src && cd /tmp/src && unzip -q "$SRC" 'net/minecraft/*' 'com/mojang/*' 'net/neoforged/*' || true
-              tar -cJf /tmp/mcsrc.tar.xz -C /tmp/src . && cd -
-              git init -q /tmp/srcrepo && cp /tmp/mcsrc.tar.xz /tmp/srcrepo/ && cd /tmp/srcrepo
+            ls -la build/moddev/artifacts/ | tee /tmp/out/SOURCES || true
+            JAR=$(ls -S build/moddev/artifacts/*.jar 2>/dev/null | grep -v sources | head -1)
+            echo "game jar: $JAR" | tee -a /tmp/out/SOURCES
+            if [ -n "$JAR" ]; then
+              curl -sSL -o /tmp/vf.jar https://repo1.maven.org/maven2/org/vineflower/vineflower/1.11.1/vineflower-1.11.1.jar
+              mkdir -p /tmp/dec /tmp/srcrepo
+              java -jar /tmp/vf.jar -only=net/minecraft -only=net/neoforged -only=com/mojang "$JAR" /tmp/dec > /tmp/vf.log 2>&1 || tail -20 /tmp/vf.log
+              (cd /tmp/dec && find . -type f | head -3; tar -cJf /tmp/srcrepo/mcsrc.tar.xz .)
+              cp "$JAR" /tmp/srcrepo/game.jar
+              cd /tmp/srcrepo && git init -q
               git -c user.name=ci -c user.email=ci@example.com add -A && git -c user.name=ci -c user.email=ci@example.com commit -qm "minecraft sources"
               git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" HEAD:refs/heads/mc-sources
-              cd -
+              cd "$GITHUB_WORKSPACE"
             fi
           fi
           cd /tmp/out && git init -q && git add -A && git -c user.name=ci -c user.email=ci@example.com commit -qm "build $GITHUB_SHA"
