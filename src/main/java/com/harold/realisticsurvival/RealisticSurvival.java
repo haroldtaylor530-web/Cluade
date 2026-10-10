@@ -27,6 +27,7 @@ public class RealisticSurvival {
         NeoForge.EVENT_BUS.register(ThirstEvents.class);
         NeoForge.EVENT_BUS.register(InjuryEvents.class);
         NeoForge.EVENT_BUS.register(EarlyGameEvents.class);
+        NeoForge.EVENT_BUS.register(SelfTest.class);
     }
 
     public static Identifier id(String path) {

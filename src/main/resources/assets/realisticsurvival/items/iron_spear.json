@@ -7,7 +7,8 @@
         "when": [
           "gui",
           "ground",
-          "fixed"
+          "fixed",
+          "on_shelf"
         ],
         "model": {
           "type": "minecraft:model",

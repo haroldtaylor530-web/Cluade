@@ -23,9 +23,7 @@
           },
           {
             "type": "minecraft:would_survive",
-            "state": {
-              "Name": "realisticsurvival:stick_on_ground"
-            }
+            "state": "realisticsurvival:stick_on_ground"
           }
         ]
       }

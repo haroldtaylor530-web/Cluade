@@ -33,6 +33,16 @@ jobs:
           chmod +x gradlew
           ./gradlew build --no-configuration-cache --stacktrace 2>&1 | tee build.log
 
+      - name: Self-test on a real server
+        id: selftest
+        if: steps.build.outcome == 'success'
+        continue-on-error: true
+        run: |
+          mkdir -p run-selftest && echo "eula=true" > run-selftest/eula.txt
+          printf 'online-mode=false\nspawn-protection=0\n' > run-selftest/server.properties
+          timeout 900 ./gradlew runSelftest --no-configuration-cache 2>&1 | tee selftest.log || true
+          grep -q "SELFTEST PASS" selftest.log
+
       # Publish the result (log, jar, and once, the game's source for reference)
       # to the ci-output branch so it can be read without a GitHub login.
       - name: Publish result
@@ -40,8 +50,10 @@ jobs:
         run: |
           mkdir -p /tmp/out
           cp build.log /tmp/out/ || true
+          cp selftest.log /tmp/out/ 2>/dev/null || true
+          cp run-selftest/logs/latest.log /tmp/out/server-latest.log 2>/dev/null || true
           cp build/libs/*.jar /tmp/out/ 2>/dev/null || true
-          echo "${{ steps.build.outcome }} $GITHUB_SHA" > /tmp/out/STATUS
+          echo "build=${{ steps.build.outcome }} selftest=${{ steps.selftest.outcome }} $GITHUB_SHA" > /tmp/out/STATUS
           if ! git ls-remote --exit-code origin refs/heads/mc-sources >/dev/null; then
             ls -la build/moddev/artifacts/ | tee /tmp/out/SOURCES || true
             JAR=$(ls -S build/moddev/artifacts/*.jar 2>/dev/null | grep -v sources | head -1)

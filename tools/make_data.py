@@ -58,13 +58,14 @@ for name in FLAT + TOOLS:
 for mat in ("flint", "iron", "diamond"):
     w(f"{A}/items/{mat}_spear.json", {"model": {
         "type": "minecraft:select", "property": "minecraft:display_context",
-        "cases": [{"when": ["gui", "ground", "fixed"], "model": model(f"item/{mat}_spear_icon")}],
+        "cases": [{"when": ["gui", "ground", "fixed", "on_shelf"], "model": model(f"item/{mat}_spear_icon")}],
         "fallback": model(f"item/{mat}_spear")}})
 
 # fur armour on the body
 w(f"{A}/equipment/fur.json", {"layers": {
     "humanoid": [{"texture": f"{NS}:fur"}],
-    "humanoid_leggings": [{"texture": f"{NS}:fur"}]}})
+    "humanoid_leggings": [{"texture": f"{NS}:fur"}],
+    "humanoid_baby": [{"texture": f"{NS}:fur"}]}})
 
 # ------------------------------------------------------------------ recipes
 R = f"{D}/{NS}/recipe"
@@ -225,7 +226,7 @@ w(f"{A}/items/cooking_pot.json", {"model": model("block/cooking_pot")})
 def loot(name, item):
     w(f"{D}/{NS}/loot_table/blocks/{name}.json", {"type": "minecraft:block", "pools": [{
         "rolls": 1, "entries": [{"type": "minecraft:item", "name": item}],
-        "conditions": [{"condition": "minecraft:survives_explosion"}]}]})
+        "condition": {"type": "minecraft:survives_explosion"}}]})
 
 
 loot("rock", ns("rock"))
@@ -237,15 +238,15 @@ shaped("cooking_pot", ["I I", "III"], {"I": "minecraft:iron_ingot"}, "cooking_po
 
 # world generation: loose rocks everywhere, fallen sticks in wooded biomes
 def scatter(name, block, count, biomes_list):
-    w(f"{D}/{NS}/worldgen/configured_feature/{name}.json", {"type": "minecraft:simple_block", "config": {
-        "to_place": {"type": "minecraft:simple_state_provider", "state": {"Name": ns(block)}}}})
+    # 26.x: features live in worldgen/feature and have no "config" wrapper
+    w(f"{D}/{NS}/worldgen/feature/{name}.json", {"type": "minecraft:simple_block", "to_place": {"id": ns(block)}})
     w(f"{D}/{NS}/worldgen/placed_feature/{name}.json", {"feature": ns(name), "placement": [
         {"type": "minecraft:count", "count": count},
         {"type": "minecraft:in_square"},
         {"type": "minecraft:heightmap", "heightmap": "MOTION_BLOCKING_NO_LEAVES"},
         {"type": "minecraft:block_predicate_filter", "predicate": {"type": "minecraft:all_of", "predicates": [
             {"type": "minecraft:matching_blocks", "blocks": "minecraft:air"},
-            {"type": "minecraft:would_survive", "state": {"Name": ns(block)}}]}},
+            {"type": "minecraft:would_survive", "state": ns(block)}]}},
         {"type": "minecraft:biome"}]})
     for i, biomes in enumerate(biomes_list):
         w(f"{D}/{NS}/neoforge/biome_modifier/{name}_{i}.json", {

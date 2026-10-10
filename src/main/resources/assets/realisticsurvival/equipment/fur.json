@@ -9,6 +9,11 @@
       {
         "texture": "realisticsurvival:fur"
       }
+    ],
+    "humanoid_baby": [
+      {
+        "texture": "realisticsurvival:fur"
+      }
     ]
   }
 }

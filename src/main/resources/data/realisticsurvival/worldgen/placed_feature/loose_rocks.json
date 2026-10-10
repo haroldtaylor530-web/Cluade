@@ -23,9 +23,7 @@
           },
           {
             "type": "minecraft:would_survive",
-            "state": {
-              "Name": "realisticsurvival:rock"
-            }
+            "state": "realisticsurvival:rock"
           }
         ]
       }

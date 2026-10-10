@@ -577,8 +577,10 @@ def fur_layer(regions):
     return img
 
 
-# humanoid: head (0,0)-(32,16), body (16,16)-(40,32), arms (40,16)-(56,32), legs/boots (0,16)-(16,32)
-save(fur_layer([(0, 0, 32, 16), (16, 16, 40, 32), (40, 16, 56, 32), (0, 16, 16, 32)]), "entity/equipment/humanoid/fur.png")
+# (fur armour layers are made from the vanilla leather layout; see README)
+if False:
+  # humanoid: head (0,0)-(32,16), body (16,16)-(40,32), arms (40,16)-(56,32), legs/boots (0,16)-(16,32)
+  save(fur_layer([(0, 0, 32, 16), (16, 16, 40, 32), (40, 16, 56, 32), (0, 16, 16, 32)]), "entity/equipment/humanoid/fur.png")
 # leggings: body (waist) and legs
-save(fur_layer([(16, 16, 40, 32), (0, 16, 16, 32)]), "entity/equipment/humanoid_leggings/fur.png")
+  save(fur_layer([(16, 16, 40, 32), (0, 16, 16, 32)]), "entity/equipment/humanoid_leggings/fur.png")
 print("art done")
