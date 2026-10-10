@@ -129,7 +129,7 @@ public final class SurvivalTicker {
 
         boolean sky = level.canSeeSky(pos.above());
         // day/night swing: +1 at noon, -1 at midnight
-        long time = level.getDayTime() % 24000L;
+        long time = level.getOverworldClockTime() % 24000L;
         float sun = Mth.cos((float) ((time - 6000L) / 24000.0 * Math.PI * 2.0));
         float swing = dry ? 10.0F : 5.0F;
         air += sun * swing;
@@ -189,7 +189,7 @@ public final class SurvivalTicker {
     private static void warn(ServerPlayer player, SurvivalState s, String key) {
         if (s.warnCooldown > 0) return;
         s.warnCooldown = 20 * 30;
-        player.displayClientMessage(Component.translatable(key), true);
+        player.sendOverlayMessage(Component.translatable(key));
     }
 
     private static void syncHud(ServerPlayer player, SurvivalState s) {

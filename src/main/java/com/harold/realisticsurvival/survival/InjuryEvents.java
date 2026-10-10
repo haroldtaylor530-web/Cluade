@@ -31,7 +31,7 @@ public final class InjuryEvents {
             if (chance > 0 && player.getRandom().nextFloat() < chance && !player.hasEffect(ModRegistry.BROKEN_LEG)) {
                 player.addEffect(new MobEffectInstance(ModRegistry.BROKEN_LEG, BROKEN_LEG_TICKS, 0));
                 player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.SKELETON_HURT, SoundSource.PLAYERS, 1.0F, 0.6F);
-                player.displayClientMessage(Component.translatable("message.realisticsurvival.broken_leg"), true);
+                player.sendOverlayMessage(Component.translatable("message.realisticsurvival.broken_leg"));
             }
             return;
         }
@@ -43,7 +43,7 @@ public final class InjuryEvents {
                 MobEffectInstance current = player.getEffect(ModRegistry.BLEEDING);
                 if (current != null && current.getAmplifier() > amp) amp = current.getAmplifier();
                 player.addEffect(new MobEffectInstance(ModRegistry.BLEEDING, 20 * 60, amp));
-                player.displayClientMessage(Component.translatable("message.realisticsurvival.bleeding"), true);
+                player.sendOverlayMessage(Component.translatable("message.realisticsurvival.bleeding"));
             }
         }
     }

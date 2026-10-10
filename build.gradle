@@ -182,3 +182,10 @@ idea {
         downloadJavadoc = true
     }
 }
+
+// Copies every jar the mod compiles against into build/cp (used by CI to publish a classpath
+// for quick offline compile checks).
+tasks.register('dumpClasspath', Copy) {
+    from configurations.compileClasspath
+    into layout.buildDirectory.dir('cp')
+}

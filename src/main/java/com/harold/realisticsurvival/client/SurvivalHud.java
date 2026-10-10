@@ -23,7 +23,7 @@ public final class SurvivalHud {
 
     private static boolean hidden(Minecraft mc) {
         LocalPlayer p = mc.player;
-        return p == null || p.isCreative() || p.isSpectator() || mc.options.hideGui;
+        return p == null || p.isCreative() || p.isSpectator() || mc.gui.hud.isHidden();
     }
 
     public static void renderThirst(GuiGraphicsExtractor g, DeltaTracker delta) {

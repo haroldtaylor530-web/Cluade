@@ -13,6 +13,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -24,7 +25,7 @@ import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.level.BlockDropsEvent;
-import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.neoforge.event.level.block.BreakBlockEvent;
 
 /**
  * A harder, more grounded start:
@@ -57,7 +58,7 @@ public final class EarlyGameEvents {
                 && (isLog(state) || state.is(BlockTags.BASE_STONE_OVERWORLD) || state.is(BlockTags.PLANKS))
                 && player instanceof ServerPlayer sp && sp.tickCount % 40 == 0 && sp.getRandom().nextFloat() < 0.35F) {
             sp.hurtServer((ServerLevel) sp.level(), sp.damageSources().generic(), 1.0F);
-            sp.displayClientMessage(Component.translatable("message.realisticsurvival.sore_hands"), true);
+            sp.sendOverlayMessage(Component.translatable("message.realisticsurvival.sore_hands"));
         }
     }
 
@@ -69,12 +70,12 @@ public final class EarlyGameEvents {
     }
 
     @SubscribeEvent
-    public static void onBreak(BlockEvent.BreakEvent event) {
+    public static void onBreak(BreakBlockEvent event) {
         Player player = event.getPlayer();
         if (player == null || player.isCreative()) return;
         BlockState state = event.getState();
         if (Config.EARLY_GAME.getAsBoolean() && isLog(state) && !hasAxe(player)) {
-            player.displayClientMessage(Component.translatable("message.realisticsurvival.need_axe"), true);
+            player.sendOverlayMessage(Component.translatable("message.realisticsurvival.need_axe"));
         }
         if (Config.WORK_TIRES.getAsBoolean() && state.getDestroySpeed(event.getLevel(), event.getPos()) >= 1.0F) {
             player.causeFoodExhaustion(0.03F);
@@ -118,7 +119,7 @@ public final class EarlyGameEvents {
             if (!player.isCreative()) held.shrink(1);
             int shards = player.getRandom().nextFloat() < 0.6F ? 2 : 1;
             ItemStack out = new ItemStack(ModRegistry.FLINT_SHARD.get(), shards);
-            if (!player.getInventory().add(out)) player.drop(out, false);
+            player.getInventory().placeItemBackInInventory(out, net.minecraft.util.Prediction.SERVER_ONLY);
             event.getLevel().playSound(null, event.getPos(), SoundEvents.STONE_HIT, SoundSource.PLAYERS, 1.0F, 1.4F);
         }
         event.setCanceled(true);
@@ -131,10 +132,10 @@ public final class EarlyGameEvents {
         Entity e = event.getEntity();
         EntityType<?> type = e.getType();
         int count = 0;
-        if (type == EntityType.WOLF || type == EntityType.FOX) count = 1;
-        else if (type == EntityType.POLAR_BEAR) count = 2 + e.getRandom().nextInt(2);
-        else if (type == EntityType.LLAMA || type == EntityType.TRADER_LLAMA || type == EntityType.CAMEL) count = 1 + e.getRandom().nextInt(2);
-        else if (type == EntityType.RABBIT && e.getRandom().nextFloat() < 0.3F) count = 1;
+        if (type == EntityTypes.WOLF || type == EntityTypes.FOX) count = 1;
+        else if (type == EntityTypes.POLAR_BEAR) count = 2 + e.getRandom().nextInt(2);
+        else if (type == EntityTypes.LLAMA || type == EntityTypes.TRADER_LLAMA || type == EntityTypes.CAMEL) count = 1 + e.getRandom().nextInt(2);
+        else if (type == EntityTypes.RABBIT && e.getRandom().nextFloat() < 0.3F) count = 1;
         if (count > 0 && e.level() instanceof ServerLevel level) {
             event.getDrops().add(new ItemEntity(level, e.getX(), e.getY() + 0.3, e.getZ(), new ItemStack(ModRegistry.FUR_PELT.get(), count)));
         }

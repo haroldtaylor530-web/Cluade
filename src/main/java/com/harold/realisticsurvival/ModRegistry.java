@@ -29,7 +29,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
@@ -121,10 +120,10 @@ public final class ModRegistry {
     // ---- blocks -----------------------------------------------------------------------------
     public static final DeferredBlock<GroundItemBlock> ROCK_BLOCK = BLOCKS.registerBlock("rock",
             p -> new GroundItemBlock(p, Block.box(3, 0, 2, 9, 2, 11)),
-            p -> p.mapColor(MapColor.STONE).instabreak().noCollision().noOcclusion().sound(SoundType.STONE).pushReaction(PushReaction.DESTROY));
+            p -> p.mapColor(MapColor.STONE).instabreak().noCollision().noOcclusion().sound(SoundType.STONE).pushReaction(PushReaction.POPPED));
     public static final DeferredBlock<GroundItemBlock> STICK_ON_GROUND = BLOCKS.registerBlock("stick_on_ground",
             p -> new GroundItemBlock(p, Block.box(0, 0, 0, 16, 1, 16)),
-            p -> p.mapColor(MapColor.WOOD).instabreak().noCollision().noOcclusion().sound(SoundType.WOOD).pushReaction(PushReaction.DESTROY));
+            p -> p.mapColor(MapColor.WOOD).instabreak().noCollision().noOcclusion().sound(SoundType.WOOD).pushReaction(PushReaction.POPPED));
     public static final DeferredBlock<CookingPotBlock> COOKING_POT_BLOCK = BLOCKS.registerBlock("cooking_pot",
             CookingPotBlock::new,
             p -> p.mapColor(MapColor.METAL).strength(1.5F).noOcclusion().sound(SoundType.METAL));
@@ -138,7 +137,7 @@ public final class ModRegistry {
     public static final DeferredItem<Item> PLANT_FIBRE = ITEMS.registerSimpleItem("plant_fibre");
     public static final DeferredItem<Item> FIBRE_STRING = ITEMS.registerSimpleItem("fibre_string");
     public static final DeferredItem<Item> FLINT_KNIFE = ITEMS.registerItem("flint_knife", Item::new, p -> p.sword(FLINT, 1.5F, -2.0F));
-    public static final DeferredItem<AxeItem> FLINT_HATCHET = ITEMS.registerItem("flint_hatchet", p -> new AxeItem(FLINT, 5.0F, -3.2F, p));
+    public static final DeferredItem<Item> FLINT_HATCHET = ITEMS.registerItem("flint_hatchet", Item::new, p -> p.axe(FLINT, 5.0F, -3.2F));
     public static final DeferredItem<Item> FLINT_PICKAXE = ITEMS.registerItem("flint_pickaxe", Item::new, p -> p.pickaxe(FLINT, 1.0F, -2.8F));
 
     // spears: melee damage, thrown damage, durability

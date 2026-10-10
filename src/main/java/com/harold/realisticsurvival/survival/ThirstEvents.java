@@ -67,7 +67,7 @@ public final class ThirstEvents {
         // a couple of handfuls: small amount per drink
         Drinking.drink(player, 1.5F, src == Drinking.Source.DIRTY);
         Drinking.playDrinkSound(player);
-        player.swing(net.minecraft.world.InteractionHand.MAIN_HAND, true);
+        
     }
 
     /** Client asks to drink; checked again on the server. */

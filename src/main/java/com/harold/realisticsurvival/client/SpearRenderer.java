@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.client.renderer.item.ItemModelResolver;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
-import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.item.ItemDisplayContext;
 
@@ -50,11 +50,11 @@ public class SpearRenderer extends EntityRenderer<ThrownSpear, SpearRenderer.Sta
     public void submit(State state, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState camera) {
         poseStack.pushPose();
         // same orientation maths as vanilla arrows: +X points along the flight path
-        poseStack.mulPose(Axis.YP.rotationDegrees(state.yRot - 90.0F));
-        poseStack.mulPose(Axis.ZP.rotationDegrees(state.xRot));
+        poseStack.rotate(Axis.YP.rotationDegrees(state.yRot - 90.0F));
+        poseStack.rotate(Axis.ZP.rotationDegrees(state.xRot));
         if (state.shake > 0.0F) {
             float wobble = -net.minecraft.util.Mth.sin(state.shake * 3.0F) * state.shake;
-            poseStack.mulPose(Axis.ZP.rotationDegrees(wobble));
+            poseStack.rotate(Axis.ZP.rotationDegrees(wobble));
         }
         // the item renderer centres the 16x16x16 model box on the origin; the spear model runs
         // from x=-14 to x=24 at y=10.5, z=8.5, so shift its middle onto the entity

@@ -21,7 +21,7 @@ public class RealisticSurvival {
     public RealisticSurvival(IEventBus modBus, ModContainer container) {
         ModRegistry.register(modBus);
         modBus.addListener(ThirstEvents::registerPayloads);
-        container.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+        container.registerConfig(ModConfig.Type.LOCAL, Config.SPEC);
 
         NeoForge.EVENT_BUS.register(SurvivalTicker.class);
         NeoForge.EVENT_BUS.register(ThirstEvents.class);

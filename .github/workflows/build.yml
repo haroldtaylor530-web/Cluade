@@ -58,5 +58,11 @@ jobs:
               cd "$GITHUB_WORKSPACE"
             fi
           fi
+          if ! git ls-remote --exit-code origin refs/heads/mc-classpath >/dev/null; then
+            ./gradlew dumpClasspath --no-configuration-cache -q || true
+            mkdir -p /tmp/cprepo && ls build/cp | tee /tmp/out/CLASSPATH
+            tar -cf /tmp/cprepo/cp.tar -C build/cp .
+            (cd /tmp/cprepo && split -b 45m cp.tar cp.tar.part- && rm cp.tar && git init -q && git -c user.name=ci -c user.email=ci@example.com add -A && git -c user.name=ci -c user.email=ci@example.com commit -qm classpath && git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" HEAD:refs/heads/mc-classpath)
+          fi
           cd /tmp/out && git init -q && git add -A && git -c user.name=ci -c user.email=ci@example.com commit -qm "build $GITHUB_SHA"
           git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" HEAD:refs/heads/ci-output

@@ -30,7 +30,7 @@ public final class Drinking {
         SurvivalState.get(sp).addThirst(amount);
         if (dirty && sp.getRandom().nextFloat() < SICK_CHANCE) {
             sp.addEffect(new MobEffectInstance(ModRegistry.DYSENTERY, 20 * 90, 0));
-            sp.displayClientMessage(Component.translatable("message.realisticsurvival.sick"), true);
+            sp.sendOverlayMessage(Component.translatable("message.realisticsurvival.sick"));
         }
     }
 

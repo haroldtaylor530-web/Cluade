@@ -79,7 +79,7 @@ public class CookingPotBlock extends Block {
                 player.setItemInHand(hand, ItemUtils.createFilledResult(stack, player, giveBack));
                 setWater(level, pos, state, Math.min(4, water + add), false);
                 level.playSound(null, pos, SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 1.0F, 1.0F);
-                if (!isHeated(level, pos)) player.displayClientMessage(Component.translatable("message.realisticsurvival.pot_boiling"), true);
+                if (!isHeated(level, pos)) player.sendOverlayMessage(Component.translatable("message.realisticsurvival.pot_boiling"));
             }
             return InteractionResult.SUCCESS;
         }
