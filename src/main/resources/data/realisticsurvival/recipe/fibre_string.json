@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "realisticsurvival:plant_fibre",
+    "realisticsurvival:plant_fibre",
+    "realisticsurvival:plant_fibre"
+  ],
+  "result": {
+    "id": "realisticsurvival:fibre_string",
+    "count": 1
+  }
+}

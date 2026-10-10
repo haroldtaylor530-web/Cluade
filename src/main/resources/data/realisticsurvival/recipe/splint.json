@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "/S/"
+  ],
+  "key": {
+    "/": "minecraft:stick",
+    "S": "#realisticsurvival:binding"
+  },
+  "result": {
+    "id": "realisticsurvival:splint",
+    "count": 1
+  }
+}

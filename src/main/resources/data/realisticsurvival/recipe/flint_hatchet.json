@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "FS",
+    " /"
+  ],
+  "key": {
+    "F": "minecraft:flint",
+    "S": "#realisticsurvival:binding",
+    "/": "minecraft:stick"
+  },
+  "result": {
+    "id": "realisticsurvival:flint_hatchet",
+    "count": 1
+  }
+}

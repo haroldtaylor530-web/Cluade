@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "realisticsurvival:flint_knife",
+    "realisticsurvival:flint_hatchet",
+    "realisticsurvival:flint_pickaxe",
+    "realisticsurvival:flint_spear",
+    "realisticsurvival:iron_spear",
+    "realisticsurvival:diamond_spear",
+    "realisticsurvival:fur_hat",
+    "realisticsurvival:fur_coat",
+    "realisticsurvival:fur_trousers",
+    "realisticsurvival:fur_boots"
+  ]
+}

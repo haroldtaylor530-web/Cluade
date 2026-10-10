@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    " ST",
+    " / ",
+    "/  "
+  ],
+  "key": {
+    "T": "minecraft:diamond",
+    "S": "#realisticsurvival:binding",
+    "/": "minecraft:stick"
+  },
+  "result": {
+    "id": "realisticsurvival:diamond_spear",
+    "count": 1
+  }
+}

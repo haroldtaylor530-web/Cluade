@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "P P",
+    "P P"
+  ],
+  "key": {
+    "P": "realisticsurvival:fur_pelt"
+  },
+  "result": {
+    "id": "realisticsurvival:fur_boots",
+    "count": 1
+  }
+}
