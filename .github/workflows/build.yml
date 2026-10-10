@@ -48,11 +48,13 @@ jobs:
         if: steps.selftest.outcome == 'success'
         continue-on-error: true
         run: |
-          sudo apt-get update -qq && sudo apt-get install -y -qq xvfb mesa-utils libgl1-mesa-dri > /dev/null
+          sudo apt-get update -qq && sudo apt-get install -y -qq xvfb mesa-utils libgl1-mesa-dri libglx-mesa0 libegl-mesa0 mesa-vulkan-drivers libvulkan1 vulkan-tools > /dev/null
           mkdir -p run-client/saves && cp -r run-selftest/world run-client/saves/test
           printf 'onboardAccessibility:false\nskipMultiplayerWarning:true\njoinedFirstServer:true\ntutorialStep:none\nrenderDistance:4\nsimulationDistance:5\npauseOnLostFocus:false\nfullscreen:false\nsoundCategory_master:0.0\nguiScale:2\n' > run-client/options.txt
-          export LIBGL_ALWAYS_SOFTWARE=1
-          timeout 1200 xvfb-run -a -s "-screen 0 1280x720x24" ./gradlew runClienttest --no-configuration-cache 2>&1 | tee clienttest.log || true
+          export LIBGL_ALWAYS_SOFTWARE=1 MESA_GL_VERSION_OVERRIDE=4.5 MESA_GLSL_VERSION_OVERRIDE=450
+          xvfb-run -a -s "-screen 0 1280x720x24 +extension GLX +render -noreset" glxinfo -B 2>&1 | head -20 || true
+          xvfb-run -a -s "-screen 0 1280x720x24 +extension GLX +render -noreset" vulkaninfo --summary 2>&1 | head -30 || true
+          timeout 1200 xvfb-run -a -s "-screen 0 1280x720x24 +extension GLX +render -noreset" ./gradlew runClienttest --no-configuration-cache 2>&1 | tee clienttest.log || true
           grep -q "CLIENTTEST DONE" clienttest.log
 
       # Publish the result (log, jar, and once, the game's source for reference)
