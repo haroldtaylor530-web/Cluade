@@ -56,9 +56,7 @@ public class SpearRenderer extends EntityRenderer<ThrownSpear, SpearRenderer.Sta
             float wobble = -net.minecraft.util.Mth.sin(state.shake * 3.0F) * state.shake;
             poseStack.rotate(Axis.ZP.rotationDegrees(wobble));
         }
-        // the item renderer centres the 16x16x16 model box on the origin; the spear model runs
-        // from x=-14 to x=24 at y=10.5, z=8.5, so shift its middle onto the entity
-        poseStack.translate(0.1875F, -0.156F, -0.031F);
+        // the spear model is centred on its grip (see tools/fix_spear_models.py)
         state.item.submit(poseStack, collector, state.lightCoords, OverlayTexture.NO_OVERLAY, state.outlineColor);
         poseStack.popPose();
         super.submit(state, poseStack, collector, camera);

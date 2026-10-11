@@ -120,6 +120,7 @@ public final class ClientSelfTest {
             if (miningClosed > 0 && ticks == miningClosed + 125) holdSpear(mc);
             if (miningClosed > 0 && ticks == miningClosed + 140) shot(mc, "19_spear_hold_first.png");
             if (miningClosed > 0 && ticks == miningClosed + 142) mc.player.startUsingItem(net.minecraft.world.InteractionHand.MAIN_HAND);
+            if (miningClosed > 0 && ticks == miningClosed + 150) shot(mc, "20a_spear_charge_first_half.png");
             if (miningClosed > 0 && ticks == miningClosed + 162) shot(mc, "20_spear_charge_first.png");
             if (miningClosed > 0 && ticks == miningClosed + 164) {
                 mc.player.stopUsingItem();

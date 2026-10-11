@@ -48,7 +48,7 @@ public class SpearItem extends Item {
 
     @Override
     public ItemUseAnimation getUseAnimation(ItemStack stack) {
-        return ItemUseAnimation.TRIDENT;
+        return ItemUseAnimation.SPEAR; // vanilla's held-forward spear pose; the pull-back is in the item models
     }
 
     @Override

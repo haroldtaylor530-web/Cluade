@@ -54,12 +54,7 @@ for name in FLAT + TOOLS:
         continue
     w(f"{A}/items/{name}.json", {"model": model(f"item/{name}")})
 
-# spears: 2D icon in inventories/frames/on the ground, the 3D model in hand and when thrown
-for mat in ("flint", "iron", "diamond"):
-    w(f"{A}/items/{mat}_spear.json", {"model": {
-        "type": "minecraft:select", "property": "minecraft:display_context",
-        "cases": [{"when": ["gui", "ground", "fixed", "on_shelf"], "model": model(f"item/{mat}_spear_icon")}],
-        "fallback": model(f"item/{mat}_spear")}})
+# spears: item definitions (icon in inventories, held and charging models) come from tools/fix_spear_models.py
 
 # fur armour on the body
 w(f"{A}/equipment/fur.json", {"layers": {
