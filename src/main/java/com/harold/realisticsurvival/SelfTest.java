@@ -175,6 +175,8 @@ public final class SelfTest {
         s.winded = false;
         s.thirst = 20.0F;
         p.setSprinting(true);
+        p.xo = p.getX();
+        p.zo = p.getZ();
         int ticks = 0;
         while (!s.winded && ticks < 1000) {
             p.setSprinting(true);
@@ -184,6 +186,8 @@ public final class SelfTest {
         check(ticks >= 430 && ticks <= 460, "sprinting empties stamina in about 22 seconds (" + ticks + " ticks)");
         check(!p.isSprinting(), "out of breath stops the sprint");
         p.setSprinting(false);
+        p.xo = p.getX();
+        p.zo = p.getZ(); // standing still
         int rest = 0;
         while (s.winded && rest < 1000) {
             com.harold.realisticsurvival.survival.Stamina.tick(p, s);
