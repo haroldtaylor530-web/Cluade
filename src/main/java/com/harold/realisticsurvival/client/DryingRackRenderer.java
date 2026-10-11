@@ -67,11 +67,13 @@ public class DryingRackRenderer implements BlockEntityRenderer<DryingRackBlockEn
                 pose.translate(0.5F, 0.0F, 0.5F);
                 pose.rotateDegrees(Axis.YP, -state.facing.toYRot());
                 // along the pole, hanging just below it; a second piece hangs behind the first
-                float x = -0.3F + slot * 0.2F;
+                float x = -0.31F + slot * 0.207F;
                 float z = n == 0 ? 0.03F : -0.03F;
                 pose.translate(x, 0.6F, z);
                 pose.rotateDegrees(Axis.ZP, (slot % 2 == 0 ? 6.0F : -6.0F) + n * 10.0F);
-                pose.scale(0.36F, 0.36F, 0.36F);
+                pose.scale(0.42F, 0.42F, 0.42F);
+                // item models span 0..1: centre it on the hook
+                pose.translate(-0.5F, -0.5F, -0.5F);
                 item.submit(pose, collector, state.lightCoords, OverlayTexture.NO_OVERLAY, 0);
                 pose.popPose();
             }
