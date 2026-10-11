@@ -175,3 +175,7 @@ inventory icon is the flat `<material>_spear_icon.png`.
 
 Needs Java 25. Run `gradlew build`; the jar is in `build/libs`. GitHub Actions builds every
 push to the `realistic-survival` branch.
+
+## License
+
+MIT, see [LICENSE](LICENSE). Remix it, improve it, include it in modpacks. Minecraft itself and its original textures belong to Mojang.
