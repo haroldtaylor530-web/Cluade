@@ -1,0 +1,21 @@
+{
+  "replace": false,
+  "values": [
+    "realisticsurvival:plant_fibre",
+    "realisticsurvival:fibre_string",
+    "minecraft:paper",
+    "minecraft:wheat",
+    "minecraft:dead_bush",
+    "minecraft:short_grass",
+    "minecraft:fern",
+    "minecraft:hay_block",
+    {
+      "id": "minecraft:short_dry_grass",
+      "required": false
+    },
+    {
+      "id": "minecraft:tall_dry_grass",
+      "required": false
+    }
+  ]
+}

@@ -1,6 +1,12 @@
 package com.harold.realisticsurvival;
 
+import com.harold.realisticsurvival.block.CampfireData;
+import com.harold.realisticsurvival.block.CampfireMenu;
 import com.harold.realisticsurvival.block.CookingPotBlock;
+import com.harold.realisticsurvival.block.RealisticCampfireBlock;
+import com.harold.realisticsurvival.entity.FallingTree;
+import net.minecraft.world.inventory.MenuType;
+import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
 import com.harold.realisticsurvival.block.GroundItemBlock;
 import com.harold.realisticsurvival.effect.BleedingEffect;
 import com.harold.realisticsurvival.effect.DysenteryEffect;
@@ -60,11 +66,13 @@ public final class ModRegistry {
     public static final DeferredRegister<AttachmentType<?>> ATTACHMENTS = DeferredRegister.create(NeoForgeRegistries.ATTACHMENT_TYPES, M);
     public static final DeferredRegister.DataComponents COMPONENTS = DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, M);
     public static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, M);
+    public static final DeferredRegister<MenuType<?>> MENUS = DeferredRegister.create(Registries.MENU, M);
 
     // ---- tags ---------------------------------------------------------------------------
     public static final TagKey<net.minecraft.world.item.Item> FLINT_REPAIR = TagKey.create(Registries.ITEM, RealisticSurvival.id("flint_repair"));
     public static final TagKey<net.minecraft.world.item.Item> FUR_REPAIR = TagKey.create(Registries.ITEM, RealisticSurvival.id("fur_repair"));
     public static final TagKey<net.minecraft.world.item.Item> WARM_CLOTHING = TagKey.create(Registries.ITEM, RealisticSurvival.id("warm_clothing"));
+    public static final TagKey<net.minecraft.world.item.Item> KINDLING = TagKey.create(Registries.ITEM, RealisticSurvival.id("kindling"));
 
     // ---- materials ----------------------------------------------------------------------
     public static final ToolMaterial FLINT = new ToolMaterial(BlockTags.INCORRECT_FOR_WOODEN_TOOL, 96, 3.0F, 0.5F, 8, FLINT_REPAIR);
@@ -116,6 +124,14 @@ public final class ModRegistry {
     public static final DeferredHolder<EntityType<?>, EntityType<ThrownSpear>> THROWN_SPEAR = ENTITIES.registerEntityType(
             "thrown_spear", ThrownSpear::new, MobCategory.MISC,
             b -> b.sized(0.5F, 0.5F).clientTrackingRange(4).updateInterval(20));
+    /** A tree toppling over after its trunk was cut through. */
+    public static final DeferredHolder<EntityType<?>, EntityType<FallingTree>> FALLING_TREE = ENTITIES.registerEntityType(
+            "falling_tree", FallingTree::new, MobCategory.MISC,
+            b -> b.sized(1.0F, 1.0F).clientTrackingRange(12).updateInterval(40).noSummon());
+
+    /** Kindling, fuel and embers of a campfire, stored on the campfire's block entity. */
+    public static final Supplier<AttachmentType<CampfireData>> CAMPFIRE_DATA = ATTACHMENTS.register("campfire",
+            () -> AttachmentType.builder(CampfireData::new).serialize(CampfireData.CODEC.fieldOf("campfire")).build());
 
     // ---- blocks -----------------------------------------------------------------------------
     public static final DeferredBlock<GroundItemBlock> ROCK_BLOCK = BLOCKS.registerBlock("rock",
@@ -128,8 +144,14 @@ public final class ModRegistry {
             CookingPotBlock::new,
             p -> p.mapColor(MapColor.METAL).strength(1.5F).noOcclusion().sound(SoundType.METAL));
 
+    /** Replaces the vanilla campfire: needs kindling and fuel, burns down, has a menu. */
+    public static final DeferredBlock<RealisticCampfireBlock> CAMPFIRE_BLOCK = BLOCKS.registerBlock("campfire",
+            RealisticCampfireBlock::new,
+            p -> p.mapColor(MapColor.PODZOL).instrument(net.minecraft.world.level.block.state.properties.NoteBlockInstrument.BASS)
+                    .strength(2.0F).sound(SoundType.WOOD).lightLevel(RealisticCampfireBlock::lightLevel).noOcclusion().ignitedByLava());
+
     // ---- items ------------------------------------------------------------------------------
-    public static final DeferredItem<BlockItem> ROCK = ITEMS.registerSimpleBlockItem("rock", ROCK_BLOCK);
+    public static final DeferredItem<BlockItem> ROCK= ITEMS.registerSimpleBlockItem("rock", ROCK_BLOCK);
     public static final DeferredItem<BlockItem> COOKING_POT = ITEMS.registerSimpleBlockItem("cooking_pot", COOKING_POT_BLOCK);
 
     // early game
@@ -167,6 +189,14 @@ public final class ModRegistry {
     public static final DeferredItem<Item> FUR_TROUSERS = ITEMS.registerItem("fur_trousers", Item::new, p -> p.humanoidArmor(FUR, ArmorType.LEGGINGS));
     public static final DeferredItem<Item> FUR_BOOTS = ITEMS.registerItem("fur_boots", Item::new, p -> p.humanoidArmor(FUR, ArmorType.BOOTS));
 
+    // fire
+    public static final DeferredItem<BlockItem> CAMPFIRE = ITEMS.registerSimpleBlockItem("campfire", CAMPFIRE_BLOCK);
+    public static final DeferredItem<Item> BOW_DRILL = ITEMS.registerItem("bow_drill", Item::new, p -> p.durability(24));
+
+    // ---- menus --------------------------------------------------------------------------------
+    public static final DeferredHolder<MenuType<?>, MenuType<CampfireMenu>> CAMPFIRE_MENU = MENUS.register("campfire",
+            () -> IMenuTypeExtension.create(CampfireMenu::fromNetwork));
+
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TAB = TABS.register("main", () -> CreativeModeTab.builder()
             .title(Component.translatable("itemGroup.realisticsurvival"))
             .withTabsBefore(CreativeModeTabs.COMBAT)
@@ -182,6 +212,10 @@ public final class ModRegistry {
         ATTACHMENTS.register(bus);
         COMPONENTS.register(bus);
         TABS.register(bus);
+        MENUS.register(bus);
+        // the realistic campfire reuses the vanilla campfire block entity (cooking slots, renderer)
+        bus.addListener((net.neoforged.neoforge.event.BlockEntityTypeAddBlocksEvent e) ->
+                e.modify(net.minecraft.world.level.block.entity.BlockEntityTypes.CAMPFIRE, CAMPFIRE_BLOCK.get()));
     }
 
     private ModRegistry() {}

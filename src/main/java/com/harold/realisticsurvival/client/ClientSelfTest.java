@@ -2,7 +2,12 @@ package com.harold.realisticsurvival.client;
 
 import com.harold.realisticsurvival.ModRegistry;
 import com.harold.realisticsurvival.RealisticSurvival;
+import com.harold.realisticsurvival.block.CampfireData;
+import com.harold.realisticsurvival.block.CampfireMenu;
 import com.harold.realisticsurvival.block.CookingPotBlock;
+import com.harold.realisticsurvival.block.RealisticCampfireBlock;
+import com.harold.realisticsurvival.survival.TreeFelling;
+import net.minecraft.world.level.block.entity.CampfireBlockEntity;
 import com.harold.realisticsurvival.entity.ThrownSpear;
 import com.harold.realisticsurvival.survival.SurvivalState;
 import net.minecraft.client.CameraType;
@@ -47,7 +52,18 @@ public final class ClientSelfTest {
             }
             if (ticks == 320) shot(mc, "3_inventory.png");
             if (ticks == 340) mc.gui.setScreen(null);
-            if (ticks == 360) {
+            // ---- campfire menu, lighting game, a falling tree
+            if (ticks == 360) setUpFireAndTree(mc);
+            if (ticks == 400) openCampfireMenu(mc);
+            if (ticks == 440) shot(mc, "4_campfire_menu.png");
+            if (ticks == 450) mc.gui.setScreen(null);
+            if (ticks == 460) mc.gui.setScreen(new LightingScreen(base.offset(0, 0, 3), 3, 0.22F, false, false));
+            if (ticks == 485) shot(mc, "5_lighting_game.png");
+            if (ticks == 495) mc.gui.setScreen(null);
+            if (ticks == 520) fellTree(mc);
+            if (ticks == 540) shot(mc, "6_tree_falling.png");
+            if (ticks == 600) shot(mc, "7_tree_fallen.png");
+            if (ticks == 640) {
                 RealisticSurvival.LOGGER.info("CLIENTTEST DONE");
                 mc.stop();
             }
@@ -55,6 +71,69 @@ public final class ClientSelfTest {
             RealisticSurvival.LOGGER.error("CLIENTTEST exception", t);
             mc.stop();
         }
+    }
+
+    private static BlockPos base = BlockPos.ZERO;
+
+    private static void setUpFireAndTree(Minecraft mc) {
+        MinecraftServer server = mc.getSingleplayerServer();
+        server.execute(() -> {
+            ServerPlayer p = server.getPlayerList().getPlayers().get(0);
+            ServerLevel level = (ServerLevel) p.level();
+            for (int x = -7; x <= 7; x++) for (int z = 1; z <= 18; z++) {
+                level.setBlockAndUpdate(base.offset(x, -1, z), Blocks.GRASS_BLOCK.defaultBlockState());
+                for (int y = 0; y <= 10; y++) {
+                    BlockPos q = base.offset(x, y, z);
+                    if (!(x == 0 && z == 3 && y <= 1)) level.setBlockAndUpdate(q, Blocks.AIR.defaultBlockState());
+                }
+            }
+            // a big realistic campfire under the pot
+            BlockPos fire = base.offset(0, 0, 3);
+            level.setBlockAndUpdate(fire, ModRegistry.CAMPFIRE_BLOCK.get().defaultBlockState());
+            if (level.getBlockEntity(fire) instanceof CampfireBlockEntity be) {
+                CampfireData d = RealisticCampfireBlock.data(be);
+                d.kindling = new ItemStack(ModRegistry.PLANT_FIBRE.get(), 6);
+                d.fuel = new ItemStack(net.minecraft.world.item.Items.OAK_LOG, 12);
+                RealisticCampfireBlock.light(level, fire);
+                level.setBlockAndUpdate(fire, level.getBlockState(fire).setValue(RealisticCampfireBlock.SIZE, 3));
+            }
+            level.setBlockAndUpdate(fire.above(), ModRegistry.COOKING_POT_BLOCK.get().defaultBlockState()
+                    .setValue(CookingPotBlock.WATER, 3).setValue(CookingPotBlock.BOILED, true).setValue(CookingPotBlock.ON_CAMPFIRE, true));
+            // an oak tree to cut down
+            BlockPos tree = base.offset(3, 0, 9);
+            var leaves = Blocks.OAK_LEAVES.defaultBlockState().setValue(net.minecraft.world.level.block.LeavesBlock.DISTANCE, 1);
+            for (int y = 3; y <= 6; y++) for (int x = -2; x <= 2; x++) for (int z = -2; z <= 2; z++) {
+                if (y == 6 && (Math.abs(x) > 1 || Math.abs(z) > 1)) continue;
+                level.setBlock(tree.offset(x, y, z), leaves, 2);
+            }
+            for (int y = 0; y <= 5; y++) level.setBlock(tree.above(y), Blocks.OAK_LOG.defaultBlockState(), 2);
+            p.getInventory().setItem(8, new ItemStack(ModRegistry.BOW_DRILL.get()));
+        });
+    }
+
+    private static void openCampfireMenu(Minecraft mc) {
+        MinecraftServer server = mc.getSingleplayerServer();
+        server.execute(() -> {
+            ServerPlayer p = server.getPlayerList().getPlayers().get(0);
+            BlockPos fire = base.offset(0, 0, 3);
+            if (p.level().getBlockEntity(fire) instanceof CampfireBlockEntity be) {
+                p.openMenu(new net.minecraft.world.SimpleMenuProvider((id, inv, pl) -> CampfireMenu.forCampfire(id, inv, be, fire),
+                        net.minecraft.network.chat.Component.translatable("container.realisticsurvival.campfire")), fire);
+            }
+        });
+    }
+
+    private static void fellTree(Minecraft mc) {
+        MinecraftServer server = mc.getSingleplayerServer();
+        server.execute(() -> {
+            ServerPlayer p = server.getPlayerList().getPlayers().get(0);
+            ServerLevel level = (ServerLevel) p.level();
+            p.teleportTo(level, base.getX() + 0.5, base.getY(), base.getZ() + 0.5, java.util.Set.of(), -38.0F, -8.0F, true);
+            BlockPos tree = base.offset(3, 0, 9);
+            // fall to the east so it crosses the view
+            TreeFelling.fell(level, tree, tree.getX() + 0.5 - 6, tree.getZ() + 0.5);
+            level.setBlockAndUpdate(tree, Blocks.AIR.defaultBlockState());
+        });
     }
 
     private static void shot(Minecraft mc, String name) {
@@ -74,7 +153,7 @@ public final class ClientSelfTest {
             p.setGameMode(GameType.SURVIVAL);
             server.getCommands().performPrefixedCommand(server.createCommandSourceStack(), "time set 6000");
             server.getCommands().performPrefixedCommand(server.createCommandSourceStack(), "weather clear");
-            BlockPos base = p.blockPosition();
+            base = p.blockPosition();
             // flat stage in front (south) of the player
             for (int x = -3; x <= 3; x++) {
                 for (int z = 1; z <= 6; z++) {

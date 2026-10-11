@@ -27,6 +27,8 @@ public class RealisticSurvivalClient {
         container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
         modBus.addListener(RealisticSurvivalClient::registerRenderers);
         modBus.addListener(RealisticSurvivalClient::registerHud);
+        modBus.addListener(RealisticSurvivalClient::registerScreens);
+        modBus.addListener(RealisticSurvivalClient::registerPayloads);
         NeoForge.EVENT_BUS.addListener(RealisticSurvivalClient::onClientTick);
         NeoForge.EVENT_BUS.addListener(RealisticSurvivalClient::onRightClickEmpty);
         if (ClientSelfTest.enabled()) NeoForge.EVENT_BUS.addListener(ClientSelfTest::onClientTick);
@@ -34,6 +36,16 @@ public class RealisticSurvivalClient {
 
     private static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(ModRegistry.THROWN_SPEAR.get(), SpearRenderer::new);
+        event.registerEntityRenderer(ModRegistry.FALLING_TREE.get(), FallingTreeRenderer::new);
+    }
+
+    private static void registerScreens(net.neoforged.neoforge.client.event.RegisterMenuScreensEvent event) {
+        event.register(ModRegistry.CAMPFIRE_MENU.get(), CampfireScreen::new);
+    }
+
+    private static void registerPayloads(net.neoforged.neoforge.client.network.event.RegisterClientPayloadHandlersEvent event) {
+        event.register(com.harold.realisticsurvival.block.CampfireNet.OpenLighting.TYPE, (p, context) ->
+                Minecraft.getInstance().gui.setScreen(new LightingScreen(p.pos(), p.hits(), p.zone(), p.bowDrill(), p.wet())));
     }
 
     private static void registerHud(RegisterGuiLayersEvent event) {

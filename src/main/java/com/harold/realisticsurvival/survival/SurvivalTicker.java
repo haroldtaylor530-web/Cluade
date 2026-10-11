@@ -156,11 +156,23 @@ public final class SurvivalTicker {
     /** Warmth from nearby fires, lava and furnaces. */
     private static float heatSources(ServerLevel level, BlockPos center) {
         float heat = 0.0F;
-        for (BlockPos p : BlockPos.betweenClosed(center.offset(-4, -2, -4), center.offset(4, 2, 4))) {
+        for (BlockPos p : BlockPos.betweenClosed(center.offset(-7, -2, -7), center.offset(7, 2, 7))) {
             BlockState state = level.getBlockState(p);
             if (state.isAir()) continue;
             float strength = 0.0F;
-            if (state.is(BlockTags.CAMPFIRES) && state.hasProperty(BlockStateProperties.LIT) && state.getValue(BlockStateProperties.LIT)) strength = 14.0F;
+            if (state.getBlock() instanceof com.harold.realisticsurvival.block.RealisticCampfireBlock) {
+                // bigger fires are hotter and reach further; embers still give a little warmth
+                int size = state.getValue(com.harold.realisticsurvival.block.RealisticCampfireBlock.SIZE);
+                double d = Math.sqrt(p.distSqr(center));
+                if (state.getValue(BlockStateProperties.LIT)) {
+                    float reach = size == 1 ? 3.5F : size == 2 ? 5.0F : 7.5F;
+                    if (d <= reach) strength = size == 1 ? 9.0F : size == 2 ? 14.0F : 22.0F;
+                } else if (state.getValue(com.harold.realisticsurvival.block.RealisticCampfireBlock.EMBERS) && d <= 2.5) {
+                    strength = 5.0F;
+                }
+            } else if (Math.abs(p.getX() - center.getX()) > 4 || Math.abs(p.getZ() - center.getZ()) > 4) {
+                continue;
+            } else if (state.is(BlockTags.CAMPFIRES) && state.hasProperty(BlockStateProperties.LIT) && state.getValue(BlockStateProperties.LIT)) strength = 14.0F;
             else if (state.is(BlockTags.FIRE)) strength = 10.0F;
             else if (state.getFluidState().is(FluidTags.LAVA)) strength = 16.0F;
             else if (state.getBlock() instanceof AbstractFurnaceBlock && state.getValue(BlockStateProperties.LIT)) strength = 7.0F;

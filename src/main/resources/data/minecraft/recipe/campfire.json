@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "/L/",
+    "RRR"
+  ],
+  "key": {
+    "/": "minecraft:stick",
+    "L": "#minecraft:logs_that_burn",
+    "R": [
+      "realisticsurvival:rock",
+      "minecraft:cobblestone"
+    ]
+  },
+  "result": {
+    "id": "realisticsurvival:campfire"
+  }
+}

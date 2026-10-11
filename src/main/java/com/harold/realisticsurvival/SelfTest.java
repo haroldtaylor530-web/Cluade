@@ -1,6 +1,12 @@
 package com.harold.realisticsurvival;
 
+import com.harold.realisticsurvival.block.CampfireData;
 import com.harold.realisticsurvival.block.CookingPotBlock;
+import com.harold.realisticsurvival.block.RealisticCampfireBlock;
+import com.harold.realisticsurvival.entity.FallingTree;
+import com.harold.realisticsurvival.survival.TreeFelling;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.entity.CampfireBlockEntity;
 import com.harold.realisticsurvival.entity.ThrownSpear;
 import com.harold.realisticsurvival.survival.ModDamage;
 import com.harold.realisticsurvival.survival.SurvivalState;
@@ -119,6 +125,99 @@ public final class SelfTest {
 
         // ground blocks survive only on solid ground
         check(ModRegistry.ROCK_BLOCK.get().defaultBlockState().canSurvive(level, ground), "rock can sit on the ground");
+
+        campfire(server, level, ground.offset(6, 0, 0));
+        tree(level, ground.offset(-8, 0, 0));
+    }
+
+    /** Clear a flat 7x7 patch of grass with air above it, surface at y. */
+    private static BlockPos flat(ServerLevel level, BlockPos at, int height) {
+        for (int x = -3; x <= 3; x++) for (int z = -3; z <= 3; z++) {
+            level.setBlockAndUpdate(at.offset(x, -1, z), Blocks.GRASS_BLOCK.defaultBlockState());
+            for (int y = 0; y <= height; y++) level.setBlockAndUpdate(at.offset(x, y, z), Blocks.AIR.defaultBlockState());
+        }
+        return at;
+    }
+
+    private static void campfire(MinecraftServer server, ServerLevel level, BlockPos at) {
+        check(server.getRecipeManager().byKey(ResourceKey.create(Registries.RECIPE, RealisticSurvival.id("bow_drill"))).isPresent(), "recipe bow_drill");
+        check(server.getRecipeManager().byKey(ResourceKey.create(Registries.RECIPE, net.minecraft.resources.Identifier.withDefaultNamespace("campfire"))).isPresent(), "recipe campfire override");
+        BlockPos pos = flat(level, at, 3);
+        level.setBlockAndUpdate(pos, ModRegistry.CAMPFIRE_BLOCK.get().defaultBlockState());
+        var state = level.getBlockState(pos);
+        check(state.is(net.minecraft.tags.BlockTags.CAMPFIRES), "realistic campfire is a campfire");
+        check(!state.getValue(RealisticCampfireBlock.LIT), "campfire starts unlit");
+        if (!(level.getBlockEntity(pos) instanceof CampfireBlockEntity be)) {
+            fail("campfire has a campfire block entity");
+            return;
+        }
+        check(new ItemStack(ModRegistry.PLANT_FIBRE.get()).is(ModRegistry.KINDLING), "plant fibre is kindling");
+        CampfireData d = RealisticCampfireBlock.data(be);
+        check(RealisticCampfireBlock.notReadyReason(state, d) != null, "empty campfire can't be lit");
+        d.kindling = new ItemStack(ModRegistry.PLANT_FIBRE.get(), 2);
+        d.fuel = new ItemStack(Items.OAK_LOG, 2);
+        check(RealisticCampfireBlock.light(level, pos), "campfire lights with kindling and fuel");
+        state = level.getBlockState(pos);
+        check(state.getValue(RealisticCampfireBlock.LIT), "campfire is lit");
+        check(d.kindling.getCount() == 1 && d.fuel.getCount() == 1 && d.burn > 0, "lighting used kindling and a log");
+        float before = d.burn;
+        for (int i = 0; i < 20; i++) RealisticCampfireBlock.serverTick(level, pos, level.getBlockState(pos), be);
+        check(d.burn < before, "fuel burns down (" + before + " -> " + d.burn + ")");
+
+        // warmth: a large fire warms more than no fire
+        FakePlayer player = FakePlayerFactory.getMinecraft(level);
+        player.setPos(pos.getX() + 3.5, pos.getY(), pos.getZ() + 0.5);
+        float warmMedium = SurvivalTicker.ambient(player, level);
+        level.setBlockAndUpdate(pos, level.getBlockState(pos).setValue(RealisticCampfireBlock.SIZE, 3));
+        float warmLarge = SurvivalTicker.ambient(player, level);
+        check(warmLarge > warmMedium, "large fire is warmer (" + warmMedium + " -> " + warmLarge + ")");
+
+        // the cooking pot boils on it
+        level.setBlockAndUpdate(pos.above(), ModRegistry.COOKING_POT_BLOCK.get().defaultBlockState().setValue(CookingPotBlock.WATER, 2));
+        check(CookingPotBlock.isHeated(level, pos.above()), "pot is heated by the realistic campfire");
+        level.setBlockAndUpdate(pos.above(), Blocks.AIR.defaultBlockState());
+
+        // runs out of fuel: embers, then fresh fuel relights it
+        d.fuel = ItemStack.EMPTY;
+        d.burn = 0.5F;
+        for (int i = 0; i < 3; i++) RealisticCampfireBlock.serverTick(level, pos, level.getBlockState(pos), be);
+        state = level.getBlockState(pos);
+        check(!state.getValue(RealisticCampfireBlock.LIT) && state.getValue(RealisticCampfireBlock.EMBERS) && d.embers > 0, "out of fuel it dies to embers");
+        d.fuel = new ItemStack(Items.STICK, 3);
+        RealisticCampfireBlock.serverTick(level, pos, level.getBlockState(pos), be);
+        check(level.getBlockState(pos).getValue(RealisticCampfireBlock.LIT), "fuel on hot embers relights it");
+        check(RealisticCampfireBlock.secondsLeft(d, 2) > 0, "fuel time left = " + RealisticCampfireBlock.secondsLeft(d, 2) + "s");
+    }
+
+    private static void tree(ServerLevel level, BlockPos at) {
+        BlockPos base = flat(level, at, 9);
+        var leaves = Blocks.OAK_LEAVES.defaultBlockState().setValue(net.minecraft.world.level.block.LeavesBlock.DISTANCE, 1);
+        for (int y = 3; y <= 6; y++) for (int x = -2; x <= 2; x++) for (int z = -2; z <= 2; z++) {
+            if (y == 6 && (Math.abs(x) > 1 || Math.abs(z) > 1)) continue;
+            level.setBlock(base.offset(x, y, z), leaves, 2);
+        }
+        for (int y = 0; y <= 5; y++) level.setBlock(base.above(y), Blocks.OAK_LOG.defaultBlockState(), 2);
+        FallingTree tree = TreeFelling.fell(level, base, base.getX() + 0.5 - 3, base.getZ() + 0.5);
+        if (tree == null) {
+            fail("tree fells");
+            return;
+        }
+        check(true, "tree fells with " + tree.parts().size() + " blocks");
+        check(level.getBlockState(base.above(2)).isAir() && level.getBlockState(base.offset(1, 4, 0)).isAir(), "tree blocks left the world");
+        // the falling direction is away from the cutter (+x): the top lands east of the stump
+        var top = tree.landedCentre(new FallingTree.Part(new BlockPos(0, 5, 0), Blocks.OAK_LOG.defaultBlockState()));
+        check(top.x > base.getX() + 3, "tree falls away from the cutter (top lands at x+" + (top.x - base.getX()) + ")");
+        for (int i = 0; i < 80 && !tree.isRemoved(); i++) tree.tick();
+        check(tree.isRemoved(), "tree landed");
+        var box = new net.minecraft.world.phys.AABB(base).inflate(12);
+        int logs = level.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class, box).stream()
+                .filter(e -> e.getItem().is(Items.OAK_LOG)).mapToInt(e -> e.getItem().getCount()).sum();
+        check(logs == 5, "fallen tree dropped its logs (" + logs + ")");
+        // placed (persistent) leaves on a log column are not a tree
+        BlockPos wall = flat(level, base.offset(0, 0, 7), 4);
+        for (int y = 0; y <= 3; y++) level.setBlock(wall.above(y), Blocks.OAK_LOG.defaultBlockState(), 2);
+        level.setBlock(wall.above(4), Blocks.OAK_LEAVES.defaultBlockState().setValue(net.minecraft.world.level.block.LeavesBlock.PERSISTENT, true), 2);
+        check(TreeFelling.fell(level, wall, wall.getX() - 3, wall.getZ()) == null, "log column with placed leaves doesn't fall");
     }
 
     private SelfTest() {}

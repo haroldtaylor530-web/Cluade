@@ -29,6 +29,14 @@ public final class Config {
             .comment("Mining and chopping make you hungrier and thirstier")
             .define("workTiresYou", true);
 
+    public static final ModConfigSpec.BooleanValue TREE_FELLING = B
+            .comment("Cutting through the bottom log of a tree with an axe makes the whole tree fall over (sneak to cut one log)")
+            .define("treeFelling", true);
+
+    public static final ModConfigSpec.DoubleValue CAMPFIRE_FUEL_RATE = B
+            .comment("How fast campfires burn their fuel. 1 = a log lasts about 2 minutes on a medium fire")
+            .defineInRange("campfireFuelRate", 1.0, 0.1, 10.0);
+
     static final ModConfigSpec SPEC = B.build();
 
     private Config() {}

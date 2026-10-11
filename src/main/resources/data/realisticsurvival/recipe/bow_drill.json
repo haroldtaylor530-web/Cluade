@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    " S",
+    "//"
+  ],
+  "key": {
+    "S": "#realisticsurvival:binding",
+    "/": "minecraft:stick"
+  },
+  "result": {
+    "id": "realisticsurvival:bow_drill",
+    "count": 1
+  }
+}

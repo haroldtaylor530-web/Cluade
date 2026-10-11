@@ -26,7 +26,7 @@ def ns(x):
 # ------------------------------------------------------------------ item models
 FLAT = ["flint_shard", "plant_fibre", "fibre_string", "unfired_clay_cup", "clay_cup", "dirty_water_cup",
         "clean_water_cup", "bandage", "splint", "fur_pelt", "fur_hat", "fur_coat", "fur_trousers", "fur_boots",
-        "waterskin", "waterskin_full", "flint_spear_icon", "iron_spear_icon", "diamond_spear_icon"]
+        "waterskin", "waterskin_full", "bow_drill", "flint_spear_icon", "iron_spear_icon", "diamond_spear_icon"]
 TOOLS = ["flint_knife", "flint_hatchet", "flint_pickaxe"]
 
 for name in FLAT:
@@ -268,3 +268,72 @@ lang.update({
 })
 w(f"{A}/lang/en_us.json", lang)
 print("blocks done")
+
+# ------------------------------------------------------------------ fire: realistic campfire, bow drill
+cf = {}
+for facing, y in (("east", 270), ("north", 180), ("south", 0), ("west", 90)):
+    for lit in ("false", "true"):
+        v = {"model": "minecraft:block/campfire" + ("" if lit == "true" else "_off")}
+        if y:
+            v["y"] = y
+        cf[f"facing={facing},lit={lit}"] = v
+blockstate("campfire", {"variants": cf})
+w(f"{A}/items/campfire.json", {"model": {"type": "minecraft:model", "model": "minecraft:item/campfire"}})
+loot("campfire", ns("campfire"))
+tag(f"{D}/minecraft/tags/block/campfires.json", [ns("campfire")])
+tag(f"{D}/{NS}/tags/item/kindling.json", [ns("plant_fibre"), ns("fibre_string"), "minecraft:paper", "minecraft:wheat",
+    "minecraft:dead_bush", "minecraft:short_grass", "minecraft:fern", "minecraft:hay_block",
+    {"id": "minecraft:short_dry_grass", "required": False}, {"id": "minecraft:tall_dry_grass", "required": False}])
+
+# the vanilla campfire recipe now makes the realistic one: a ring of rocks, a log and two sticks
+w(f"{D}/minecraft/recipe/campfire.json", {"type": "minecraft:crafting_shaped", "category": "misc",
+    "pattern": ["/L/", "RRR"],
+    "key": {"/": "minecraft:stick", "L": "#minecraft:logs_that_burn", "R": [ns("rock"), "minecraft:cobblestone"]},
+    "result": {"id": ns("campfire")}})
+shaped("bow_drill", [" S", "//"], {"S": BIND, "/": "minecraft:stick"}, "bow_drill", cat="equipment")
+
+with open(f"{A}/lang/en_us.json") as f:
+    lang = json.load(f)
+lang.update({
+    f"block.{NS}.campfire": "Campfire",
+    f"item.{NS}.bow_drill": "Bow Drill",
+    f"entity.{NS}.falling_tree": "Falling Tree",
+    f"container.{NS}.campfire": "Campfire",
+    f"gui.{NS}.campfire.kindling": "Kindling",
+    f"gui.{NS}.campfire.fuel": "Fuel",
+    f"gui.{NS}.campfire.kindling.tip": "Kindling catches the first spark: plant fibre, fibre string, paper, wheat, dry grass, ferns or dead bushes.",
+    f"gui.{NS}.campfire.fuel.tip": "Fuel keeps it burning: sticks, planks, logs or coal. Logs last a couple of minutes, coal much longer.",
+    f"gui.{NS}.campfire.small": "Small",
+    f"gui.{NS}.campfire.medium": "Medium",
+    f"gui.{NS}.campfire.large": "Large",
+    f"gui.{NS}.campfire.small.tip": "A small fire: half the fuel, a little warmth close by, cooks slowly. Rain puts it out easily.",
+    f"gui.{NS}.campfire.medium.tip": "A medium fire: normal fuel use, warms you within about 5 blocks.",
+    f"gui.{NS}.campfire.large.tip": "A large fire: burns fuel 2.5x as fast, warms you from 7 blocks, cooks twice as fast, lots of smoke. Don't stand in it.",
+    f"gui.{NS}.campfire.light": "Light",
+    f"gui.{NS}.campfire.light.tip": "Light it with a bow drill or flint and steel from your inventory. Needs kindling and fuel.",
+    f"gui.{NS}.campfire.burning": "Burning",
+    f"gui.{NS}.campfire.left": "%s left",
+    f"gui.{NS}.campfire.embers": "Glowing embers",
+    f"gui.{NS}.campfire.embers_left": "Add fuel: %s",
+    f"gui.{NS}.campfire.out": "Not lit",
+    f"gui.{NS}.campfire.fuel_for": "Fuel for %s",
+    f"gui.{NS}.campfire.rain": "Rain will put it out",
+    f"gui.{NS}.lighting.title": "Light the fire",
+    f"gui.{NS}.lighting.ember": "Ember",
+    f"gui.{NS}.lighting.misses": "Misses",
+    f"gui.{NS}.lighting.hint": "Space or click when the spark is in the glow",
+    f"gui.{NS}.lighting.wet": "It's raining: the tinder is damp",
+    f"gui.{NS}.lighting.caught": "It caught!",
+    f"gui.{NS}.lighting.failed": "The tinder didn't catch",
+    f"message.{NS}.campfire.lit": "It's already burning.",
+    f"message.{NS}.campfire.wet": "It's soaked. It won't light in water.",
+    f"message.{NS}.campfire.no_kindling": "Add kindling first: plant fibre, paper or dry grass.",
+    f"message.{NS}.campfire.no_fuel": "Add fuel first: sticks, logs or coal.",
+    f"message.{NS}.campfire.no_starter": "You need a bow drill or flint and steel to light it.",
+    f"message.{NS}.campfire.caught": "The fire caught.",
+    f"message.{NS}.campfire.failed": "The tinder didn't catch. Try again.",
+    f"{NS}.configuration.treeFelling": "Trees fall when you cut through the trunk",
+    f"{NS}.configuration.campfireFuelRate": "Campfire fuel use",
+})
+w(f"{A}/lang/en_us.json", lang)
+print("fire done")
