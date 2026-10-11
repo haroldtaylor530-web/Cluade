@@ -53,11 +53,12 @@ public final class ThirstEvents {
     }
 
     public static void registerPayloads(RegisterPayloadHandlersEvent event) {
-        var registrar = event.registrar("2");
+        var registrar = event.registrar("3");
         registrar.playToServer(DrinkFromHand.TYPE, DrinkFromHand.CODEC, (payload, context) -> {
             if (context.player() instanceof ServerPlayer player) drinkFromHand(player);
         });
         com.harold.realisticsurvival.block.CampfireNet.register(registrar);
+        OreMining.register(registrar);
     }
 
     private static void drinkFromHand(ServerPlayer player) {

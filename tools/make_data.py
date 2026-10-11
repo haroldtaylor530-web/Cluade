@@ -477,16 +477,33 @@ def box(frm, to, tex, uv_len=None):
     return {"from": frm, "to": to, "faces": faces}
 
 
+# the posts and pole use your stick texture (its wood strip is the top two rows)
+def stick(frm, to, along):
+    """A stick-textured box running along x, y or z."""
+    faces = {}
+    for d in ("north", "south", "east", "west", "up", "down"):
+        axis_of_face = {"north": "z", "south": "z", "east": "x", "west": "x", "up": "y", "down": "y"}[d]
+        if axis_of_face == along:
+            faces[d] = {"uv": [0, 0, 2, 2], "texture": "#stick"}  # the cut end
+        elif along == "y":
+            faces[d] = {"uv": [0, 0, 16, 2], "rotation": 90, "texture": "#stick"}
+        elif along == "z" and d in ("up", "down"):
+            faces[d] = {"uv": [0, 0, 16, 2], "rotation": 90, "texture": "#stick"}
+        else:
+            faces[d] = {"uv": [0, 0, 16, 2], "texture": "#stick"}
+    return {"from": frm, "to": to, "faces": faces}
+
+
 rack = [
-    box([1, 0, 7], [3, 16, 9], "#post"), box([13, 0, 7], [15, 16, 9], "#post"),
-    box([0, 13.5, 7.25], [16, 15, 8.75], "#pole"),
-    box([0.5, 0, 5], [3.5, 1, 11], "#post"), box([12.5, 0, 5], [15.5, 1, 11], "#post"),
+    stick([1, 0, 7], [3, 16, 9], "y"), stick([13, 0, 7], [15, 16, 9], "y"),
+    stick([0, 13.5, 7.25], [16, 15, 8.75], "x"),
+    stick([1, 0, 5], [3, 1, 11], "z"), stick([13, 0, 5], [15, 1, 11], "z"),
 ]
 for i, x in enumerate((3.6, 6.8, 9.8, 12.6)):
     rack.append(box([x - 0.3, 12.5, 7.6], [x + 0.3, 13.5, 8.4], "#hook"))
 w(f"{A}/models/block/drying_rack.json", {"parent": "minecraft:block/block", "textures": {
-    "post": "minecraft:block/stripped_spruce_log", "pole": "minecraft:block/stripped_birch_log",
-    "hook": "minecraft:block/hay_block_side", "particle": "minecraft:block/stripped_spruce_log"}, "elements": rack})
+    "stick": f"{NS}:block/stick_on_ground", "hook": "minecraft:block/hay_block_side",
+    "particle": f"{NS}:block/stick_on_ground"}, "elements": rack})
 blockstate("drying_rack", {"variants": {f"facing={f}": {"model": f"{NS}:block/drying_rack", "y": y}
                                         for f, y in (("north", 0), ("east", 90), ("south", 180), ("west", 270))}})
 w(f"{A}/items/drying_rack.json", {"model": model("block/drying_rack")})
@@ -531,6 +548,18 @@ lang.update({
     f"{NS}.configuration.foodSpoilage": "Food spoilage",
     f"{NS}.configuration.spoilageRate": "Spoilage rate",
     f"{NS}.configuration.rawFoodRisk": "Raw and bad food can make you ill",
+    f"{NS}.configuration.oreMinigame": "Ore mining game",
+    f"gui.{NS}.mining.title": "Mining",
+    f"gui.{NS}.mining.smashed": "Smashed! That piece is dust.",
+    f"gui.{NS}.mining.got": "Got it!",
+    f"gui.{NS}.mining.time": "Out of time",
+    f"gui.{NS}.mining.pieces": "Ore: %s / %s pieces",
+    f"gui.{NS}.mining.share": "Got: %s%%",
+    f"gui.{NS}.mining.lost": "Smashed: %s%%",
+    f"gui.{NS}.mining.help.move": "WASD: move",
+    f"gui.{NS}.mining.help.swing": "Space: swing (breaks rock, smashes ore)",
+    f"gui.{NS}.mining.help.tap": "Shift: tap (prises ore out, chips rock)",
+    f"gui.{NS}.mining.help.done": "Enter: stop, keep what you got",
 })
 w(f"{A}/lang/en_us.json", lang)
 print("food done")

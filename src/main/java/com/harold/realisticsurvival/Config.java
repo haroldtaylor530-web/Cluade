@@ -47,6 +47,10 @@ public final class Config {
             .comment("Raw meat and fish, and food that's going off, can give you food poisoning")
             .define("rawFoodRisk", true);
 
+    public static final ModConfigSpec.BooleanValue ORE_MINIGAME = B
+            .comment("Mining ore opens a little game: dig through the rock in the ore's texture and prise out the pieces of ore")
+            .define("oreMinigame", true);
+
     static final ModConfigSpec SPEC = B.build();
 
     private Config() {}

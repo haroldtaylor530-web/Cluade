@@ -50,6 +50,8 @@ public class RealisticSurvivalClient {
     private static void registerPayloads(net.neoforged.neoforge.client.network.event.RegisterClientPayloadHandlersEvent event) {
         event.register(com.harold.realisticsurvival.block.CampfireNet.OpenLighting.TYPE, (p, context) ->
                 Minecraft.getInstance().gui.setScreen(new LightingScreen(p.pos(), p.hits(), p.zone(), p.bowDrill(), p.wet())));
+        event.register(com.harold.realisticsurvival.survival.OreMining.OpenMining.TYPE, (p, context) ->
+                Minecraft.getInstance().gui.setScreen(new MiningScreen(p)));
     }
 
     private static void registerHud(RegisterGuiLayersEvent event) {

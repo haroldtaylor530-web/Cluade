@@ -146,5 +146,17 @@
   "tooltip.realisticsurvival.smoked": "Smoked",
   "realisticsurvival.configuration.foodSpoilage": "Food spoilage",
   "realisticsurvival.configuration.spoilageRate": "Spoilage rate",
-  "realisticsurvival.configuration.rawFoodRisk": "Raw and bad food can make you ill"
+  "realisticsurvival.configuration.rawFoodRisk": "Raw and bad food can make you ill",
+  "realisticsurvival.configuration.oreMinigame": "Ore mining game",
+  "gui.realisticsurvival.mining.title": "Mining",
+  "gui.realisticsurvival.mining.smashed": "Smashed! That piece is dust.",
+  "gui.realisticsurvival.mining.got": "Got it!",
+  "gui.realisticsurvival.mining.time": "Out of time",
+  "gui.realisticsurvival.mining.pieces": "Ore: %s / %s pieces",
+  "gui.realisticsurvival.mining.share": "Got: %s%%",
+  "gui.realisticsurvival.mining.lost": "Smashed: %s%%",
+  "gui.realisticsurvival.mining.help.move": "WASD: move",
+  "gui.realisticsurvival.mining.help.swing": "Space: swing (breaks rock, smashes ore)",
+  "gui.realisticsurvival.mining.help.tap": "Shift: tap (prises ore out, chips rock)",
+  "gui.realisticsurvival.mining.help.done": "Enter: stop, keep what you got"
 }

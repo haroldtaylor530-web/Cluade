@@ -135,6 +135,44 @@ public final class SelfTest {
         tree(level, ground.offset(-8, 0, 0));
         oven(server, level, ground.offset(0, 0, 14));
         food(server, level, ground.offset(12, 0, 14));
+        mining(level, ground.offset(-12, 0, 14));
+    }
+
+    private static void mining(ServerLevel level, BlockPos at) {
+        clear(level, at, 2);
+        BlockPos ore = at.above();
+        level.setBlockAndUpdate(ore, Blocks.DIAMOND_ORE.defaultBlockState());
+        FakePlayer p = FakePlayerFactory.getMinecraft(level);
+        p.setPos(at.getX() + 1.5, at.getY() + 1, at.getZ() + 0.5);
+        p.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, new ItemStack(Items.WOODEN_PICKAXE));
+        var diamond = level.getBlockState(ore);
+        check(com.harold.realisticsurvival.survival.OreMining.isOre(diamond), "diamond ore is an ore");
+        check(!com.harold.realisticsurvival.survival.OreMining.applies(p, diamond), "a wooden pickaxe can't start the game on diamond ore");
+        check(!com.harold.realisticsurvival.survival.OreMining.applies(p, Blocks.STONE.defaultBlockState()), "stone isn't an ore");
+        ItemStack pick = new ItemStack(Items.DIAMOND_PICKAXE);
+        p.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, pick);
+        check(com.harold.realisticsurvival.survival.OreMining.applies(p, diamond), "a diamond pickaxe starts the game on diamond ore");
+        check(com.harold.realisticsurvival.survival.OreMining.power(pick, diamond) == 4, "diamond pickaxe power 4 (" + com.harold.realisticsurvival.survival.OreMining.power(pick, diamond) + ")");
+        check(com.harold.realisticsurvival.survival.OreMining.rockKind(Blocks.DEEPSLATE_IRON_ORE.defaultBlockState()) == 1, "deepslate ore sits in deepslate");
+
+        check(com.harold.realisticsurvival.survival.OreMining.finish(p, ore, 10, 10, 5) == -1, "no result without a dig in progress");
+        com.harold.realisticsurvival.survival.OreMining.start(p, ore, diamond);
+        check(com.harold.realisticsurvival.survival.OreMining.finish(p, ore, 0, 10, 0) == 0 && level.getBlockState(ore).is(Blocks.DIAMOND_ORE),
+                "walking away without a swing leaves the ore");
+        com.harold.realisticsurvival.survival.OreMining.start(p, ore, diamond);
+        int got = com.harold.realisticsurvival.survival.OreMining.finish(p, ore, 60, 60, 40);
+        check(got == 1 && level.getBlockState(ore).isAir(), "getting all the ore out drops the diamond (" + got + ")");
+        check(pick.getDamageValue() == 1 + 40 / 12, "the dig wore the pickaxe (" + pick.getDamageValue() + ")");
+        level.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class, new net.minecraft.world.phys.AABB(ore).inflate(2)).forEach(e -> e.discard());
+
+        level.setBlockAndUpdate(ore, Blocks.DIAMOND_ORE.defaultBlockState());
+        com.harold.realisticsurvival.survival.OreMining.start(p, ore, diamond);
+        level.setBlockAndUpdate(ore, Blocks.STONE.defaultBlockState());
+        check(com.harold.realisticsurvival.survival.OreMining.finish(p, ore, 60, 60, 40) == -1, "no ore if the block changed meanwhile");
+        check(com.harold.realisticsurvival.survival.OreMining.scaled(4, 0.5F, 0.9F) == 2
+                && com.harold.realisticsurvival.survival.OreMining.scaled(1, 0.5F, 0.3F) == 1
+                && com.harold.realisticsurvival.survival.OreMining.scaled(1, 0.5F, 0.7F) == 0
+                && com.harold.realisticsurvival.survival.OreMining.scaled(1, 0.0F, 0.0F) == 0, "partial digs give a share of the drops");
     }
 
     private static void food(MinecraftServer server, ServerLevel level, BlockPos at) {

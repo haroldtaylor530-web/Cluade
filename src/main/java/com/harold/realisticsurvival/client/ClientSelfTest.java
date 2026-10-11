@@ -80,7 +80,20 @@ public final class ClientSelfTest {
                 logTooltips(mc);
             }
             if (ticks == 840) mc.gui.setScreen(null);
-            if (ticks == 860) {
+            if (ticks == 860) startMining(mc);
+            if (mc.gui.screen() instanceof MiningScreen ms) {
+                if (miningOpened < 0) miningOpened = ticks;
+                if (ticks == miningOpened + 6) shot(mc, "13_mining_start.png");
+                if (ticks > miningOpened + 10) ms.botStep();
+                if (ticks == miningOpened + 140) shot(mc, "14_mining_dig.png");
+                lastMining = ms;
+            } else if (lastMining != null && miningClosed < 0) {
+                miningClosed = ticks;
+                RealisticSurvival.LOGGER.info("CLIENTTEST mining {}/{} ore, {} pieces left, {} swings in {} ticks",
+                        lastMining.collected, lastMining.totalOre, lastMining.piecesLeft(), lastMining.actions, ticks - miningOpened);
+            }
+            if (miningClosed > 0 && ticks == miningClosed + 15) shot(mc, "15_mined.png");
+            if ((miningClosed > 0 && ticks == miningClosed + 30) || ticks == 2400) {
                 RealisticSurvival.LOGGER.info("CLIENTTEST DONE");
                 mc.stop();
             }
@@ -284,6 +297,22 @@ public final class ClientSelfTest {
             var lines = s.getTooltipLines(ctx, mc.player, net.minecraft.world.item.TooltipFlag.NORMAL);
             RealisticSurvival.LOGGER.info("CLIENTTEST tooltip {}", String.join(" | ", lines.stream().map(c -> c.getString()).toList()));
         }
+    }
+
+    private static int miningOpened = -1, miningClosed = -1;
+    private static MiningScreen lastMining;
+
+    private static void startMining(Minecraft mc) {
+        MinecraftServer server = mc.getSingleplayerServer();
+        server.execute(() -> {
+            ServerPlayer p = server.getPlayerList().getPlayers().get(0);
+            ServerLevel level = (ServerLevel) p.level();
+            BlockPos ore = base.offset(4, 0, 11);
+            level.setBlockAndUpdate(ore, Blocks.DIAMOND_ORE.defaultBlockState());
+            p.getInventory().setItem(p.getInventory().getSelectedSlot(), new ItemStack(net.minecraft.world.item.Items.DIAMOND_PICKAXE));
+            p.teleportTo(level, ore.getX() + 0.5, ore.getY(), ore.getZ() - 1.5, java.util.Set.of(), 0.0F, 30.0F, true);
+            com.harold.realisticsurvival.survival.OreMining.start(p, ore, level.getBlockState(ore));
+        });
     }
 
     private static void shot(Minecraft mc, String name) {

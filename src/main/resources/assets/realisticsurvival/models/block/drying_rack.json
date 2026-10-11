@@ -1,10 +1,9 @@
 {
   "parent": "minecraft:block/block",
   "textures": {
-    "post": "minecraft:block/stripped_spruce_log",
-    "pole": "minecraft:block/stripped_birch_log",
+    "stick": "realisticsurvival:block/stick_on_ground",
     "hook": "minecraft:block/hay_block_side",
-    "particle": "minecraft:block/stripped_spruce_log"
+    "particle": "realisticsurvival:block/stick_on_ground"
   },
   "elements": [
     {
@@ -21,57 +20,61 @@
       "faces": {
         "north": {
           "uv": [
-            1,
             0,
-            3,
-            16
+            0,
+            16,
+            2
           ],
-          "texture": "#post"
+          "rotation": 90,
+          "texture": "#stick"
         },
         "south": {
           "uv": [
-            1,
             0,
-            3,
-            16
+            0,
+            16,
+            2
           ],
-          "texture": "#post"
+          "rotation": 90,
+          "texture": "#stick"
         },
         "east": {
           "uv": [
-            7,
             0,
-            9,
-            16
+            0,
+            16,
+            2
           ],
-          "texture": "#post"
+          "rotation": 90,
+          "texture": "#stick"
         },
         "west": {
           "uv": [
-            7,
             0,
-            9,
-            16
+            0,
+            16,
+            2
           ],
-          "texture": "#post"
+          "rotation": 90,
+          "texture": "#stick"
         },
         "up": {
           "uv": [
-            1,
-            7,
-            3,
-            9
+            0,
+            0,
+            2,
+            2
           ],
-          "texture": "#post"
+          "texture": "#stick"
         },
         "down": {
           "uv": [
-            1,
-            7,
-            3,
-            9
+            0,
+            0,
+            2,
+            2
           ],
-          "texture": "#post"
+          "texture": "#stick"
         }
       }
     },
@@ -89,57 +92,61 @@
       "faces": {
         "north": {
           "uv": [
-            13,
             0,
-            15,
-            16
+            0,
+            16,
+            2
           ],
-          "texture": "#post"
+          "rotation": 90,
+          "texture": "#stick"
         },
         "south": {
           "uv": [
-            13,
             0,
-            15,
-            16
+            0,
+            16,
+            2
           ],
-          "texture": "#post"
+          "rotation": 90,
+          "texture": "#stick"
         },
         "east": {
           "uv": [
-            7,
             0,
-            9,
-            16
+            0,
+            16,
+            2
           ],
-          "texture": "#post"
+          "rotation": 90,
+          "texture": "#stick"
         },
         "west": {
           "uv": [
-            7,
             0,
-            9,
-            16
+            0,
+            16,
+            2
           ],
-          "texture": "#post"
+          "rotation": 90,
+          "texture": "#stick"
         },
         "up": {
           "uv": [
-            13,
-            7,
-            15,
-            9
+            0,
+            0,
+            2,
+            2
           ],
-          "texture": "#post"
+          "texture": "#stick"
         },
         "down": {
           "uv": [
-            13,
-            7,
-            15,
-            9
+            0,
+            0,
+            2,
+            2
           ],
-          "texture": "#post"
+          "texture": "#stick"
         }
       }
     },
@@ -158,192 +165,196 @@
         "north": {
           "uv": [
             0,
-            1,
+            0,
             16,
-            2.5
+            2
           ],
-          "texture": "#pole"
+          "texture": "#stick"
         },
         "south": {
           "uv": [
             0,
-            1,
+            0,
             16,
-            2.5
+            2
           ],
-          "texture": "#pole"
+          "texture": "#stick"
         },
         "east": {
           "uv": [
-            7.25,
-            1,
-            8.75,
-            2.5
+            0,
+            0,
+            2,
+            2
           ],
-          "texture": "#pole"
+          "texture": "#stick"
         },
         "west": {
           "uv": [
-            7.25,
-            1,
-            8.75,
-            2.5
+            0,
+            0,
+            2,
+            2
           ],
-          "texture": "#pole"
+          "texture": "#stick"
         },
         "up": {
           "uv": [
             0,
-            7.25,
+            0,
             16,
-            8.75
+            2
           ],
-          "texture": "#pole"
+          "texture": "#stick"
         },
         "down": {
           "uv": [
             0,
-            7.25,
+            0,
             16,
-            8.75
+            2
           ],
-          "texture": "#pole"
+          "texture": "#stick"
         }
       }
     },
     {
       "from": [
-        0.5,
+        1,
         0,
         5
       ],
       "to": [
-        3.5,
+        3,
         1,
         11
       ],
       "faces": {
         "north": {
           "uv": [
-            0.5,
-            15,
-            3.5,
-            16
+            0,
+            0,
+            2,
+            2
           ],
-          "texture": "#post"
+          "texture": "#stick"
         },
         "south": {
           "uv": [
-            0.5,
-            15,
-            3.5,
-            16
+            0,
+            0,
+            2,
+            2
           ],
-          "texture": "#post"
+          "texture": "#stick"
         },
         "east": {
           "uv": [
-            5,
-            15,
-            11,
-            16
+            0,
+            0,
+            16,
+            2
           ],
-          "texture": "#post"
+          "texture": "#stick"
         },
         "west": {
           "uv": [
-            5,
-            15,
-            11,
-            16
+            0,
+            0,
+            16,
+            2
           ],
-          "texture": "#post"
+          "texture": "#stick"
         },
         "up": {
           "uv": [
-            0.5,
-            5,
-            3.5,
-            11
+            0,
+            0,
+            16,
+            2
           ],
-          "texture": "#post"
+          "rotation": 90,
+          "texture": "#stick"
         },
         "down": {
           "uv": [
-            0.5,
-            5,
-            3.5,
-            11
+            0,
+            0,
+            16,
+            2
           ],
-          "texture": "#post"
+          "rotation": 90,
+          "texture": "#stick"
         }
       }
     },
     {
       "from": [
-        12.5,
+        13,
         0,
         5
       ],
       "to": [
-        15.5,
+        15,
         1,
         11
       ],
       "faces": {
         "north": {
           "uv": [
-            12.5,
-            15,
-            15.5,
-            16
+            0,
+            0,
+            2,
+            2
           ],
-          "texture": "#post"
+          "texture": "#stick"
         },
         "south": {
           "uv": [
-            12.5,
-            15,
-            15.5,
-            16
+            0,
+            0,
+            2,
+            2
           ],
-          "texture": "#post"
+          "texture": "#stick"
         },
         "east": {
           "uv": [
-            5,
-            15,
-            11,
-            16
+            0,
+            0,
+            16,
+            2
           ],
-          "texture": "#post"
+          "texture": "#stick"
         },
         "west": {
           "uv": [
-            5,
-            15,
-            11,
-            16
+            0,
+            0,
+            16,
+            2
           ],
-          "texture": "#post"
+          "texture": "#stick"
         },
         "up": {
           "uv": [
-            12.5,
-            5,
-            15.5,
-            11
+            0,
+            0,
+            16,
+            2
           ],
-          "texture": "#post"
+          "rotation": 90,
+          "texture": "#stick"
         },
         "down": {
           "uv": [
-            12.5,
-            5,
-            15.5,
-            11
+            0,
+            0,
+            16,
+            2
           ],
-          "texture": "#post"
+          "rotation": 90,
+          "texture": "#stick"
         }
       }
     },
