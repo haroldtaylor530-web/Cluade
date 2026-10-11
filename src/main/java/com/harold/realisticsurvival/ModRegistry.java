@@ -1,6 +1,8 @@
 package com.harold.realisticsurvival;
 
 import com.harold.realisticsurvival.block.CampfireData;
+import com.harold.realisticsurvival.block.ChoppedLogBlock;
+import net.minecraft.resources.Identifier;
 import com.harold.realisticsurvival.block.CampfireMenu;
 import com.harold.realisticsurvival.block.CookingPotBlock;
 import com.harold.realisticsurvival.block.RealisticCampfireBlock;
@@ -149,6 +151,28 @@ public final class ModRegistry {
             RealisticCampfireBlock::new,
             p -> p.mapColor(MapColor.PODZOL).instrument(net.minecraft.world.level.block.state.properties.NoteBlockInstrument.BASS)
                     .strength(2.0F).sound(SoundType.WOOD).lightLevel(RealisticCampfireBlock::lightLevel).noOcclusion().ignitedByLava());
+
+    /** Part-way chopped bottom logs, one per tree wood. */
+    public static final String[] CHOPPABLE_WOODS = { "oak", "spruce", "birch", "jungle", "acacia", "dark_oak", "mangrove", "cherry", "pale_oak" };
+    public static final Map<String, DeferredBlock<ChoppedLogBlock>> CHOPPED_LOGS = new java.util.LinkedHashMap<>();
+
+    static {
+        for (String wood : CHOPPABLE_WOODS) {
+            Identifier logId = Identifier.withDefaultNamespace(wood + "_log");
+            CHOPPED_LOGS.put(wood, BLOCKS.registerBlock("chopped_" + wood + "_log",
+                    p -> new ChoppedLogBlock(p, () -> net.minecraft.core.registries.BuiltInRegistries.BLOCK.getValue(logId)),
+                    p -> p.mapColor(MapColor.WOOD).instrument(net.minecraft.world.level.block.state.properties.NoteBlockInstrument.BASS)
+                            .strength(2.0F).sound(SoundType.WOOD).ignitedByLava().requiresCorrectToolForDrops()));
+        }
+    }
+
+    /** The chopped version of a log block, or null if it has none. */
+    public static ChoppedLogBlock choppedFor(Block log) {
+        Identifier id = net.minecraft.core.registries.BuiltInRegistries.BLOCK.getKey(log);
+        if (!id.getNamespace().equals("minecraft") || !id.getPath().endsWith("_log")) return null;
+        DeferredBlock<ChoppedLogBlock> b = CHOPPED_LOGS.get(id.getPath().substring(0, id.getPath().length() - 4));
+        return b == null ? null : b.get();
+    }
 
     // ---- items ------------------------------------------------------------------------------
     public static final DeferredItem<BlockItem> ROCK= ITEMS.registerSimpleBlockItem("rock", ROCK_BLOCK);

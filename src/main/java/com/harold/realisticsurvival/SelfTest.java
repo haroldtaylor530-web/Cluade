@@ -1,6 +1,7 @@
 package com.harold.realisticsurvival;
 
 import com.harold.realisticsurvival.block.CampfireData;
+import com.harold.realisticsurvival.block.ChoppedLogBlock;
 import com.harold.realisticsurvival.block.CookingPotBlock;
 import com.harold.realisticsurvival.block.RealisticCampfireBlock;
 import com.harold.realisticsurvival.entity.FallingTree;
@@ -218,6 +219,41 @@ public final class SelfTest {
         for (int y = 0; y <= 3; y++) level.setBlock(wall.above(y), Blocks.OAK_LOG.defaultBlockState(), 2);
         level.setBlock(wall.above(4), Blocks.OAK_LEAVES.defaultBlockState().setValue(net.minecraft.world.level.block.LeavesBlock.PERSISTENT, true), 2);
         check(TreeFelling.fell(level, wall, wall.getX() - 3, wall.getZ()) == null, "log column with placed leaves doesn't fall");
+
+        // layered chopping with a real break, as a player with an axe would
+        BlockPos b2 = flat(level, base.offset(0, 0, -9), 9);
+        for (int y = 3; y <= 6; y++) for (int x = -2; x <= 2; x++) for (int z = -2; z <= 2; z++) {
+            if (y == 6 && (Math.abs(x) > 1 || Math.abs(z) > 1)) continue;
+            level.setBlock(b2.offset(x, y, z), leaves, 2);
+        }
+        for (int y = 0; y <= 5; y++) level.setBlock(b2.above(y), Blocks.BIRCH_LOG.defaultBlockState(), 2);
+        FakePlayer chopper = FakePlayerFactory.getMinecraft(level);
+        chopper.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);
+        chopper.setShiftKeyDown(false);
+        chopper.setPos(b2.getX() + 0.5, b2.getY(), b2.getZ() - 1.5);
+        chopper.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, new ItemStack(Items.IRON_AXE));
+        for (int cut = 1; cut <= 3; cut++) {
+            chopper.gameMode.destroyBlock(b2);
+            var st = level.getBlockState(b2);
+            check(st.getBlock() instanceof ChoppedLogBlock && st.getValue(ChoppedLogBlock.STAGE) == cut, "cut " + cut + " takes a layer off (" + st + ")");
+            check(level.getBlockState(b2.above()).is(Blocks.BIRCH_LOG), "tree still standing after cut " + cut);
+        }
+        int before = level.getEntitiesOfClass(FallingTree.class, new net.minecraft.world.phys.AABB(b2).inflate(4)).size();
+        chopper.gameMode.destroyBlock(b2);
+        var fallen = level.getEntitiesOfClass(FallingTree.class, new net.minecraft.world.phys.AABB(b2).inflate(4));
+        check(fallen.size() == before + 1 && level.getBlockState(b2).isAir() && level.getBlockState(b2.above()).isAir(), "cutting the core fells the tree");
+        if (fallen.size() > before) {
+            var top2 = fallen.get(fallen.size() - 1).landedCentre(new FallingTree.Part(new BlockPos(0, 5, 0), Blocks.BIRCH_LOG.defaultBlockState()));
+            check(top2.z > b2.getZ() + 3, "chopped tree falls away from the chopper (z+" + (top2.z - b2.getZ()) + ")");
+            fallen.forEach(net.minecraft.world.entity.Entity::discard);
+        }
+        // sneaking cuts a single log as normal
+        level.setBlock(b2, Blocks.BIRCH_LOG.defaultBlockState(), 2);
+        chopper.setShiftKeyDown(true);
+        chopper.gameMode.destroyBlock(b2);
+        check(level.getBlockState(b2).isAir(), "sneaking breaks a log normally");
+        chopper.setShiftKeyDown(false);
+        chopper.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, ItemStack.EMPTY);
     }
 
     private SelfTest() {}

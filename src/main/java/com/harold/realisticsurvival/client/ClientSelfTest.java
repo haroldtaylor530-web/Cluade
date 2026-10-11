@@ -60,6 +60,7 @@ public final class ClientSelfTest {
             if (ticks == 460) mc.gui.setScreen(new LightingScreen(base.offset(0, 0, 3), 3, 0.22F, false, false));
             if (ticks == 485) shot(mc, "5_lighting_game.png");
             if (ticks == 495) mc.gui.setScreen(null);
+            if (ticks == 505) shot(mc, "8_chop_stages.png");
             if (ticks == 520) fellTree(mc);
             if (ticks == 540) shot(mc, "6_tree_falling.png");
             if (ticks == 600) shot(mc, "7_tree_fallen.png");
@@ -108,6 +109,13 @@ public final class ClientSelfTest {
             }
             for (int y = 0; y <= 5; y++) level.setBlock(tree.above(y), Blocks.OAK_LOG.defaultBlockState(), 2);
             p.getInventory().setItem(8, new ItemStack(ModRegistry.BOW_DRILL.get()));
+            // three trunks chopped one, two and three layers deep
+            for (int i = 0; i < 3; i++) {
+                BlockPos stump = base.offset(-2 - i * 2, 0, 6);
+                level.setBlockAndUpdate(stump, ModRegistry.CHOPPED_LOGS.get("oak").get().defaultBlockState()
+                        .setValue(com.harold.realisticsurvival.block.ChoppedLogBlock.STAGE, i + 1));
+                level.setBlockAndUpdate(stump.above(), Blocks.OAK_LOG.defaultBlockState());
+            }
         });
     }
 

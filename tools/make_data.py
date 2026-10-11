@@ -337,3 +337,42 @@ lang.update({
 })
 w(f"{A}/lang/en_us.json", lang)
 print("fire done")
+
+# ------------------------------------------------------------------ chopped logs: a notch that deepens with each cut
+WOODS_CHOP = ["oak", "spruce", "birch", "jungle", "acacia", "dark_oak", "mangrove", "cherry", "pale_oak"]
+
+
+def ring(lo, hi, uv_side):
+    return {"from": [0, lo, 0], "to": [16, hi, 16], "faces": {
+        d: {"uv": uv_side, "texture": "#side"} for d in ("north", "south", "east", "west")}}
+
+
+for wood in WOODS_CHOP:
+    name = f"chopped_{wood}_log"
+    tex = {"side": f"minecraft:block/{wood}_log", "end": f"minecraft:block/{wood}_log_top",
+           "inner": f"minecraft:block/stripped_{wood}_log", "cut": f"minecraft:block/stripped_{wood}_log_top",
+           "particle": f"minecraft:block/{wood}_log"}
+    for stage in (1, 2, 3):
+        m = 2 * stage
+        bottom = ring(0, 4, [0, 12, 16, 16])
+        bottom["faces"]["down"] = {"uv": [0, 0, 16, 16], "texture": "#end", "cullface": "down"}
+        bottom["faces"]["up"] = {"uv": [0, 0, 16, 16], "texture": "#cut"}
+        top = ring(12, 16, [0, 0, 16, 4])
+        top["faces"]["up"] = {"uv": [0, 0, 16, 16], "texture": "#end", "cullface": "up"}
+        top["faces"]["down"] = {"uv": [0, 0, 16, 16], "texture": "#cut"}
+        core = {"from": [m, 4, m], "to": [16 - m, 12, 16 - m], "faces": {
+            d: {"uv": [m, 4, 16 - m, 12], "texture": "#inner"} for d in ("north", "south", "east", "west")}}
+        w(f"{A}/models/block/{name}_{stage}.json", {"parent": "minecraft:block/block", "textures": tex,
+                                                    "elements": [bottom, core, top]})
+    blockstate(name, {"variants": {f"stage={s}": {"model": f"{NS}:block/{name}_{s}"} for s in (1, 2, 3)}})
+    w(f"{D}/{NS}/loot_table/blocks/{name}.json", {"type": "minecraft:block", "pools": [{
+        "rolls": 1, "entries": [{"type": "minecraft:item", "name": f"minecraft:{wood}_log"}],
+        "condition": {"type": "minecraft:survives_explosion"}}]})
+tag(f"{D}/minecraft/tags/block/mineable/axe.json", [ns(f"chopped_{x}_log") for x in WOODS_CHOP])
+
+with open(f"{A}/lang/en_us.json") as f:
+    lang = json.load(f)
+for wood in WOODS_CHOP:
+    lang[f"block.{NS}.chopped_{wood}_log"] = "Chopped " + wood.replace("_", " ").title() + " Log"
+w(f"{A}/lang/en_us.json", lang)
+print("chopped logs done")

@@ -1,0 +1,14 @@
+{
+  "replace": false,
+  "values": [
+    "realisticsurvival:chopped_oak_log",
+    "realisticsurvival:chopped_spruce_log",
+    "realisticsurvival:chopped_birch_log",
+    "realisticsurvival:chopped_jungle_log",
+    "realisticsurvival:chopped_acacia_log",
+    "realisticsurvival:chopped_dark_oak_log",
+    "realisticsurvival:chopped_mangrove_log",
+    "realisticsurvival:chopped_cherry_log",
+    "realisticsurvival:chopped_pale_oak_log"
+  ]
+}

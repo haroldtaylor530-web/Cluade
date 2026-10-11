@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "stage=1": {
+      "model": "realisticsurvival:block/chopped_mangrove_log_1"
+    },
+    "stage=2": {
+      "model": "realisticsurvival:block/chopped_mangrove_log_2"
+    },
+    "stage=3": {
+      "model": "realisticsurvival:block/chopped_mangrove_log_3"
+    }
+  }
+}

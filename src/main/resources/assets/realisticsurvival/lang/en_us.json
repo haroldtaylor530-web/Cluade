@@ -96,5 +96,14 @@
   "message.realisticsurvival.campfire.caught": "The fire caught.",
   "message.realisticsurvival.campfire.failed": "The tinder didn't catch. Try again.",
   "realisticsurvival.configuration.treeFelling": "Trees fall when you cut through the trunk",
-  "realisticsurvival.configuration.campfireFuelRate": "Campfire fuel use"
+  "realisticsurvival.configuration.campfireFuelRate": "Campfire fuel use",
+  "block.realisticsurvival.chopped_oak_log": "Chopped Oak Log",
+  "block.realisticsurvival.chopped_spruce_log": "Chopped Spruce Log",
+  "block.realisticsurvival.chopped_birch_log": "Chopped Birch Log",
+  "block.realisticsurvival.chopped_jungle_log": "Chopped Jungle Log",
+  "block.realisticsurvival.chopped_acacia_log": "Chopped Acacia Log",
+  "block.realisticsurvival.chopped_dark_oak_log": "Chopped Dark Oak Log",
+  "block.realisticsurvival.chopped_mangrove_log": "Chopped Mangrove Log",
+  "block.realisticsurvival.chopped_cherry_log": "Chopped Cherry Log",
+  "block.realisticsurvival.chopped_pale_oak_log": "Chopped Pale Oak Log"
 }
