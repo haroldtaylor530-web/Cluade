@@ -430,6 +430,7 @@ with open(f"{A}/lang/en_us.json") as f:
     lang = json.load(f)
 lang.update({
     f"item.{NS}.wet_clay_brick": "Wet Clay Brick",
+    f"block.{NS}.wet_clay_brick": "Wet Clay Brick",  # it is a block item, so the game looks for the block. key
     f"item.{NS}.dry_clay_brick": "Dried Clay Brick",
     f"block.{NS}.clay_brick_pile": "Clay Bricks",
     f"block.{NS}.oven_wall": "Oven Wall",

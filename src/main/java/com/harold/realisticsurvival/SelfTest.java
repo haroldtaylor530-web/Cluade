@@ -200,6 +200,19 @@ public final class SelfTest {
         s.stamina = 20.0F;
         s.winded = false;
 
+        // ---- every item of the mod has a name
+        for (var holder : ModRegistry.ITEMS.getEntries()) {
+            {
+                String key = holder.get().getDescriptionId();
+                try (var in = SelfTest.class.getResourceAsStream("/assets/realisticsurvival/lang/en_us.json")) {
+                    String text = new String(in.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8);
+                    check(text.contains("\"" + key + "\""), "name for " + key);
+                } catch (java.io.IOException e) {
+                    fail("lang file: " + e);
+                }
+            }
+        }
+
         // ---- flint striker and fire starter
         ItemStack striker = new ItemStack(ModRegistry.FLINT_STRIKER.get());
         ItemStack starter = new ItemStack(ModRegistry.FIRE_STARTER.get());
