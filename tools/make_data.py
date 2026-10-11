@@ -563,3 +563,88 @@ lang.update({
 })
 w(f"{A}/lang/en_us.json", lang)
 print("food done")
+
+# ------------------------------------------------------------------ extras: rubble slab/wall, stick fence
+# Rubble uses your rock texture on every face; the fence uses your stick texture.
+ROCK_TEX = f"{NS}:block/rock"
+w(f"{A}/models/block/rubble_slab.json", {"parent": "minecraft:block/slab", "textures": {"bottom": ROCK_TEX, "top": ROCK_TEX, "side": ROCK_TEX}})
+w(f"{A}/models/block/rubble_slab_top.json", {"parent": "minecraft:block/slab_top", "textures": {"bottom": ROCK_TEX, "top": ROCK_TEX, "side": ROCK_TEX}})
+w(f"{A}/models/block/rubble_block.json", {"parent": "minecraft:block/cube_all", "textures": {"all": ROCK_TEX}})
+blockstate("rubble_slab", {"variants": {"type=bottom": {"model": f"{NS}:block/rubble_slab"},
+                                        "type=top": {"model": f"{NS}:block/rubble_slab_top"},
+                                        "type=double": {"model": f"{NS}:block/rubble_block"}}})
+w(f"{A}/items/rubble_slab.json", {"model": model("block/rubble_slab")})
+
+for part in ("post", "side", "side_tall"):
+    w(f"{A}/models/block/rubble_wall_{part}.json", {"parent": f"minecraft:block/template_wall_{part}", "textures": {"wall": ROCK_TEX}})
+w(f"{A}/models/block/rubble_wall_inventory.json", {"parent": "minecraft:block/wall_inventory", "textures": {"wall": ROCK_TEX}})
+wall_parts = [{"when": {"up": "true"}, "apply": {"model": f"{NS}:block/rubble_wall_post"}}]
+for side, y in (("north", 0), ("east", 90), ("south", 180), ("west", 270)):
+    for kind, model_name in (("low", "rubble_wall_side"), ("tall", "rubble_wall_side_tall")):
+        wall_parts.append({"when": {side: kind}, "apply": {"model": f"{NS}:block/{model_name}", "y": y, "uvlock": True}})
+blockstate("rubble_wall", {"multipart": wall_parts})
+w(f"{A}/items/rubble_wall.json", {"model": model("block/rubble_wall_inventory")})
+
+
+def bar(frm, to, along):
+    """A box of your stick texture running along x, y or z; the wood strip runs the length of it."""
+    length = to[{"x": 0, "y": 1, "z": 2}[along]] - frm[{"x": 0, "y": 1, "z": 2}[along]]
+    faces = {}
+    for d in ("north", "south", "east", "west", "up", "down"):
+        face_axis = {"north": "z", "south": "z", "east": "x", "west": "x", "up": "y", "down": "y"}[d]
+        if face_axis == along:
+            faces[d] = {"uv": [0, 0, 2, 2], "texture": "#stick"}  # cut end
+        else:
+            face = {"uv": [0, 0, min(16, length), 2], "texture": "#stick"}
+            if along == "y" or (along == "z" and d in ("up", "down")):
+                face["rotation"] = 90
+            faces[d] = face
+    return {"from": frm, "to": to, "faces": faces}
+
+
+FENCE_TEX = {"stick": f"{NS}:block/stick_on_ground", "particle": f"{NS}:block/stick_on_ground"}
+post = bar([6, 0, 6], [10, 16, 10], "y")
+arms_north = [bar([7.5, 12, 0], [8.5, 14.5, 6], "z"), bar([7.5, 5, 0], [8.5, 7.5, 6], "z")]
+w(f"{A}/models/block/stick_fence_post.json", {"parent": "minecraft:block/block", "textures": FENCE_TEX, "elements": [post]})
+w(f"{A}/models/block/stick_fence_side.json", {"parent": "minecraft:block/block", "textures": FENCE_TEX, "elements": arms_north})
+w(f"{A}/models/block/stick_fence_inventory.json", {"parent": "minecraft:block/block", "textures": FENCE_TEX, "elements": [
+    bar([6, 0, 6], [10, 16, 10], "y"),
+    bar([0, 12, 7.5], [16, 14.5, 8.5], "x"), bar([0, 5, 7.5], [16, 7.5, 8.5], "x")]})
+fence_parts = [{"apply": {"model": f"{NS}:block/stick_fence_post"}}]
+for side, y in (("north", 0), ("east", 90), ("south", 180), ("west", 270)):
+    fence_parts.append({"when": {side: "true"}, "apply": {"model": f"{NS}:block/stick_fence_side", "y": y}})
+blockstate("stick_fence", {"multipart": fence_parts})
+w(f"{A}/items/stick_fence.json", {"model": model("block/stick_fence_inventory")})
+
+loot("rubble_wall", ns("rubble_wall"))
+loot("stick_fence", ns("stick_fence"))
+w(f"{D}/{NS}/loot_table/blocks/rubble_slab.json", {"type": "minecraft:block", "pools": [{
+    "rolls": 1, "entries": [{"type": "minecraft:item", "name": ns("rubble_slab"), "functions": [{
+        "function": "minecraft:set_count", "count": 2, "add": False, "conditions": [{
+            "condition": "minecraft:block_state_property", "block": ns("rubble_slab"), "properties": {"type": "double"}}]},
+        {"function": "minecraft:explosion_decay"}]}]}]})
+
+shaped("rubble_slab", ["RRR"], {"R": ns("rock")}, "rubble_slab", count=6, cat="building")
+shaped("rubble_wall", ["RRR", "RRR"], {"R": ns("rock")}, "rubble_wall", count=6, cat="building")
+shaped("stick_fence", ["/F/", "/F/"], {"/": "minecraft:stick", "F": ns("fibre_string")}, "stick_fence", count=3, cat="building")
+
+tag(f"{D}/minecraft/tags/block/slabs.json", [ns("rubble_slab")])
+tag(f"{D}/minecraft/tags/item/slabs.json", [ns("rubble_slab")])
+tag(f"{D}/minecraft/tags/block/walls.json", [ns("rubble_wall")])
+tag(f"{D}/minecraft/tags/item/walls.json", [ns("rubble_wall")])
+tag(f"{D}/minecraft/tags/block/fences.json", [ns("stick_fence")])
+tag(f"{D}/minecraft/tags/item/fences.json", [ns("stick_fence")])
+tag(f"{D}/minecraft/tags/block/wooden_fences.json", [ns("stick_fence")])
+tag(f"{D}/minecraft/tags/item/wooden_fences.json", [ns("stick_fence")])
+for path, extra in ((f"{D}/minecraft/tags/block/mineable/pickaxe.json", [ns("rubble_slab"), ns("rubble_wall")]),
+                    (f"{D}/minecraft/tags/block/mineable/axe.json", [ns("stick_fence")])):
+    with open(path) as f:
+        values = json.load(f)["values"]
+    tag(path, values + extra)
+
+with open(f"{A}/lang/en_us.json") as f:
+    lang = json.load(f)
+lang.update({f"block.{NS}.rubble_slab": "Rubble Slab", f"block.{NS}.rubble_wall": "Rubble Wall",
+             f"block.{NS}.stick_fence": "Stick Fence"})
+w(f"{A}/lang/en_us.json", lang)
+print("extras done")

@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab",
+  "textures": {
+    "bottom": "realisticsurvival:block/rock",
+    "top": "realisticsurvival:block/rock",
+    "side": "realisticsurvival:block/rock"
+  }
+}

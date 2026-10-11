@@ -185,6 +185,14 @@ public final class ModRegistry {
     public static final DeferredBlock<OvenWallBlock> OVEN_WALL_BLOCK = BLOCKS.registerBlock("oven_wall", OvenWallBlock::new,
             p -> p.mapColor(MapColor.TERRACOTTA_ORANGE).strength(2.0F, 6.0F).sound(SoundType.MUD_BRICKS).requiresCorrectToolForDrops());
 
+    /** Small decorative blocks made from your rock and stick textures. */
+    public static final DeferredBlock<net.minecraft.world.level.block.SlabBlock> RUBBLE_SLAB_BLOCK = BLOCKS.registerBlock("rubble_slab",
+            net.minecraft.world.level.block.SlabBlock::new, p -> p.mapColor(MapColor.STONE).strength(1.0F, 4.0F).sound(SoundType.STONE));
+    public static final DeferredBlock<net.minecraft.world.level.block.WallBlock> RUBBLE_WALL_BLOCK = BLOCKS.registerBlock("rubble_wall",
+            net.minecraft.world.level.block.WallBlock::new, p -> p.mapColor(MapColor.STONE).strength(1.0F, 4.0F).sound(SoundType.STONE));
+    public static final DeferredBlock<net.minecraft.world.level.block.FenceBlock> STICK_FENCE_BLOCK = BLOCKS.registerBlock("stick_fence",
+            net.minecraft.world.level.block.FenceBlock::new, p -> p.mapColor(MapColor.WOOD).strength(1.0F, 2.0F).sound(SoundType.WOOD).ignitedByLava());
+
     /** Part-way chopped bottom logs, one per tree wood. */
     public static final String[] CHOPPABLE_WOODS = { "oak", "spruce", "birch", "jungle", "acacia", "dark_oak", "mangrove", "cherry", "pale_oak" };
     public static final Map<String, DeferredBlock<ChoppedLogBlock>> CHOPPED_LOGS = new java.util.LinkedHashMap<>();
@@ -209,6 +217,9 @@ public final class ModRegistry {
 
     // ---- items ------------------------------------------------------------------------------
     public static final DeferredItem<BlockItem> ROCK= ITEMS.registerSimpleBlockItem("rock", ROCK_BLOCK);
+    public static final DeferredItem<BlockItem> RUBBLE_SLAB = ITEMS.registerSimpleBlockItem("rubble_slab", RUBBLE_SLAB_BLOCK);
+    public static final DeferredItem<BlockItem> RUBBLE_WALL = ITEMS.registerSimpleBlockItem("rubble_wall", RUBBLE_WALL_BLOCK);
+    public static final DeferredItem<BlockItem> STICK_FENCE = ITEMS.registerSimpleBlockItem("stick_fence", STICK_FENCE_BLOCK);
     public static final DeferredItem<BlockItem> COOKING_POT = ITEMS.registerSimpleBlockItem("cooking_pot", COOKING_POT_BLOCK);
 
     // early game

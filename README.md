@@ -104,6 +104,9 @@ golden food never spoil. Food gathered within the same quarter-day still stacks.
   give you **food poisoning** (you burn through food and water for a minute, with nausea).
   Raw meat and fish can make you ill too: raw chicken often, pork sometimes, beef, mutton,
   rabbit and fish now and then. Cook it.
+- **Rubble slab, rubble wall, stick fence** (small building blocks). Rubble is made from rocks (3 across for 6 slabs, 2 rows of 3
+  for 6 walls) and uses your rock texture on every face. The stick fence is 3 per crafting (sticks plus a fibre string) and uses
+  your stick texture. Stick fences connect to vanilla fences.
 - **Drying rack** (sticks and a fibre string; it's built from your stick texture). Right-click to hang meat, fish or fruit (4
   hooks, up to 4 pieces each), empty hand to take it down.
   - **Over a campfire** (directly below, or two below with air between): raw meat and fish

@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "RRR",
+    "RRR"
+  ],
+  "key": {
+    "R": "realisticsurvival:rock"
+  },
+  "result": {
+    "id": "realisticsurvival:rubble_wall",
+    "count": 6
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "/F/",
+    "/F/"
+  ],
+  "key": {
+    "/": "minecraft:stick",
+    "F": "realisticsurvival:fibre_string"
+  },
+  "result": {
+    "id": "realisticsurvival:stick_fence",
+    "count": 3
+  }
+}

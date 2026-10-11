@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "realisticsurvival:block/rubble_slab"
+    },
+    "type=top": {
+      "model": "realisticsurvival:block/rubble_slab_top"
+    },
+    "type=double": {
+      "model": "realisticsurvival:block/rubble_block"
+    }
+  }
+}

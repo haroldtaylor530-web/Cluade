@@ -1,6 +1,8 @@
 {
   "replace": false,
   "values": [
-    "realisticsurvival:oven_wall"
+    "realisticsurvival:oven_wall",
+    "realisticsurvival:rubble_slab",
+    "realisticsurvival:rubble_wall"
   ]
 }
