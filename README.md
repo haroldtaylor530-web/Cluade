@@ -104,7 +104,7 @@ golden food never spoil. Food gathered within the same quarter-day still stacks.
   give you **food poisoning** (you burn through food and water for a minute, with nausea).
   Raw meat and fish can make you ill too: raw chicken often, pork sometimes, beef, mutton,
   rabbit and fish now and then. Cook it.
-- **Drying rack** (sticks and a fibre string). Right-click to hang meat, fish or fruit (4
+- **Drying rack** (sticks and a fibre string; it's built from your stick texture). Right-click to hang meat, fish or fruit (4
   hooks, up to 4 pieces each), empty hand to take it down.
   - **Over a campfire** (directly below, or two below with air between): raw meat and fish
     come out **cooked and smoked** in a quarter of a day; smoked meat keeps 8 times as long.
@@ -121,6 +121,18 @@ golden food never spoil. Food gathered within the same quarter-day still stacks.
 - **Cold storage:** food in a chest or barrel ages much slower when it's next to ice or snow
   blocks (4 to 7 times slower), in a snowy biome (2.5 times) or in a cellar well below ground
   (a bit slower).
+
+**Mining ore is a little game.** Hit any ore with a pickaxe that can mine it and you see the
+ore up close, its own texture with one square per pixel. Your pickaxe starts outside the block
+and walks round its edge and along any tunnel you dig.
+- **WASD / arrows:** move (or turn, if the way is blocked). The outlined square is what you'll hit.
+- **Space:** swing hard. Breaks rock (a better pickaxe or Efficiency breaks more per swing;
+  deepslate is tougher, netherrack softer), but hitting ore this way smashes that piece to dust.
+- **Shift:** tap gently. Prises a whole piece of ore out cleanly; only chips rock.
+- **Enter / Esc:** stop and keep what you've got. You have 45 seconds.
+- You get the share of the ore you got out: all of it gives the full drop (Fortune still
+  works), half of it about half. Longer digs wear the pickaxe more. Turn it off with
+  `oreMinigame` in the config.
 
 **Spears.** Flint, iron and diamond. Stab with them (slow, longer reach), or hold right-click
 to wind up and release to throw. The longer the wind-up (up to a second), the harder the throw.

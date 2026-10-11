@@ -487,6 +487,17 @@ public class MiningScreen extends Screen {
             }
         }
 
+        // the cell the next swing will hit
+        int hx = px + fx, hy0 = py + fy;
+        if (inside(hx, hy0) && endAt < 0) {
+            int cx = cellX(hx), cy = cellY(hy0);
+            int c = type[hx][hy0] == ORE ? 0xFF8BE07A : 0xFFFFF4D6;
+            g.fill(cx - 1, cy - 1, cx + CELL + 1, cy, c);
+            g.fill(cx - 1, cy + CELL, cx + CELL + 1, cy + CELL + 1, c);
+            g.fill(cx - 1, cy, cx, cy + CELL, c);
+            g.fill(cx + CELL, cy, cx + CELL + 1, cy + CELL, c);
+        }
+
         // the pickaxe, head towards where it faces
         ItemStack tool = minecraft != null && minecraft.player != null ? minecraft.player.getMainHandItem() : ItemStack.EMPTY;
         float pcx = cellX(px) + CELL / 2.0F, pcy = cellY(py) + CELL / 2.0F;
@@ -496,7 +507,7 @@ public class MiningScreen extends Screen {
         g.pose().pushMatrix();
         g.pose().translate(pcx + fx * 3, pcy + fy * 3);
         g.pose().rotate(angle);
-        g.pose().scale(0.8F, 0.8F);
+        g.pose().scale(1.1F, 1.1F);
         g.pose().translate(-8.0F, -8.0F);
         g.item(tool, 0, 0);
         g.pose().popMatrix();
