@@ -21,7 +21,7 @@ public final class Drinking {
     /** Chance that a drink of dirty water makes you ill. */
     public static final float SICK_CHANCE = 0.5F;
 
-    public enum Source { NONE, DIRTY, CLEAN }
+    public enum Source { NONE, DIRTY, CLEAN, SALT }
 
     /** Drink: add thirst and maybe get sick. Server side only. */
     public static void drink(Player player, float amount, boolean dirty) {
@@ -45,13 +45,26 @@ public final class Drinking {
         }
         BlockPos pos = hit.getBlockPos();
         if (!level.getFluidState(pos).is(net.minecraft.tags.FluidTags.WATER)) return Source.NONE;
-        return isCleanWaterAt(level, pos) ? Source.CLEAN : Source.DIRTY;
+        if (isCleanWaterAt(level, pos)) return Source.CLEAN;
+        return isSeaWaterAt(level, pos) ? Source.SALT : Source.DIRTY;
     }
 
     /** Fast running river water and high mountain springs are safe; ponds, lakes, swamps and the sea are not. */
     public static boolean isCleanWaterAt(Level level, BlockPos pos) {
         if (level.getBiome(pos).is(BiomeTags.IS_RIVER)) return true;
         return pos.getY() > 110 && !level.getBiome(pos).is(BiomeTags.IS_OCEAN);
+    }
+
+    /** Water in an ocean or on a beach is sea water. */
+    public static boolean isSeaWaterAt(Level level, BlockPos pos) {
+        return level.getBiome(pos).is(BiomeTags.IS_OCEAN) || level.getBiome(pos).is(BiomeTags.IS_BEACH);
+    }
+
+    /** Drinking sea water: it makes you thirstier. Server side only. */
+    public static void drinkSalt(Player player, float amount) {
+        if (!(player instanceof ServerPlayer sp) || !Config.THIRST.getAsBoolean()) return;
+        SurvivalState.get(sp).addThirst(-amount);
+        sp.sendOverlayMessage(Component.translatable("message.realisticsurvival.salt_water"));
     }
 
     public static boolean isCatchingRain(Level level, Player player) {

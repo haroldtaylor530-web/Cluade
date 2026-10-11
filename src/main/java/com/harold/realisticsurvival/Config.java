@@ -37,6 +37,16 @@ public final class Config {
             .comment("How fast campfires burn their fuel. 1 = a log lasts about 2 minutes on a medium fire")
             .defineInRange("campfireFuelRate", 1.0, 0.1, 10.0);
 
+    public static final ModConfigSpec.BooleanValue SPOILAGE = B
+            .comment("Food goes stale and rots over time; drying, smoking, salting and cold storage make it last")
+            .define("foodSpoilage", true);
+    public static final ModConfigSpec.DoubleValue SPOILAGE_RATE = B
+            .comment("How fast food spoils. 1 = raw meat lasts about 3 in-game days, bread about 10")
+            .defineInRange("spoilageRate", 1.0, 0.1, 10.0);
+    public static final ModConfigSpec.BooleanValue RAW_FOOD_RISK = B
+            .comment("Raw meat and fish, and food that's going off, can give you food poisoning")
+            .define("rawFoodRisk", true);
+
     static final ModConfigSpec SPEC = B.build();
 
     private Config() {}

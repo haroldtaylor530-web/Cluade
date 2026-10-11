@@ -22,7 +22,7 @@ import net.minecraft.world.level.block.state.BlockState;
  * or from a cauldron of rainwater. Boil a dirty cup in a furnace or on a campfire.
  */
 public class CupItem extends Item {
-    public enum Kind { EMPTY, DIRTY, CLEAN }
+    public enum Kind { EMPTY, DIRTY, CLEAN, SALT }
 
     private final Kind kind;
 
@@ -40,7 +40,7 @@ public class CupItem extends Item {
         if (state.is(Blocks.WATER_CAULDRON)) {
             if (!level.isClientSide()) {
                 LayeredCauldronBlock.lowerFillLevel(state, level, pos);
-                fill(ctx.getPlayer(), ctx.getHand(), true);
+                fill(ctx.getPlayer(), ctx.getHand(), Drinking.Source.CLEAN);
             }
             return InteractionResult.SUCCESS;
         }
@@ -52,16 +52,17 @@ public class CupItem extends Item {
         if (kind == Kind.EMPTY) {
             Drinking.Source src = Drinking.lookAtWater(level, player);
             if (src == Drinking.Source.NONE) return InteractionResult.PASS;
-            if (!level.isClientSide()) fill(player, hand, src == Drinking.Source.CLEAN);
+            if (!level.isClientSide()) fill(player, hand, src);
             return InteractionResult.SUCCESS;
         }
         player.startUsingItem(hand);
         return InteractionResult.CONSUME;
     }
 
-    private static void fill(Player player, InteractionHand hand, boolean clean) {
+    private static void fill(Player player, InteractionHand hand, Drinking.Source src) {
         ItemStack held = player.getItemInHand(hand);
-        ItemStack filled = new ItemStack(clean ? ModRegistry.CLEAN_WATER_CUP.get() : ModRegistry.DIRTY_WATER_CUP.get());
+        ItemStack filled = new ItemStack(src == Drinking.Source.CLEAN ? ModRegistry.CLEAN_WATER_CUP.get()
+                : src == Drinking.Source.SALT ? ModRegistry.SALT_WATER_CUP.get() : ModRegistry.DIRTY_WATER_CUP.get());
         player.setItemInHand(hand, ItemUtils.createFilledResult(held, player, filled));
         Drinking.playFillSound(player);
     }
@@ -69,7 +70,10 @@ public class CupItem extends Item {
     @Override
     public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity entity) {
         if (kind == Kind.EMPTY || !(entity instanceof Player player)) return stack;
-        if (!level.isClientSide()) Drinking.drink(player, 6.0F, kind == Kind.DIRTY);
+        if (!level.isClientSide()) {
+            if (kind == Kind.SALT) Drinking.drinkSalt(player, 4.0F);
+            else Drinking.drink(player, 6.0F, kind == Kind.DIRTY);
+        }
         if (player.getAbilities().instabuild) return stack;
         return new ItemStack(ModRegistry.CLAY_CUP.get());
     }

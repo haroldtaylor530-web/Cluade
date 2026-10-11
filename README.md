@@ -95,6 +95,33 @@ cooking pot. Flint and steel and stone tools are still made by hand.
   right-clicking a wall tells you what's missing.
 - A full oven takes 56 wall blocks, which is 224 bricks.
 
+**Food spoils.** Food goes stale, then starts going off, then rots, and turns into rotten
+flesh (meat and fish) or rotten food (everything else, good for the composter). A coloured bar
+under the item and its tooltip show how fresh it is. Roughly: raw meat 3 days, raw fish 2,
+cooked meat 5, bread 10, apples 2 weeks, carrots and potatoes 3 weeks. Dried kelp, honey and
+golden food never spoil. Food gathered within the same quarter-day still stacks.
+- **Eating:** stale food fills you a quarter less, food that's going off half as much and can
+  give you **food poisoning** (you burn through food and water for a minute, with nausea).
+  Raw meat and fish can make you ill too: raw chicken often, pork sometimes, beef, mutton,
+  rabbit and fish now and then. Cook it.
+- **Drying rack** (sticks and a fibre string). Right-click to hang meat, fish or fruit (4
+  hooks, up to 4 pieces each), empty hand to take it down.
+  - **Over a campfire** (directly below, or two below with air between): raw meat and fish
+    come out **cooked and smoked** in a quarter of a day; smoked meat keeps 8 times as long.
+    Fruit dries.
+  - **In the sun** on a dry day: meat turns to **jerky**, fish to **dried fish**, fruit to
+    **dried fruit** in about a day (each keeps about 40 days). In the shade or at night it dries
+    four times slower, and rain soaks it and undoes some of the work. Meat keeps ageing while it
+    hangs, so don't leave it too long.
+- **Salt:** fill a clay cup in the sea, pour it into a cooking pot on a fire and let it boil
+  dry; each cup leaves a salt to scrape out with an empty hand. Sea water won't go in a
+  waterskin and drinking it makes you thirstier. **Salting:** one salt with up to 8 pieces of
+  the same meat or fish in a crafting grid salts them all; salted meat keeps 6 times as long and
+  is less risky raw.
+- **Cold storage:** food in a chest or barrel ages much slower when it's next to ice or snow
+  blocks (4 to 7 times slower), in a snowy biome (2.5 times) or in a cellar well below ground
+  (a bit slower).
+
 **Spears.** Flint, iron and diamond. Stab with them (slow, longer reach), or hold right-click
 to wind up and release to throw. The longer the wind-up (up to a second), the harder the throw.
 Thrown spears can make targets bleed. Walk over a landed spear to pick it back up.
@@ -103,7 +130,8 @@ down the diagonal.
 
 ## Replacing the art
 
-To regenerate everything, run in order: `tools/make_art.py` (pixel art), `tools/make_data.py`
+To regenerate everything, run in order: `tools/make_art.py`, `tools/make_fire_art.py`, `tools/make_oven_art.py`,
+`tools/make_food_art.py` (pixel art), `tools/make_data.py`
 (item models, recipes, tags, text) and `tools/convert_bbmodels.py` (your Blockbench models).
 
 **Spear models** (Blockbench, *Java Block/Item*): replace

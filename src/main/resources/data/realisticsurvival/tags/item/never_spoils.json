@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:honey_bottle",
+    "minecraft:dried_kelp",
+    "minecraft:golden_apple",
+    "minecraft:enchanted_golden_apple",
+    "minecraft:golden_carrot",
+    "minecraft:rotten_flesh",
+    "realisticsurvival:rotten_food"
+  ]
+}

@@ -37,6 +37,10 @@ public class WaterskinItem extends Item {
         ItemStack stack = player.getItemInHand(hand);
         int amount = amount(stack);
         Drinking.Source src = amount < CAPACITY ? Drinking.lookAtWater(level, player) : Drinking.Source.NONE;
+        if (src == Drinking.Source.SALT) {
+            if (!level.isClientSide()) player.sendOverlayMessage(net.minecraft.network.chat.Component.translatable("message.realisticsurvival.no_sea_water"));
+            return InteractionResult.FAIL;
+        }
         if (src != Drinking.Source.NONE) {
             if (!level.isClientSide()) {
                 boolean nowDirty = src == Drinking.Source.DIRTY || (amount > 0 && dirty(stack));

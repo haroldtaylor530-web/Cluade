@@ -215,7 +215,9 @@ for name in ("rock", "stick_on_ground"):
 
 pot_variants = {}
 for low, suffix in (("false", ""), ("true", "_lowered")):
-    pot_variants[f"on_campfire={low},water=0"] = {"model": f"{NS}:block/cooking_pot{suffix}"}
+    pot_variants[f"on_campfire={low},salt=0,water=0"] = {"model": f"{NS}:block/cooking_pot{suffix}"}
+    for salt in range(1, 5):
+        pot_variants[f"on_campfire={low},salt={salt},water=0"] = {"model": f"{NS}:block/cooking_pot_salt{suffix}"}
     for level in range(1, 5):
         pot_variants[f"boiled=false,on_campfire={low},water={level}"] = {"model": f"{NS}:block/cooking_pot_{level}_dirty{suffix}"}
         pot_variants[f"boiled=true,on_campfire={low},water={level}"] = {"model": f"{NS}:block/cooking_pot_{level}_clean{suffix}"}
@@ -448,3 +450,87 @@ lang.update({
 })
 w(f"{A}/lang/en_us.json", lang)
 print("oven done")
+
+# ------------------------------------------------------------------ food: spoilage and preserving
+for name in ("jerky", "dried_fish", "dried_fruit", "rotten_food", "salt", "salt_water_cup"):
+    w(f"{A}/models/item/{name}.json", {"parent": "minecraft:item/generated", "textures": {"layer0": f"{NS}:item/{name}"}})
+    w(f"{A}/items/{name}.json", {"model": model(f"item/{name}")})
+
+# salt crusted in the bottom of the cooking pot: the 1-cup water model with a salt texture
+for suffix in ("", "_lowered"):
+    with open(f"{A}/models/block/cooking_pot_1_clean{suffix}.json") as f:
+        m = json.load(f)
+    m["textures"]["water"] = f"{NS}:block/pot_salt"
+    w(f"{A}/models/block/cooking_pot_salt{suffix}.json", m)
+
+# drying rack: two posts, a pole along x, little feet
+def box(frm, to, tex, uv_len=None):
+    faces = {}
+    for d in ("north", "south", "east", "west", "up", "down"):
+        if d in ("north", "south"):
+            uv = [frm[0], 16 - to[1], to[0], 16 - frm[1]]
+        elif d in ("east", "west"):
+            uv = [frm[2], 16 - to[1], to[2], 16 - frm[1]]
+        else:
+            uv = [frm[0], frm[2], to[0], to[2]]
+        faces[d] = {"uv": uv, "texture": tex}
+    return {"from": frm, "to": to, "faces": faces}
+
+
+rack = [
+    box([1, 0, 7], [3, 16, 9], "#post"), box([13, 0, 7], [15, 16, 9], "#post"),
+    box([0, 13.5, 7.25], [16, 15, 8.75], "#pole"),
+    box([0.5, 0, 5], [3.5, 1, 11], "#post"), box([12.5, 0, 5], [15.5, 1, 11], "#post"),
+]
+for i, x in enumerate((3.6, 6.8, 9.8, 12.6)):
+    rack.append(box([x - 0.3, 12.5, 7.6], [x + 0.3, 13.5, 8.4], "#hook"))
+w(f"{A}/models/block/drying_rack.json", {"parent": "minecraft:block/block", "textures": {
+    "post": "minecraft:block/stripped_spruce_log", "pole": "minecraft:block/stripped_birch_log",
+    "hook": f"{NS}:item/fibre_string", "particle": "minecraft:block/stripped_spruce_log"}, "elements": rack})
+blockstate("drying_rack", {"variants": {f"facing={f}": {"model": f"{NS}:block/drying_rack", "y": y}
+                                        for f, y in (("north", 0), ("east", 90), ("south", 180), ("west", 270))}})
+w(f"{A}/items/drying_rack.json", {"model": model("block/drying_rack")})
+loot("drying_rack", ns("drying_rack"))
+with open(f"{D}/minecraft/tags/block/mineable/axe.json") as f:
+    axe = json.load(f)["values"]
+tag(f"{D}/minecraft/tags/block/mineable/axe.json", axe + [ns("drying_rack")])
+
+shaped("drying_rack", ["SFS", "S S", "S S"], {"S": "minecraft:stick", "F": ns("fibre_string")}, "drying_rack")
+w(f"{R}/salting.json", {"type": f"{NS}:salting"})
+tag(f"{D}/{NS}/tags/item/never_spoils.json", ["minecraft:honey_bottle", "minecraft:dried_kelp", "minecraft:golden_apple",
+    "minecraft:enchanted_golden_apple", "minecraft:golden_carrot", "minecraft:rotten_flesh", ns("rotten_food")])
+
+with open(f"{A}/lang/en_us.json") as f:
+    lang = json.load(f)
+lang.update({
+    f"item.{NS}.jerky": "Jerky",
+    f"item.{NS}.dried_fish": "Dried Fish",
+    f"item.{NS}.dried_fruit": "Dried Fruit",
+    f"item.{NS}.rotten_food": "Rotten Food",
+    f"item.{NS}.salt": "Salt",
+    f"item.{NS}.salt_water_cup": "Cup of Sea Water",
+    f"block.{NS}.drying_rack": "Drying Rack",
+    f"effect.{NS}.food_poisoning": "Food Poisoning",
+    f"message.{NS}.food_poisoning": "Your stomach turns. That food was bad.",
+    f"message.{NS}.salt_water": "Sea water only makes you thirstier.",
+    f"message.{NS}.no_sea_water": "That's sea water. Boil it dry in a cooking pot to get salt.",
+    f"message.{NS}.pot_salty": "That's sea water. Keep it boiling until it's gone and scrape out the salt.",
+    f"message.{NS}.rack_full": "The rack is full.",
+    f"message.{NS}.rack_shade": "It will dry slowly in here. Hang it in the sun or over a campfire.",
+    f"tooltip.{NS}.keeps": "Keeps about %s",
+    f"tooltip.{NS}.stage.fresh": "Fresh",
+    f"tooltip.{NS}.stage.stale": "Stale",
+    f"tooltip.{NS}.stage.going_off": "Going off",
+    f"tooltip.{NS}.stage.rotten": "Rotten",
+    f"tooltip.{NS}.left": " (about %s left)",
+    f"tooltip.{NS}.days": "%s days",
+    f"tooltip.{NS}.hours": "%s hours",
+    f"tooltip.{NS}.cold": "Kept cold",
+    f"tooltip.{NS}.salted": "Salted",
+    f"tooltip.{NS}.smoked": "Smoked",
+    f"{NS}.configuration.foodSpoilage": "Food spoilage",
+    f"{NS}.configuration.spoilageRate": "Spoilage rate",
+    f"{NS}.configuration.rawFoodRisk": "Raw and bad food can make you ill",
+})
+w(f"{A}/lang/en_us.json", lang)
+print("food done")

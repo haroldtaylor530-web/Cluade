@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SFS",
+    "S S",
+    "S S"
+  ],
+  "key": {
+    "S": "minecraft:stick",
+    "F": "realisticsurvival:fibre_string"
+  },
+  "result": {
+    "id": "realisticsurvival:drying_rack",
+    "count": 1
+  }
+}

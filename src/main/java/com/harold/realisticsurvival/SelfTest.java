@@ -134,6 +134,149 @@ public final class SelfTest {
         campfire(server, level, ground.offset(6, 0, 0));
         tree(level, ground.offset(-8, 0, 0));
         oven(server, level, ground.offset(0, 0, 14));
+        food(server, level, ground.offset(12, 0, 14));
+    }
+
+    private static void food(MinecraftServer server, ServerLevel level, BlockPos at) {
+        long now = level.getGameTime();
+        // ---- spoiling
+        ItemStack beef = com.harold.realisticsurvival.survival.Spoilage.update(new ItemStack(Items.BEEF, 5), now);
+        Long start = beef.get(ModRegistry.FOOD_START.get());
+        check(start != null && start == com.harold.realisticsurvival.survival.Spoilage.round(now), "new beef gets a start time");
+        long life = com.harold.realisticsurvival.survival.Spoilage.lifetime(beef);
+        check(life == 3 * 24000L, "raw beef keeps 3 days (" + life + ")");
+        check(com.harold.realisticsurvival.survival.Spoilage.lifetime(new ItemStack(Items.BREAD)) == 10 * 24000L, "bread keeps 10 days");
+        var stageOf = (java.util.function.LongFunction<com.harold.realisticsurvival.survival.Spoilage.Stage>) t ->
+                com.harold.realisticsurvival.survival.Spoilage.stage(com.harold.realisticsurvival.survival.Spoilage.progress(beef, t));
+        check(stageOf.apply(start + 10000) == com.harold.realisticsurvival.survival.Spoilage.Stage.FRESH, "beef is fresh at first");
+        check(stageOf.apply(start + 40000) == com.harold.realisticsurvival.survival.Spoilage.Stage.STALE, "beef is stale after 1.7 days");
+        check(stageOf.apply(start + 60000) == com.harold.realisticsurvival.survival.Spoilage.Stage.GOING_OFF, "beef is going off after 2.5 days");
+        ItemStack rotten = com.harold.realisticsurvival.survival.Spoilage.update(beef, start + life + 1);
+        check(rotten.is(Items.ROTTEN_FLESH) && rotten.getCount() == 5, "rotten beef turns into rotten flesh (" + rotten + ")");
+        ItemStack bread = com.harold.realisticsurvival.survival.Spoilage.update(new ItemStack(Items.BREAD, 2), now);
+        check(com.harold.realisticsurvival.survival.Spoilage.update(bread, now + 11 * 24000L).is(ModRegistry.ROTTEN_FOOD.get()), "rotten bread turns into rotten food");
+        check(!com.harold.realisticsurvival.survival.Spoilage.spoils(new ItemStack(Items.DRIED_KELP)), "dried kelp never spoils");
+        check(!com.harold.realisticsurvival.survival.Spoilage.spoils(new ItemStack(Items.GOLDEN_APPLE)), "golden apples never spoil");
+        check(com.harold.realisticsurvival.survival.Spoilage.update(beef, now) == beef, "an up-to-date stack is left alone");
+
+        // ---- cold storage
+        ItemStack cold = beef.copy();
+        com.harold.realisticsurvival.survival.Spoilage.markCold(cold, start, 0.25F);
+        float pc = com.harold.realisticsurvival.survival.Spoilage.progress(cold, start + 48000);
+        check(Math.abs(pc - 12000F / life) < 0.001F, "two days in the cold ages beef by half a day (" + pc + ")");
+        ItemStack settled = com.harold.realisticsurvival.survival.Spoilage.update(cold, start + 48000);
+        check(!settled.has(ModRegistry.FOOD_COLD.get()) && settled.get(ModRegistry.FOOD_START.get()) == start + 36000,
+                "taking it out of the cold moves its start time on (" + settled.get(ModRegistry.FOOD_START.get()) + ")");
+
+        clear(level, at, 4);
+        BlockPos chestPos = at.above();
+        level.setBlockAndUpdate(chestPos, Blocks.CHEST.defaultBlockState());
+        level.setBlockAndUpdate(chestPos.east(), Blocks.PACKED_ICE.defaultBlockState());
+        check(com.harold.realisticsurvival.survival.Spoilage.coldness(level, chestPos) <= 0.25F, "a chest next to packed ice is cold");
+        var chest = (net.minecraft.world.level.block.entity.ChestBlockEntity) level.getBlockEntity(chestPos);
+        chest.setItem(0, beef.copy());
+        FakePlayer player = FakePlayerFactory.getMinecraft(level);
+        var menu = net.minecraft.world.inventory.ChestMenu.threeRows(1, player.getInventory(), chest);
+        com.harold.realisticsurvival.survival.FoodEvents.onClose(new net.neoforged.neoforge.event.entity.player.PlayerContainerEvent.Close(player, menu));
+        check(chest.getItem(0).has(ModRegistry.FOOD_COLD.get()), "closing a cold chest keeps the food in it cold");
+        com.harold.realisticsurvival.survival.FoodEvents.onOpen(new net.neoforged.neoforge.event.entity.player.PlayerContainerEvent.Open(player, menu));
+        check(!chest.getItem(0).has(ModRegistry.FOOD_COLD.get()), "opening it again settles the cold time");
+        level.setBlockAndUpdate(chestPos.east(), Blocks.AIR.defaultBlockState());
+
+        // ---- eating
+        var fd = player.getFoodData();
+        fd.setFoodLevel(10);
+        fd.setSaturation(0);
+        ItemStack staleBread = bread.copy();
+        staleBread.set(ModRegistry.FOOD_START.get(), now - 6 * 24000L);
+        com.harold.realisticsurvival.survival.FoodEvents.afterEating(player, staleBread, staleBread.get(net.minecraft.core.component.DataComponents.FOOD), 0.99F);
+        check(fd.getFoodLevel() == 9, "stale bread fills you less (" + fd.getFoodLevel() + ")");
+        player.removeAllEffects();
+        ItemStack chicken = com.harold.realisticsurvival.survival.Spoilage.update(new ItemStack(Items.CHICKEN), now);
+        com.harold.realisticsurvival.survival.FoodEvents.afterEating(player, chicken, chicken.get(net.minecraft.core.component.DataComponents.FOOD), 0.1F);
+        check(player.hasEffect(ModRegistry.FOOD_POISONING), "raw chicken can give you food poisoning");
+        player.removeAllEffects();
+        ItemStack smoked = chicken.copy();
+        smoked.set(ModRegistry.PRESERVED.get(), com.harold.realisticsurvival.survival.Spoilage.SMOKED);
+        com.harold.realisticsurvival.survival.FoodEvents.afterEating(player, smoked, smoked.get(net.minecraft.core.component.DataComponents.FOOD), 0.0F);
+        check(!player.hasEffect(ModRegistry.FOOD_POISONING), "smoked meat is safe");
+        ItemStack steak = com.harold.realisticsurvival.survival.Spoilage.update(new ItemStack(Items.COOKED_BEEF), now);
+        com.harold.realisticsurvival.survival.FoodEvents.afterEating(player, steak, steak.get(net.minecraft.core.component.DataComponents.FOOD), 0.0F);
+        check(!player.hasEffect(ModRegistry.FOOD_POISONING), "fresh cooked food is safe");
+
+        // ---- salting
+        var rm = server.getRecipeManager();
+        List<ItemStack> grid = new ArrayList<>(java.util.Collections.nCopies(9, ItemStack.EMPTY));
+        grid.set(0, new ItemStack(ModRegistry.SALT.get()));
+        for (int i = 1; i <= 3; i++) grid.set(i, beef.copyWithCount(1));
+        var input = net.minecraft.world.item.crafting.CraftingInput.of(3, 3, grid);
+        var salting = rm.getRecipeFor(net.minecraft.world.item.crafting.RecipeType.CRAFTING, input, level);
+        ItemStack salted = salting.map(r -> r.value().assemble(input)).orElse(ItemStack.EMPTY);
+        check(salted.is(Items.BEEF) && salted.getCount() == 3 && com.harold.realisticsurvival.survival.Spoilage.salted(salted), "salt and 3 beef make 3 salted beef (" + salted + ")");
+        check(com.harold.realisticsurvival.survival.Spoilage.lifetime(salted) == 6 * life, "salted beef keeps 6 times as long");
+        grid.set(4, new ItemStack(Items.PORKCHOP));
+        check(rm.getRecipeFor(net.minecraft.world.item.crafting.RecipeType.CRAFTING, net.minecraft.world.item.crafting.CraftingInput.of(3, 3, grid), level).isEmpty(), "can't salt two kinds of meat at once");
+
+        // ---- drying rack: smoking over a fire
+        BlockPos fire = at.offset(2, 1, 0);
+        level.setBlockAndUpdate(fire, Blocks.CAMPFIRE.defaultBlockState().setValue(CampfireBlock.LIT, true));
+        BlockPos rackPos = fire.above();
+        level.setBlockAndUpdate(rackPos, ModRegistry.DRYING_RACK_BLOCK.get().defaultBlockState());
+        var rack = (com.harold.realisticsurvival.block.DryingRackBlockEntity) level.getBlockEntity(rackPos);
+        check(rack != null, "drying rack has its block entity");
+        check(com.harold.realisticsurvival.block.DryingRackBlockEntity.smoky(level, rackPos), "a rack over a lit campfire is smoky");
+        check(rack.hang(beef.copyWithCount(1)) && rack.hang(beef.copyWithCount(1)), "hang beef on the rack");
+        check(rack.getItems().get(0).getCount() == 2, "two pieces share a hook");
+        check(rack.hang(new ItemStack(Items.APPLE)), "hang an apple on the rack");
+        rack.work(level, 6000);
+        ItemStack smokedBeef = rack.getItems().get(0);
+        check(smokedBeef.is(Items.COOKED_BEEF) && smokedBeef.getCount() == 2 && com.harold.realisticsurvival.survival.Spoilage.smoked(smokedBeef),
+                "smoking turns raw beef into smoked cooked beef (" + smokedBeef + ")");
+        check(com.harold.realisticsurvival.survival.Spoilage.lifetime(smokedBeef) == 40 * 24000L, "smoked beef keeps 40 days");
+        check(rack.getItems().get(1).is(ModRegistry.DRIED_FRUIT.get()), "the apple dried over the fire");
+        ItemStack old = beef.copyWithCount(1);
+        old.set(ModRegistry.FOOD_START.get(), now - 4 * 24000L);
+        rack.takeLast();
+        rack.hang(old);
+        rack.work(level, 20);
+        check(rack.getItems().get(1).is(Items.ROTTEN_FLESH), "meat that's too old rots on the rack");
+        // drying in the shade: slow, but it gets there
+        level.setBlockAndUpdate(fire, Blocks.AIR.defaultBlockState());
+        level.setBlockAndUpdate(rackPos.above(), Blocks.OAK_PLANKS.defaultBlockState());
+        rack.takeLast();
+        rack.takeLast();
+        rack.hang(com.harold.realisticsurvival.survival.Spoilage.update(new ItemStack(Items.SALMON), now));
+        rack.work(level, 20000, com.harold.realisticsurvival.block.DryingRackBlockEntity.Weather.SHADE);
+        check(rack.getItems().get(0).is(Items.SALMON) && rack.progress(0) == 5000, "fish dries slowly in the shade (" + rack.progress(0) + ")");
+        rack.work(level, 1000, com.harold.realisticsurvival.block.DryingRackBlockEntity.Weather.RAIN);
+        check(rack.progress(0) == 3000, "rain soaks it and undoes some drying (" + rack.progress(0) + ")");
+        rack.work(level, 9000, com.harold.realisticsurvival.block.DryingRackBlockEntity.Weather.SUN);
+        check(rack.getItems().get(0).is(ModRegistry.DRIED_FISH.get()), "salmon dried in the sun into dried fish");
+        check(com.harold.realisticsurvival.block.DryingRackBlockEntity.weather(level, rackPos) != com.harold.realisticsurvival.block.DryingRackBlockEntity.Weather.SMOKE,
+                "no smoke once the fire's gone");
+        level.destroyBlock(rackPos, true);
+
+        // ---- salt from sea water
+        BlockPos fire2 = at.offset(-2, 1, 0);
+        level.setBlockAndUpdate(fire2, Blocks.CAMPFIRE.defaultBlockState().setValue(CampfireBlock.LIT, true));
+        BlockPos potPos = fire2.above();
+        level.setBlockAndUpdate(potPos, ModRegistry.COOKING_POT_BLOCK.get().defaultBlockState()
+                .setValue(CookingPotBlock.WATER, 2).setValue(CookingPotBlock.SALTY, true));
+        for (int i = 0; i < 14; i++) level.getBlockState(potPos).tick(level, potPos, level.getRandom());
+        var pot = level.getBlockState(potPos);
+        check(pot.getValue(CookingPotBlock.WATER) == 0 && pot.getValue(CookingPotBlock.SALT) == 2 && !pot.getValue(CookingPotBlock.SALTY),
+                "2 cups of sea water boil down to 2 salt (" + pot + ")");
+        player.getInventory().clearContent();
+        pot.useWithoutItem(level, player, new net.minecraft.world.phys.BlockHitResult(Vec3.atCenterOf(potPos), net.minecraft.core.Direction.UP, potPos, false));
+        check(player.getInventory().countItem(ModRegistry.SALT.get()) == 2, "scrape the salt out of the pot");
+        check(level.getBlockState(potPos).getValue(CookingPotBlock.SALT) == 0, "the pot is empty after");
+    }
+
+    private static void clear(ServerLevel level, BlockPos at, int r) {
+        for (int x = -r; x <= r; x++) for (int z = -r; z <= r; z++) {
+            level.setBlockAndUpdate(at.offset(x, 0, z), Blocks.STONE.defaultBlockState());
+            for (int y = 1; y <= 5; y++) level.setBlockAndUpdate(at.offset(x, y, z), Blocks.AIR.defaultBlockState());
+        }
     }
 
     /** Build a brick oven with its front facing the given way. Used by the tests. */

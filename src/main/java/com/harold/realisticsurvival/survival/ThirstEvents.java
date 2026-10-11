@@ -67,7 +67,8 @@ public final class ThirstEvents {
         Drinking.Source src = Drinking.lookAtWater(player.level(), player);
         if (src == Drinking.Source.NONE) return;
         // a couple of handfuls: small amount per drink
-        Drinking.drink(player, 1.5F, src == Drinking.Source.DIRTY);
+        if (src == Drinking.Source.SALT) Drinking.drinkSalt(player, 1.5F);
+        else Drinking.drink(player, 1.5F, src == Drinking.Source.DIRTY);
         Drinking.playDrinkSound(player);
         
     }

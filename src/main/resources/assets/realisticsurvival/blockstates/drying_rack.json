@@ -1,0 +1,20 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "realisticsurvival:block/drying_rack",
+      "y": 0
+    },
+    "facing=east": {
+      "model": "realisticsurvival:block/drying_rack",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "realisticsurvival:block/drying_rack",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "realisticsurvival:block/drying_rack",
+      "y": 270
+    }
+  }
+}

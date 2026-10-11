@@ -29,6 +29,8 @@ public class RealisticSurvivalClient {
         modBus.addListener(RealisticSurvivalClient::registerHud);
         modBus.addListener(RealisticSurvivalClient::registerScreens);
         modBus.addListener(RealisticSurvivalClient::registerPayloads);
+        modBus.addListener(FoodClient::registerDecorations);
+        NeoForge.EVENT_BUS.addListener(FoodClient::onTooltip);
         NeoForge.EVENT_BUS.addListener(RealisticSurvivalClient::onClientTick);
         NeoForge.EVENT_BUS.addListener(RealisticSurvivalClient::onRightClickEmpty);
         if (ClientSelfTest.enabled()) NeoForge.EVENT_BUS.addListener(ClientSelfTest::onClientTick);
@@ -37,6 +39,7 @@ public class RealisticSurvivalClient {
     private static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(ModRegistry.THROWN_SPEAR.get(), SpearRenderer::new);
         event.registerEntityRenderer(ModRegistry.FALLING_TREE.get(), FallingTreeRenderer::new);
+        event.registerBlockEntityRenderer(ModRegistry.DRYING_RACK_BE.get(), DryingRackRenderer::new);
     }
 
     private static void registerScreens(net.neoforged.neoforge.client.event.RegisterMenuScreensEvent event) {

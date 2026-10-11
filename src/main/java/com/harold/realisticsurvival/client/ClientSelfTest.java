@@ -69,7 +69,18 @@ public final class ClientSelfTest {
             if (ticks == 660) openOven(mc);
             if (ticks == 690) shot(mc, "10_oven_menu.png");
             if (ticks == 700) mc.gui.setScreen(null);
-            if (ticks == 720) {
+            if (ticks == 720) buildFoodScene(mc);
+            if (ticks == 770) shot(mc, "11_drying_and_salt.png");
+            if (ticks == 780) {
+                fillFoodInventory(mc);
+            }
+            if (ticks == 800) mc.gui.setScreen(new InventoryScreen(mc.player));
+            if (ticks == 830) {
+                shot(mc, "12_food_freshness.png");
+                logTooltips(mc);
+            }
+            if (ticks == 840) mc.gui.setScreen(null);
+            if (ticks == 860) {
                 RealisticSurvival.LOGGER.info("CLIENTTEST DONE");
                 mc.stop();
             }
@@ -185,6 +196,94 @@ public final class ClientSelfTest {
                 for (int i = 0; i < 9; i++) if (i != 4) menu.getSlot(1 + i).set(new ItemStack(net.minecraft.world.item.Items.COBBLESTONE));
             }
         });
+    }
+
+    private static void buildFoodScene(Minecraft mc) {
+        MinecraftServer server = mc.getSingleplayerServer();
+        server.execute(() -> {
+            ServerPlayer p = server.getPlayerList().getPlayers().get(0);
+            ServerLevel level = (ServerLevel) p.level();
+            server.getCommands().performPrefixedCommand(server.createCommandSourceStack(), "kill @e[type=item]");
+            server.getCommands().performPrefixedCommand(server.createCommandSourceStack(), "kill @e[type=realisticsurvival:falling_tree]");
+            for (int x = -1; x <= 9; x++) for (int z = 8; z <= 17; z++) {
+                level.setBlockAndUpdate(base.offset(x, -1, z), Blocks.GRASS_BLOCK.defaultBlockState());
+                for (int y = 0; y <= 6; y++) level.setBlockAndUpdate(base.offset(x, y, z), Blocks.AIR.defaultBlockState());
+            }
+            long now = level.getGameTime();
+            // smoking over a campfire
+            BlockPos fire = base.offset(3, 0, 13);
+            level.setBlockAndUpdate(fire, Blocks.CAMPFIRE.defaultBlockState().setValue(CampfireBlock.LIT, true));
+            BlockPos rack = fire.above();
+            level.setBlockAndUpdate(rack, ModRegistry.DRYING_RACK_BLOCK.get().defaultBlockState());
+            if (level.getBlockEntity(rack) instanceof com.harold.realisticsurvival.block.DryingRackBlockEntity r) {
+                r.hang(new ItemStack(net.minecraft.world.item.Items.BEEF));
+                r.hang(new ItemStack(net.minecraft.world.item.Items.SALMON));
+                r.hang(new ItemStack(net.minecraft.world.item.Items.PORKCHOP));
+                r.hang(new ItemStack(net.minecraft.world.item.Items.APPLE));
+            }
+            // drying in the sun
+            BlockPos sun = base.offset(6, 0, 13);
+            level.setBlockAndUpdate(sun, ModRegistry.DRYING_RACK_BLOCK.get().defaultBlockState());
+            if (level.getBlockEntity(sun) instanceof com.harold.realisticsurvival.block.DryingRackBlockEntity r) {
+                r.hang(new ItemStack(net.minecraft.world.item.Items.MUTTON));
+                r.hang(new ItemStack(net.minecraft.world.item.Items.MUTTON));
+                r.hang(new ItemStack(net.minecraft.world.item.Items.COD));
+                r.hang(new ItemStack(ModRegistry.JERKY.get()));
+            }
+            // a pot of sea water boiled down to salt
+            BlockPos fire2 = base.offset(0, 0, 13);
+            level.setBlockAndUpdate(fire2, Blocks.CAMPFIRE.defaultBlockState().setValue(CampfireBlock.LIT, true));
+            level.setBlockAndUpdate(fire2.above(), ModRegistry.COOKING_POT_BLOCK.get().defaultBlockState()
+                    .setValue(CookingPotBlock.SALT, 3).setValue(CookingPotBlock.ON_CAMPFIRE, true));
+            // an ice-cooled chest
+            level.setBlockAndUpdate(base.offset(8, 0, 13), Blocks.CHEST.defaultBlockState());
+            level.setBlockAndUpdate(base.offset(8, 0, 14), Blocks.PACKED_ICE.defaultBlockState());
+            level.setBlockAndUpdate(base.offset(8, 1, 14), Blocks.PACKED_ICE.defaultBlockState());
+            p.teleportTo(level, base.getX() + 4.5, base.getY(), base.getZ() + 9.0, java.util.Set.of(), 0.0F, 18.0F, true);
+        });
+    }
+
+    private static ItemStack aged(net.minecraft.world.item.Item item, int count, long now, double days, int preserved) {
+        ItemStack s = new ItemStack(item, count);
+        s.set(ModRegistry.FOOD_START.get(), com.harold.realisticsurvival.survival.Spoilage.round(now - (long) (days * 24000)));
+        if (preserved != 0) s.set(ModRegistry.PRESERVED.get(), preserved);
+        return s;
+    }
+
+    private static void fillFoodInventory(Minecraft mc) {
+        MinecraftServer server = mc.getSingleplayerServer();
+        server.execute(() -> {
+            ServerPlayer p = server.getPlayerList().getPlayers().get(0);
+            long now = p.level().getGameTime();
+            var inv = p.getInventory();
+            inv.clearContent();
+            inv.setItem(0, aged(net.minecraft.world.item.Items.BEEF, 6, now, 0.2, 0));
+            inv.setItem(1, aged(net.minecraft.world.item.Items.BEEF, 3, now, 1.8, 0));
+            inv.setItem(2, aged(net.minecraft.world.item.Items.BEEF, 2, now, 2.6, 0));
+            inv.setItem(3, aged(net.minecraft.world.item.Items.COOKED_BEEF, 4, now, 1.0, 0));
+            inv.setItem(4, aged(net.minecraft.world.item.Items.BEEF, 8, now, 0.5, com.harold.realisticsurvival.survival.Spoilage.SALTED));
+            inv.setItem(5, aged(net.minecraft.world.item.Items.COOKED_PORKCHOP, 5, now, 3.0, com.harold.realisticsurvival.survival.Spoilage.SMOKED));
+            inv.setItem(6, aged(ModRegistry.JERKY.get(), 12, now, 4.0, 0));
+            inv.setItem(7, aged(net.minecraft.world.item.Items.BREAD, 3, now, 6.0, 0));
+            inv.setItem(8, aged(ModRegistry.DRIED_FRUIT.get(), 9, now, 1.0, 0));
+            inv.setItem(9, new ItemStack(ModRegistry.SALT.get(), 7));
+            inv.setItem(10, new ItemStack(ModRegistry.ROTTEN_FOOD.get(), 2));
+            inv.setItem(11, new ItemStack(ModRegistry.SALT_WATER_CUP.get()));
+            inv.setItem(12, aged(ModRegistry.DRIED_FISH.get(), 5, now, 2.0, 0));
+            inv.setItem(13, new ItemStack(ModRegistry.DRYING_RACK.get(), 2));
+            inv.setItem(14, aged(net.minecraft.world.item.Items.APPLE, 10, now, 3.0, 0));
+            inv.setItem(15, new ItemStack(net.minecraft.world.item.Items.ROTTEN_FLESH, 4));
+        });
+    }
+
+    private static void logTooltips(Minecraft mc) {
+        var ctx = net.minecraft.world.item.Item.TooltipContext.of(mc.level);
+        for (int i = 0; i < 9; i++) {
+            ItemStack s = mc.player.getInventory().getItem(i);
+            if (s.isEmpty()) continue;
+            var lines = s.getTooltipLines(ctx, mc.player, net.minecraft.world.item.TooltipFlag.NORMAL);
+            RealisticSurvival.LOGGER.info("CLIENTTEST tooltip {}", String.join(" | ", lines.stream().map(c -> c.getString()).toList()));
+        }
     }
 
     private static void shot(Minecraft mc, String name) {

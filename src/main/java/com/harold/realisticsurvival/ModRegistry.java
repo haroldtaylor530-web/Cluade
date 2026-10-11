@@ -73,6 +73,7 @@ public final class ModRegistry {
     public static final DeferredRegister<MenuType<?>> MENUS = DeferredRegister.create(Registries.MENU, M);
     public static final DeferredRegister<net.minecraft.world.item.crafting.RecipeType<?>> RECIPE_TYPES = DeferredRegister.create(Registries.RECIPE_TYPE, M);
     public static final DeferredRegister<net.minecraft.world.item.crafting.RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(Registries.RECIPE_SERIALIZER, M);
+    public static final DeferredRegister<net.minecraft.world.level.block.entity.BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, M);
 
     // ---- brick oven recipes -------------------------------------------------------------------
     public static final DeferredHolder<net.minecraft.world.item.crafting.RecipeType<?>, net.minecraft.world.item.crafting.RecipeType<net.minecraft.world.item.crafting.CraftingRecipe>> OVEN_RECIPE =
@@ -81,6 +82,8 @@ public final class ModRegistry {
             RECIPE_SERIALIZERS.register("oven_shaped", () -> com.harold.realisticsurvival.recipe.OvenRecipe.SHAPED);
     public static final DeferredHolder<net.minecraft.world.item.crafting.RecipeSerializer<?>, net.minecraft.world.item.crafting.RecipeSerializer<com.harold.realisticsurvival.recipe.OvenRecipe>> OVEN_SHAPELESS =
             RECIPE_SERIALIZERS.register("oven_shapeless", () -> com.harold.realisticsurvival.recipe.OvenRecipe.SHAPELESS);
+    public static final DeferredHolder<net.minecraft.world.item.crafting.RecipeSerializer<?>, net.minecraft.world.item.crafting.RecipeSerializer<com.harold.realisticsurvival.recipe.SaltingRecipe>> SALTING =
+            RECIPE_SERIALIZERS.register("salting", () -> com.harold.realisticsurvival.recipe.SaltingRecipe.SERIALIZER);
 
     // ---- tags ---------------------------------------------------------------------------
     public static final TagKey<net.minecraft.world.item.Item> FLINT_REPAIR = TagKey.create(Registries.ITEM, RealisticSurvival.id("flint_repair"));
@@ -103,10 +106,21 @@ public final class ModRegistry {
     /** True if the water in a waterskin is unsafe. */
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> WATER_DIRTY =
             COMPONENTS.registerComponentType("water_dirty", b -> b.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL));
+    /** When a food was made (game time, rounded to a quarter day). */
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Long>> FOOD_START =
+            COMPONENTS.registerComponentType("food_start", b -> b.persistent(Codec.LONG).networkSynchronized(ByteBufCodecs.VAR_LONG));
+    /** Food sitting in cold storage. */
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<com.harold.realisticsurvival.survival.Spoilage.Cold>> FOOD_COLD =
+            COMPONENTS.registerComponentType("food_cold", b -> b.persistent(com.harold.realisticsurvival.survival.Spoilage.Cold.CODEC)
+                    .networkSynchronized(com.harold.realisticsurvival.survival.Spoilage.Cold.STREAM_CODEC));
+    /** Salted (1) and/or smoked (2). */
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> PRESERVED =
+            COMPONENTS.registerComponentType("preserved", b -> b.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT));
 
     // ---- effects ----------------------------------------------------------------------------
     public static final DeferredHolder<MobEffect, MobEffect> BLEEDING = EFFECTS.register("bleeding", BleedingEffect::new);
     public static final DeferredHolder<MobEffect, MobEffect> DYSENTERY = EFFECTS.register("dysentery", DysenteryEffect::new);
+    public static final DeferredHolder<MobEffect, MobEffect> FOOD_POISONING = EFFECTS.register("food_poisoning", com.harold.realisticsurvival.effect.FoodPoisoningEffect::new);
     public static final DeferredHolder<MobEffect, MobEffect> BROKEN_LEG = EFFECTS.register("broken_leg", () ->
             new SimpleEffect(MobEffectCategory.HARMFUL, 0x8a6a4a)
                     .addAttributeModifier(Attributes.MOVEMENT_SPEED, RealisticSurvival.id("broken_leg_speed"), -0.45, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
@@ -241,6 +255,27 @@ public final class ModRegistry {
     public static final DeferredItem<Item> DRY_CLAY_BRICK = ITEMS.registerSimpleItem("dry_clay_brick");
     public static final DeferredItem<BlockItem> OVEN_WALL = ITEMS.registerSimpleBlockItem("oven_wall", OVEN_WALL_BLOCK);
 
+    // ---- food -------------------------------------------------------------------------------
+    /** Meat and fish hung up to dry in the sun or smoke over a fire. */
+    public static final DeferredBlock<com.harold.realisticsurvival.block.DryingRackBlock> DRYING_RACK_BLOCK = BLOCKS.registerBlock("drying_rack",
+            com.harold.realisticsurvival.block.DryingRackBlock::new,
+            p -> p.mapColor(MapColor.WOOD).strength(1.0F).sound(SoundType.WOOD).noOcclusion().ignitedByLava());
+    public static final DeferredItem<BlockItem> DRYING_RACK = ITEMS.registerSimpleBlockItem("drying_rack", DRYING_RACK_BLOCK);
+    public static final Supplier<net.minecraft.world.level.block.entity.BlockEntityType<com.harold.realisticsurvival.block.DryingRackBlockEntity>> DRYING_RACK_BE =
+            BLOCK_ENTITIES.register("drying_rack", () -> new net.minecraft.world.level.block.entity.BlockEntityType<>(
+                    com.harold.realisticsurvival.block.DryingRackBlockEntity::new, DRYING_RACK_BLOCK.get()));
+    public static final DeferredItem<Item> JERKY = ITEMS.registerItem("jerky", Item::new,
+            p -> p.food(new net.minecraft.world.food.FoodProperties.Builder().nutrition(4).saturationModifier(0.5F).build()));
+    public static final DeferredItem<Item> DRIED_FISH = ITEMS.registerItem("dried_fish", Item::new,
+            p -> p.food(new net.minecraft.world.food.FoodProperties.Builder().nutrition(3).saturationModifier(0.5F).build()));
+    public static final DeferredItem<Item> DRIED_FRUIT = ITEMS.registerItem("dried_fruit", Item::new,
+            p -> p.food(new net.minecraft.world.food.FoodProperties.Builder().nutrition(3).saturationModifier(0.4F).build()));
+    public static final DeferredItem<Item> ROTTEN_FOOD = ITEMS.registerItem("rotten_food", Item::new,
+            p -> p.food(new net.minecraft.world.food.FoodProperties.Builder().nutrition(1).saturationModifier(0.1F).build())
+                    .compostable(net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProviders.COMPOSTABLE_MEDIUM));
+    public static final DeferredItem<Item> SALT = ITEMS.registerSimpleItem("salt");
+    public static final DeferredItem<CupItem> SALT_WATER_CUP = ITEMS.registerItem("salt_water_cup", p -> new CupItem(p, CupItem.Kind.SALT), p -> p.stacksTo(1));
+
     // ---- menus --------------------------------------------------------------------------------
     public static final DeferredHolder<MenuType<?>, MenuType<com.harold.realisticsurvival.block.OvenMenu>> OVEN_MENU = MENUS.register("oven",
             () -> IMenuTypeExtension.create(com.harold.realisticsurvival.block.OvenMenu::fromNetwork));
@@ -265,6 +300,7 @@ public final class ModRegistry {
         MENUS.register(bus);
         RECIPE_TYPES.register(bus);
         RECIPE_SERIALIZERS.register(bus);
+        BLOCK_ENTITIES.register(bus);
         // the realistic campfire reuses the vanilla campfire block entity (cooking slots, renderer)
         bus.addListener((net.neoforged.neoforge.event.BlockEntityTypeAddBlocksEvent e) ->
                 e.modify(net.minecraft.world.level.block.entity.BlockEntityTypes.CAMPFIRE, CAMPFIRE_BLOCK.get()));
