@@ -116,7 +116,24 @@ public final class ClientSelfTest {
             }
             if (miningClosed > 0 && ticks == miningClosed + 90) buildSpearScene(mc);
             if (miningClosed > 0 && ticks == miningClosed + 110) shot(mc, "18_thrown_spears.png");
-            if ((miningClosed > 0 && ticks == miningClosed + 125) || ticks == 2400) {
+            // ---- how the spear is held and charged, first and third person
+            if (miningClosed > 0 && ticks == miningClosed + 125) holdSpear(mc);
+            if (miningClosed > 0 && ticks == miningClosed + 140) shot(mc, "19_spear_hold_first.png");
+            if (miningClosed > 0 && ticks == miningClosed + 142) mc.player.startUsingItem(net.minecraft.world.InteractionHand.MAIN_HAND);
+            if (miningClosed > 0 && ticks == miningClosed + 162) shot(mc, "20_spear_charge_first.png");
+            if (miningClosed > 0 && ticks == miningClosed + 164) {
+                mc.player.stopUsingItem();
+                mc.options.setCameraType(CameraType.THIRD_PERSON_FRONT);
+            }
+            if (miningClosed > 0 && ticks == miningClosed + 180) shot(mc, "21_spear_hold_third.png");
+            if (miningClosed > 0 && ticks == miningClosed + 182) mc.player.startUsingItem(net.minecraft.world.InteractionHand.MAIN_HAND);
+            if (miningClosed > 0 && ticks == miningClosed + 200) shot(mc, "22_spear_charge_third.png");
+            if (miningClosed > 0 && ticks == miningClosed + 202) {
+                mc.player.stopUsingItem();
+                mc.options.setCameraType(CameraType.THIRD_PERSON_BACK);
+            }
+            if (miningClosed > 0 && ticks == miningClosed + 220) shot(mc, "23_spear_hold_back.png");
+            if ((miningClosed > 0 && ticks == miningClosed + 235) || ticks == 2400) {
                 RealisticSurvival.LOGGER.info("CLIENTTEST DONE");
                 mc.stop();
             }
@@ -336,6 +353,18 @@ public final class ClientSelfTest {
             p.teleportTo(level, ore.getX() + 0.5, ore.getY(), ore.getZ() - 1.5, java.util.Set.of(), 0.0F, 30.0F, true);
             com.harold.realisticsurvival.survival.OreMining.start(p, ore, level.getBlockState(ore));
         });
+    }
+
+    private static void holdSpear(Minecraft mc) {
+        MinecraftServer server = mc.getSingleplayerServer();
+        server.execute(() -> {
+            ServerPlayer p = server.getPlayerList().getPlayers().get(0);
+            p.getInventory().setItem(0, new ItemStack(ModRegistry.FLINT_SPEAR.get()));
+            p.getInventory().setSelectedSlot(0);
+            ServerLevel level = (ServerLevel) p.level();
+            p.teleportTo(level, base.getX() + 0.5, base.getY(), base.getZ() + 26.5, java.util.Set.of(), 0.0F, 10.0F, true);
+        });
+        mc.options.setCameraType(CameraType.FIRST_PERSON);
     }
 
     /** Thrown spears frozen in the air: one flat, one diving, one iron one. */
