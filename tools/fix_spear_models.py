@@ -2,8 +2,9 @@
 
 Your Flint_Spear model has its tip along +x. Vanilla's spear (item/spear_in_hand) is a flat
 sprite whose tip points up-left, with the display transform [-20, 90, -35] in first person and
-[5, 270, -40] in third. Turning your tip direction onto vanilla's (a 135 degree turn about Z)
-gives the same pose: Z = -35 + 135 = 100 and -40 + 135 = 95.
+[5, 270, -40] in third. Display rotations apply X, then Y, then Z, so the angles that send your +x
+tip to the direction vanilla's tip ends up pointing (forward and up, about 43 degrees) are
+[0, -45, 75] in first person and [0, 45, 55] in third.
 
 This also centres the model on the hand (shifts it 3, -2.5, -0.5 units), so the thrown-spear
 renderer no longer has to, and writes the pull-back models that the item definition swaps in
@@ -22,14 +23,14 @@ SHIFT = (3.0, -2.5, -0.5)
 
 def hold(pull):
     """Display transforms; pull 0..3 draws the spear back towards the shoulder."""
-    z = 0.13 + 1.8 * pull
-    y = 2.0 + 0.5 * pull
-    rx = -20 - 6 * pull
+    z = 0.13 - 2.2 * pull
+    y = 2.0 + 0.6 * pull
+    rz = 75 + 5 * pull
     return {
-        "firstperson_righthand": {"rotation": [rx, 90, 100], "translation": [3.13, y, z], "scale": [0.85, 0.85, 0.85]},
-        "firstperson_lefthand": {"rotation": [rx, -90, -100], "translation": [3.13, y, z], "scale": [0.85, 0.85, 0.85]},
-        "thirdperson_righthand": {"rotation": [5, 270, 95], "translation": [0, 2, 2], "scale": [1.05, 1.05, 1.05]},
-        "thirdperson_lefthand": {"rotation": [5, -270, -95], "translation": [0, 2, 2], "scale": [1.05, 1.05, 1.05]},
+        "firstperson_righthand": {"rotation": [0, -45, rz], "translation": [3.13, y, z], "scale": [0.85, 0.85, 0.85]},
+        "firstperson_lefthand": {"rotation": [0, 45, -rz], "translation": [3.13, y, z], "scale": [0.85, 0.85, 0.85]},
+        "thirdperson_righthand": {"rotation": [0, 45, 55], "translation": [0, 2, 2], "scale": [1.05, 1.05, 1.05]},
+        "thirdperson_lefthand": {"rotation": [0, -45, -55], "translation": [0, 2, 2], "scale": [1.05, 1.05, 1.05]},
         "head": {"rotation": [0, 0, 45], "translation": [0, 10, 0]},
     }
 
