@@ -134,7 +134,15 @@ public final class ClientSelfTest {
                 mc.options.setCameraType(CameraType.THIRD_PERSON_BACK);
             }
             if (miningClosed > 0 && ticks == miningClosed + 220) shot(mc, "23_spear_hold_back.png");
-            if ((miningClosed > 0 && ticks == miningClosed + 235) || ticks == 2400) {
+            // TEMP: calibrate spear display rotations
+            if (miningClosed > 0 && ticks >= miningClosed + 240 && ticks < miningClosed + 240 + 8 * 30) {
+                int k = (ticks - miningClosed - 240) / 30, t = (ticks - miningClosed - 240) % 30;
+                if (t == 0) { setCandidate(mc, k); mc.options.setCameraType(CameraType.FIRST_PERSON); }
+                if (t == 10) shot(mc, "cand_" + k + "_first.png");
+                if (t == 12) mc.options.setCameraType(CameraType.THIRD_PERSON_FRONT);
+                if (t == 24) shot(mc, "cand_" + k + "_third.png");
+            }
+            if ((miningClosed > 0 && ticks == miningClosed + 500) || ticks == 2400) {
                 RealisticSurvival.LOGGER.info("CLIENTTEST DONE");
                 mc.stop();
             }
@@ -353,6 +361,17 @@ public final class ClientSelfTest {
             p.getInventory().setItem(p.getInventory().getSelectedSlot(), new ItemStack(net.minecraft.world.item.Items.DIAMOND_PICKAXE));
             p.teleportTo(level, ore.getX() + 0.5, ore.getY(), ore.getZ() - 1.5, java.util.Set.of(), 0.0F, 30.0F, true);
             com.harold.realisticsurvival.survival.OreMining.start(p, ore, level.getBlockState(ore));
+        });
+    }
+
+    private static void setCandidate(Minecraft mc, int k) {
+        MinecraftServer server = mc.getSingleplayerServer();
+        server.execute(() -> {
+            ServerPlayer p = server.getPlayerList().getPlayers().get(0);
+            ItemStack stack = new ItemStack(ModRegistry.FLINT_SPEAR.get());
+            stack.set(net.minecraft.core.component.DataComponents.ITEM_MODEL, RealisticSurvival.id("spear_cand_" + k));
+            p.getInventory().setItem(0, stack);
+            p.getInventory().setSelectedSlot(0);
         });
     }
 
