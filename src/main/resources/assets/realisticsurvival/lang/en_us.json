@@ -1,5 +1,5 @@
 {
-  "itemGroup.realisticsurvival": "Realistic Survival",
+  "itemGroup.realisticsurvival": "Flint & Fire",
   "item.realisticsurvival.flint_shard": "Flint Shard",
   "item.realisticsurvival.plant_fibre": "Plant Fibre",
   "item.realisticsurvival.fibre_string": "Fibre String",
@@ -39,7 +39,7 @@
   "message.realisticsurvival.bleeding": "You're bleeding! Use a bandage.",
   "message.realisticsurvival.need_axe": "You can't get logs by hand. Make a flint hatchet.",
   "message.realisticsurvival.sore_hands": "Ouch! Punching that hurts.",
-  "realisticsurvival.configuration.title": "Realistic Survival",
+  "realisticsurvival.configuration.title": "Flint & Fire",
   "realisticsurvival.configuration.thirst": "Thirst",
   "realisticsurvival.configuration.thirstRate": "Thirst rate",
   "realisticsurvival.configuration.temperature": "Body temperature",

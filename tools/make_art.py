@@ -1,4 +1,4 @@
-"""Generates the placeholder pixel art for Realistic Survival.
+"""Generates the placeholder pixel art for Flint & Fire.
 
 Run: python3 make_art.py <path to src/main/resources/assets/realisticsurvival>
 """

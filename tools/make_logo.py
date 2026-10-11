@@ -64,7 +64,7 @@ img.alpha_composite(spear, (sx, sy))
 d = ImageDraw.Draw(img)
 font = ImageFont.truetype("/usr/share/fonts/truetype/google-fonts/Poppins-Bold.ttf", 46)
 small = ImageFont.truetype("/usr/share/fonts/truetype/google-fonts/Poppins-Bold.ttf", 26)
-for text, f, y, col in (("REALISTIC", font, 376, (255, 226, 170)), ("SURVIVAL", font, 425, (255, 226, 170))):
+for text, f, y, col in (("FLINT", font, 376, (255, 226, 170)), ("& FIRE", font, 425, (255, 226, 170))):
     w = d.textlength(text, font=f)
     for dx, dy in ((-3, 0), (3, 0), (0, -3), (0, 3), (3, 3), (-3, -3), (3, -3), (-3, 3)):
         d.text(((S - w) / 2 + dx, y + dy), text, font=f, fill=(20, 10, 4, 255))

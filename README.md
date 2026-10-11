@@ -1,11 +1,11 @@
-# Realistic Survival (NeoForge, Minecraft 26.3)
+# Flint & Fire (NeoForge, Minecraft 26.3)
 
 Makes survival harder and more grounded, and adds throwable spears.
 
 ## Install
 
 Put `realisticsurvival-<version>.jar` in your `mods` folder (NeoForge 26.3). Settings are in
-`config/realisticsurvival-common.toml`, or in game under Mods → Realistic Survival → Config.
+`config/realisticsurvival-common.toml`, or in game under Mods → Flint & Fire → Config.
 
 ## What it adds
 

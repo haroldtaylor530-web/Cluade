@@ -1,4 +1,4 @@
-"""Writes models, item definitions, recipes, tags, damage types and lang for Realistic Survival.
+"""Writes models, item definitions, recipes, tags, damage types and lang for Flint & Fire.
 
 Run: python3 make_data.py <repo>/src/main/resources
 """
@@ -146,7 +146,7 @@ tag(f"{D}/minecraft/tags/damage_type/no_knockback.json", [ns(x) for x in DAMAGE]
 
 # ------------------------------------------------------------------ language
 lang = {
-    "itemGroup.realisticsurvival": "Realistic Survival",
+    "itemGroup.realisticsurvival": "Flint & Fire",
     f"item.{NS}.flint_shard": "Flint Shard",
     f"item.{NS}.plant_fibre": "Plant Fibre",
     f"item.{NS}.fibre_string": "Fibre String",
@@ -186,7 +186,7 @@ lang = {
     f"message.{NS}.bleeding": "You're bleeding! Use a bandage.",
     f"message.{NS}.need_axe": "You can't get logs by hand. Make a flint hatchet.",
     f"message.{NS}.sore_hands": "Ouch! Punching that hurts.",
-    f"{NS}.configuration.title": "Realistic Survival",
+    f"{NS}.configuration.title": "Flint & Fire",
     f"{NS}.configuration.thirst": "Thirst",
     f"{NS}.configuration.thirstRate": "Thirst rate",
     f"{NS}.configuration.temperature": "Body temperature",
