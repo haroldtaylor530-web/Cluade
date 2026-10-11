@@ -24,7 +24,7 @@ import com.mojang.blaze3d.platform.InputConstants;
  * more strike and has a smaller sweet spot than flint and steel; rain makes it smaller still.
  */
 public class LightingScreen extends Screen {
-    private static final int W = 220, H = 118;
+    private static final int W = 250, H = 118, BAR_X = 35, BAR_W = 180;
     private static final long TIME_LIMIT = 20_000;
     private static final int MAX_MISSES = 3;
 
@@ -75,8 +75,8 @@ public class LightingScreen extends Screen {
         if (endAt >= 0 || start < 0) return;
         float m = marker();
         boolean inside = Math.abs(m - zoneCentre) <= zoneWidth / 2;
-        int left = (width - W) / 2 + 20;
-        float sx = left + m * 180, sy = (height - H) / 2 + 47;
+        int left = (width - W) / 2 + BAR_X;
+        float sx = left + m * BAR_W, sy = (height - H) / 2 + 47;
         if (inside) {
             hits++;
             speed += 0.5F;
@@ -194,7 +194,7 @@ public class LightingScreen extends Screen {
         g.centeredText(font, tool, cx, y0 + 18, 0xFFB8A48C);
 
         // the bar with its glowing sweet spot
-        int bx = x0 + 20, by = y0 + 40, bw = 180, bh = 14;
+        int bx = x0 + BAR_X, by = y0 + 40, bw = BAR_W, bh = 14;
         g.fill(bx - 1, by - 1, bx + bw + 1, by + bh + 1, 0xFF000000);
         g.fill(bx, by, bx + bw, by + bh, 0xFF3B2A20);
         int zl = bx + Math.round((zoneCentre - zoneWidth / 2) * bw), zr = bx + Math.round((zoneCentre + zoneWidth / 2) * bw);

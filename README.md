@@ -52,6 +52,29 @@ can make stone tools without a pickaxe.
 bucket, water bottles or dirty cups, and after about 15 seconds the water boils clean (steam
 rises). Take clean water out with clay cups, a waterskin or bottles.
 
+**Realistic campfires.** The campfire recipe now makes a fire pit (stick, log, stick over
+three rocks or cobblestone). It is built cold:
+- Put **kindling** (plant fibre, fibre string, paper, wheat, dry grass, ferns, dead bushes) and
+  **fuel** (sticks, planks, logs, coal) in it: right-click with them, or open its menu with an
+  empty hand. A log burns about 2 minutes on a medium fire, coal about 6.
+- **Light it** with a **bow drill** (string top right, two sticks along the bottom) or flint and
+  steel: right-click the fire with it, or press Light in the menu. A little game pops up: press
+  space or click while the swinging spark is in the glowing patch. Flint and steel needs 3
+  good strikes, a bow drill 4 with a smaller patch; rain makes it harder; 3 misses and the
+  tinder doesn't catch.
+- **Small / Medium / Large** in the menu: bigger fires burn fuel faster (half, normal, 2.5x),
+  warm you from further away (about 3, 5 and 7 blocks), cook faster, smoke more, and a large
+  fire sets you alight if you stand in it.
+- When the fuel runs out it dies down to **embers** for 45 seconds; add fuel in time and it
+  catches again by itself.
+- **Rain** puts it out unless it has a roof over it (small fires go out fastest). Water or a
+  shovel douses it. Food cooks on it and the cooking pot works on it as before.
+
+**Tree felling.** With an axe, cut through a tree's trunk and the whole tree topples over away
+from you, crashes down and drops its logs, saplings and sticks where it lands. Anything it
+lands on gets hurt. Bigger trees take longer to cut through. Sneak to cut a single log, and
+player-built log walls (with placed leaves) never fall.
+
 **Spears.** Flint, iron and diamond. Stab with them (slow, longer reach), or hold right-click
 to wind up and release to throw. The longer the wind-up (up to a second), the harder the throw.
 Thrown spears can make targets bleed. Walk over a landed spear to pick it back up.
