@@ -114,7 +114,9 @@ public final class ClientSelfTest {
                     RealisticSurvival.LOGGER.info("CLIENTTEST friction success {}", f.succeeded());
                 }
             }
-            if ((miningClosed > 0 && ticks == miningClosed + 100) || ticks == 2400) {
+            if (miningClosed > 0 && ticks == miningClosed + 90) buildSpearScene(mc);
+            if (miningClosed > 0 && ticks == miningClosed + 110) shot(mc, "18_thrown_spears.png");
+            if ((miningClosed > 0 && ticks == miningClosed + 125) || ticks == 2400) {
                 RealisticSurvival.LOGGER.info("CLIENTTEST DONE");
                 mc.stop();
             }
@@ -333,6 +335,35 @@ public final class ClientSelfTest {
             p.getInventory().setItem(p.getInventory().getSelectedSlot(), new ItemStack(net.minecraft.world.item.Items.DIAMOND_PICKAXE));
             p.teleportTo(level, ore.getX() + 0.5, ore.getY(), ore.getZ() - 1.5, java.util.Set.of(), 0.0F, 30.0F, true);
             com.harold.realisticsurvival.survival.OreMining.start(p, ore, level.getBlockState(ore));
+        });
+    }
+
+    /** Thrown spears frozen in the air: one flat, one diving, one iron one. */
+    private static void buildSpearScene(Minecraft mc) {
+        MinecraftServer server = mc.getSingleplayerServer();
+        server.execute(() -> {
+            ServerPlayer p = server.getPlayerList().getPlayers().get(0);
+            ServerLevel level = (ServerLevel) p.level();
+            for (int x = -6; x <= 6; x++) for (int z = 24; z <= 32; z++) {
+                level.setBlockAndUpdate(base.offset(x, -1, z), Blocks.GRASS_BLOCK.defaultBlockState());
+                for (int y = 0; y <= 5; y++) level.setBlockAndUpdate(base.offset(x, y, z), Blocks.AIR.defaultBlockState());
+            }
+            Object[][] spears = {
+                { ModRegistry.FLINT_SPEAR.get(), -3.0, 1.9, 0.0F, -90.0F },
+                { ModRegistry.IRON_SPEAR.get(), 0.0, 2.3, 22.0F, -90.0F },
+                { ModRegistry.DIAMOND_SPEAR.get(), 3.0, 1.2, 55.0F, -90.0F } };
+            for (Object[] sp : spears) {
+                ThrownSpear spear = new ThrownSpear(level, p, new ItemStack((net.minecraft.world.item.Item) sp[0]), 7.0F);
+                spear.setNoGravity(true);
+                spear.setPos(base.getX() + 0.5 + (double) sp[1], base.getY() + (double) sp[2], base.getZ() + 28.5);
+                spear.setDeltaMovement(Vec3.ZERO);
+                spear.setYRot((float) sp[4]);
+                spear.setXRot((float) sp[3]);
+                spear.yRotO = spear.getYRot();
+                spear.xRotO = spear.getXRot();
+                level.addFreshEntity(spear);
+            }
+            p.teleportTo(level, base.getX() + 0.5, base.getY(), base.getZ() + 24.5, java.util.Set.of(), 0.0F, 6.0F, true);
         });
     }
 
