@@ -1,8 +1,8 @@
 {
   "type": "realisticsurvival:oven_shaped",
   "key": {
-    "#": "minecraft:stick",
-    "X": "minecraft:iron_ingot"
+    "#": "#c:rods/wooden",
+    "X": "#c:ingots/iron"
   },
   "pattern": [
     "X X",

@@ -19,7 +19,8 @@ Thirst, body temperature, injuries, a harder early game and throwable spears.
     modId="neoforge" #mandatory
     type="required" #mandatory
     versionRange="[26.3,)" #mandatory
-    ordering="NONE"
+    # load after NeoForge so this mod's recipe changes win over NeoForge's copies of vanilla recipes
+    ordering="AFTER"
     side="BOTH"
 
 [[dependencies.${mod_id}]]

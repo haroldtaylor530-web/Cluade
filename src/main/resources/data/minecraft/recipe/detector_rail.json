@@ -3,7 +3,7 @@
   "key": {
     "#": "minecraft:stone_pressure_plate",
     "R": "minecraft:redstone",
-    "X": "minecraft:iron_ingot"
+    "X": "#c:ingots/iron"
   },
   "pattern": [
     "X X",

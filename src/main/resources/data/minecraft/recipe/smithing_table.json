@@ -2,7 +2,7 @@
   "type": "realisticsurvival:oven_shaped",
   "key": {
     "#": "#minecraft:planks",
-    "@": "minecraft:iron_ingot"
+    "@": "#c:ingots/iron"
   },
   "pattern": [
     "@@",

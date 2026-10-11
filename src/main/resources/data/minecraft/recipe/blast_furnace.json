@@ -2,7 +2,7 @@
   "type": "realisticsurvival:oven_shaped",
   "key": {
     "#": "minecraft:smooth_stone",
-    "I": "minecraft:iron_ingot",
+    "I": "#c:ingots/iron",
     "X": "minecraft:furnace"
   },
   "pattern": [

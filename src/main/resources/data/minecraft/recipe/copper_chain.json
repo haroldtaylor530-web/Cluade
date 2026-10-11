@@ -1,7 +1,7 @@
 {
   "type": "realisticsurvival:oven_shaped",
   "key": {
-    "I": "minecraft:copper_ingot",
+    "I": "#c:ingots/copper",
     "N": "minecraft:copper_nugget"
   },
   "pattern": [

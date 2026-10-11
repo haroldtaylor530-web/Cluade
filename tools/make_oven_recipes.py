@@ -3,7 +3,8 @@
 Each vanilla recipe listed here is overridden (same id, same pattern) with the oven recipe
 type, so it can only be made in a working brick oven. Flint and steel is left alone.
 
-Run: python3 tools/make_oven_recipes.py <folder with the vanilla data/minecraft/recipe/*.json>
+Run: python3 tools/make_oven_recipes.py <vanilla data/minecraft/recipe folder> [<NeoForge's generated data/minecraft/recipe folder>]
+NeoForge ships its own copies of many vanilla recipes (using c: tags); those are preferred.
 """
 import json
 import os
@@ -12,6 +13,7 @@ import sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "src", "main", "resources", "data", "minecraft", "recipe")
 SRC = sys.argv[1]
+NEO = sys.argv[2] if len(sys.argv) > 2 else None
 
 STATIONS = ["furnace", "smoker", "blast_furnace", "stonecutter", "anvil", "grindstone", "smithing_table"]
 PIECES = ["pickaxe", "axe", "shovel", "hoe", "sword", "spear", "helmet", "chestplate", "leggings", "boots"]
@@ -26,6 +28,8 @@ os.makedirs(OUT, exist_ok=True)
 moved = 0
 for name in STATIONS + GEAR + GOODS:
     path = os.path.join(SRC, name + ".json")
+    if NEO and os.path.exists(os.path.join(NEO, name + ".json")):
+        path = os.path.join(NEO, name + ".json")
     if not os.path.exists(path):
         print("no vanilla recipe:", name)
         continue

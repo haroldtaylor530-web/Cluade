@@ -2,7 +2,7 @@
   "type": "realisticsurvival:oven_shaped",
   "category": "equipment",
   "key": {
-    "#": "minecraft:iron_ingot",
+    "#": "#c:ingots/iron",
     "X": "minecraft:redstone"
   },
   "pattern": [

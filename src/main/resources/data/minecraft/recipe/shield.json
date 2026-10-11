@@ -3,7 +3,7 @@
   "category": "equipment",
   "key": {
     "W": "#minecraft:wooden_tool_materials",
-    "o": "minecraft:iron_ingot"
+    "o": "#c:ingots/iron"
   },
   "pattern": [
     "WoW",

@@ -3,7 +3,7 @@
   "key": {
     "#": "#minecraft:planks",
     "-": "minecraft:stone_slab",
-    "I": "minecraft:stick"
+    "I": "#c:rods/wooden"
   },
   "pattern": [
     "I-I",

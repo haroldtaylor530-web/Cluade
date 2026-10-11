@@ -2,7 +2,7 @@
   "type": "realisticsurvival:oven_shaped",
   "category": "equipment",
   "key": {
-    "#": "minecraft:stick",
+    "#": "#c:rods/wooden",
     "X": "#minecraft:copper_tool_materials"
   },
   "pattern": [

@@ -234,7 +234,10 @@ public final class SelfTest {
 
     private static void campfire(MinecraftServer server, ServerLevel level, BlockPos at) {
         check(server.getRecipeManager().byKey(ResourceKey.create(Registries.RECIPE, RealisticSurvival.id("bow_drill"))).isPresent(), "recipe bow_drill");
-        check(server.getRecipeManager().byKey(ResourceKey.create(Registries.RECIPE, net.minecraft.resources.Identifier.withDefaultNamespace("campfire"))).isPresent(), "recipe campfire override");
+        var campfireRecipe = server.getRecipeManager().byKey(ResourceKey.create(Registries.RECIPE, net.minecraft.resources.Identifier.withDefaultNamespace("campfire")));
+        check(campfireRecipe.isPresent() && campfireRecipe.get().value() instanceof net.minecraft.world.item.crafting.ShapedRecipe sr
+                && sr.pattern.ingredients().stream().anyMatch(i -> i.isPresent() && i.get().test(new ItemStack(ModRegistry.ROCK.get()))),
+                "campfire recipe is the realistic one (rocks, not coal)");
         BlockPos pos = flat(level, at, 3);
         level.setBlockAndUpdate(pos, ModRegistry.CAMPFIRE_BLOCK.get().defaultBlockState());
         var state = level.getBlockState(pos);
