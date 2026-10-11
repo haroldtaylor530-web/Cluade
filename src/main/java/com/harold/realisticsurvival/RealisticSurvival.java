@@ -31,6 +31,7 @@ public class RealisticSurvival {
         NeoForge.EVENT_BUS.register(com.harold.realisticsurvival.block.BrickOven.class);
         NeoForge.EVENT_BUS.register(com.harold.realisticsurvival.survival.FoodEvents.class);
         NeoForge.EVENT_BUS.register(com.harold.realisticsurvival.survival.OreMining.class);
+        NeoForge.EVENT_BUS.register(com.harold.realisticsurvival.survival.ToolWear.class);
         NeoForge.EVENT_BUS.register(SelfTest.class);
     }
 

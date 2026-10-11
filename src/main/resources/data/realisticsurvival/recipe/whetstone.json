@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "RR"
+  ],
+  "key": {
+    "R": "realisticsurvival:rock"
+  },
+  "result": {
+    "id": "realisticsurvival:whetstone",
+    "count": 1
+  }
+}

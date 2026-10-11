@@ -104,6 +104,13 @@ golden food never spoil. Food gathered within the same quarter-day still stacks.
   give you **food poisoning** (you burn through food and water for a minute, with nausea).
   Raw meat and fish can make you ill too: raw chicken often, pork sometimes, beef, mutton,
   rabbit and fish now and then. Cook it.
+- **Tools go dull** (config `toolDulling`). Pickaxes, axes, shovels and hoes lose their edge a point per block mined (flint, wood and
+  stone fastest, iron slower, diamond slowest). A dull tool digs up to 45% slower, also in the ore mining game. Make a **whetstone**
+  from 2 rocks (it uses your rock texture), hold it in one hand and the tool in the other, and right-click: +35 edge per go,
+  48 uses. The tooltip shows how keen the edge is.
+- **Stamina** (config `stamina`). A thin bar under the water drops shows up when you're not fully rested. Sprinting empties it in
+  about 22 seconds, swimming drains it slowly, mining drains a little per block. At zero you're out of breath: no sprinting and
+  slower digging until it's back above 6. Standing still recovers fastest; hunger and thirst slow the recovery.
 - **Rubble slab, rubble wall, stick fence** (small building blocks). Rubble is made from rocks (3 across for 6 slabs, 2 rows of 3
   for 6 walls) and uses your rock texture on every face. The stick fence is 3 per crafting (sticks plus a fibre string) and uses
   your stick texture. Stick fences connect to vanilla fences.

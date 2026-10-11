@@ -94,7 +94,13 @@ public final class ClientSelfTest {
             }
             if (miningClosed > 0 && ticks == miningClosed + 15) shot(mc, "15_mined.png");
             if (miningClosed > 0 && ticks == miningClosed + 25) buildBlocksScene(mc);
-            if (miningClosed > 0 && ticks == miningClosed + 70) shot(mc, "16_rubble_and_fence.png");
+            if (miningClosed > 0 && ticks == miningClosed + 70) {
+                shot(mc, "16_rubble_and_fence.png");
+                var ctx = net.minecraft.world.item.Item.TooltipContext.of(mc.level);
+                ItemStack dull = mc.player.getInventory().getItem(3);
+                var lines = dull.getTooltipLines(ctx, mc.player, net.minecraft.world.item.TooltipFlag.NORMAL);
+                RealisticSurvival.LOGGER.info("CLIENTTEST tooltip {}", String.join(" | ", lines.stream().map(c -> c.getString()).toList()));
+            }
             if ((miningClosed > 0 && ticks == miningClosed + 85) || ticks == 2400) {
                 RealisticSurvival.LOGGER.info("CLIENTTEST DONE");
                 mc.stop();
@@ -340,6 +346,11 @@ public final class ClientSelfTest {
             p.getInventory().setItem(0, new ItemStack(ModRegistry.RUBBLE_SLAB.get(), 6));
             p.getInventory().setItem(1, new ItemStack(ModRegistry.RUBBLE_WALL.get(), 6));
             p.getInventory().setItem(2, new ItemStack(ModRegistry.STICK_FENCE.get(), 3));
+            ItemStack dull = new ItemStack(net.minecraft.world.item.Items.IRON_PICKAXE);
+            com.harold.realisticsurvival.survival.ToolWear.setSharpness(dull, 22);
+            p.getInventory().setItem(3, dull);
+            p.getInventory().setItem(4, new ItemStack(ModRegistry.WHETSTONE.get()));
+            com.harold.realisticsurvival.survival.SurvivalState.get(p).stamina = 9.0F;
             p.teleportTo(level, base.getX() + 0.5, base.getY(), base.getZ() + 15.0, java.util.Set.of(), 0.0F, 14.0F, true);
         });
     }

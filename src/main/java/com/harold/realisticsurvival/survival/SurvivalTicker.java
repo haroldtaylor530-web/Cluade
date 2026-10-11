@@ -49,6 +49,8 @@ public final class SurvivalTicker {
         } else if (exempt) {
             s.bodyTemp = SurvivalState.NORMAL_TEMP;
         }
+        if (Config.STAMINA.getAsBoolean() && !exempt) Stamina.tick(player, s);
+        else if (exempt) { s.stamina = SurvivalState.MAX_STAMINA; s.winded = false; }
         if (s.warnCooldown > 0) s.warnCooldown--;
 
         if (player.tickCount % 10 == 0) syncHud(player, s);
@@ -209,6 +211,8 @@ public final class SurvivalTicker {
         if (player.getData(ModRegistry.THIRST_HUD) != thirst) player.setData(ModRegistry.THIRST_HUD, thirst);
         int temp = Math.round(s.bodyTemp * 10.0F);
         if (player.getData(ModRegistry.TEMP_HUD) != temp) player.setData(ModRegistry.TEMP_HUD, temp);
+        int stamina = Math.round(s.stamina * 10.0F) + (s.winded ? 1000 : 0);
+        if (player.getData(ModRegistry.STAMINA_HUD) != stamina) player.setData(ModRegistry.STAMINA_HUD, stamina);
     }
 
     /** Very thirsty bodies don't heal. */

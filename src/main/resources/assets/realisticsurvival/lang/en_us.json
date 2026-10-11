@@ -161,5 +161,15 @@
   "gui.realisticsurvival.mining.help.done": "Enter: stop, keep what you got",
   "block.realisticsurvival.rubble_slab": "Rubble Slab",
   "block.realisticsurvival.rubble_wall": "Rubble Wall",
-  "block.realisticsurvival.stick_fence": "Stick Fence"
+  "block.realisticsurvival.stick_fence": "Stick Fence",
+  "item.realisticsurvival.whetstone": "Whetstone",
+  "message.realisticsurvival.winded": "You're out of breath",
+  "message.realisticsurvival.getting_dull": "Your %s is getting dull. Sharpen it with a whetstone.",
+  "message.realisticsurvival.already_sharp": "Your %s is already sharp",
+  "tooltip.realisticsurvival.edge.keen": "Edge: keen (%s%%)",
+  "tooltip.realisticsurvival.edge.worn": "Edge: worn (%s%%)",
+  "tooltip.realisticsurvival.edge.dull": "Edge: dull (%s%%)",
+  "tooltip.realisticsurvival.edge.blunt": "Edge: blunt (%s%%)",
+  "realisticsurvival.configuration.stamina": "Stamina",
+  "realisticsurvival.configuration.toolDulling": "Tools go dull"
 }

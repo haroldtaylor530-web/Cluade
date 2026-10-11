@@ -51,6 +51,14 @@ public final class Config {
             .comment("Mining ore opens a little game: dig through the rock in the ore's texture and prise out the pieces of ore")
             .define("oreMinigame", true);
 
+    public static final ModConfigSpec.BooleanValue STAMINA = B
+            .comment("Stamina: sprinting and hard work wear you out; when it runs out you can't sprint until you've got your breath back")
+            .define("stamina", true);
+
+    public static final ModConfigSpec.BooleanValue TOOL_DULLING = B
+            .comment("Pickaxes, axes, shovels and hoes go dull as you use them and mine slower; a whetstone sharpens them")
+            .define("toolDulling", true);
+
     static final ModConfigSpec SPEC = B.build();
 
     private Config() {}

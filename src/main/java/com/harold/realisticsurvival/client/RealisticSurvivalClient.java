@@ -31,6 +31,7 @@ public class RealisticSurvivalClient {
         modBus.addListener(RealisticSurvivalClient::registerPayloads);
         modBus.addListener(FoodClient::registerDecorations);
         NeoForge.EVENT_BUS.addListener(FoodClient::onTooltip);
+        NeoForge.EVENT_BUS.addListener(ToolClient::onTooltip);
         NeoForge.EVENT_BUS.addListener(RealisticSurvivalClient::onClientTick);
         NeoForge.EVENT_BUS.addListener(RealisticSurvivalClient::onRightClickEmpty);
         if (ClientSelfTest.enabled()) NeoForge.EVENT_BUS.addListener(ClientSelfTest::onClientTick);
@@ -57,6 +58,7 @@ public class RealisticSurvivalClient {
     private static void registerHud(RegisterGuiLayersEvent event) {
         event.registerAbove(VanillaGuiLayers.FOOD_LEVEL, RealisticSurvival.id("thirst"), SurvivalHud::renderThirst);
         event.registerAbove(VanillaGuiLayers.ARMOR_LEVEL, RealisticSurvival.id("temperature"), SurvivalHud::renderTemperature);
+        event.registerAbove(RealisticSurvival.id("thirst"), RealisticSurvival.id("stamina"), SurvivalHud::renderStamina);
     }
 
     /** Too thirsty or a broken leg: no sprinting. */
@@ -64,7 +66,8 @@ public class RealisticSurvivalClient {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null || player.isCreative() || player.isSpectator() || !player.isSprinting()) return;
         boolean parched = Config.THIRST.getAsBoolean() && player.getData(ModRegistry.THIRST_HUD) <= 6;
-        if (parched || player.hasEffect(ModRegistry.BROKEN_LEG)) player.setSprinting(false);
+        boolean winded = Config.STAMINA.getAsBoolean() && player.getData(ModRegistry.STAMINA_HUD) >= 1000;
+        if (parched || winded || player.hasEffect(ModRegistry.BROKEN_LEG)) player.setSprinting(false);
     }
 
     /** Sneak and right-click water with an empty hand to drink from it. */

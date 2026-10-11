@@ -117,6 +117,10 @@ public final class ModRegistry {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> PRESERVED =
             COMPONENTS.registerComponentType("preserved", b -> b.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT));
 
+    /** How keen a tool's edge is, 1..99; missing means fully sharp. */
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> SHARPNESS =
+            COMPONENTS.registerComponentType("sharpness", b -> b.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT));
+
     // ---- effects ----------------------------------------------------------------------------
     public static final DeferredHolder<MobEffect, MobEffect> BLEEDING = EFFECTS.register("bleeding", BleedingEffect::new);
     public static final DeferredHolder<MobEffect, MobEffect> DYSENTERY = EFFECTS.register("dysentery", DysenteryEffect::new);
@@ -147,6 +151,10 @@ public final class ModRegistry {
     /** Body temperature in tenths of a degree C, synced for the HUD. */
     public static final Supplier<AttachmentType<Integer>> TEMP_HUD = ATTACHMENTS.register("temp_hud",
             () -> AttachmentType.builder(() -> 370).sync(ByteBufCodecs.VAR_INT).build());
+
+    /** Stamina for the HUD: tenths of a point (0..200), plus 1000 while out of breath. */
+    public static final Supplier<AttachmentType<Integer>> STAMINA_HUD = ATTACHMENTS.register("stamina_hud",
+            () -> AttachmentType.builder(() -> 200).sync(ByteBufCodecs.VAR_INT).build());
 
     // ---- entities ---------------------------------------------------------------------------
     public static final DeferredHolder<EntityType<?>, EntityType<ThrownSpear>> THROWN_SPEAR = ENTITIES.registerEntityType(
@@ -223,6 +231,8 @@ public final class ModRegistry {
     public static final DeferredItem<BlockItem> COOKING_POT = ITEMS.registerSimpleBlockItem("cooking_pot", COOKING_POT_BLOCK);
 
     // early game
+    public static final DeferredItem<com.harold.realisticsurvival.item.WhetstoneItem> WHETSTONE = ITEMS.registerItem("whetstone",
+            com.harold.realisticsurvival.item.WhetstoneItem::new, p -> p.durability(48));
     public static final DeferredItem<Item> FLINT_SHARD = ITEMS.registerSimpleItem("flint_shard");
     public static final DeferredItem<Item> PLANT_FIBRE = ITEMS.registerSimpleItem("plant_fibre");
     public static final DeferredItem<Item> FIBRE_STRING = ITEMS.registerSimpleItem("fibre_string");

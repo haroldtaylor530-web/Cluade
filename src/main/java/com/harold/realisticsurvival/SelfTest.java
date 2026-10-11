@@ -136,6 +136,65 @@ public final class SelfTest {
         oven(server, level, ground.offset(0, 0, 14));
         food(server, level, ground.offset(12, 0, 14));
         mining(level, ground.offset(-12, 0, 14));
+        toolsAndStamina(level);
+    }
+
+    private static void toolsAndStamina(ServerLevel level) {
+        FakePlayer p = FakePlayerFactory.getMinecraft(level);
+        ItemStack pick = new ItemStack(Items.IRON_PICKAXE);
+        check(com.harold.realisticsurvival.survival.ToolWear.sharpness(pick) == 100
+                && com.harold.realisticsurvival.survival.ToolWear.factor(pick) == 1.0F, "new tools are sharp");
+        com.harold.realisticsurvival.survival.ToolWear.setSharpness(pick, 0);
+        check(Math.abs(com.harold.realisticsurvival.survival.ToolWear.factor(pick) - 0.55F) < 1.0E-4F, "a blunt tool digs at 55%");
+        com.harold.realisticsurvival.survival.ToolWear.setSharpness(pick, 50);
+        check(Math.abs(com.harold.realisticsurvival.survival.ToolWear.factor(pick) - 0.775F) < 1.0E-4F, "half an edge digs at 77.5%");
+        com.harold.realisticsurvival.survival.ToolWear.setSharpness(pick, 100);
+        check(!pick.has(ModRegistry.SHARPNESS.get()), "a full edge stores nothing");
+        check(!com.harold.realisticsurvival.survival.ToolWear.dulls(new ItemStack(Items.DIAMOND_SWORD)), "swords don't dull");
+        check(com.harold.realisticsurvival.survival.ToolWear.dulls(new ItemStack(ModRegistry.FLINT_HATCHET.get())), "flint hatchets dull");
+
+        ItemStack flint = new ItemStack(ModRegistry.FLINT_PICKAXE.get());
+        for (int i = 0; i < 30; i++) com.harold.realisticsurvival.survival.ToolWear.wear(p, flint, 1);
+        check(com.harold.realisticsurvival.survival.ToolWear.sharpness(flint) == 70, "a flint pickaxe loses 1 point a block ("
+                + com.harold.realisticsurvival.survival.ToolWear.sharpness(flint) + ")");
+        ItemStack stone = new ItemStack(ModRegistry.WHETSTONE.get());
+        p.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, stone);
+        p.setItemInHand(net.minecraft.world.InteractionHand.OFF_HAND, flint);
+        var r = stone.getItem().use(level, p, net.minecraft.world.InteractionHand.MAIN_HAND);
+        check(r == net.minecraft.world.InteractionResult.SUCCESS, "the whetstone sharpens the tool in the other hand");
+        check(com.harold.realisticsurvival.survival.ToolWear.sharpness(flint) == 100, "70 + 35 caps at a full edge");
+        check(stone.getDamageValue() == 1, "sharpening wears the whetstone");
+        check(stone.getItem().use(level, p, net.minecraft.world.InteractionHand.MAIN_HAND) == net.minecraft.world.InteractionResult.FAIL,
+                "a sharp tool is left alone");
+        p.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+        p.setItemInHand(net.minecraft.world.InteractionHand.OFF_HAND, ItemStack.EMPTY);
+
+        // ---- stamina
+        var s = com.harold.realisticsurvival.survival.SurvivalState.get(p);
+        s.stamina = 20.0F;
+        s.winded = false;
+        s.thirst = 20.0F;
+        p.setSprinting(true);
+        int ticks = 0;
+        while (!s.winded && ticks < 1000) {
+            p.setSprinting(true);
+            com.harold.realisticsurvival.survival.Stamina.tick(p, s);
+            ticks++;
+        }
+        check(ticks >= 430 && ticks <= 460, "sprinting empties stamina in about 22 seconds (" + ticks + " ticks)");
+        check(!p.isSprinting(), "out of breath stops the sprint");
+        p.setSprinting(false);
+        int rest = 0;
+        while (s.winded && rest < 1000) {
+            com.harold.realisticsurvival.survival.Stamina.tick(p, s);
+            rest++;
+        }
+        check(rest >= 110 && rest <= 130, "resting gets your breath back in about 6 seconds (" + rest + " ticks)");
+        s.stamina = 20.0F;
+        com.harold.realisticsurvival.survival.Stamina.spend(p, 5.0F);
+        check(Math.abs(s.stamina - 15.0F) < 1.0E-3F, "hard work spends stamina");
+        s.stamina = 20.0F;
+        s.winded = false;
     }
 
     private static void mining(ServerLevel level, BlockPos at) {

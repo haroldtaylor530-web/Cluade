@@ -69,6 +69,27 @@ public final class SurvivalHud {
         hud.leftHeight += 10;
     }
 
+    /** A thin bar under the water drops, only while you're not fully rested. */
+    public static void renderStamina(GuiGraphicsExtractor g, DeltaTracker delta) {
+        Minecraft mc = Minecraft.getInstance();
+        if (hidden(mc) || !Config.STAMINA.getAsBoolean()) return;
+        int raw = mc.player.getData(ModRegistry.STAMINA_HUD);
+        boolean winded = raw >= 1000;
+        float stamina = (raw % 1000) / 10.0F;
+        if (stamina >= 19.95F && !winded) return;
+        Hud hud = mc.gui.hud;
+        int right = g.guiWidth() / 2 + 91;
+        int bw = 80, bh = 3;
+        int bx = right - bw, by = g.guiHeight() - hud.rightHeight + 3;
+        float f = Mth.clamp(stamina / 20.0F, 0.0F, 1.0F);
+        g.fill(bx - 1, by - 1, bx + bw + 1, by + bh + 1, 0xFF1A1A1A);
+        g.fill(bx, by, bx + bw, by + bh, 0xFF3A3A3A);
+        int colour = winded ? ((mc.player.tickCount / 4) % 2 == 0 ? 0xFFD63A2A : 0xFF8A2218)
+                : 0xFF000000 | Mth.hsvToRgb(0.04F + 0.2F * f, 0.85F, 0.95F);
+        g.fill(bx, by, bx + Math.round(bw * f), by + bh, colour);
+        hud.rightHeight += 6;
+    }
+
     /** Blue when cold, green when normal, red when hot. */
     private static int colour(float t) {
         float r, gr, b;

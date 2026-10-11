@@ -648,3 +648,24 @@ lang.update({f"block.{NS}.rubble_slab": "Rubble Slab", f"block.{NS}.rubble_wall"
              f"block.{NS}.stick_fence": "Stick Fence"})
 w(f"{A}/lang/en_us.json", lang)
 print("extras done")
+
+# ------------------------------------------------------------------ tool dulling, whetstone, stamina
+w(f"{A}/models/item/whetstone.json", {"parent": "minecraft:item/generated", "textures": {"layer0": f"{NS}:item/whetstone"}})
+w(f"{A}/items/whetstone.json", {"model": model("item/whetstone")})
+shaped("whetstone", ["RR"], {"R": ns("rock")}, "whetstone", cat="equipment")
+with open(f"{A}/lang/en_us.json") as f:
+    lang = json.load(f)
+lang.update({
+    f"item.{NS}.whetstone": "Whetstone",
+    f"message.{NS}.winded": "You're out of breath",
+    f"message.{NS}.getting_dull": "Your %s is getting dull. Sharpen it with a whetstone.",
+    f"message.{NS}.already_sharp": "Your %s is already sharp",
+    f"tooltip.{NS}.edge.keen": "Edge: keen (%s%%)",
+    f"tooltip.{NS}.edge.worn": "Edge: worn (%s%%)",
+    f"tooltip.{NS}.edge.dull": "Edge: dull (%s%%)",
+    f"tooltip.{NS}.edge.blunt": "Edge: blunt (%s%%)",
+    f"{NS}.configuration.stamina": "Stamina",
+    f"{NS}.configuration.toolDulling": "Tools go dull",
+})
+w(f"{A}/lang/en_us.json", lang)
+print("tools done")

@@ -64,7 +64,7 @@ public final class OreMining {
 
     /** How much rock one hard swing breaks, from the pickaxe's mining speed (efficiency counts). */
     public static int power(ItemStack tool, BlockState state) {
-        float speed = tool.getDestroySpeed(state);
+        float speed = tool.getDestroySpeed(state) * ToolWear.factor(tool);
         return Math.max(1, Math.min(6, Math.round(speed / 2.0F)));
     }
 
@@ -125,6 +125,8 @@ public final class OreMining {
         level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
         player.awardStat(Stats.BLOCK_MINED.get(state.getBlock()));
         tool.hurtAndBreak(1 + actions / 12, player, EquipmentSlot.MAINHAND);
+        ToolWear.wear(player, tool, 1 + actions / 8);
+        Stamina.spend(player, 0.3F + actions * 0.08F);
         if (Config.WORK_TIRES.getAsBoolean()) player.causeFoodExhaustion(0.02F * actions);
         return dropped;
     }
