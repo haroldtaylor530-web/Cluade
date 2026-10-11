@@ -1,10 +1,10 @@
 """Hold and charge poses for the spears, matched to vanilla's spear pose.
 
 Your Flint_Spear model has its tip along +x. Vanilla's spear (item/spear_in_hand) is a flat
-sprite whose tip points up-left, with the display transform [-20, 90, -35] in first person and
-[5, 270, -40] in third. Display rotations apply X, then Y, then Z, so the angles that send your +x
-tip to the direction vanilla's tip ends up pointing (forward and up, about 43 degrees) are
-[0, -45, 75] in first person and [0, 45, 55] in third.
+sprite with its tip up-left, held with the display rotation [-20, 90, -35] in first person. The
+rotations that put your tip in the same place were found by rendering candidates in the game
+(CI screenshots): [0, 90, 40] first person (pointing forward and up), and [0, -90, 40] in third
+person (held upright at the side; the arm pose raises it while charging).
 
 This also centres the model on the hand (shifts it 3, -2.5, -0.5 units), so the thrown-spear
 renderer no longer has to, and writes the pull-back models that the item definition swaps in
@@ -23,14 +23,14 @@ SHIFT = (3.0, -2.5, -0.5)
 
 def hold(pull):
     """Display transforms; pull 0..3 draws the spear back towards the shoulder."""
-    z = 0.13 - 2.2 * pull
+    z = 0.13 + 2.0 * pull
     y = 2.0 + 0.6 * pull
-    rz = 75 + 5 * pull
+    rz = 40 + 6 * pull
     return {
-        "firstperson_righthand": {"rotation": [0, -45, rz], "translation": [3.13, y, z], "scale": [0.85, 0.85, 0.85]},
-        "firstperson_lefthand": {"rotation": [0, 45, -rz], "translation": [3.13, y, z], "scale": [0.85, 0.85, 0.85]},
-        "thirdperson_righthand": {"rotation": [0, 45, 55], "translation": [0, 2, 2], "scale": [1.05, 1.05, 1.05]},
-        "thirdperson_lefthand": {"rotation": [0, -45, -55], "translation": [0, 2, 2], "scale": [1.05, 1.05, 1.05]},
+        "firstperson_righthand": {"rotation": [0, 90, rz], "translation": [3.13, y, z], "scale": [0.85, 0.85, 0.85]},
+        "firstperson_lefthand": {"rotation": [0, -90, -rz], "translation": [3.13, y, z], "scale": [0.85, 0.85, 0.85]},
+        "thirdperson_righthand": {"rotation": [0, -90, 40], "translation": [0, 2, 2], "scale": [1.05, 1.05, 1.05]},
+        "thirdperson_lefthand": {"rotation": [0, 90, -40], "translation": [0, 2, 2], "scale": [1.05, 1.05, 1.05]},
         "head": {"rotation": [0, 0, 45], "translation": [0, 10, 0]},
     }
 
