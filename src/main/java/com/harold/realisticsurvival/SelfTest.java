@@ -231,7 +231,8 @@ public final class SelfTest {
         chopper.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);
         chopper.setShiftKeyDown(false);
         chopper.setPos(b2.getX() + 0.5, b2.getY(), b2.getZ() - 1.5);
-        chopper.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, new ItemStack(Items.IRON_AXE));
+        chopper.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, new ItemStack(Items.STONE_AXE));
+        chopper.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, new ItemStack(ModRegistry.FLINT_HATCHET.get()));
         for (int cut = 1; cut <= 3; cut++) {
             chopper.gameMode.destroyBlock(b2);
             var st = level.getBlockState(b2);
@@ -247,6 +248,15 @@ public final class SelfTest {
             check(top2.z > b2.getZ() + 3, "chopped tree falls away from the chopper (z+" + (top2.z - b2.getZ()) + ")");
             fallen.forEach(net.minecraft.world.entity.Entity::discard);
         }
+        // better axes take fewer cuts
+        int[] expect = { 4, 3, 2 };
+        net.minecraft.world.item.Item[] axes = { Items.WOODEN_AXE, Items.IRON_AXE, Items.DIAMOND_AXE };
+        for (int i = 0; i < axes.length; i++) {
+            chopper.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, new ItemStack(axes[i]));
+            check(TreeFelling.cutsToFell(chopper, Blocks.OAK_LOG.defaultBlockState()) == expect[i], axes[i] + " fells in " + expect[i] + " cuts");
+        }
+        chopper.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, new ItemStack(ModRegistry.FLINT_HATCHET.get()));
+        check(TreeFelling.cutsToFell(chopper, Blocks.OAK_LOG.defaultBlockState()) == 4, "flint hatchet fells in 4 cuts");
         // sneaking cuts a single log as normal
         level.setBlock(b2, Blocks.BIRCH_LOG.defaultBlockState(), 2);
         chopper.setShiftKeyDown(true);

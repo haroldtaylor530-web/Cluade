@@ -74,7 +74,7 @@ public final class TreeFelling {
         if (state.getBlock() instanceof ChoppedLogBlock chopped) {
             int stage = state.getValue(ChoppedLogBlock.STAGE);
             if (stage < 3) {
-                cutLayer(event, level, player, pos, state.setValue(ChoppedLogBlock.STAGE, stage + 1), chopped.log().defaultBlockState());
+                cutLayer(event, level, player, pos, state.setValue(ChoppedLogBlock.STAGE, nextStage(stage, player, chopped.log().defaultBlockState())), chopped.log().defaultBlockState());
             } else {
                 fellAndTire(level, pos, player);
             }
@@ -86,12 +86,29 @@ public final class TreeFelling {
         boolean upright = !state.hasProperty(BlockStateProperties.AXIS) || state.getValue(BlockStateProperties.AXIS) == Direction.Axis.Y;
         if (chopped != null && upright) {
             if (scan(level, pos) != null) {
-                cutLayer(event, level, player, pos, chopped.defaultBlockState(), state);
+                cutLayer(event, level, player, pos, chopped.defaultBlockState().setValue(ChoppedLogBlock.STAGE, nextStage(0, player, state)), state);
             }
             return;
         }
         // logs without a notched model (modded trees): the old way, one cut and it falls
         fellAndTire(level, pos, player);
+    }
+
+    /**
+     * Cuts it takes to fell a tree with the axe in hand, counting the final cut through the core:
+     * flint, wooden and other slow axes 4, stone, copper and iron 3, diamond, netherite and gold 2.
+     * Each cut is also quicker with a better axe, as usual.
+     */
+    public static int cutsToFell(Player player, BlockState log) {
+        float speed = player.getMainHandItem().getDestroySpeed(log);
+        if (speed <= 3.5F) return 4;
+        if (speed <= 7.0F) return 3;
+        return 2;
+    }
+
+    /** Stage after one more cut; a better axe takes off more than one layer at a time. */
+    private static int nextStage(int stage, Player player, BlockState log) {
+        return Math.min(3, Math.max(stage + 1, 5 - cutsToFell(player, log)));
     }
 
     private static void cutLayer(BreakBlockEvent event, ServerLevel level, Player player, BlockPos pos, BlockState next, BlockState particles) {

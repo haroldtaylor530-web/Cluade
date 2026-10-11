@@ -73,7 +73,8 @@ three rocks or cobblestone). It is built cold:
 **Tree felling.** Chop a tree's trunk with an axe and each cut takes a layer off: the log gets
 a notch that goes deeper three times, down to the core. Cut the core and the whole tree
 topples over away from you, crashes down and drops its logs, saplings and sticks where it
-lands. Anything it lands on gets hurt. Thick 2x2 trunks are slower to cut. Sneak to cut a
+lands. Anything it lands on gets hurt. Better axes cut faster and take more off each time: flint and wooden axes need 4 cuts,
+stone, copper and iron 3, diamond, netherite and gold 2. Thick 2x2 trunks are slower to cut. Sneak to cut a
 single log, and player-built log walls (with placed leaves) never fall.
 
 **Spears.** Flint, iron and diamond. Stab with them (slow, longer reach), or hold right-click
