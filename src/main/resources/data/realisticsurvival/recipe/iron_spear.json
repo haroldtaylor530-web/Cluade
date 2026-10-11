@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "realisticsurvival:oven_shaped",
   "category": "equipment",
   "pattern": [
     " ST",

@@ -1,0 +1,14 @@
+{
+  "type": "realisticsurvival:oven_shaped",
+  "key": {
+    "#": "#minecraft:stone_crafting_materials"
+  },
+  "pattern": [
+    "###",
+    "# #",
+    "###"
+  ],
+  "result": {
+    "id": "minecraft:furnace"
+  }
+}

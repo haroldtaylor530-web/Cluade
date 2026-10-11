@@ -1,0 +1,28 @@
+{
+  "variants": {
+    "count=1,dry=false": {
+      "model": "realisticsurvival:block/clay_brick_pile_wet_1"
+    },
+    "count=2,dry=false": {
+      "model": "realisticsurvival:block/clay_brick_pile_wet_2"
+    },
+    "count=3,dry=false": {
+      "model": "realisticsurvival:block/clay_brick_pile_wet_3"
+    },
+    "count=4,dry=false": {
+      "model": "realisticsurvival:block/clay_brick_pile_wet_4"
+    },
+    "count=1,dry=true": {
+      "model": "realisticsurvival:block/clay_brick_pile_dry_1"
+    },
+    "count=2,dry=true": {
+      "model": "realisticsurvival:block/clay_brick_pile_dry_2"
+    },
+    "count=3,dry=true": {
+      "model": "realisticsurvival:block/clay_brick_pile_dry_3"
+    },
+    "count=4,dry=true": {
+      "model": "realisticsurvival:block/clay_brick_pile_dry_4"
+    }
+  }
+}

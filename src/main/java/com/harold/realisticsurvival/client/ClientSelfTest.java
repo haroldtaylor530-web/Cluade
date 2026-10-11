@@ -64,7 +64,12 @@ public final class ClientSelfTest {
             if (ticks == 520) fellTree(mc);
             if (ticks == 540) shot(mc, "6_tree_falling.png");
             if (ticks == 600) shot(mc, "7_tree_fallen.png");
-            if (ticks == 640) {
+            if (ticks == 610) buildOvenScene(mc);
+            if (ticks == 650) shot(mc, "9_brick_oven.png");
+            if (ticks == 660) openOven(mc);
+            if (ticks == 690) shot(mc, "10_oven_menu.png");
+            if (ticks == 700) mc.gui.setScreen(null);
+            if (ticks == 720) {
                 RealisticSurvival.LOGGER.info("CLIENTTEST DONE");
                 mc.stop();
             }
@@ -141,6 +146,42 @@ public final class ClientSelfTest {
             // fall to the east so it crosses the view
             TreeFelling.fell(level, tree, tree.getX() + 0.5 - 6, tree.getZ() + 0.5);
             level.setBlockAndUpdate(tree, Blocks.AIR.defaultBlockState());
+        });
+    }
+
+    private static BlockPos ovenWall = BlockPos.ZERO;
+
+    private static void buildOvenScene(Minecraft mc) {
+        MinecraftServer server = mc.getSingleplayerServer();
+        server.execute(() -> {
+            ServerPlayer p = server.getPlayerList().getPlayers().get(0);
+            ServerLevel level = (ServerLevel) p.level();
+            var o = com.harold.realisticsurvival.SelfTest.buildOven(level, base.offset(-6, 0, 10), net.minecraft.core.Direction.NORTH, true);
+            com.harold.realisticsurvival.block.BrickOven.setFormed(level, o, true);
+            ovenWall = o.at(0, 1, 0);
+            // bricks drying in front of it
+            for (int i = 0; i < 2; i++) {
+                BlockPos pile = base.offset(-1 - i, 0, 8);
+                level.setBlockAndUpdate(pile.below(), Blocks.GRASS_BLOCK.defaultBlockState());
+                level.setBlockAndUpdate(pile, ModRegistry.CLAY_BRICK_PILE.get().defaultBlockState()
+                        .setValue(com.harold.realisticsurvival.block.ClayBrickPileBlock.COUNT, 4)
+                        .setValue(com.harold.realisticsurvival.block.ClayBrickPileBlock.DRY, i == 1));
+            }
+            p.teleportTo(level, base.getX() - 3.0, base.getY(), base.getZ() + 4.5, java.util.Set.of(), 0.0F, 12.0F, true);
+        });
+    }
+
+    private static void openOven(Minecraft mc) {
+        MinecraftServer server = mc.getSingleplayerServer();
+        server.execute(() -> {
+            ServerPlayer p = server.getPlayerList().getPlayers().get(0);
+            BlockPos wall = ovenWall;
+            p.openMenu(new net.minecraft.world.SimpleMenuProvider((id, inv, pl) -> new com.harold.realisticsurvival.block.OvenMenu(id, inv,
+                    net.minecraft.world.inventory.ContainerLevelAccess.create(p.level(), wall), wall),
+                    net.minecraft.network.chat.Component.translatable("container.realisticsurvival.oven")), wall);
+            if (p.containerMenu instanceof com.harold.realisticsurvival.block.OvenMenu menu) {
+                for (int i = 0; i < 9; i++) if (i != 4) menu.getSlot(1 + i).set(new ItemStack(net.minecraft.world.item.Items.COBBLESTONE));
+            }
         });
     }
 

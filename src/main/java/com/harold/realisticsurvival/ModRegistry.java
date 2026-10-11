@@ -2,6 +2,8 @@ package com.harold.realisticsurvival;
 
 import com.harold.realisticsurvival.block.CampfireData;
 import com.harold.realisticsurvival.block.ChoppedLogBlock;
+import com.harold.realisticsurvival.block.ClayBrickPileBlock;
+import com.harold.realisticsurvival.block.OvenWallBlock;
 import net.minecraft.resources.Identifier;
 import com.harold.realisticsurvival.block.CampfireMenu;
 import com.harold.realisticsurvival.block.CookingPotBlock;
@@ -69,6 +71,16 @@ public final class ModRegistry {
     public static final DeferredRegister.DataComponents COMPONENTS = DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, M);
     public static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, M);
     public static final DeferredRegister<MenuType<?>> MENUS = DeferredRegister.create(Registries.MENU, M);
+    public static final DeferredRegister<net.minecraft.world.item.crafting.RecipeType<?>> RECIPE_TYPES = DeferredRegister.create(Registries.RECIPE_TYPE, M);
+    public static final DeferredRegister<net.minecraft.world.item.crafting.RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(Registries.RECIPE_SERIALIZER, M);
+
+    // ---- brick oven recipes -------------------------------------------------------------------
+    public static final DeferredHolder<net.minecraft.world.item.crafting.RecipeType<?>, net.minecraft.world.item.crafting.RecipeType<net.minecraft.world.item.crafting.CraftingRecipe>> OVEN_RECIPE =
+            RECIPE_TYPES.register("oven", () -> net.minecraft.world.item.crafting.RecipeType.simple(RealisticSurvival.id("oven")));
+    public static final DeferredHolder<net.minecraft.world.item.crafting.RecipeSerializer<?>, net.minecraft.world.item.crafting.RecipeSerializer<com.harold.realisticsurvival.recipe.OvenRecipe>> OVEN_SHAPED =
+            RECIPE_SERIALIZERS.register("oven_shaped", () -> com.harold.realisticsurvival.recipe.OvenRecipe.SHAPED);
+    public static final DeferredHolder<net.minecraft.world.item.crafting.RecipeSerializer<?>, net.minecraft.world.item.crafting.RecipeSerializer<com.harold.realisticsurvival.recipe.OvenRecipe>> OVEN_SHAPELESS =
+            RECIPE_SERIALIZERS.register("oven_shapeless", () -> com.harold.realisticsurvival.recipe.OvenRecipe.SHAPELESS);
 
     // ---- tags ---------------------------------------------------------------------------
     public static final TagKey<net.minecraft.world.item.Item> FLINT_REPAIR = TagKey.create(Registries.ITEM, RealisticSurvival.id("flint_repair"));
@@ -152,6 +164,13 @@ public final class ModRegistry {
             p -> p.mapColor(MapColor.PODZOL).instrument(net.minecraft.world.level.block.state.properties.NoteBlockInstrument.BASS)
                     .strength(2.0F).sound(SoundType.WOOD).lightLevel(RealisticCampfireBlock::lightLevel).noOcclusion().ignitedByLava());
 
+    /** Wet clay bricks set out to dry, up to 4 to a pile. */
+    public static final DeferredBlock<ClayBrickPileBlock> CLAY_BRICK_PILE = BLOCKS.registerBlock("clay_brick_pile", ClayBrickPileBlock::new,
+            p -> p.mapColor(MapColor.CLAY).strength(0.3F).sound(SoundType.MUD_BRICKS).noOcclusion().pushReaction(PushReaction.POPPED));
+    /** Dried clay bricks built into a wall; part of the brick oven. */
+    public static final DeferredBlock<OvenWallBlock> OVEN_WALL_BLOCK = BLOCKS.registerBlock("oven_wall", OvenWallBlock::new,
+            p -> p.mapColor(MapColor.TERRACOTTA_ORANGE).strength(2.0F, 6.0F).sound(SoundType.MUD_BRICKS).requiresCorrectToolForDrops());
+
     /** Part-way chopped bottom logs, one per tree wood. */
     public static final String[] CHOPPABLE_WOODS = { "oak", "spruce", "birch", "jungle", "acacia", "dark_oak", "mangrove", "cherry", "pale_oak" };
     public static final Map<String, DeferredBlock<ChoppedLogBlock>> CHOPPED_LOGS = new java.util.LinkedHashMap<>();
@@ -217,7 +236,14 @@ public final class ModRegistry {
     public static final DeferredItem<BlockItem> CAMPFIRE = ITEMS.registerSimpleBlockItem("campfire", CAMPFIRE_BLOCK);
     public static final DeferredItem<Item> BOW_DRILL = ITEMS.registerItem("bow_drill", Item::new, p -> p.durability(24));
 
+    // brick oven
+    public static final DeferredItem<BlockItem> WET_CLAY_BRICK = ITEMS.registerSimpleBlockItem("wet_clay_brick", CLAY_BRICK_PILE);
+    public static final DeferredItem<Item> DRY_CLAY_BRICK = ITEMS.registerSimpleItem("dry_clay_brick");
+    public static final DeferredItem<BlockItem> OVEN_WALL = ITEMS.registerSimpleBlockItem("oven_wall", OVEN_WALL_BLOCK);
+
     // ---- menus --------------------------------------------------------------------------------
+    public static final DeferredHolder<MenuType<?>, MenuType<com.harold.realisticsurvival.block.OvenMenu>> OVEN_MENU = MENUS.register("oven",
+            () -> IMenuTypeExtension.create(com.harold.realisticsurvival.block.OvenMenu::fromNetwork));
     public static final DeferredHolder<MenuType<?>, MenuType<CampfireMenu>> CAMPFIRE_MENU = MENUS.register("campfire",
             () -> IMenuTypeExtension.create(CampfireMenu::fromNetwork));
 
@@ -237,6 +263,8 @@ public final class ModRegistry {
         COMPONENTS.register(bus);
         TABS.register(bus);
         MENUS.register(bus);
+        RECIPE_TYPES.register(bus);
+        RECIPE_SERIALIZERS.register(bus);
         // the realistic campfire reuses the vanilla campfire block entity (cooking slots, renderer)
         bus.addListener((net.neoforged.neoforge.event.BlockEntityTypeAddBlocksEvent e) ->
                 e.modify(net.minecraft.world.level.block.entity.BlockEntityTypes.CAMPFIRE, CAMPFIRE_BLOCK.get()));

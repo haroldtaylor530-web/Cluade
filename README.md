@@ -77,6 +77,24 @@ lands. Anything it lands on gets hurt. Better axes cut faster and take more off 
 stone, copper and iron 3, diamond, netherite and gold 2. Thick 2x2 trunks are slower to cut. Sneak to cut a
 single log, and player-built log walls (with placed leaves) never fall.
 
+**Brick oven.** Furnaces, work stations and all metal work need a brick oven; the crafting
+table can't make them any more. That covers the furnace, smoker, blast furnace, stonecutter,
+anvil, grindstone and smithing table; iron, gold and copper tools, weapons, spears and armour
+(and the shield); and metal goods such as buckets, shears, rails, cauldrons, hoppers, chains,
+lanterns, iron doors, trapdoors and bars, minecarts, compasses, clocks, lightning rods and the
+cooking pot. Flint and steel and stone tools are still made by hand.
+- **Clay bricks:** a clay ball and a plant fibre make a wet clay brick. Place it on the ground
+  (up to 4 to a pile) and it dries in 1 to 3 days; rain soaks it and holds it back. Break the
+  pile to collect the dried bricks.
+- **Oven wall:** 4 dried bricks in a square.
+- **The oven:** a 4x4 ring of oven walls, 5 high, open at the top. Leave a 2-wide opening in
+  the middle of the front on the 2nd and 3rd layers. Inside, the floor is gravel and two
+  campfires go along the back. When it's complete the walls darken.
+- **Using it:** light at least one of the campfires, then right-click any wall to open the
+  oven's 3x3 workbench. It uses the normal crafting patterns. If something is wrong,
+  right-clicking a wall tells you what's missing.
+- A full oven takes 56 wall blocks, which is 224 bricks.
+
 **Spears.** Flint, iron and diamond. Stab with them (slow, longer reach), or hold right-click
 to wind up and release to throw. The longer the wind-up (up to a second), the harder the throw.
 Thrown spears can make targets bleed. Walk over a landed spear to pick it back up.

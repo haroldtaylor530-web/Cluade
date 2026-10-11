@@ -28,6 +28,7 @@ public class RealisticSurvival {
         NeoForge.EVENT_BUS.register(InjuryEvents.class);
         NeoForge.EVENT_BUS.register(EarlyGameEvents.class);
         NeoForge.EVENT_BUS.register(com.harold.realisticsurvival.survival.TreeFelling.class);
+        NeoForge.EVENT_BUS.register(com.harold.realisticsurvival.block.BrickOven.class);
         NeoForge.EVENT_BUS.register(SelfTest.class);
     }
 

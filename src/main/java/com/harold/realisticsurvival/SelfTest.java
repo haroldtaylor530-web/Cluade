@@ -1,6 +1,10 @@
 package com.harold.realisticsurvival;
 
+import com.harold.realisticsurvival.block.BrickOven;
 import com.harold.realisticsurvival.block.CampfireData;
+import com.harold.realisticsurvival.block.ClayBrickPileBlock;
+import com.harold.realisticsurvival.block.OvenMenu;
+import com.harold.realisticsurvival.recipe.OvenRecipe;
 import com.harold.realisticsurvival.block.ChoppedLogBlock;
 import com.harold.realisticsurvival.block.CookingPotBlock;
 import com.harold.realisticsurvival.block.RealisticCampfireBlock;
@@ -129,6 +133,94 @@ public final class SelfTest {
 
         campfire(server, level, ground.offset(6, 0, 0));
         tree(level, ground.offset(-8, 0, 0));
+        oven(server, level, ground.offset(0, 0, 14));
+    }
+
+    /** Build a brick oven with its front facing the given way. Used by the tests. */
+    public static BrickOven.Oven buildOven(ServerLevel level, BlockPos origin, net.minecraft.core.Direction front, boolean lit) {
+        BrickOven.Oven o = new BrickOven.Oven(origin, front);
+        for (int x = -1; x <= 4; x++) for (int z = -1; z <= 4; z++) {
+            level.setBlockAndUpdate(origin.offset(x, -1, z), Blocks.STONE.defaultBlockState());
+            for (int y = 0; y <= 6; y++) level.setBlockAndUpdate(origin.offset(x, y, z), Blocks.AIR.defaultBlockState());
+        }
+        for (int ly = 0; ly < 5; ly++) for (int lz = 0; lz < 4; lz++) for (int lx = 0; lx < 4; lx++) {
+            boolean ring = lx == 0 || lx == 3 || lz == 0 || lz == 3;
+            boolean doorway = lz == 0 && (lx == 1 || lx == 2) && (ly == 1 || ly == 2);
+            var state = Blocks.AIR.defaultBlockState();
+            if (ring && !doorway) state = ModRegistry.OVEN_WALL_BLOCK.get().defaultBlockState();
+            else if (!ring && ly == 0) state = Blocks.GRAVEL.defaultBlockState();
+            else if (!ring && ly == 1 && lz == 2) state = Blocks.CAMPFIRE.defaultBlockState().setValue(net.minecraft.world.level.block.CampfireBlock.LIT, lit);
+            level.setBlockAndUpdate(o.at(lx, ly, lz), state);
+        }
+        return o;
+    }
+
+    private static void oven(MinecraftServer server, ServerLevel level, BlockPos at) {
+        // recipes moved to the oven
+        var rm = server.getRecipeManager();
+        for (String id : new String[] { "furnace", "iron_pickaxe", "bucket", "anvil", "golden_sword", "copper_helmet", "shield" }) {
+            var r = rm.byKey(ResourceKey.create(Registries.RECIPE, net.minecraft.resources.Identifier.withDefaultNamespace(id)));
+            check(r.isPresent() && r.get().value() instanceof OvenRecipe, id + " is an oven recipe");
+        }
+        for (String id : new String[] { "flint_and_steel", "stone_pickaxe", "crafting_table" }) {
+            var r = rm.byKey(ResourceKey.create(Registries.RECIPE, net.minecraft.resources.Identifier.withDefaultNamespace(id)));
+            check(r.isPresent() && !(r.get().value() instanceof OvenRecipe), id + " is still a crafting table recipe");
+        }
+        var cob = new ItemStack(Items.COBBLESTONE);
+        var grid = java.util.List.of(cob, cob, cob, cob, ItemStack.EMPTY, cob, cob, cob, cob);
+        var input = net.minecraft.world.item.crafting.CraftingInput.of(3, 3, grid);
+        check(rm.getRecipeFor(net.minecraft.world.item.crafting.RecipeType.CRAFTING, input, level).isEmpty(), "crafting table can't make a furnace");
+        check(rm.getRecipeFor(ModRegistry.OVEN_RECIPE.get(), input, level).isPresent(), "the oven can make a furnace");
+
+        // bricks dry
+        server.setWeatherParameters(24000, 0, false, false);
+        BlockPos pilePos = at.offset(8, 0, 0);
+        level.setBlockAndUpdate(pilePos.below(), Blocks.STONE.defaultBlockState());
+        level.setBlockAndUpdate(pilePos, ModRegistry.CLAY_BRICK_PILE.get().defaultBlockState().setValue(ClayBrickPileBlock.COUNT, 3));
+        check(level.getBlockTicks().hasScheduledTick(pilePos, ModRegistry.CLAY_BRICK_PILE.get()), "wet bricks are scheduled to dry");
+        level.getBlockState(pilePos).tick(level, pilePos, level.getRandom());
+        var pile = level.getBlockState(pilePos);
+        check(pile.getValue(ClayBrickPileBlock.DRY), "bricks dried");
+        var drops = net.minecraft.world.level.block.Block.getDrops(pile, level, pilePos, null);
+        check(drops.size() == 1 && drops.get(0).is(ModRegistry.DRY_CLAY_BRICK.get()) && drops.get(0).getCount() == 3, "a pile of 3 dry bricks drops 3 dried bricks (" + drops + ")");
+        int t = ClayBrickPileBlock.dryingTime(level.getRandom());
+        check(t >= 24000 && t <= 72000, "drying takes 1-3 days (" + t + " ticks)");
+
+        // the multiblock, built facing each way
+        net.minecraft.core.Direction[] fronts = { net.minecraft.core.Direction.NORTH, net.minecraft.core.Direction.EAST,
+                net.minecraft.core.Direction.SOUTH, net.minecraft.core.Direction.WEST };
+        for (int i = 0; i < 4; i++) {
+            BlockPos origin = at.offset(i * 7, 0, 0);
+            BrickOven.Oven built = buildOven(level, origin, fronts[i], false);
+            BrickOven.Oven found = BrickOven.find(level, built.at(3, 4, 3));
+            check(found != null && found.front() == fronts[i] && found.origin().equals(origin), "oven facing " + fronts[i] + " is recognised");
+            if (found == null) continue;
+            check(!found.lit(level), "unlit oven is cold");
+            BlockPos fire = found.campfires()[0];
+            level.setBlockAndUpdate(fire, level.getBlockState(fire).setValue(net.minecraft.world.level.block.CampfireBlock.LIT, true));
+            check(found.lit(level), "one lit campfire heats the oven");
+        }
+        BrickOven.Oven o = BrickOven.find(level, at);
+        if (o == null) return;
+        // the workbench makes a furnace
+        FakePlayer smith = FakePlayerFactory.getMinecraft(level);
+        smith.setPos(o.at(1, 1, 0).getX() + 0.5, o.at(1, 1, 0).getY(), o.at(1, 1, 0).getZ() + 0.5);
+        BlockPos wallPos = o.at(0, 1, 0);
+        OvenMenu menu = new OvenMenu(0, smith.getInventory(), net.minecraft.world.inventory.ContainerLevelAccess.create(level, wallPos), wallPos);
+        for (int i = 0; i < 9; i++) if (i != 4) menu.getSlot(1 + i).set(new ItemStack(Items.COBBLESTONE));
+        check(menu.getSlot(0).getItem().is(Items.FURNACE), "oven workbench shows a furnace (" + menu.getSlot(0).getItem() + ")");
+        menu.getSlot(0).onTake(smith, menu.getSlot(0).getItem());
+        check(menu.getSlot(1).getItem().isEmpty(), "making it used up the cobblestone");
+        check(menu.stillValid(smith), "workbench stays open while the oven is hot");
+        menu.removed(smith);
+
+        // break a wall: no longer an oven, and it says what's missing
+        level.setBlockAndUpdate(o.at(3, 2, 2), Blocks.AIR.defaultBlockState());
+        check(BrickOven.find(level, o.at(0, 0, 0)) == null, "an oven with a missing wall isn't an oven");
+        var missing = BrickOven.whatsMissing(level, o.at(0, 0, 0));
+        var contents = (net.minecraft.network.chat.contents.TranslatableContents) missing.getContents();
+        check(contents.getKey().endsWith("missing.wall") && "3".equals(String.valueOf(contents.getArgs()[0])),
+                "it says what's missing: " + contents.getKey() + " layer " + contents.getArgs()[0]);
     }
 
     /** Clear a flat 7x7 patch of grass with air above it, surface at y. */

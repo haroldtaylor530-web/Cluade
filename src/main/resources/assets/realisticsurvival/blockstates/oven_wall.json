@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "formed=false": {
+      "model": "realisticsurvival:block/oven_wall"
+    },
+    "formed=true": {
+      "model": "realisticsurvival:block/oven_wall_formed"
+    }
+  }
+}

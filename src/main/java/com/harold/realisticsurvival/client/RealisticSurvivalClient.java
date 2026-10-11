@@ -41,6 +41,7 @@ public class RealisticSurvivalClient {
 
     private static void registerScreens(net.neoforged.neoforge.client.event.RegisterMenuScreensEvent event) {
         event.register(ModRegistry.CAMPFIRE_MENU.get(), CampfireScreen::new);
+        event.register(ModRegistry.OVEN_MENU.get(), OvenScreen::new);
     }
 
     private static void registerPayloads(net.neoforged.neoforge.client.network.event.RegisterClientPayloadHandlersEvent event) {

@@ -105,5 +105,18 @@
   "block.realisticsurvival.chopped_dark_oak_log": "Chopped Dark Oak Log",
   "block.realisticsurvival.chopped_mangrove_log": "Chopped Mangrove Log",
   "block.realisticsurvival.chopped_cherry_log": "Chopped Cherry Log",
-  "block.realisticsurvival.chopped_pale_oak_log": "Chopped Pale Oak Log"
+  "block.realisticsurvival.chopped_pale_oak_log": "Chopped Pale Oak Log",
+  "item.realisticsurvival.wet_clay_brick": "Wet Clay Brick",
+  "item.realisticsurvival.dry_clay_brick": "Dried Clay Brick",
+  "block.realisticsurvival.clay_brick_pile": "Clay Bricks",
+  "block.realisticsurvival.oven_wall": "Oven Wall",
+  "container.realisticsurvival.oven": "Brick Oven",
+  "message.realisticsurvival.oven.complete": "The brick oven is complete. Light the fires and right-click a wall to work.",
+  "message.realisticsurvival.oven.cold": "The oven is cold. Light the campfires inside.",
+  "message.realisticsurvival.oven.broken": "The oven isn't whole any more.",
+  "message.realisticsurvival.oven.missing.wall": "Not an oven yet: an oven wall is missing on layer %s (4x4 walls, 5 high).",
+  "message.realisticsurvival.oven.missing.doorway": "Not an oven yet: leave a 2-wide opening in the middle of the front, layers 2 and 3 (layer %s is blocked).",
+  "message.realisticsurvival.oven.missing.floor": "Not an oven yet: the floor inside must be gravel (layer %s).",
+  "message.realisticsurvival.oven.missing.campfire": "Not an oven yet: put two campfires along the back inside, on the gravel (layer %s).",
+  "message.realisticsurvival.oven.missing.inside": "Not an oven yet: the inside must be hollow (layer %s)."
 }

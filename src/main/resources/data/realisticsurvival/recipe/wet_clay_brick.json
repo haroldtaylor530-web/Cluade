@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:clay_ball",
+    "realisticsurvival:plant_fibre"
+  ],
+  "result": {
+    "id": "realisticsurvival:wet_clay_brick",
+    "count": 1
+  }
+}

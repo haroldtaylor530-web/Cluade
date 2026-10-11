@@ -376,3 +376,75 @@ for wood in WOODS_CHOP:
     lang[f"block.{NS}.chopped_{wood}_log"] = "Chopped " + wood.replace("_", " ").title() + " Log"
 w(f"{A}/lang/en_us.json", lang)
 print("chopped logs done")
+
+# ------------------------------------------------------------------ brick oven
+# metal work moves to the oven: the iron spear and the cooking pot
+for name in ("iron_spear", "cooking_pot"):
+    p = f"{R}/{name}.json"
+    with open(p) as f:
+        r = json.load(f)
+    r["type"] = "realisticsurvival:oven_shaped"
+    w(p, r)
+
+shapeless("wet_clay_brick", ["minecraft:clay_ball", ns("plant_fibre")], "wet_clay_brick")
+shaped("oven_wall", ["BB", "BB"], {"B": ns("dry_clay_brick")}, "oven_wall", cat="building")
+
+# brick piles: up to 4 bricks, two flat then two across on top
+BRICKS = [([2, 0, 2], [14, 3, 7]), ([2, 0, 9], [14, 3, 14]), ([2, 3, 2], [7, 6, 14]), ([9, 3, 2], [14, 6, 14])]
+
+
+def brick(frm, to):
+    faces = {}
+    for d in ("north", "south", "east", "west", "up", "down"):
+        faces[d] = {"uv": [2, 5, 14, 11] if d in ("up", "down") else [2, 6, 14, 9], "texture": "#brick"}
+    return {"from": frm, "to": to, "faces": faces}
+
+
+pile = {}
+for state in ("wet", "dry"):
+    for n in range(1, 5):
+        w(f"{A}/models/block/clay_brick_pile_{state}_{n}.json", {
+            "parent": "minecraft:block/block", "textures": {"brick": f"{NS}:block/clay_brick_{state}", "particle": f"{NS}:block/clay_brick_{state}"},
+            "elements": [brick(*b) for b in BRICKS[:n]]})
+        pile[f"count={n},dry={'true' if state == 'dry' else 'false'}"] = {"model": f"{NS}:block/clay_brick_pile_{state}_{n}"}
+blockstate("clay_brick_pile", {"variants": pile})
+pools = []
+for dry, item in (("false", "wet_clay_brick"), ("true", "dry_clay_brick")):
+    counts = [{"type": "minecraft:set_count", "count": n,
+               "condition": {"type": "minecraft:match_block", "blocks": ns("clay_brick_pile"), "state": {"count": str(n)}}}
+              for n in range(2, 5)]
+    pools.append({"rolls": 1, "entries": [{"type": "minecraft:item", "name": ns(item), "modifier": counts}],
+                  "condition": {"type": "minecraft:match_block", "blocks": ns("clay_brick_pile"), "state": {"dry": dry}}})
+w(f"{D}/{NS}/loot_table/blocks/clay_brick_pile.json", {"type": "minecraft:block", "pools": pools})
+
+for formed in ("false", "true"):
+    suffix = "_formed" if formed == "true" else ""
+    w(f"{A}/models/block/oven_wall{suffix}.json", {"parent": "minecraft:block/cube_all", "textures": {"all": f"{NS}:block/oven_wall{suffix}"}})
+blockstate("oven_wall", {"variants": {"formed=false": {"model": f"{NS}:block/oven_wall"}, "formed=true": {"model": f"{NS}:block/oven_wall_formed"}}})
+loot("oven_wall", ns("oven_wall"))
+w(f"{A}/items/oven_wall.json", {"model": model("block/oven_wall")})
+for name in ("wet_clay_brick", "dry_clay_brick"):
+    w(f"{A}/models/item/{name}.json", {"parent": "minecraft:item/generated", "textures": {"layer0": f"{NS}:item/{name}"}})
+    w(f"{A}/items/{name}.json", {"model": model(f"item/{name}")})
+tag(f"{D}/minecraft/tags/block/mineable/pickaxe.json", [ns("oven_wall")])
+tag(f"{D}/minecraft/tags/block/mineable/shovel.json", [ns("clay_brick_pile")])
+
+with open(f"{A}/lang/en_us.json") as f:
+    lang = json.load(f)
+lang.update({
+    f"item.{NS}.wet_clay_brick": "Wet Clay Brick",
+    f"item.{NS}.dry_clay_brick": "Dried Clay Brick",
+    f"block.{NS}.clay_brick_pile": "Clay Bricks",
+    f"block.{NS}.oven_wall": "Oven Wall",
+    f"container.{NS}.oven": "Brick Oven",
+    f"message.{NS}.oven.complete": "The brick oven is complete. Light the fires and right-click a wall to work.",
+    f"message.{NS}.oven.cold": "The oven is cold. Light the campfires inside.",
+    f"message.{NS}.oven.broken": "The oven isn't whole any more.",
+    f"message.{NS}.oven.missing.wall": "Not an oven yet: an oven wall is missing on layer %s (4x4 walls, 5 high).",
+    f"message.{NS}.oven.missing.doorway": "Not an oven yet: leave a 2-wide opening in the middle of the front, layers 2 and 3 (layer %s is blocked).",
+    f"message.{NS}.oven.missing.floor": "Not an oven yet: the floor inside must be gravel (layer %s).",
+    f"message.{NS}.oven.missing.campfire": "Not an oven yet: put two campfires along the back inside, on the gravel (layer %s).",
+    f"message.{NS}.oven.missing.inside": "Not an oven yet: the inside must be hollow (layer %s).",
+})
+w(f"{A}/lang/en_us.json", lang)
+print("oven done")

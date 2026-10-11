@@ -1,0 +1,15 @@
+{
+  "type": "realisticsurvival:oven_shaped",
+  "category": "equipment",
+  "key": {
+    "X": "minecraft:copper_ingot"
+  },
+  "pattern": [
+    "XXX",
+    "X X",
+    "X X"
+  ],
+  "result": {
+    "id": "minecraft:copper_leggings"
+  }
+}

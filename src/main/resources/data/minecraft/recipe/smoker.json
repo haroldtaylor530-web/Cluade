@@ -1,0 +1,15 @@
+{
+  "type": "realisticsurvival:oven_shaped",
+  "key": {
+    "#": "#minecraft:logs",
+    "X": "minecraft:furnace"
+  },
+  "pattern": [
+    " # ",
+    "#X#",
+    " # "
+  ],
+  "result": {
+    "id": "minecraft:smoker"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "type": "realisticsurvival:oven_shaped",
+  "category": "equipment",
+  "key": {
+    "X": "minecraft:iron_ingot"
+  },
+  "pattern": [
+    "X X",
+    "X X"
+  ],
+  "result": {
+    "id": "minecraft:iron_boots"
+  }
+}

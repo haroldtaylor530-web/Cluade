@@ -1,0 +1,13 @@
+{
+  "type": "realisticsurvival:oven_shaped",
+  "key": {
+    "#": "minecraft:iron_ingot"
+  },
+  "pattern": [
+    "# #",
+    "###"
+  ],
+  "result": {
+    "id": "minecraft:minecart"
+  }
+}

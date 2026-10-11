@@ -1,0 +1,77 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "brick": "realisticsurvival:block/clay_brick_wet",
+    "particle": "realisticsurvival:block/clay_brick_wet"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        0,
+        2
+      ],
+      "to": [
+        14,
+        3,
+        7
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            2,
+            6,
+            14,
+            9
+          ],
+          "texture": "#brick"
+        },
+        "south": {
+          "uv": [
+            2,
+            6,
+            14,
+            9
+          ],
+          "texture": "#brick"
+        },
+        "east": {
+          "uv": [
+            2,
+            6,
+            14,
+            9
+          ],
+          "texture": "#brick"
+        },
+        "west": {
+          "uv": [
+            2,
+            6,
+            14,
+            9
+          ],
+          "texture": "#brick"
+        },
+        "up": {
+          "uv": [
+            2,
+            5,
+            14,
+            11
+          ],
+          "texture": "#brick"
+        },
+        "down": {
+          "uv": [
+            2,
+            5,
+            14,
+            11
+          ],
+          "texture": "#brick"
+        }
+      }
+    }
+  ]
+}
