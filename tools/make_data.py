@@ -692,7 +692,7 @@ lang.update({
     f"item.{NS}.hand_drill": "Hand Drill",
     f"gui.{NS}.lighting.heat": "Heat",
     f"gui.{NS}.lighting.speed": "Rubbing",
-    f"gui.{NS}.lighting.friction.hint": "Rub the mouse left and right, fast! Stay past the white mark.",
+    f"gui.{NS}.lighting.friction.hint": "Rub the mouse side to side, fast!",
 })
 lang[f"gui.{NS}.campfire.light.tip"] = "Light it with a hand drill, bow drill, flint and steel or a flint striker from your inventory. Needs kindling and fuel. A fire starter as kindling makes it easier."
 lang[f"message.{NS}.campfire.no_starter"] = "You need a hand drill, bow drill, flint and steel or a flint striker to light it."
