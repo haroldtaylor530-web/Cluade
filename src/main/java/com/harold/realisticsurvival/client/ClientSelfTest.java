@@ -93,7 +93,9 @@ public final class ClientSelfTest {
                         lastMining.collected, lastMining.totalOre, lastMining.piecesLeft(), lastMining.actions, ticks - miningOpened);
             }
             if (miningClosed > 0 && ticks == miningClosed + 15) shot(mc, "15_mined.png");
-            if ((miningClosed > 0 && ticks == miningClosed + 30) || ticks == 2400) {
+            if (miningClosed > 0 && ticks == miningClosed + 25) buildBlocksScene(mc);
+            if (miningClosed > 0 && ticks == miningClosed + 70) shot(mc, "16_rubble_and_fence.png");
+            if ((miningClosed > 0 && ticks == miningClosed + 85) || ticks == 2400) {
                 RealisticSurvival.LOGGER.info("CLIENTTEST DONE");
                 mc.stop();
             }
@@ -312,6 +314,33 @@ public final class ClientSelfTest {
             p.getInventory().setItem(p.getInventory().getSelectedSlot(), new ItemStack(net.minecraft.world.item.Items.DIAMOND_PICKAXE));
             p.teleportTo(level, ore.getX() + 0.5, ore.getY(), ore.getZ() - 1.5, java.util.Set.of(), 0.0F, 30.0F, true);
             com.harold.realisticsurvival.survival.OreMining.start(p, ore, level.getBlockState(ore));
+        });
+    }
+
+    /** The rubble slab, rubble wall and stick fence, side by side. */
+    private static void buildBlocksScene(Minecraft mc) {
+        MinecraftServer server = mc.getSingleplayerServer();
+        server.execute(() -> {
+            ServerPlayer p = server.getPlayerList().getPlayers().get(0);
+            ServerLevel level = (ServerLevel) p.level();
+            for (int x = -5; x <= 5; x++) for (int z = 14; z <= 23; z++) {
+                level.setBlockAndUpdate(base.offset(x, -1, z), Blocks.GRASS_BLOCK.defaultBlockState());
+                for (int y = 0; y <= 4; y++) level.setBlockAndUpdate(base.offset(x, y, z), Blocks.AIR.defaultBlockState());
+            }
+            var slab = ModRegistry.RUBBLE_SLAB_BLOCK.get().defaultBlockState();
+            level.setBlockAndUpdate(base.offset(-1, 0, 18), slab.setValue(net.minecraft.world.level.block.SlabBlock.TYPE, net.minecraft.world.level.block.state.properties.SlabType.BOTTOM));
+            level.setBlockAndUpdate(base.offset(0, 0, 18), slab.setValue(net.minecraft.world.level.block.SlabBlock.TYPE, net.minecraft.world.level.block.state.properties.SlabType.DOUBLE));
+            level.setBlockAndUpdate(base.offset(1, 0, 18), slab.setValue(net.minecraft.world.level.block.SlabBlock.TYPE, net.minecraft.world.level.block.state.properties.SlabType.TOP));
+            for (int x = 1; x <= 4; x++) level.setBlockAndUpdate(base.offset(x, 0, 21), ModRegistry.RUBBLE_WALL_BLOCK.get().defaultBlockState());
+            level.setBlockAndUpdate(base.offset(4, 0, 22), ModRegistry.RUBBLE_WALL_BLOCK.get().defaultBlockState());
+            level.setBlockAndUpdate(base.offset(2, 1, 21), ModRegistry.RUBBLE_WALL_BLOCK.get().defaultBlockState());
+            for (int x = -4; x <= -1; x++) level.setBlockAndUpdate(base.offset(x, 0, 21), ModRegistry.STICK_FENCE_BLOCK.get().defaultBlockState());
+            level.setBlockAndUpdate(base.offset(-4, 0, 22), ModRegistry.STICK_FENCE_BLOCK.get().defaultBlockState());
+            level.setBlockAndUpdate(base.offset(-3, 1, 21), ModRegistry.STICK_FENCE_BLOCK.get().defaultBlockState());
+            p.getInventory().setItem(0, new ItemStack(ModRegistry.RUBBLE_SLAB.get(), 6));
+            p.getInventory().setItem(1, new ItemStack(ModRegistry.RUBBLE_WALL.get(), 6));
+            p.getInventory().setItem(2, new ItemStack(ModRegistry.STICK_FENCE.get(), 3));
+            p.teleportTo(level, base.getX() + 0.5, base.getY(), base.getZ() + 15.0, java.util.Set.of(), 0.0F, 14.0F, true);
         });
     }
 
