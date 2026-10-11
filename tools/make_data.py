@@ -486,7 +486,7 @@ for i, x in enumerate((3.6, 6.8, 9.8, 12.6)):
     rack.append(box([x - 0.3, 12.5, 7.6], [x + 0.3, 13.5, 8.4], "#hook"))
 w(f"{A}/models/block/drying_rack.json", {"parent": "minecraft:block/block", "textures": {
     "post": "minecraft:block/stripped_spruce_log", "pole": "minecraft:block/stripped_birch_log",
-    "hook": f"{NS}:item/fibre_string", "particle": "minecraft:block/stripped_spruce_log"}, "elements": rack})
+    "hook": "minecraft:block/hay_block_side", "particle": "minecraft:block/stripped_spruce_log"}, "elements": rack})
 blockstate("drying_rack", {"variants": {f"facing={f}": {"model": f"{NS}:block/drying_rack", "y": y}
                                         for f, y in (("north", 0), ("east", 90), ("south", 180), ("west", 270))}})
 w(f"{A}/items/drying_rack.json", {"model": model("block/drying_rack")})

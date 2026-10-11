@@ -3,7 +3,7 @@
   "textures": {
     "post": "minecraft:block/stripped_spruce_log",
     "pole": "minecraft:block/stripped_birch_log",
-    "hook": "realisticsurvival:item/fibre_string",
+    "hook": "minecraft:block/hay_block_side",
     "particle": "minecraft:block/stripped_spruce_log"
   },
   "elements": [
