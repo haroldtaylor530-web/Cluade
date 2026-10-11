@@ -108,6 +108,10 @@ golden food never spoil. Food gathered within the same quarter-day still stacks.
   in the campfire lighting game and then breaks. Its icon is cut from your rock texture.
 - **Fire starter** (2 plant fibre, 1 binding, 1 stripped log, shapeless). The best kindling and fuel: as kindling it makes the lighting game
   easier (one hit fewer, a sweet spot half as wide again), and as fuel it burns 4 minutes on a medium fire (a log burns 2).
+- **Hand drill** (1 vanilla string + 1 stick, shapeless; 10 tries). A third way to light a campfire, with its own minigame: **rub the
+  mouse left and right, fast**. Every full sweep is a stroke (24 needed, 16 with a fire starter as kindling); the heat drains 12.5% a
+  second, so you have to keep above about 3 strokes a second. A bar shows your rubbing speed against the mark you must stay past.
+  Rain makes the heat drain 40% faster. The icon uses your stick texture.
 - **Tools go dull** (config `toolDulling`). Pickaxes, axes, shovels and hoes lose their edge a point per block mined (flint, wood and
   stone fastest, iron slower, diamond slowest). A dull tool digs up to 45% slower, also in the ore mining game. Make a **whetstone**
   from 2 rocks (it uses your rock texture), hold it in one hand and the tool in the other, and right-click: +35 edge per go,

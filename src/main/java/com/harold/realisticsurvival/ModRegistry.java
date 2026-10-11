@@ -233,6 +233,8 @@ public final class ModRegistry {
     // early game
     public static final DeferredItem<com.harold.realisticsurvival.item.WhetstoneItem> WHETSTONE = ITEMS.registerItem("whetstone",
             com.harold.realisticsurvival.item.WhetstoneItem::new, p -> p.durability(48));
+    /** A stick wound with string, spun between your hands: lights a fire if you rub the mouse fast enough. */
+    public static final DeferredItem<Item> HAND_DRILL = ITEMS.registerItem("hand_drill", Item::new, p -> p.durability(10));
     /** A flint struck on a rock: one go at lighting a fire. */
     public static final DeferredItem<net.minecraft.world.item.FlintAndSteelItem> FLINT_STRIKER = ITEMS.registerItem("flint_striker",
             net.minecraft.world.item.FlintAndSteelItem::new, p -> p.durability(1));

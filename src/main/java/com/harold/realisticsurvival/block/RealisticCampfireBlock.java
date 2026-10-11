@@ -272,19 +272,37 @@ public class RealisticCampfireBlock extends CampfireBlock {
 
     /** Is this something you can start a fire with by friction or sparks? */
     public static boolean isFireStarter(ItemStack stack) {
-        return stack.is(Items.FLINT_AND_STEEL) || stack.is(ModRegistry.FLINT_STRIKER.get()) || stack.is(ModRegistry.BOW_DRILL.get());
+        return stack.is(Items.FLINT_AND_STEEL) || stack.is(ModRegistry.FLINT_STRIKER.get()) || stack.is(ModRegistry.HAND_DRILL.get()) || stack.is(ModRegistry.BOW_DRILL.get());
     }
 
-    /** Hits needed in the lighting game: a fire starter as kindling takes one fewer (never under 2). */
+    /** Which lighting game a tool plays: 0 spark strikes, 1 bow drill, 2 rubbing with the mouse (hand drill). */
+    public static int modeFor(ItemStack tool) {
+        return tool.is(ModRegistry.HAND_DRILL.get()) ? 2 : tool.is(ModRegistry.BOW_DRILL.get()) ? 1 : 0;
+    }
+
+    /**
+     * Hits needed in the lighting game: a fire starter as kindling takes one fewer (never under 2).
+     * For the hand drill it is the number of back-and-forth strokes, 24, or 16 with a fire starter.
+     */
     public static int hitsFor(ItemStack tool, ItemStack kindling) {
-        int hits = tool.is(ModRegistry.BOW_DRILL.get()) ? 4 : 3;
-        return kindling.is(ModRegistry.FIRE_STARTER.get()) ? Math.max(2, hits - 1) : hits;
+        boolean good = kindling.is(ModRegistry.FIRE_STARTER.get());
+        int mode = modeFor(tool);
+        if (mode == 2) return good ? 16 : 24;
+        int hits = mode == 1 ? 4 : 3;
+        return good ? Math.max(2, hits - 1) : hits;
     }
 
-    /** How wide the sweet spot is: a fire starter as kindling makes it half as wide again. */
+    /**
+     * How wide the sweet spot is: a fire starter as kindling makes it half as wide again.
+     * For the hand drill it is the share of the heat lost every second (so 0.125 means you must
+     * rub at least 3 strokes a second to get anywhere); a fire starter cuts it by 30%.
+     */
     public static float zoneFor(ItemStack tool, ItemStack kindling) {
-        float zone = tool.is(ModRegistry.BOW_DRILL.get()) ? 0.16F : 0.22F;
-        return kindling.is(ModRegistry.FIRE_STARTER.get()) ? zone * 1.5F : zone;
+        boolean good = kindling.is(ModRegistry.FIRE_STARTER.get());
+        int mode = modeFor(tool);
+        if (mode == 2) return good ? 0.0875F : 0.125F;
+        float zone = mode == 1 ? 0.16F : 0.22F;
+        return good ? zone * 1.5F : zone;
     }
 
     /** Start the lighting game for a player: checks the fire is ready, then tells their client to open it. */
@@ -302,14 +320,14 @@ public class RealisticCampfireBlock extends CampfireBlock {
             player.sendOverlayMessage(Component.translatable("message.realisticsurvival.campfire.no_starter"));
             return;
         }
-        boolean bowDrill = tool.is(ModRegistry.BOW_DRILL.get());
+        int mode = modeFor(tool);
         ItemStack kindling = data(be).kindling;
         int hits = hitsFor(tool, kindling);
         float zone = zoneFor(tool, kindling);
         boolean wetWeather = level.isRainingAt(pos.above());
-        if (wetWeather) zone *= 0.6F;
+        if (wetWeather) zone *= mode == 2 ? 1.4F : 0.6F; // rain: a smaller sweet spot, or heat that drains faster
         PENDING.put(player.getUUID(), new Pending(pos.immutable(), level.getGameTime()));
-        PacketDistributor.sendToPlayer(player, new CampfireNet.OpenLighting(pos, hits, zone, bowDrill, wetWeather));
+        PacketDistributor.sendToPlayer(player, new CampfireNet.OpenLighting(pos, hits, zone, mode, wetWeather));
     }
 
     /** The player's client says how the lighting game went. */

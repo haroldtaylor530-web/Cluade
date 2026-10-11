@@ -73,7 +73,7 @@
   "gui.realisticsurvival.campfire.medium.tip": "A medium fire: normal fuel use, warms you within about 5 blocks.",
   "gui.realisticsurvival.campfire.large.tip": "A large fire: burns fuel 2.5x as fast, warms you from 7 blocks, cooks twice as fast, lots of smoke. Don't stand in it.",
   "gui.realisticsurvival.campfire.light": "Light",
-  "gui.realisticsurvival.campfire.light.tip": "Light it with a bow drill, flint and steel or a flint striker from your inventory. Needs kindling and fuel. A fire starter as kindling makes it easier.",
+  "gui.realisticsurvival.campfire.light.tip": "Light it with a hand drill, bow drill, flint and steel or a flint striker from your inventory. Needs kindling and fuel. A fire starter as kindling makes it easier.",
   "gui.realisticsurvival.campfire.burning": "Burning",
   "gui.realisticsurvival.campfire.left": "%s left",
   "gui.realisticsurvival.campfire.embers": "Glowing embers",
@@ -92,7 +92,7 @@
   "message.realisticsurvival.campfire.wet": "It's soaked. It won't light in water.",
   "message.realisticsurvival.campfire.no_kindling": "Add kindling first: plant fibre, paper or dry grass.",
   "message.realisticsurvival.campfire.no_fuel": "Add fuel first: sticks, logs or coal.",
-  "message.realisticsurvival.campfire.no_starter": "You need a bow drill, flint and steel or a flint striker to light it.",
+  "message.realisticsurvival.campfire.no_starter": "You need a hand drill, bow drill, flint and steel or a flint striker to light it.",
   "message.realisticsurvival.campfire.caught": "The fire caught.",
   "message.realisticsurvival.campfire.failed": "The tinder didn't catch. Try again.",
   "realisticsurvival.configuration.treeFelling": "Trees fall when you cut through the trunk",
@@ -173,5 +173,9 @@
   "realisticsurvival.configuration.stamina": "Stamina",
   "realisticsurvival.configuration.toolDulling": "Tools go dull",
   "item.realisticsurvival.flint_striker": "Flint Striker",
-  "item.realisticsurvival.fire_starter": "Fire Starter"
+  "item.realisticsurvival.fire_starter": "Fire Starter",
+  "item.realisticsurvival.hand_drill": "Hand Drill",
+  "gui.realisticsurvival.lighting.heat": "Heat",
+  "gui.realisticsurvival.lighting.speed": "Rubbing",
+  "gui.realisticsurvival.lighting.friction.hint": "Rub the mouse left and right, fast! Stay past the white mark."
 }

@@ -101,7 +101,20 @@ public final class ClientSelfTest {
                 var lines = dull.getTooltipLines(ctx, mc.player, net.minecraft.world.item.TooltipFlag.NORMAL);
                 RealisticSurvival.LOGGER.info("CLIENTTEST tooltip {}", String.join(" | ", lines.stream().map(c -> c.getString()).toList()));
             }
-            if ((miningClosed > 0 && ticks == miningClosed + 85) || ticks == 2400) {
+            if (miningClosed > 0 && ticks == miningClosed + 74) {
+                var friction = new FrictionScreen(base, 24, 0.125F, false);
+                mc.gui.setScreen(friction);
+                friction.simulate(15);
+            }
+            if (miningClosed > 0 && ticks == miningClosed + 80) {
+                shot(mc, "17_hand_drill.png");
+                if (mc.gui.screen() instanceof FrictionScreen f) {
+                    RealisticSurvival.LOGGER.info("CLIENTTEST friction heat {}", f.heat());
+                    f.simulate(20);
+                    RealisticSurvival.LOGGER.info("CLIENTTEST friction success {}", f.succeeded());
+                }
+            }
+            if ((miningClosed > 0 && ticks == miningClosed + 100) || ticks == 2400) {
                 RealisticSurvival.LOGGER.info("CLIENTTEST DONE");
                 mc.stop();
             }

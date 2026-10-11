@@ -71,7 +71,7 @@ public final class SelfTest {
         // ---- data loaded
         String[] recipes = { "fibre_string", "flint_knife", "flint_hatchet", "flint_pickaxe", "flint_spear", "iron_spear",
                 "diamond_spear", "unfired_clay_cup", "clay_cup", "boil_water_furnace", "boil_water_campfire", "waterskin",
-                "bandage_from_wool", "splint", "fur_hat", "fur_coat", "fur_trousers", "fur_boots", "cobblestone_from_rocks", "cooking_pot", "fire_starter", "flint_striker" };
+                "bandage_from_wool", "splint", "fur_hat", "fur_coat", "fur_trousers", "fur_boots", "cobblestone_from_rocks", "cooking_pot", "fire_starter", "flint_striker", "hand_drill" };
         for (String r : recipes) {
             check(server.getRecipeManager().byKey(ResourceKey.create(Registries.RECIPE, RealisticSurvival.id(r))).isPresent(), "recipe " + r);
         }
@@ -213,6 +213,16 @@ public final class SelfTest {
         check(com.harold.realisticsurvival.block.RealisticCampfireBlock.hitsFor(striker, starter) == 2, "striker with a fire starter: 2 hits");
         check(com.harold.realisticsurvival.block.RealisticCampfireBlock.hitsFor(new ItemStack(ModRegistry.BOW_DRILL.get()), starter) == 3, "bow drill with a fire starter: 3 hits");
         check(Math.abs(com.harold.realisticsurvival.block.RealisticCampfireBlock.zoneFor(striker, starter) - 0.33F) < 1.0E-4F, "a fire starter widens the sweet spot by half");
+        ItemStack drill = new ItemStack(ModRegistry.HAND_DRILL.get());
+        check(com.harold.realisticsurvival.block.RealisticCampfireBlock.isFireStarter(drill), "a hand drill lights campfires");
+        check(drill.getMaxDamage() == 10, "a hand drill lasts 10 tries");
+        check(com.harold.realisticsurvival.block.RealisticCampfireBlock.modeFor(drill) == 2, "the hand drill plays the rubbing game");
+        check(com.harold.realisticsurvival.block.RealisticCampfireBlock.modeFor(striker) == 0, "the striker plays the spark game");
+        check(com.harold.realisticsurvival.block.RealisticCampfireBlock.hitsFor(drill, ItemStack.EMPTY) == 24, "hand drill needs 24 strokes");
+        check(com.harold.realisticsurvival.block.RealisticCampfireBlock.hitsFor(drill, starter) == 16, "hand drill needs 16 strokes with a fire starter");
+        check(Math.abs(com.harold.realisticsurvival.block.RealisticCampfireBlock.zoneFor(drill, ItemStack.EMPTY) - 0.125F) < 1.0E-4F, "hand drill heat drains 12.5% a second");
+        check(com.harold.realisticsurvival.block.RealisticCampfireBlock.zoneFor(drill, starter) < com.harold.realisticsurvival.block.RealisticCampfireBlock.zoneFor(drill, ItemStack.EMPTY),
+                "a fire starter makes the rubbing easier");
         check(new ItemStack(Items.STRIPPED_OAK_LOG).is(net.minecraft.tags.TagKey.create(Registries.ITEM, RealisticSurvival.id("stripped_logs"))), "stripped oak is a stripped log");
     }
 

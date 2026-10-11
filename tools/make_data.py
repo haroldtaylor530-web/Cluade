@@ -26,7 +26,7 @@ def ns(x):
 # ------------------------------------------------------------------ item models
 FLAT = ["flint_shard", "plant_fibre", "fibre_string", "unfired_clay_cup", "clay_cup", "dirty_water_cup",
         "clean_water_cup", "bandage", "splint", "fur_pelt", "fur_hat", "fur_coat", "fur_trousers", "fur_boots",
-        "waterskin", "waterskin_full", "bow_drill", "flint_striker", "fire_starter", "flint_spear_icon", "iron_spear_icon", "diamond_spear_icon"]
+        "waterskin", "waterskin_full", "bow_drill", "flint_striker", "fire_starter", "hand_drill", "flint_spear_icon", "iron_spear_icon", "diamond_spear_icon"]
 TOOLS = ["flint_knife", "flint_hatchet", "flint_pickaxe"]
 
 for name in FLAT:
@@ -682,3 +682,19 @@ with open(f"{A}/lang/en_us.json") as f:
 lang.update({f"item.{NS}.flint_striker": "Flint Striker", f"item.{NS}.fire_starter": "Fire Starter"})
 w(f"{A}/lang/en_us.json", lang)
 print("fire starter done")
+
+# ------------------------------------------------------------------ hand drill (string + stick, rubbing game)
+w(f"{R}/hand_drill.json", {"type": "minecraft:crafting_shapeless", "category": "equipment",
+    "ingredients": ["minecraft:string", "minecraft:stick"], "result": result("hand_drill")})
+with open(f"{A}/lang/en_us.json") as f:
+    lang = json.load(f)
+lang.update({
+    f"item.{NS}.hand_drill": "Hand Drill",
+    f"gui.{NS}.lighting.heat": "Heat",
+    f"gui.{NS}.lighting.speed": "Rubbing",
+    f"gui.{NS}.lighting.friction.hint": "Rub the mouse left and right, fast! Stay past the white mark.",
+})
+lang[f"gui.{NS}.campfire.light.tip"] = "Light it with a hand drill, bow drill, flint and steel or a flint striker from your inventory. Needs kindling and fuel. A fire starter as kindling makes it easier."
+lang[f"message.{NS}.campfire.no_starter"] = "You need a hand drill, bow drill, flint and steel or a flint striker to light it."
+w(f"{A}/lang/en_us.json", lang)
+print("hand drill done")

@@ -13,13 +13,14 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 public final class CampfireNet {
 
     /** Server to client: open the lighting game for the campfire at pos. */
-    public record OpenLighting(BlockPos pos, int hits, float zone, boolean bowDrill, boolean wet) implements CustomPacketPayload {
+    /** mode: 0 flint and steel / striker, 1 bow drill, 2 hand drill (rubbing game: hits = strokes needed, zone = heat lost per second). */
+    public record OpenLighting(BlockPos pos, int hits, float zone, int mode, boolean wet) implements CustomPacketPayload {
         public static final Type<OpenLighting> TYPE = new Type<>(RealisticSurvival.id("open_lighting"));
         public static final StreamCodec<ByteBuf, OpenLighting> CODEC = StreamCodec.composite(
                 BlockPos.STREAM_CODEC, OpenLighting::pos,
                 ByteBufCodecs.VAR_INT, OpenLighting::hits,
                 ByteBufCodecs.FLOAT, OpenLighting::zone,
-                ByteBufCodecs.BOOL, OpenLighting::bowDrill,
+                ByteBufCodecs.VAR_INT, OpenLighting::mode,
                 ByteBufCodecs.BOOL, OpenLighting::wet,
                 OpenLighting::new);
 

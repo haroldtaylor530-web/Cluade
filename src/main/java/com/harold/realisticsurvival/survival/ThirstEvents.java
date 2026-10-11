@@ -53,7 +53,7 @@ public final class ThirstEvents {
     }
 
     public static void registerPayloads(RegisterPayloadHandlersEvent event) {
-        var registrar = event.registrar("3");
+        var registrar = event.registrar("4");
         registrar.playToServer(DrinkFromHand.TYPE, DrinkFromHand.CODEC, (payload, context) -> {
             if (context.player() instanceof ServerPlayer player) drinkFromHand(player);
         });
