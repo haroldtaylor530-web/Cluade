@@ -136,7 +136,8 @@ public class RealisticCampfireBlock extends CampfireBlock {
         if (ticks <= 0) return false;
         d.burn += ticks;
         d.burnTotal = d.burn;
-        ItemStack remainder = d.fuel.getItem().getCraftingRemainder().create();
+        var template = d.fuel.getItem().getCraftingRemainder();
+        ItemStack remainder = template == null ? ItemStack.EMPTY : template.create();
         d.fuel.shrink(1);
         if (d.fuel.isEmpty() && !remainder.isEmpty()) d.fuel = remainder;
         return true;
