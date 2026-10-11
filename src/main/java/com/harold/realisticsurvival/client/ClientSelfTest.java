@@ -159,6 +159,8 @@ public final class ClientSelfTest {
             var o = com.harold.realisticsurvival.SelfTest.buildOven(level, base.offset(-6, 0, 10), net.minecraft.core.Direction.NORTH, true);
             com.harold.realisticsurvival.block.BrickOven.setFormed(level, o, true);
             ovenWall = o.at(0, 1, 0);
+            // clear the chopped stumps out of the way of the camera
+            for (int x = -7; x <= 0; x++) for (int y = 0; y <= 2; y++) level.setBlockAndUpdate(base.offset(x, y, 6), Blocks.AIR.defaultBlockState());
             // bricks drying in front of it
             for (int i = 0; i < 2; i++) {
                 BlockPos pile = base.offset(-1 - i, 0, 8);
@@ -167,7 +169,7 @@ public final class ClientSelfTest {
                         .setValue(com.harold.realisticsurvival.block.ClayBrickPileBlock.COUNT, 4)
                         .setValue(com.harold.realisticsurvival.block.ClayBrickPileBlock.DRY, i == 1));
             }
-            p.teleportTo(level, base.getX() - 3.0, base.getY(), base.getZ() + 4.5, java.util.Set.of(), 0.0F, 12.0F, true);
+            p.teleportTo(level, base.getX() - 3.0, base.getY(), base.getZ() + 3.5, java.util.Set.of(), 0.0F, 8.0F, true);
         });
     }
 
