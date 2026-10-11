@@ -104,6 +104,10 @@ golden food never spoil. Food gathered within the same quarter-day still stacks.
   give you **food poisoning** (you burn through food and water for a minute, with nausea).
   Raw meat and fish can make you ill too: raw chicken often, pork sometimes, beef, mutton,
   rabbit and fish now and then. Cook it.
+- **Flint striker** (a flint and a rock, shapeless). A single-use fire lighter for before you have iron: it works like flint and steel
+  in the campfire lighting game and then breaks. Its icon is cut from your rock texture.
+- **Fire starter** (2 plant fibre, 1 binding, 1 stripped log, shapeless). The best kindling and fuel: as kindling it makes the lighting game
+  easier (one hit fewer, a sweet spot half as wide again), and as fuel it burns 4 minutes on a medium fire (a log burns 2).
 - **Tools go dull** (config `toolDulling`). Pickaxes, axes, shovels and hoes lose their edge a point per block mined (flint, wood and
   stone fastest, iron slower, diamond slowest). A dull tool digs up to 45% slower, also in the ore mining game. Make a **whetstone**
   from 2 rocks (it uses your rock texture), hold it in one hand and the tool in the other, and right-click: +35 edge per go,

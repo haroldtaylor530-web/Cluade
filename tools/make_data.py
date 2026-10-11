@@ -26,7 +26,7 @@ def ns(x):
 # ------------------------------------------------------------------ item models
 FLAT = ["flint_shard", "plant_fibre", "fibre_string", "unfired_clay_cup", "clay_cup", "dirty_water_cup",
         "clean_water_cup", "bandage", "splint", "fur_pelt", "fur_hat", "fur_coat", "fur_trousers", "fur_boots",
-        "waterskin", "waterskin_full", "bow_drill", "flint_spear_icon", "iron_spear_icon", "diamond_spear_icon"]
+        "waterskin", "waterskin_full", "bow_drill", "flint_striker", "fire_starter", "flint_spear_icon", "iron_spear_icon", "diamond_spear_icon"]
 TOOLS = ["flint_knife", "flint_hatchet", "flint_pickaxe"]
 
 for name in FLAT:
@@ -284,7 +284,7 @@ w(f"{A}/items/campfire.json", {"model": {"type": "minecraft:model", "model": "mi
 loot("campfire", ns("campfire"))
 tag(f"{D}/minecraft/tags/block/campfires.json", [ns("campfire")])
 tag(f"{D}/{NS}/tags/item/kindling.json", [ns("plant_fibre"), ns("fibre_string"), "minecraft:paper", "minecraft:wheat",
-    "minecraft:dead_bush", "minecraft:short_grass", "minecraft:fern", "minecraft:hay_block",
+    "minecraft:dead_bush", "minecraft:short_grass", "minecraft:fern", "minecraft:hay_block", ns("fire_starter"),
     {"id": "minecraft:short_dry_grass", "required": False}, {"id": "minecraft:tall_dry_grass", "required": False}])
 
 # the vanilla campfire recipe now makes the realistic one: a ring of rocks, a log and two sticks
@@ -303,8 +303,8 @@ lang.update({
     f"container.{NS}.campfire": "Campfire",
     f"gui.{NS}.campfire.kindling": "Kindling",
     f"gui.{NS}.campfire.fuel": "Fuel",
-    f"gui.{NS}.campfire.kindling.tip": "Kindling catches the first spark: plant fibre, fibre string, paper, wheat, dry grass, ferns or dead bushes.",
-    f"gui.{NS}.campfire.fuel.tip": "Fuel keeps it burning: sticks, planks, logs or coal. Logs last a couple of minutes, coal much longer.",
+    f"gui.{NS}.campfire.kindling.tip": "Kindling catches the first spark: plant fibre, fibre string, paper, wheat, dry grass, ferns or dead bushes. A fire starter is the best.",
+    f"gui.{NS}.campfire.fuel.tip": "Fuel keeps it burning: sticks, planks, logs or coal. Logs last a couple of minutes, a fire starter four, coal much longer.",
     f"gui.{NS}.campfire.small": "Small",
     f"gui.{NS}.campfire.medium": "Medium",
     f"gui.{NS}.campfire.large": "Large",
@@ -312,7 +312,7 @@ lang.update({
     f"gui.{NS}.campfire.medium.tip": "A medium fire: normal fuel use, warms you within about 5 blocks.",
     f"gui.{NS}.campfire.large.tip": "A large fire: burns fuel 2.5x as fast, warms you from 7 blocks, cooks twice as fast, lots of smoke. Don't stand in it.",
     f"gui.{NS}.campfire.light": "Light",
-    f"gui.{NS}.campfire.light.tip": "Light it with a bow drill or flint and steel from your inventory. Needs kindling and fuel.",
+    f"gui.{NS}.campfire.light.tip": "Light it with a bow drill, flint and steel or a flint striker from your inventory. Needs kindling and fuel. A fire starter as kindling makes it easier.",
     f"gui.{NS}.campfire.burning": "Burning",
     f"gui.{NS}.campfire.left": "%s left",
     f"gui.{NS}.campfire.embers": "Glowing embers",
@@ -331,7 +331,7 @@ lang.update({
     f"message.{NS}.campfire.wet": "It's soaked. It won't light in water.",
     f"message.{NS}.campfire.no_kindling": "Add kindling first: plant fibre, paper or dry grass.",
     f"message.{NS}.campfire.no_fuel": "Add fuel first: sticks, logs or coal.",
-    f"message.{NS}.campfire.no_starter": "You need a bow drill or flint and steel to light it.",
+    f"message.{NS}.campfire.no_starter": "You need a bow drill, flint and steel or a flint striker to light it.",
     f"message.{NS}.campfire.caught": "The fire caught.",
     f"message.{NS}.campfire.failed": "The tinder didn't catch. Try again.",
     f"{NS}.configuration.treeFelling": "Trees fall when you cut through the trunk",
@@ -669,3 +669,16 @@ lang.update({
 })
 w(f"{A}/lang/en_us.json", lang)
 print("tools done")
+
+# ------------------------------------------------------------------ flint striker and fire starter
+STRIPPED = [f"minecraft:stripped_{w_}_log" for w_ in ("oak", "spruce", "birch", "jungle", "acacia", "dark_oak", "mangrove", "cherry", "pale_oak")]
+tag(f"{D}/{NS}/tags/item/stripped_logs.json", STRIPPED)
+w(f"{R}/flint_striker.json", {"type": "minecraft:crafting_shapeless", "category": "equipment",
+    "ingredients": [["minecraft:flint", ns("flint_shard")], ns("rock")], "result": result("flint_striker")})
+w(f"{R}/fire_starter.json", {"type": "minecraft:crafting_shapeless", "category": "misc",
+    "ingredients": [ns("plant_fibre"), ns("plant_fibre"), BIND, f"#{NS}:stripped_logs"], "result": result("fire_starter")})
+with open(f"{A}/lang/en_us.json") as f:
+    lang = json.load(f)
+lang.update({f"item.{NS}.flint_striker": "Flint Striker", f"item.{NS}.fire_starter": "Fire Starter"})
+w(f"{A}/lang/en_us.json", lang)
+print("fire starter done")

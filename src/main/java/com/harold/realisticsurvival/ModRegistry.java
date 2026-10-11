@@ -233,6 +233,11 @@ public final class ModRegistry {
     // early game
     public static final DeferredItem<com.harold.realisticsurvival.item.WhetstoneItem> WHETSTONE = ITEMS.registerItem("whetstone",
             com.harold.realisticsurvival.item.WhetstoneItem::new, p -> p.durability(48));
+    /** A flint struck on a rock: one go at lighting a fire. */
+    public static final DeferredItem<net.minecraft.world.item.FlintAndSteelItem> FLINT_STRIKER = ITEMS.registerItem("flint_striker",
+            net.minecraft.world.item.FlintAndSteelItem::new, p -> p.durability(1));
+    /** Very good kindling and fuel: a stripped log bundled with fibre. */
+    public static final DeferredItem<Item> FIRE_STARTER = ITEMS.registerSimpleItem("fire_starter");
     public static final DeferredItem<Item> FLINT_SHARD = ITEMS.registerSimpleItem("flint_shard");
     public static final DeferredItem<Item> PLANT_FIBRE = ITEMS.registerSimpleItem("plant_fibre");
     public static final DeferredItem<Item> FIBRE_STRING = ITEMS.registerSimpleItem("fibre_string");

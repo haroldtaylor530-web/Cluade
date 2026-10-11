@@ -101,6 +101,7 @@ public class RealisticCampfireBlock extends CampfireBlock {
         if (stack.isEmpty()) return 0;
         if (stack.is(Items.COAL_BLOCK)) return 20 * 60 * 60;
         if (stack.is(Items.COAL) || stack.is(Items.CHARCOAL)) return 20 * 60 * 6;
+        if (stack.is(ModRegistry.FIRE_STARTER.get())) return 20 * 60 * 4;
         if (stack.is(ItemTags.LOGS_THAT_BURN)) return 20 * 120;
         if (stack.is(ItemTags.PLANKS)) return 20 * 40;
         if (stack.is(ItemTags.WOODEN_SLABS)) return 20 * 20;
@@ -271,7 +272,19 @@ public class RealisticCampfireBlock extends CampfireBlock {
 
     /** Is this something you can start a fire with by friction or sparks? */
     public static boolean isFireStarter(ItemStack stack) {
-        return stack.is(Items.FLINT_AND_STEEL) || stack.is(ModRegistry.BOW_DRILL.get());
+        return stack.is(Items.FLINT_AND_STEEL) || stack.is(ModRegistry.FLINT_STRIKER.get()) || stack.is(ModRegistry.BOW_DRILL.get());
+    }
+
+    /** Hits needed in the lighting game: a fire starter as kindling takes one fewer (never under 2). */
+    public static int hitsFor(ItemStack tool, ItemStack kindling) {
+        int hits = tool.is(ModRegistry.BOW_DRILL.get()) ? 4 : 3;
+        return kindling.is(ModRegistry.FIRE_STARTER.get()) ? Math.max(2, hits - 1) : hits;
+    }
+
+    /** How wide the sweet spot is: a fire starter as kindling makes it half as wide again. */
+    public static float zoneFor(ItemStack tool, ItemStack kindling) {
+        float zone = tool.is(ModRegistry.BOW_DRILL.get()) ? 0.16F : 0.22F;
+        return kindling.is(ModRegistry.FIRE_STARTER.get()) ? zone * 1.5F : zone;
     }
 
     /** Start the lighting game for a player: checks the fire is ready, then tells their client to open it. */
@@ -290,8 +303,9 @@ public class RealisticCampfireBlock extends CampfireBlock {
             return;
         }
         boolean bowDrill = tool.is(ModRegistry.BOW_DRILL.get());
-        int hits = bowDrill ? 4 : 3;
-        float zone = bowDrill ? 0.16F : 0.22F;
+        ItemStack kindling = data(be).kindling;
+        int hits = hitsFor(tool, kindling);
+        float zone = zoneFor(tool, kindling);
         boolean wetWeather = level.isRainingAt(pos.above());
         if (wetWeather) zone *= 0.6F;
         PENDING.put(player.getUUID(), new Pending(pos.immutable(), level.getGameTime()));

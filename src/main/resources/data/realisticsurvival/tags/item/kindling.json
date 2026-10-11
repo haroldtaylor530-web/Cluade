@@ -9,6 +9,7 @@
     "minecraft:short_grass",
     "minecraft:fern",
     "minecraft:hay_block",
+    "realisticsurvival:fire_starter",
     {
       "id": "minecraft:short_dry_grass",
       "required": false

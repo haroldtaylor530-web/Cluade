@@ -71,7 +71,7 @@ public final class SelfTest {
         // ---- data loaded
         String[] recipes = { "fibre_string", "flint_knife", "flint_hatchet", "flint_pickaxe", "flint_spear", "iron_spear",
                 "diamond_spear", "unfired_clay_cup", "clay_cup", "boil_water_furnace", "boil_water_campfire", "waterskin",
-                "bandage_from_wool", "splint", "fur_hat", "fur_coat", "fur_trousers", "fur_boots", "cobblestone_from_rocks", "cooking_pot" };
+                "bandage_from_wool", "splint", "fur_hat", "fur_coat", "fur_trousers", "fur_boots", "cobblestone_from_rocks", "cooking_pot", "fire_starter", "flint_striker" };
         for (String r : recipes) {
             check(server.getRecipeManager().byKey(ResourceKey.create(Registries.RECIPE, RealisticSurvival.id(r))).isPresent(), "recipe " + r);
         }
@@ -199,6 +199,21 @@ public final class SelfTest {
         check(Math.abs(s.stamina - 15.0F) < 1.0E-3F, "hard work spends stamina");
         s.stamina = 20.0F;
         s.winded = false;
+
+        // ---- flint striker and fire starter
+        ItemStack striker = new ItemStack(ModRegistry.FLINT_STRIKER.get());
+        ItemStack starter = new ItemStack(ModRegistry.FIRE_STARTER.get());
+        check(com.harold.realisticsurvival.block.RealisticCampfireBlock.isFireStarter(striker), "a flint striker lights campfires");
+        check(striker.getMaxDamage() == 1, "a flint striker is single use");
+        check(com.harold.realisticsurvival.block.RealisticCampfireBlock.isKindling(starter), "a fire starter is kindling");
+        check(com.harold.realisticsurvival.block.RealisticCampfireBlock.fuelTicks(starter) == 20 * 60 * 4, "a fire starter burns four minutes");
+        check(com.harold.realisticsurvival.block.RealisticCampfireBlock.fuelTicks(starter) > com.harold.realisticsurvival.block.RealisticCampfireBlock.fuelTicks(new ItemStack(Items.OAK_LOG)),
+                "a fire starter beats a log as fuel");
+        check(com.harold.realisticsurvival.block.RealisticCampfireBlock.hitsFor(striker, ItemStack.EMPTY) == 3, "striker: 3 hits");
+        check(com.harold.realisticsurvival.block.RealisticCampfireBlock.hitsFor(striker, starter) == 2, "striker with a fire starter: 2 hits");
+        check(com.harold.realisticsurvival.block.RealisticCampfireBlock.hitsFor(new ItemStack(ModRegistry.BOW_DRILL.get()), starter) == 3, "bow drill with a fire starter: 3 hits");
+        check(Math.abs(com.harold.realisticsurvival.block.RealisticCampfireBlock.zoneFor(striker, starter) - 0.33F) < 1.0E-4F, "a fire starter widens the sweet spot by half");
+        check(new ItemStack(Items.STRIPPED_OAK_LOG).is(net.minecraft.tags.TagKey.create(Registries.ITEM, RealisticSurvival.id("stripped_logs"))), "stripped oak is a stripped log");
     }
 
     private static void mining(ServerLevel level, BlockPos at) {

@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "realisticsurvival:plant_fibre",
+    "realisticsurvival:plant_fibre",
+    "#realisticsurvival:binding",
+    "#realisticsurvival:stripped_logs"
+  ],
+  "result": {
+    "id": "realisticsurvival:fire_starter",
+    "count": 1
+  }
+}

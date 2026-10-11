@@ -64,8 +64,8 @@
   "container.realisticsurvival.campfire": "Campfire",
   "gui.realisticsurvival.campfire.kindling": "Kindling",
   "gui.realisticsurvival.campfire.fuel": "Fuel",
-  "gui.realisticsurvival.campfire.kindling.tip": "Kindling catches the first spark: plant fibre, fibre string, paper, wheat, dry grass, ferns or dead bushes.",
-  "gui.realisticsurvival.campfire.fuel.tip": "Fuel keeps it burning: sticks, planks, logs or coal. Logs last a couple of minutes, coal much longer.",
+  "gui.realisticsurvival.campfire.kindling.tip": "Kindling catches the first spark: plant fibre, fibre string, paper, wheat, dry grass, ferns or dead bushes. A fire starter is the best.",
+  "gui.realisticsurvival.campfire.fuel.tip": "Fuel keeps it burning: sticks, planks, logs or coal. Logs last a couple of minutes, a fire starter four, coal much longer.",
   "gui.realisticsurvival.campfire.small": "Small",
   "gui.realisticsurvival.campfire.medium": "Medium",
   "gui.realisticsurvival.campfire.large": "Large",
@@ -73,7 +73,7 @@
   "gui.realisticsurvival.campfire.medium.tip": "A medium fire: normal fuel use, warms you within about 5 blocks.",
   "gui.realisticsurvival.campfire.large.tip": "A large fire: burns fuel 2.5x as fast, warms you from 7 blocks, cooks twice as fast, lots of smoke. Don't stand in it.",
   "gui.realisticsurvival.campfire.light": "Light",
-  "gui.realisticsurvival.campfire.light.tip": "Light it with a bow drill or flint and steel from your inventory. Needs kindling and fuel.",
+  "gui.realisticsurvival.campfire.light.tip": "Light it with a bow drill, flint and steel or a flint striker from your inventory. Needs kindling and fuel. A fire starter as kindling makes it easier.",
   "gui.realisticsurvival.campfire.burning": "Burning",
   "gui.realisticsurvival.campfire.left": "%s left",
   "gui.realisticsurvival.campfire.embers": "Glowing embers",
@@ -92,7 +92,7 @@
   "message.realisticsurvival.campfire.wet": "It's soaked. It won't light in water.",
   "message.realisticsurvival.campfire.no_kindling": "Add kindling first: plant fibre, paper or dry grass.",
   "message.realisticsurvival.campfire.no_fuel": "Add fuel first: sticks, logs or coal.",
-  "message.realisticsurvival.campfire.no_starter": "You need a bow drill or flint and steel to light it.",
+  "message.realisticsurvival.campfire.no_starter": "You need a bow drill, flint and steel or a flint striker to light it.",
   "message.realisticsurvival.campfire.caught": "The fire caught.",
   "message.realisticsurvival.campfire.failed": "The tinder didn't catch. Try again.",
   "realisticsurvival.configuration.treeFelling": "Trees fall when you cut through the trunk",
@@ -171,5 +171,7 @@
   "tooltip.realisticsurvival.edge.dull": "Edge: dull (%s%%)",
   "tooltip.realisticsurvival.edge.blunt": "Edge: blunt (%s%%)",
   "realisticsurvival.configuration.stamina": "Stamina",
-  "realisticsurvival.configuration.toolDulling": "Tools go dull"
+  "realisticsurvival.configuration.toolDulling": "Tools go dull",
+  "item.realisticsurvival.flint_striker": "Flint Striker",
+  "item.realisticsurvival.fire_starter": "Fire Starter"
 }

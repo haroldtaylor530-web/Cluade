@@ -349,6 +349,8 @@ public final class ClientSelfTest {
             ItemStack dull = new ItemStack(net.minecraft.world.item.Items.IRON_PICKAXE);
             com.harold.realisticsurvival.survival.ToolWear.setSharpness(dull, 22);
             p.getInventory().setItem(3, dull);
+            p.getInventory().setItem(6, new ItemStack(ModRegistry.FLINT_STRIKER.get()));
+            p.getInventory().setItem(7, new ItemStack(ModRegistry.FIRE_STARTER.get(), 3));
             p.getInventory().setItem(4, new ItemStack(ModRegistry.WHETSTONE.get()));
             com.harold.realisticsurvival.survival.SurvivalState.get(p).stamina = 9.0F;
             p.teleportTo(level, base.getX() + 0.5, base.getY(), base.getZ() + 15.0, java.util.Set.of(), 0.0F, 14.0F, true);
