@@ -5,7 +5,6 @@ import com.harold.realisticsurvival.survival.Spoilage;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
@@ -72,9 +71,9 @@ public final class FoodClient {
     };
 
     public static void registerDecorations(RegisterItemDecorationsEvent event) {
-        for (Item item : BuiltInRegistries.ITEM) {
-            if (item.components().has(DataComponents.FOOD)) event.register(item, BAR);
-        }
+        // item components aren't bound yet when this runs, so every item gets the decorator and
+        // it checks the stack when drawing
+        for (Item item : BuiltInRegistries.ITEM) event.register(item, BAR);
     }
 
     private FoodClient() {}
