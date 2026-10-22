@@ -320,7 +320,7 @@ public final class DecayTextures {
             if (exposed) {
                 if (kind == CorpseKind.FLESH && bone[i] != 0) {
                     int b = bone[i];
-                    if (what[i] == BonePainter.BONE) b = mix(b, 0xFF4A3E34, 0.6F - 0.25F * gone);
+                    if (what[i] == BonePainter.BONE) b = scorched(b, i);
                     return withAlpha(b, a);
                 }
                 return 0;
@@ -332,6 +332,14 @@ public final class DecayTextures {
                 return withAlpha(coal, Math.round(a * (1F - smooth(0.82F, 1F, p))));
             }
             return withAlpha(coal, a);
+        }
+
+        /** Burnt bone stays burnt: charcoal grey, blackened in patches, chalky where it burnt hottest. */
+        private int scorched(int bone, int i) {
+            int b = mix(bone, 0xFF3C342E, 0.66F);
+            if (blot[i] > 0.58F) b = mix(b, 0xFF15120F, Math.min(1F, (blot[i] - 0.58F) * 2.4F));
+            if (tear[i] > 0.9F) b = mix(b, 0xFFB4AC9E, 0.55F);
+            return b;
         }
 
         /** What shows where the skin has rotted away. */
