@@ -13,6 +13,7 @@ import net.minecraft.client.Screenshot;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.Mob;
@@ -30,21 +31,21 @@ import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 /**
  * CI only (-Dcorpsedecay.clienttest=true): lines mobs up in front of the camera on a flat world,
  * shoots a few, kills them all, and screenshots the fall, the bodies at rest, every stage of decay
- * and some close-ups, then quits.
+ * and close-ups from ground level, then quits.
  */
 public final class ClientSelfTest {
     private static final Logger LOG = LogUtils.getLogger();
     private static int ticks = -1;
-    private static int start;
     private static int ground;
     private static final List<Mob> mobs = new ArrayList<>();
+    private static final List<double[]> spots = new ArrayList<>();
+    private static final List<String> names = new ArrayList<>();
     private static final List<Step> steps = new ArrayList<>();
     private static boolean planned;
 
@@ -107,41 +108,39 @@ public final class ClientSelfTest {
     }
 
     private static void plan() {
-        start = 60;
+        int start = 60;
         at(start, () -> server(ClientSelfTest::setup));
         at(start + 30, () -> server(ClientSelfTest::shootSome));
         at(start + 50, () -> shot("00_alive"));
         at(start + 55, () -> server(ClientSelfTest::killAll));
-        at(start + 58, () -> shot("01_falling"));
-        at(start + 63, () -> shot("02_falling"));
-        at(start + 70, () -> shot("03_falling"));
+        at(start + 60, () -> shot("01_falling"));
+        at(start + 65, () -> shot("02_falling"));
+        at(start + 72, () -> shot("03_falling"));
         at(start + 160, () -> shot("04_at_rest"));
+        at(start + 161, ClientSelfTest::logLimbs);
         float[] stages = {0.1F, 0.22F, 0.36F, 0.5F, 0.64F, 0.78F, 0.9F, 1.0F};
         int t = start + 170;
         for (float f : stages) {
             final float frac = f;
-            at(t, () -> server(() -> age(frac)));
+            at(t, () -> server(() -> ageAll(frac)));
             at(t + 12, () -> shot(String.format("05_decay_%03d", Math.round(frac * 100))));
             t += 20;
         }
-        // close-ups of the skeletons with their gear, then fresh bodies with arrows in them
-        at(t, () -> closeUp("minecraft:zombie", 1.0F));
-        at(t + 25, () -> shot("10_zombie_skeleton_armour"));
-        at(t + 30, () -> closeUp("minecraft:villager", 1.0F));
-        at(t + 55, () -> shot("11_villager_skeleton_clothes"));
-        at(t + 60, () -> closeUp("minecraft:horse", 1.0F));
-        at(t + 85, () -> shot("12_horse_skeleton"));
-        at(t + 90, () -> closeUp("minecraft:cow", 1.0F));
-        at(t + 115, () -> shot("13_cow_skeleton"));
-        at(t + 120, () -> closeUp("minecraft:zombie", 0.0F));
-        at(t + 145, () -> shot("14_zombie_fresh_arrows"));
-        at(t + 150, () -> closeUp("minecraft:zombie", 0.45F));
-        at(t + 175, () -> shot("15_zombie_rotting"));
-        at(t + 180, () -> closeUp("minecraft:sheep", 0.25F));
-        at(t + 205, () -> shot("16_sheep_bloated"));
-        at(t + 210, () -> closeUp("minecraft:chicken", 1.0F));
-        at(t + 235, () -> shot("17_chicken_skeleton"));
-        at(t + 245, () -> {
+        // close-ups from low down: fresh, rotting, skeleton
+        String[] who = {"zombie_armour", "zombie", "villager", "pillager", "cow", "sheep", "horse", "pig", "chicken", "wolf", "skeleton"};
+        float[] when = {0.0F, 0.5F, 1.0F};
+        int n = 10;
+        for (String w : who) {
+            for (float f : when) {
+                final String name = String.format("%02d_%s_%03d", n, w, Math.round(f * 100));
+                final float frac = f;
+                at(t, () -> closeUp(w, frac));
+                at(t + 22, () -> shot(name));
+                t += 26;
+            }
+            n++;
+        }
+        at(t + 5, () -> {
             LOG.info("CLIENTTEST DONE");
             Minecraft.getInstance().stop();
         });
@@ -153,58 +152,68 @@ public final class ClientSelfTest {
         rules.getRule(GameRules.RULE_DOMOBSPAWNING).set(false, level.getServer());
         rules.getRule(GameRules.RULE_DAYLIGHT).set(false, level.getServer());
         rules.getRule(GameRules.RULE_WEATHER_CYCLE).set(false, level.getServer());
-        level.setDayTime(6000);
+        level.setDayTime(18000 - 12000); // noon
         level.setWeatherParameters(6000, 0, false, false);
         ground = level.getHeight(Heightmap.Types.MOTION_BLOCKING, 0, 0);
-        for (CorpseEntity c : level.getEntitiesOfClass(CorpseEntity.class, new AABB(-200, -100, -200, 200, 400, 200))) c.discard();
+        AABB area = new AABB(-200, -100, -200, 200, 400, 200);
+        for (Entity e : level.getEntitiesOfClass(Entity.class, area, e -> !(e instanceof ServerPlayer))) e.discard();
 
-        Mob zombie = spawn(EntityType.ZOMBIE, 0);
+        // front row
+        spawn("cow", EntityType.COW, -6, 0);
+        Sheep sheep = (Sheep) spawn("sheep", EntityType.SHEEP, -3.6, 0);
+        sheep.setColor(DyeColor.RED);
+        Mob zombie = spawn("zombie_armour", EntityType.ZOMBIE, -1.2, 0);
         zombie.setItemSlot(EquipmentSlot.HEAD, new ItemStack(Items.IRON_HELMET));
         zombie.setItemSlot(EquipmentSlot.CHEST, new ItemStack(Items.DIAMOND_CHESTPLATE));
         zombie.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.IRON_SWORD));
         zombie.setDropChance(EquipmentSlot.CHEST, 2F);
-        Villager villager = (Villager) spawn(EntityType.VILLAGER, 2.4);
+        Villager villager = (Villager) spawn("villager", EntityType.VILLAGER, 1.2, 0);
         villager.setVillagerData(villager.getVillagerData().setProfession(VillagerProfession.LIBRARIAN).setType(VillagerType.PLAINS).setLevel(2));
-        Sheep sheep = (Sheep) spawn(EntityType.SHEEP, -2.4);
-        sheep.setColor(DyeColor.RED);
-        spawn(EntityType.COW, -5);
-        spawn(EntityType.CHICKEN, 4.6);
-        Horse horse = (Horse) spawn(EntityType.HORSE, 7.2);
+        Horse horse = (Horse) spawn("horse", EntityType.HORSE, 3.8, 0);
         CompoundTag h = new CompoundTag();
         horse.addAdditionalSaveData(h);
         h.put("SaddleItem", new ItemStack(Items.SADDLE).save(new CompoundTag()));
         h.put("ArmorItem", new ItemStack(Items.IRON_HORSE_ARMOR).save(new CompoundTag()));
         h.putBoolean("Tame", true);
         horse.readAdditionalSaveData(h);
-        Mob skeleton = spawn(EntityType.SKELETON, -7.4);
+        Mob skeleton = spawn("skeleton", EntityType.SKELETON, 6.4, 0);
         skeleton.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.BOW));
-        Mob spider = spawn(EntityType.SPIDER, -9.8);
-        spider.moveTo(-9.8 + 0.5, ground, 0.5, 180, 0);
-        spawn(EntityType.PIG, 9.8);
-        camera(0.5, ground + 4.2, -10.5, 0F, 20F);
+        // back row
+        spawn("pig", EntityType.PIG, -6, 4);
+        spawn("chicken", EntityType.CHICKEN, -3.6, 4);
+        spawn("zombie", EntityType.ZOMBIE, -1.2, 4);
+        Mob pillager = spawn("pillager", EntityType.PILLAGER, 1.2, 4);
+        pillager.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.CROSSBOW));
+        spawn("spider", EntityType.SPIDER, 3.8, 4);
+        spawn("wolf", EntityType.WOLF, 6.4, 4);
+        camera(0.5, ground + 6.5, -8.5, 0F, 32F);
     }
 
-    private static Mob spawn(EntityType<? extends Mob> type, double x) {
+    private static Mob spawn(String name, EntityType<? extends Mob> type, double x, double z) {
         Mob m = type.create(level());
-        m.moveTo(x + 0.5, ground, 0.5, 180F, 0F);
+        m.moveTo(x + 0.5, ground, z + 0.5, 180F, 0F);
         m.setYBodyRot(180F);
         m.setYHeadRot(180F);
         m.setNoAi(true);
         m.setPersistenceRequired();
+        m.setInvulnerable(false);
         level().addFreshEntity(m);
         mobs.add(m);
+        names.add(name);
+        spots.add(new double[] {x + 0.5, z + 0.5});
         return m;
     }
 
-    /** Arrows into the zombie, villager and cow from the camera's side. */
+    /** Arrows into a few of them from the camera's side. */
     private static void shootSome() {
-        for (Mob m : mobs) {
-            String id = EntityType.getKey(m.getType()).toString();
-            int count = id.equals("minecraft:zombie") ? 3 : (id.equals("minecraft:villager") || id.equals("minecraft:cow") ? 1 : 0);
+        for (int k = 0; k < mobs.size(); k++) {
+            Mob m = mobs.get(k);
+            String id = names.get(k);
+            int count = id.startsWith("zombie") ? 3 : (id.equals("villager") || id.equals("cow") || id.equals("pillager") ? 1 : 0);
             for (int i = 0; i < count; i++) {
-                Arrow a = new Arrow(level(), m.getX() + (i - 1) * 0.15, m.getY() + m.getBbHeight() * (0.55 + 0.15 * i), m.getZ() - 4);
-                a.shoot(0, 0.05, 1, 2.2F, 0F);
-                a.setBaseDamage(0.5);
+                Arrow a = new Arrow(level(), m.getX() + (i - 1) * 0.15, m.getY() + m.getBbHeight() * (0.5 + 0.12 * i), m.getZ() - 3);
+                a.shoot(0, 0.04, 1, 2.2F, 0F);
+                a.setBaseDamage(0.4);
                 a.pickup = AbstractArrow.Pickup.ALLOWED;
                 level().addFreshEntity(a);
             }
@@ -222,26 +231,58 @@ public final class ClientSelfTest {
         p.setGameMode(GameType.SPECTATOR);
     }
 
-    private static void age(float frac) {
+    private static void ageAll(float frac) {
         ServerLevel level = level();
         for (CorpseEntity c : level.getEntitiesOfClass(CorpseEntity.class, new AABB(-50, -100, -50, 50, 400, 50))) {
             c.setDeathTime(level.getGameTime() - Math.round(frac * c.decayTicks()));
         }
     }
 
-    private static void closeUp(String type, float frac) {
+    private static void logLimbs() {
+        Minecraft mc = Minecraft.getInstance();
+        LOG.info("CLIENTTEST ground y={}", ground);
+        for (Entity e : mc.level.entitiesForRendering()) {
+            if (e instanceof CorpseEntity c) {
+                LOG.info("CLIENTTEST limbs {} at {} settled={} :: {}", c.getId(), c.position(), c.settled(), CorpseClient.of(c).debug(c));
+            }
+        }
+    }
+
+    private static CorpseEntity corpseFor(ServerLevel level, String name) {
+        int idx = names.indexOf(name);
+        if (idx < 0) return null;
+        double[] spot = spots.get(idx);
+        String type = EntityType.getKey(mobs.get(idx).getType()).toString();
+        CorpseEntity best = null;
+        double bd = Double.MAX_VALUE;
+        for (CorpseEntity c : level.getEntitiesOfClass(CorpseEntity.class, new AABB(-50, -100, -50, 50, 400, 50))) {
+            if (!c.mobType().equals(type)) continue;
+            double d = (c.getX() - spot[0]) * (c.getX() - spot[0]) + (c.getZ() - spot[1]) * (c.getZ() - spot[1]);
+            if (d < bd) {
+                bd = d;
+                best = c;
+            }
+        }
+        return best;
+    }
+
+    /** A low three-quarter view of one body. */
+    private static void closeUp(String name, float frac) {
         server(() -> {
             ServerLevel level = level();
-            for (CorpseEntity c : level.getEntitiesOfClass(CorpseEntity.class, new AABB(-50, -100, -50, 50, 400, 50))) {
-                if (!c.mobType().equals(type)) continue;
-                c.setDeathTime(level.getGameTime() - Math.round(frac * c.decayTicks()));
-                Vec3 pos = c.position();
-                double size = Math.max(1.2, Math.max(c.bodyWidth(), c.bodyHeight()));
-                ServerPlayer p = player();
-                p.setGameMode(GameType.SPECTATOR);
-                p.teleportTo(level, pos.x - size * 0.9, pos.y + size * 1.1, pos.z - size * 1.2, -35F, 38F);
+            CorpseEntity c = corpseFor(level, name);
+            if (c == null) {
+                LOG.warn("CLIENTTEST no corpse for {}", name);
                 return;
             }
+            c.setDeathTime(level.getGameTime() - Math.round(frac * c.decayTicks()));
+            double size = Math.max(1.0, Math.max(c.bodyDepth(), c.bodyHeight()));
+            ServerPlayer p = player();
+            p.setGameMode(GameType.SPECTATOR);
+            double dx = -0.75 * size * 1.6, dz = -1.3 * size * 1.6, dy = 0.75 * size;
+            float yaw = (float) Math.toDegrees(Math.atan2(-(-dx), -dz));
+            float pitch = (float) Math.toDegrees(Math.atan2(dy - 0.1, Math.sqrt(dx * dx + dz * dz)));
+            p.teleportTo(level, c.getX() + dx, c.getY() + dy, c.getZ() + dz, yaw, pitch);
         });
     }
 }

@@ -45,10 +45,10 @@ public final class Ragdoll {
     private double impactSpeed;
     private boolean inLava;
 
-    public Ragdoll(float width, float height) {
+    public Ragdoll(float width, float height, float depth) {
         half[0] = Math.max(0.1, width / 2.0);
         half[1] = Math.max(0.1, height / 2.0);
-        half[2] = Math.max(0.1, width / 2.0);
+        half[2] = Math.max(0.1, depth / 2.0);
     }
 
     /** Places the box at {@code center} with orientation {@code q}, moving with the given velocity (blocks/tick). */

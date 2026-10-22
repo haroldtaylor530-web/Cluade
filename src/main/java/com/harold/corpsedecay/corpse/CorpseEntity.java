@@ -52,6 +52,7 @@ public class CorpseEntity extends Entity {
     private static final EntityDataAccessor<CompoundTag> RENDER_TAG = SynchedEntityData.defineId(CorpseEntity.class, EntityDataSerializers.COMPOUND_TAG);
     private static final EntityDataAccessor<Float> BODY_W = SynchedEntityData.defineId(CorpseEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> BODY_H = SynchedEntityData.defineId(CorpseEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Float> BODY_D = SynchedEntityData.defineId(CorpseEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Quaternionf> ORIENT = SynchedEntityData.defineId(CorpseEntity.class, EntityDataSerializers.QUATERNION);
     private static final EntityDataAccessor<Boolean> SETTLED = SynchedEntityData.defineId(CorpseEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Long> DEATH_TIME = SynchedEntityData.defineId(CorpseEntity.class, EntityDataSerializers.LONG);
@@ -99,6 +100,7 @@ public class CorpseEntity extends Entity {
         entityData.define(RENDER_TAG, new CompoundTag());
         entityData.define(BODY_W, 0.6F);
         entityData.define(BODY_H, 1.8F);
+        entityData.define(BODY_D, 0.6F);
         entityData.define(ORIENT, new Quaternionf());
         entityData.define(SETTLED, false);
         entityData.define(DEATH_TIME, 0L);
@@ -113,7 +115,7 @@ public class CorpseEntity extends Entity {
     public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
         super.onSyncedDataUpdated(key);
         if (key == MOB_TYPE || key == RENDER_TAG) lookVersion++;
-        if (key == BODY_W || key == BODY_H || key == ORIENT) {
+        if (key == BODY_W || key == BODY_H || key == BODY_D || key == ORIENT) {
             if (ready) setBoundingBox(makeBoundingBox());
         }
     }
@@ -126,6 +128,11 @@ public class CorpseEntity extends Entity {
         entityData.set(RENDER_TAG, s.renderTag);
         entityData.set(BODY_W, s.width);
         entityData.set(BODY_H, s.height);
+        boolean upright = s.height > s.width * 1.9F;
+        boolean flat = s.width >= s.height * 1.5F;
+        // four-legged bodies are long and low, so they roll onto their side rather than stand on end
+        float depth = upright || flat ? s.width : Math.max(s.width, s.height * 1.15F);
+        entityData.set(BODY_D, depth);
         entityData.set(DEATH_TIME, level().getGameTime());
         entityData.set(DECAY_TICKS, (int) Math.max(20, Config.MINUTES_TO_SKELETON.get() * 1200.0));
         skeletonTicks = (long) (Config.SKELETON_MINUTES.get() * 1200.0);
@@ -147,7 +154,7 @@ public class CorpseEntity extends Entity {
         double force = Config.RAGDOLL_FORCE.get();
         Vec3 vel = s.velocity.add(s.push.scale(force));
         if (vel.lengthSqr() > 1.0) vel = vel.normalize();
-        ragdoll = new Ragdoll(s.width, s.height);
+        ragdoll = new Ragdoll(s.width, s.height, depth);
         ragdoll.place(center, q, vel, new Vector3f());
 
         // which way the body goes down: upright bodies topple the way they were hit,
@@ -158,8 +165,7 @@ public class CorpseEntity extends Entity {
             dx = Math.cos(a);
             dz = Math.sin(a);
         }
-        boolean upright = s.height > s.width * 1.6F;
-        if (!upright && s.width < s.height * 1.5F) {
+        if (!upright && !flat) {
             Vector3f right = q.transform(new Vector3f(1, 0, 0));
             double side = right.x * dx + right.z * dz;
             if (Math.abs(side) < 0.2) side = random.nextBoolean() ? 1 : -1;
@@ -167,7 +173,7 @@ public class CorpseEntity extends Entity {
             dz = right.z * Math.signum(side);
         }
         double strength = 0.02 + 0.01 * Math.min(2.0, force);
-        if (s.width >= s.height * 1.5F) strength = 0.004; // flat bodies (spiders) just slump
+        if (flat) strength = 0.004; // flat bodies (spiders) just slump
         ragdoll.collapse(dx, dz, strength, upright ? 14 : 10);
 
         setPos(center);
@@ -192,6 +198,10 @@ public class CorpseEntity extends Entity {
 
     public float bodyHeight() {
         return entityData.get(BODY_H);
+    }
+
+    public float bodyDepth() {
+        return entityData.get(BODY_D);
     }
 
     public Quaternionf orientation() {
@@ -249,7 +259,7 @@ public class CorpseEntity extends Entity {
         }
         if (!settled()) {
             if (ragdoll == null) {
-                ragdoll = new Ragdoll(bodyWidth(), bodyHeight());
+                ragdoll = new Ragdoll(bodyWidth(), bodyHeight(), bodyDepth());
                 ragdoll.place(position(), orientation(), Vec3.ZERO, new Vector3f());
             }
             boolean rest = ragdoll.tick(level());
@@ -424,7 +434,7 @@ public class CorpseEntity extends Entity {
 
     private void wake() {
         if (ragdoll == null) {
-            ragdoll = new Ragdoll(bodyWidth(), bodyHeight());
+            ragdoll = new Ragdoll(bodyWidth(), bodyHeight(), bodyDepth());
             ragdoll.place(position(), orientation(), Vec3.ZERO, new Vector3f());
         }
         entityData.set(SETTLED, false);
@@ -454,12 +464,12 @@ public class CorpseEntity extends Entity {
     @Override
     protected AABB makeBoundingBox() {
         if (!ready) return super.makeBoundingBox();
-        float hw = bodyWidth() / 2F, hh = bodyHeight() / 2F;
+        float hw = bodyWidth() / 2F, hh = bodyHeight() / 2F, hd = bodyDepth() / 2F;
         Quaternionf q = orientation();
         Vector3f v = new Vector3f();
         float ex = 0, ey = 0, ez = 0;
         for (int i = 0; i < 8; i++) {
-            v.set((i & 1) != 0 ? hw : -hw, (i & 2) != 0 ? hh : -hh, (i & 4) != 0 ? hw : -hw);
+            v.set((i & 1) != 0 ? hw : -hw, (i & 2) != 0 ? hh : -hh, (i & 4) != 0 ? hd : -hd);
             q.transform(v);
             ex = Math.max(ex, Math.abs(v.x));
             ey = Math.max(ey, Math.abs(v.y));
@@ -488,6 +498,7 @@ public class CorpseEntity extends Entity {
         entityData.set(RENDER_TAG, tag.getCompound("Render"));
         entityData.set(BODY_W, tag.getFloat("BodyW"));
         entityData.set(BODY_H, tag.getFloat("BodyH"));
+        entityData.set(BODY_D, tag.contains("BodyD") ? tag.getFloat("BodyD") : tag.getFloat("BodyW"));
         ListTag o = tag.getList("Orient", Tag.TAG_FLOAT);
         if (o.size() == 4) {
             entityData.set(ORIENT, new Quaternionf(o.getFloat(0), o.getFloat(1), o.getFloat(2), o.getFloat(3)).normalize());
@@ -515,6 +526,7 @@ public class CorpseEntity extends Entity {
         tag.put("Render", renderTag());
         tag.putFloat("BodyW", bodyWidth());
         tag.putFloat("BodyH", bodyHeight());
+        tag.putFloat("BodyD", bodyDepth());
         Quaternionf q = orientation();
         ListTag o = new ListTag();
         o.add(net.minecraft.nbt.FloatTag.valueOf(q.x));

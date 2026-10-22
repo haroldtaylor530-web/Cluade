@@ -265,6 +265,28 @@ public final class CorpseClient {
         return false;
     }
 
+    /** For the CI log: where each limb ended up. */
+    public String debug(CorpseEntity corpse) {
+        StringBuilder b = new StringBuilder();
+        Vector3f up = new Quaternionf(curBody).transform(new Vector3f(0, 1, 0));
+        b.append(String.format("%s up=(%.2f,%.2f,%.2f) parts=%d limbs=%d", corpse.mobType(), up.x, up.y, up.z,
+                info == null ? -1 : info.parts.size(), info == null ? -1 : info.limbs.size()));
+        if (info == null) return b.toString();
+        for (int i = 0; i < info.limbs.size(); i++) {
+            ModelInfo.Part l = info.limbs.get(i);
+            Vector3f tipModel = new Vector3f(l.tip);
+            limbCur[i].transform(tipModel);
+            l.parentRot.transform(tipModel);
+            tipModel.add(l.pivotModel);
+            Vec3 w = toWorld(corpse, curBody, tipModel, corpse.bodyHeight());
+            float[] e = eulerZYX(limbCur[i]);
+            b.append(String.format(" | %s[%s] rot=(%.2f,%.2f,%.2f) tipY=%.2f", l.name, l.cls, e[0], e[1], e[2], w.y));
+        }
+        b.append(" | names:");
+        for (ModelInfo.Part p : info.parts) b.append(' ').append(p.name).append('/').append(p.cls).append(p.follows != null ? "->" + p.follows.name : "");
+        return b.toString();
+    }
+
     /** Pushes the current limb poses into the render context. */
     public void applyPoses(RenderContext ctx, float partial) {
         if (info == null) return;
