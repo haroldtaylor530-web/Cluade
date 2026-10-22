@@ -38,6 +38,8 @@ public final class Ragdoll {
     /** extra push on the top corners for the first ticks so the body actually collapses */
     private double collapseX, collapseZ;
     private int collapseTicks;
+    /** keep pushing until the body has actually gone over (up to this many ticks) */
+    private int collapseUntilDown;
 
     private int stillTicks;
     private int age;
@@ -78,12 +80,20 @@ public final class Ragdoll {
     }
 
     /** Makes the body tip over towards (dx, dz) for the first ticks. */
-    public void collapse(double dx, double dz, double strength, int ticks) {
+    public void collapse(double dx, double dz, double strength, int ticks, int untilDown) {
         double len = Math.sqrt(dx * dx + dz * dz);
         if (len < 1e-6) return;
         collapseX = dx / len * strength;
         collapseZ = dz / len * strength;
         collapseTicks = ticks;
+        collapseUntilDown = untilDown;
+    }
+
+    /** How upright the body is: 1 = standing, 0 = lying on its side or back. */
+    public double uprightness() {
+        Vector3f up = axis(1);
+        double len = up.length();
+        return len < 1e-9 ? 0 : up.y / len;
     }
 
     /** Shoves the whole body (a punch, an explosion). */
@@ -156,6 +166,10 @@ public final class Ragdoll {
             }
         }
         if (collapseTicks > 0) collapseTicks--;
+        if (collapseUntilDown > 0) {
+            collapseUntilDown--;
+            if (collapseTicks == 0 && uprightness() > 0.55) collapseTicks = 1;
+        }
 
         double maxMove = 0;
         for (int i = 0; i < 8; i++) {

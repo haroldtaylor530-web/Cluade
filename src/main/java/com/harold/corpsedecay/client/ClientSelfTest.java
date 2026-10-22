@@ -46,6 +46,7 @@ public final class ClientSelfTest {
     private static final List<Mob> mobs = new ArrayList<>();
     private static final List<double[]> spots = new ArrayList<>();
     private static final List<String> names = new ArrayList<>();
+    private static final java.util.Map<String, java.util.UUID> corpseOf = new java.util.HashMap<>();
     private static final List<Step> steps = new ArrayList<>();
     private static boolean planned;
 
@@ -113,6 +114,7 @@ public final class ClientSelfTest {
         at(start + 30, () -> server(ClientSelfTest::shootSome));
         at(start + 50, () -> shot("00_alive"));
         at(start + 55, () -> server(ClientSelfTest::killAll));
+        at(start + 58, () -> server(ClientSelfTest::matchCorpses));
         at(start + 60, () -> shot("01_falling"));
         at(start + 65, () -> shot("02_falling"));
         at(start + 72, () -> shot("03_falling"));
@@ -231,6 +233,26 @@ public final class ClientSelfTest {
         p.setGameMode(GameType.SPECTATOR);
     }
 
+    private static void matchCorpses() {
+        ServerLevel level = level();
+        for (int k = 0; k < mobs.size(); k++) {
+            Mob m = mobs.get(k);
+            String type = EntityType.getKey(m.getType()).toString();
+            CorpseEntity best = null;
+            double bd = Double.MAX_VALUE;
+            for (CorpseEntity c : level.getEntitiesOfClass(CorpseEntity.class, new AABB(-50, -100, -50, 50, 400, 50))) {
+                if (!c.mobType().equals(type)) continue;
+                double d = c.position().distanceToSqr(m.position());
+                if (d < bd) {
+                    bd = d;
+                    best = c;
+                }
+            }
+            if (best != null) corpseOf.put(names.get(k), best.getUUID());
+        }
+        LOG.info("CLIENTTEST matched {} corpses", corpseOf.size());
+    }
+
     private static void ageAll(float frac) {
         ServerLevel level = level();
         for (CorpseEntity c : level.getEntitiesOfClass(CorpseEntity.class, new AABB(-50, -100, -50, 50, 400, 50))) {
@@ -249,6 +271,8 @@ public final class ClientSelfTest {
     }
 
     private static CorpseEntity corpseFor(ServerLevel level, String name) {
+        java.util.UUID id = corpseOf.get(name);
+        if (id != null && level.getEntity(id) instanceof CorpseEntity c) return c;
         int idx = names.indexOf(name);
         if (idx < 0) return null;
         double[] spot = spots.get(idx);
@@ -279,10 +303,11 @@ public final class ClientSelfTest {
             double size = Math.max(1.0, Math.max(c.bodyDepth(), c.bodyHeight()));
             ServerPlayer p = player();
             p.setGameMode(GameType.SPECTATOR);
-            double dx = -0.75 * size * 1.6, dz = -1.3 * size * 1.6, dy = 0.75 * size;
-            float yaw = (float) Math.toDegrees(Math.atan2(-(-dx), -dz));
-            float pitch = (float) Math.toDegrees(Math.atan2(dy - 0.1, Math.sqrt(dx * dx + dz * dz)));
-            p.teleportTo(level, c.getX() + dx, c.getY() + dy, c.getZ() + dz, yaw, pitch);
+            double dx = -0.7 * size * 1.25, dz = -1.2 * size * 1.25, dy = 0.8 * size;
+            float yaw = (float) Math.toDegrees(Math.atan2(dx, -dz));
+            float pitch = (float) Math.toDegrees(Math.atan2(dy, Math.sqrt(dx * dx + dz * dz)));
+            // the camera is at eye height above where the player stands
+            p.teleportTo(level, c.getX() + dx, c.getY() + dy - p.getEyeHeight(), c.getZ() + dz, yaw, pitch);
         });
     }
 }

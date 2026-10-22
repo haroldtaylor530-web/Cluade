@@ -131,7 +131,7 @@ public class CorpseEntity extends Entity {
         boolean upright = s.height > s.width * 1.9F;
         boolean flat = s.width >= s.height * 1.5F;
         // four-legged bodies are long and low, so they roll onto their side rather than stand on end
-        float depth = upright || flat ? s.width : Math.max(s.width, s.height * 1.15F);
+        float depth = upright || flat ? s.width : Math.max(s.width, s.height * 1.3F);
         entityData.set(BODY_D, depth);
         entityData.set(DEATH_TIME, level().getGameTime());
         entityData.set(DECAY_TICKS, (int) Math.max(20, Config.MINUTES_TO_SKELETON.get() * 1200.0));
@@ -153,6 +153,10 @@ public class CorpseEntity extends Entity {
         Vec3 center = s.feet.add(0, s.height / 2.0, 0);
         double force = Config.RAGDOLL_FORCE.get();
         Vec3 vel = s.velocity.add(s.push.scale(force));
+        if (!upright && !flat) {
+            // animals drop where they stand rather than flying (sliding would trip them end over end)
+            vel = new Vec3(vel.x * 0.3, Math.min(vel.y, 0.15), vel.z * 0.3);
+        }
         if (vel.lengthSqr() > 1.0) vel = vel.normalize();
         ragdoll = new Ragdoll(s.width, s.height, depth);
         ragdoll.place(center, q, vel, new Vector3f());
@@ -174,7 +178,7 @@ public class CorpseEntity extends Entity {
         }
         double strength = 0.02 + 0.01 * Math.min(2.0, force);
         if (flat) strength = 0.004; // flat bodies (spiders) just slump
-        ragdoll.collapse(dx, dz, strength, upright ? 14 : 10);
+        ragdoll.collapse(dx, dz, strength, upright ? 14 : 10, flat ? 0 : 60);
 
         setPos(center);
         entityData.set(ORIENT, q);
