@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#minecraft:is_end",
+  "features": "corpsedecay:end_remains",
+  "step": "vegetal_decoration"
+}

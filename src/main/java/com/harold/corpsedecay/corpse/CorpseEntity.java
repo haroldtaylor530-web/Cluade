@@ -65,6 +65,7 @@ public class CorpseEntity extends Entity {
     private static final EntityDataAccessor<Byte> MATERIAL = SynchedEntityData.defineId(CorpseEntity.class, EntityDataSerializers.BYTE);
     private static final EntityDataAccessor<Integer> LOOT_MASK = SynchedEntityData.defineId(CorpseEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<CompoundTag> ARROWS = SynchedEntityData.defineId(CorpseEntity.class, EntityDataSerializers.COMPOUND_TAG);
+    private static final EntityDataAccessor<CompoundTag> DECOR = SynchedEntityData.defineId(CorpseEntity.class, EntityDataSerializers.COMPOUND_TAG);
     @SuppressWarnings("unchecked")
     private static final EntityDataAccessor<ItemStack>[] EQUIP = new EntityDataAccessor[6];
 
@@ -118,6 +119,7 @@ public class CorpseEntity extends Entity {
         entityData.define(MATERIAL, (byte) 0);
         entityData.define(LOOT_MASK, 0);
         entityData.define(ARROWS, new CompoundTag());
+        entityData.define(DECOR, new CompoundTag());
         for (EntityDataAccessor<ItemStack> a : EQUIP) entityData.define(a, ItemStack.EMPTY);
     }
 
@@ -236,19 +238,20 @@ public class CorpseEntity extends Entity {
         return entityData.get(SQUASH);
     }
 
-    /** Fossil rock: 0 stone, 1 sandstone, 2 deepslate, 3 bleached (surface bones). */
+    /** How old remains have weathered: see the constants below. */
     public int material() {
         return entityData.get(MATERIAL);
     }
 
-    public static final int STONE = 0, SANDSTONE = 1, DEEPSLATE = 2, BLEACHED = 3;
+    /** old yellowed bone, sandy, grimy cave bone, sun-bleached, mossy, charred, ender-stained */
+    public static final int OLD = 0, SANDY = 1, DARK = 2, BLEACHED = 3, MOSSY = 4, CHARRED = 5, ENDER = 6;
 
     /**
-     * A fossil: the bones of a mob that died long ago, lying on {@code ground} (the top of the
-     * block it rests on), turned to {@code material} and sunk {@code sink} (0..1) of its thickness
-     * into the ground.
+     * Remains: the bones of a mob that died long ago, lying on {@code ground} (the top of the
+     * block it rests on), weathered as {@code material} and sunk {@code sink} (0..1) of its
+     * thickness into the ground.
      */
-    public static CorpseEntity fossil(ServerLevel level, EntityType<?> mob, Vec3 ground, net.minecraft.util.RandomSource rand, int material, double sink) {
+    public static CorpseEntity remains(ServerLevel level, EntityType<?> mob, Vec3 ground, net.minecraft.util.RandomSource rand, int material, double sink) {
         CorpseEntity c = com.harold.corpsedecay.ModRegistry.CORPSE.get().create(level);
         if (c == null) return null;
         float w = mob.getWidth(), h = mob.getHeight();
@@ -258,7 +261,7 @@ public class CorpseEntity extends Entity {
         c.entityData.set(BODY_W, w);
         c.entityData.set(BODY_H, h);
         c.entityData.set(BODY_D, upright || flat ? w : Math.max(w, h * 1.3F));
-        c.entityData.set(KIND, (byte) CorpseKind.FOSSIL.ordinal());
+        c.entityData.set(KIND, (byte) CorpseKind.REMAINS.ordinal());
         c.entityData.set(MATERIAL, (byte) material);
         c.entityData.set(DECAY_TICKS, 20);
         c.entityData.set(DEATH_TIME, 0L);
@@ -277,6 +280,69 @@ public class CorpseEntity extends Entity {
         return c;
     }
 
+    /** Puts a piece of gear on the remains, which can be taken off. */
+    public void giveGear(EquipmentSlot slot, ItemStack stack) {
+        entityData.set(EQUIP[slot.ordinal()], stack);
+        int mask = entityData.get(LOOT_MASK);
+        entityData.set(LOOT_MASK, stack.isEmpty() ? mask & ~(1 << slot.ordinal()) : mask | (1 << slot.ordinal()));
+    }
+
+    /** Sticks an old arrow somewhere in the body (it can be pulled out). */
+    public void addOldArrow(net.minecraft.util.RandomSource rand) {
+        ListTag list = arrows().copy();
+        if (list.size() >= MAX_ARROWS) return;
+        float w = bodyWidth(), h = bodyHeight(), d = bodyDepth();
+        CompoundTag t = new CompoundTag();
+        t.putFloat("X", (rand.nextFloat() - 0.5F) * w * 0.5F);
+        t.putFloat("Y", h * (0.35F + rand.nextFloat() * 0.5F));
+        t.putFloat("Z", (rand.nextFloat() - 0.5F) * d * 0.5F);
+        Vector3f dir = new Vector3f(rand.nextFloat() - 0.5F, -0.2F - rand.nextFloat() * 0.5F, rand.nextFloat() - 0.5F).normalize();
+        t.putFloat("DX", dir.x);
+        t.putFloat("DY", dir.y);
+        t.putFloat("DZ", dir.z);
+        t.putInt("Kind", StuckArrows.KIND_ARROW);
+        t.putInt("Color", -1);
+        t.putBoolean("Loot", true);
+        list.add(t);
+        CompoundTag w2 = new CompoundTag();
+        w2.put("List", list);
+        entityData.set(ARROWS, w2);
+    }
+
+    /**
+     * Something growing on (or lying over) the remains: a mushroom, moss, roots, snow, cobweb.
+     * It goes on whichever side of the body faces up, at a random spot.
+     */
+    public void addGrowth(net.minecraft.world.level.block.Block block, float scale, net.minecraft.util.RandomSource rand) {
+        Quaternionf inv = new Quaternionf(orientation()).conjugate();
+        Vector3f up = inv.transform(new Vector3f(0, 1, 0));
+        float[] half = {bodyWidth() / 2F, bodyHeight() / 2F, bodyDepth() / 2F};
+        float[] u = {up.x, up.y, up.z};
+        int axis = 0;
+        for (int i = 1; i < 3; i++) if (Math.abs(u[i]) > Math.abs(u[axis])) axis = i;
+        float[] p = new float[3];
+        for (int i = 0; i < 3; i++) {
+            p[i] = i == axis ? Math.signum(u[i]) * half[i] * 0.45F : (rand.nextFloat() * 2 - 1) * half[i] * 0.6F;
+        }
+        ListTag list = growths().copy();
+        CompoundTag t = new CompoundTag();
+        t.putString("Block", String.valueOf(net.minecraftforge.registries.ForgeRegistries.BLOCKS.getKey(block)));
+        t.putFloat("X", p[0]);
+        t.putFloat("Y", p[1]);
+        t.putFloat("Z", p[2]);
+        t.putFloat("Scale", scale);
+        t.putFloat("Yaw", rand.nextFloat() * 360F);
+        list.add(t);
+        CompoundTag w = new CompoundTag();
+        w.put("List", list);
+        entityData.set(DECOR, w);
+    }
+
+    /** Growths on the body: block id, position from the body's middle in its own frame, scale, yaw. */
+    public ListTag growths() {
+        return entityData.get(DECOR).getList("List", Tag.TAG_COMPOUND);
+    }
+
     /** How far through decay a burnt body jumps to: charred, just short of bare bone. */
     public static final float BURNT_DECAY = 0.75F;
 
@@ -287,7 +353,7 @@ public class CorpseEntity extends Entity {
     public void burn() {
         if (level().isClientSide) return;
         CorpseKind kind = kind();
-        if (kind == CorpseKind.NO_DECAY || kind == CorpseKind.FOSSIL) return;
+        if (kind == CorpseKind.NO_DECAY || kind == CorpseKind.REMAINS) return;
         if (burnTime() > 0) return;
         long now = level().getGameTime();
         entityData.set(BURN_TIME, now);
@@ -386,7 +452,7 @@ public class CorpseEntity extends Entity {
             // a body left standing (wedged against something) gets another chance to fall over
             checkedUpright = true;
             Vector3f up = orientation().transform(new Vector3f(0, 1, 0));
-            if (up.y > 0.85F && !flatBody() && cause() != DeathCause.CRUSHED && kind() != CorpseKind.FOSSIL) {
+            if (up.y > 0.85F && !flatBody() && cause() != DeathCause.CRUSHED && kind() != CorpseKind.REMAINS) {
                 wake();
                 double a = random.nextDouble() * Math.PI * 2;
                 ragdoll.collapse(Math.cos(a), Math.sin(a), Math.max(0.04, 1.35 * 0.08 * bodyWidth() / bodyHeight()), 6, 60, 0.55);
@@ -413,7 +479,7 @@ public class CorpseEntity extends Entity {
                 entityData.set(SETTLED, true);
             }
         }
-        if (tickCount % 20 == 0 && kind() != CorpseKind.FOSSIL) {
+        if (tickCount % 20 == 0 && kind() != CorpseKind.REMAINS) {
             long age = level().getGameTime() - deathTime();
             long end = decayTicks() + skeletonTicks;
             CorpseKind kind = kind();
@@ -423,15 +489,6 @@ public class CorpseEntity extends Entity {
                 crumble(false);
             }
         }
-    }
-
-    private net.minecraft.world.level.block.Block fossilRock() {
-        return switch (material()) {
-            case SANDSTONE -> Blocks.SANDSTONE;
-            case DEEPSLATE -> Blocks.DEEPSLATE;
-            case BLEACHED -> Blocks.BONE_BLOCK;
-            default -> Blocks.STONE;
-        };
     }
 
     private void burnUp() {
@@ -446,16 +503,8 @@ public class CorpseEntity extends Entity {
     public void crumble(boolean dropLoot) {
         if (!(level() instanceof ServerLevel sl)) return;
         if (dropLoot) dropAllLoot();
-        if (kind() == CorpseKind.FOSSIL) {
-            if (dropLoot) spawnAtLocation(new ItemStack(Items.BONE, 2 + random.nextInt(4)), 0.3F);
-            sl.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, fossilRock().defaultBlockState()), getX(), getY(), getZ(),
-                    30, bodyWidth() / 2, 0.2, bodyWidth() / 2, 0.05);
-            playSound(SoundEvents.STONE_BREAK, 0.9F, 0.9F);
-            level().broadcastEntityEvent(this, EVENT_CRUMBLE);
-            discard();
-            return;
-        }
-        boolean bones = kind() == CorpseKind.BONES || decay(0) > 0.75F;
+        if (kind() == CorpseKind.REMAINS && dropLoot) spawnAtLocation(new ItemStack(Items.BONE, 2 + random.nextInt(4)), 0.3F);
+        boolean bones = kind() == CorpseKind.BONES || kind() == CorpseKind.REMAINS || decay(0) > 0.75F;
         ParticleOptions particle = bones
                 ? new BlockParticleOption(ParticleTypes.BLOCK, Blocks.BONE_BLOCK.defaultBlockState())
                 : new ItemParticleOption(ParticleTypes.ITEM, new ItemStack(Items.ROTTEN_FLESH));
@@ -680,6 +729,9 @@ public class CorpseEntity extends Entity {
         CompoundTag arrows = new CompoundTag();
         arrows.put("List", tag.getList("Arrows", Tag.TAG_COMPOUND));
         entityData.set(ARROWS, arrows);
+        CompoundTag decor = new CompoundTag();
+        decor.put("List", tag.getList("Growths", Tag.TAG_COMPOUND));
+        entityData.set(DECOR, decor);
         extraLoot = tag.getCompound("ExtraLoot");
         ragdoll = null;
         setBoundingBox(makeBoundingBox());
@@ -714,6 +766,7 @@ public class CorpseEntity extends Entity {
         for (int i = 0; i < 6; i++) eq.add(entityData.get(EQUIP[i]).save(new CompoundTag()));
         tag.put("Equipment", eq);
         tag.put("Arrows", arrows());
+        tag.put("Growths", growths());
         tag.put("ExtraLoot", extraLoot);
     }
 

@@ -26,12 +26,24 @@ there, rotting through stages down to a bare skeleton, still wearing whatever it
   - Withered (the wither effect, the Wither, wither skeletons): a shrivelled grey-black husk.
   - Fell to its death: crumpled, limbs bent at broken angles.
   - Crushed by an anvil or falling block: squashed flat where it stood.
-- **Fossils.** New chunks can hold the remains of things that died long ago. In caves, skeletons
-  turned to the stone they lay in (grey in stone, tan in sandstone, near black in deepslate) lie on
-  the cave floor; in deserts, badlands and beaches, old bleached bones lie half buried in the sand.
-  They're mostly animals (sniffers included) with the odd villager or zombie; which mobs is the
-  tag `#corpsedecay:fossil_mobs`. Fossils never crumble and don't count towards the corpse limit.
-  Sneak and hit one to break it up for bones.
+- **Remains of the long dead.** New chunks can hold the bones of things that died long ago, lying
+  where they fell. Adventurers lie in their battered armour with their sword, bow or pickaxe, old
+  arrows still in them, sometimes with a chest of their belongings beside them; animals lie as
+  bare bones. What's on and around them depends on where they are: moss in lush caves, mushrooms
+  in mushroom fields and dark forests, cobwebs in caves, dripstone in dripstone caves, dead bushes
+  and cactus in the desert, snow in the cold, roots and fungus in the nether. The bones weather to
+  match: yellowed, grimy, sandy, sun-bleached, mossy, charred in the nether, stained purple in the
+  end. They turn up on the surface, in caves, in the nether (adventurers, piglins, hoglins,
+  striders) and in the end (heroes the dragon got, endermen). You can take the gear and arrows off
+  them. They never crumble and don't count towards the corpse limit; sneak and hit them to break
+  them up for bones. Which mobs turn up is the tags `#corpsedecay:remains_mobs`,
+  `nether_remains_mobs` and `end_remains_mobs`.
+- **Fossils in the rock.** Whole skeletons of fossil blocks are set into the stone underground:
+  skull, backbone, ribcage, tail, leg bones and feet, seen side-on like a museum fossil, so you
+  find them mining or exposed in cave walls. Sandstone ones lie under deserts and beaches. Smaller
+  fossils (ammonites, trilobites, fish and ferns) turn up on their own like ores. Each comes in
+  stone, deepslate and sandstone, matching the rock it's in. Mine one with a pickaxe to get the
+  block itself and build your own display; they're in their own creative tab.
 - **Real skeletons for every mob.** The skeleton is built from each mob's own model: a skull with
   eye sockets and teeth, a ribcage and spine running the length of the body (upright for zombies
   and villagers, horizontal for animals), a pelvis, leg bones with knobbly joints, tail
@@ -74,7 +86,8 @@ These are entity type tags (`#corpsedecay:no_corpse`, `already_bones`, `no_skele
 | `ragdollForce` | 1.0 | How hard killing blows throw bodies |
 | `lootAllEquipment` | false | Let players take everything off a body, not just what would have dropped |
 | `flies` | true | Flies around rotting bodies |
-| `fossils` | true | Fossils in newly generated chunks |
+| `remains` | true | Old remains in newly generated chunks |
+| `fossils` | true | Fossil blocks in the rock of newly generated chunks |
 | `excludedMobs` | [] | Mob ids that never leave a corpse |
 
 ## Installing

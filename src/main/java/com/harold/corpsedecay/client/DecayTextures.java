@@ -54,7 +54,7 @@ public final class DecayTextures {
 
     /** The texture to draw a corpse with, or the original if it can't be made. */
     /** Looks a body can have besides plain rotting. */
-    public static final int NORMAL = 0, BURNT = 1, DROWNED = 2, FROZEN = 3, WITHERED = 5, FOSSIL = 10;
+    public static final int NORMAL = 0, BURNT = 1, DROWNED = 2, FROZEN = 3, WITHERED = 5, REMAINS = 20;
 
     public static ResourceLocation get(ResourceLocation original, ModelInfo info, CorpseKind kind, int variant, float decay) {
         if (kind == CorpseKind.NO_DECAY || original == null) return original;
@@ -286,7 +286,7 @@ public final class DecayTextures {
             int c = argb[i];
             int a = c >>> 24;
             if (a == 0) return 0;
-            if (kind == CorpseKind.FOSSIL) return fossil(i, a);
+            if (variant >= REMAINS) return aged(i, c, a);
             if (burnt) return charred(i, c, a, p, last);
             if (variant == WITHERED) return withered(i, c, a, p, last);
             if (variant == DROWNED || variant == FROZEN) return tinted(i, normal(i, c, a, p, last), p);
@@ -380,23 +380,35 @@ public final class DecayTextures {
             return withAlpha(husk, a);
         }
 
-        /** Bones turned to stone: only the skeleton, in the colour of the rock it lay in. */
-        private int fossil(int i, int a) {
-            if (bone[i] == 0) return 0;
+        /**
+         * Old remains: a bare skeleton (clothes in rags) weathered by where it lay: yellowed, sandy,
+         * grimy, sun-bleached, mossy, charred or stained purple in the end.
+         */
+        private int aged(int i, int c, int a) {
+            int out = normal(i, c, a, 1F, true);
+            if ((out >>> 24) == 0) return out;
             int x = i % w, y = i / w;
-            if (what[i] == BonePainter.DARK) return withAlpha(0xFF201E1C, a);
-            int rock = switch (variant - FOSSIL) {
-                case 1 -> 0xFFCDB98C; // sandstone
-                case 2 -> 0xFF55555C; // deepslate
-                case 3 -> 0xFFE9E3D2; // bleached
-                default -> 0xFF8E8E8A; // stone
+            boolean cloth = kind != CorpseKind.BONES && clothes[i] && tear[i] >= 0.45F * 0.85F;
+            if (cloth) {
+                out = mix(out, 0xFF4A4034, 0.3F); // faded rags
+                if (variant - REMAINS == 4 && blot[i] > 0.6F) out = mix(out, 0xFF4E6B2A, 0.6F);
+                if (variant - REMAINS == 6) out = mix(out, 0xFF2A2236, 0.45F);
+                return withAlpha(out, a);
+            }
+            boolean bone = kind == CorpseKind.BONES ? brightness(out) > 70 : what[i] == BonePainter.BONE;
+            if (!bone) return withAlpha(out, a);
+            float n = Noise.hash(x, y, 911);
+            out = switch (variant - REMAINS) {
+                case 1 -> mix(out, 0xFFD8C596, 0.4F);                                      // sandy
+                case 2 -> scale(mix(out, 0xFF8E887C, 0.35F), blot[i] > 0.55F ? 0.85F : 1F); // cave grime
+                case 3 -> mix(out, 0xFFF2EEE4, 0.45F);                                      // sun bleached
+                case 4 -> blot[i] > 0.56F                                                  // mossy
+                        ? mix(out, n > 0.7F ? 0xFF7A9A3E : 0xFF5A7A2E, 0.8F)
+                        : mix(out, 0xFFCBBE98, 0.3F);
+                case 5 -> scorched(out, i);                                                 // charred
+                case 6 -> n > 0.93F ? mix(out, 0xFF9A6CC4, 0.7F) : mix(out, 0xFF4E3D63, 0.6F); // ender
+                default -> scale(mix(out, 0xFFCBBE98, 0.3F), blot[i] > 0.62F ? 0.88F : 1F); // old, yellowed
             };
-            float shade = brightness(bone[i]) / 220F;
-            int out = scale(rock, Math.min(1.15F, shade));
-            float n = Noise.hash(x, y, 313);
-            if (n > 0.86F) out = scale(out, 0.78F);       // mineral flecks
-            else if (n < 0.08F) out = scale(out, 1.12F);
-            if (variant - FOSSIL == 3 && tear[i] < 0.08F) out = scale(out, 0.72F); // weathering cracks
             return withAlpha(out, a);
         }
 

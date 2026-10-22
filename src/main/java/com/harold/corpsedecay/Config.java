@@ -16,6 +16,7 @@ public final class Config {
     public static final ForgeConfigSpec.DoubleValue RAGDOLL_FORCE;
     public static final ForgeConfigSpec.BooleanValue LOOT_ALL_EQUIPMENT;
     public static final ForgeConfigSpec.BooleanValue FLIES;
+    public static final ForgeConfigSpec.BooleanValue REMAINS;
     public static final ForgeConfigSpec.BooleanValue FOSSILS;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> EXCLUDED;
 
@@ -35,7 +36,9 @@ public final class Config {
         LOOT_ALL_EQUIPMENT = b.comment("Let players take every piece of armour and held item off a corpse, not only what the mob would normally drop.")
                 .define("lootAllEquipment", false);
         FLIES = b.comment("Flies buzz around rotting bodies.").define("flies", true);
-        FOSSILS = b.comment("New chunks can have fossils: stone bones in caves, bleached bones in deserts, badlands and beaches.")
+        REMAINS = b.comment("New chunks can have the remains of things that died long ago: adventurers in their armour, animals, with moss, mushrooms or cobwebs growing on them.")
+                .define("remains", true);
+        FOSSILS = b.comment("New chunks can have fossils in the rock: whole skeletons of fossil blocks, and ammonites, trilobites, fish and ferns.")
                 .define("fossils", true);
         EXCLUDED = b.comment("Entity ids that never leave a corpse, e.g. [\"minecraft:bat\"]. The tag #corpsedecay:no_corpse works too.")
                 .defineListAllowEmpty("excludedMobs", List.of(), o -> o instanceof String);

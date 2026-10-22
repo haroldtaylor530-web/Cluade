@@ -11,6 +11,9 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
+import com.harold.corpsedecay.world.FossilBedFeature;
+import com.harold.corpsedecay.world.RemainsFeature;
+
 public final class ModRegistry {
     private static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, CorpseDecay.MODID);
     private static final DeferredRegister<net.minecraft.world.level.levelgen.feature.Feature<?>> FEATURES =
@@ -24,10 +27,12 @@ public final class ModRegistry {
                     .updateInterval(1)
                     .build("corpse"));
 
-    public static final RegistryObject<com.harold.corpsedecay.world.FossilFeature> CAVE_FOSSIL =
-            FEATURES.register("cave_fossil", () -> new com.harold.corpsedecay.world.FossilFeature(false));
-    public static final RegistryObject<com.harold.corpsedecay.world.FossilFeature> SURFACE_FOSSIL =
-            FEATURES.register("surface_fossil", () -> new com.harold.corpsedecay.world.FossilFeature(true));
+    static {
+        for (RemainsFeature.Where w : RemainsFeature.Where.values()) {
+            FEATURES.register(w.name().toLowerCase(java.util.Locale.ROOT) + "_remains", () -> new RemainsFeature(w));
+        }
+    }
+    public static final RegistryObject<FossilBedFeature> FOSSIL_BED = FEATURES.register("fossil_bed", FossilBedFeature::new);
 
     public static final RegistryObject<SimpleParticleType> FLY = PARTICLES.register("fly", () -> new SimpleParticleType(false));
 
@@ -38,5 +43,6 @@ public final class ModRegistry {
         ENTITIES.register(bus);
         PARTICLES.register(bus);
         FEATURES.register(bus);
+        com.harold.corpsedecay.block.FossilBlocks.register(bus);
     }
 }

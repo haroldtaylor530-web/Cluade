@@ -1,0 +1,11 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#minecraft:is_overworld",
+  "features": [
+    "corpsedecay:ammonite_fossil",
+    "corpsedecay:trilobite_fossil",
+    "corpsedecay:fish_fossil",
+    "corpsedecay:fern_fossil"
+  ],
+  "step": "underground_ores"
+}

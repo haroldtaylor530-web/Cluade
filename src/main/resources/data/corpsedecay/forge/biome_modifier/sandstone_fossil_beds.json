@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#corpsedecay:sandy",
+  "features": "corpsedecay:fossil_bed_sandstone",
+  "step": "underground_ores"
+}

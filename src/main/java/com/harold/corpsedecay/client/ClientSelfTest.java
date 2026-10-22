@@ -130,12 +130,12 @@ public final class ClientSelfTest {
         }
         // close-ups from low down: fresh, rotting, skeleton
         String[] who = {"cow_drowned", "zombie_frozen", "cow_exploded", "zombie_withered", "zombie_fell", "cow_crushed",
-                "fossil_stone", "fossil_sand", "fossil_deep", "fossil_bleached", "zombie_burnt", "cow_burnt", "zombie_armour", "zombie", "villager", "pillager", "cow", "sheep", "horse", "pig", "chicken", "wolf", "skeleton"};
+                "remains_adventurer", "remains_mossy", "remains_piglin", "remains_ender", "remains_bleached", "remains_cave", "zombie_burnt", "cow_burnt", "zombie_armour", "zombie", "villager", "pillager", "cow", "sheep", "horse", "pig", "chicken", "wolf", "skeleton"};
         float[] when = {0.0F, 0.5F, 1.0F};
         int n = 10;
         for (String w : who) {
             float[] times = w.endsWith("_burnt") ? new float[] {0.75F, 0.88F, 1.0F}
-                    : w.startsWith("fossil") ? new float[] {1.0F}
+                    : w.startsWith("remains") ? new float[] {1.0F}
                     : w.endsWith("_withered") ? new float[] {0.6F, 1.0F}
                     : (w.endsWith("_drowned") || w.endsWith("_frozen") || w.endsWith("_exploded") || w.endsWith("_fell") || w.endsWith("_crushed"))
                     ? new float[] {0.15F, 0.6F} : when;
@@ -148,6 +148,11 @@ public final class ClientSelfTest {
             }
             n++;
         }
+        at(t, () -> camera(0.5, ground + 3.2, 14.6, 0F, 12F));
+        at(t + 25, () -> shot("90_fossil_wall"));
+        at(t + 30, () -> camera(1.0, ground + 4.5, 7.5, 0F, 30F));
+        at(t + 55, () -> shot("91_remains_row"));
+        t += 60;
         at(t + 5, () -> {
             LOG.info("CLIENTTEST DONE");
             Minecraft.getInstance().stop();
@@ -210,22 +215,72 @@ public final class ClientSelfTest {
         spawn("zombie_withered", EntityType.ZOMBIE, 3, 8);
         spawn("zombie_fell", EntityType.ZOMBIE, 6, 8);
         spawn("cow_crushed", EntityType.COW, 9, 8);
-        // fossils, each on its own kind of rock
-        fossil("fossil_stone", EntityType.COW, -5, net.minecraft.world.level.block.Blocks.STONE, com.harold.corpsedecay.corpse.CorpseEntity.STONE, 0.1);
-        fossil("fossil_sand", EntityType.HORSE, -1, net.minecraft.world.level.block.Blocks.SANDSTONE, com.harold.corpsedecay.corpse.CorpseEntity.SANDSTONE, 0.1);
-        fossil("fossil_deep", EntityType.VILLAGER, 3, net.minecraft.world.level.block.Blocks.DEEPSLATE, com.harold.corpsedecay.corpse.CorpseEntity.DEEPSLATE, 0.1);
-        fossil("fossil_bleached", EntityType.SNIFFER, 7, net.minecraft.world.level.block.Blocks.SAND, com.harold.corpsedecay.corpse.CorpseEntity.BLEACHED, 0.4);
+        // old remains, weathered different ways, with gear and things growing on them
+        CorpseEntity r = remains("remains_adventurer", EntityType.SKELETON, -7, net.minecraft.world.level.block.Blocks.GRASS_BLOCK, CorpseEntity.OLD, 0.05);
+        if (r != null) {
+            r.giveGear(EquipmentSlot.HEAD, new ItemStack(Items.IRON_HELMET));
+            r.giveGear(EquipmentSlot.CHEST, new ItemStack(Items.CHAINMAIL_CHESTPLATE));
+            r.giveGear(EquipmentSlot.MAINHAND, new ItemStack(Items.IRON_SWORD));
+            r.addOldArrow(level.random);
+            r.addOldArrow(level.random);
+            r.addGrowth(net.minecraft.world.level.block.Blocks.GRASS, 0.55F, level.random);
+            level.setBlockAndUpdate(new net.minecraft.core.BlockPos(-8, ground, 13), net.minecraft.world.level.block.Blocks.CHEST.defaultBlockState());
+        }
+        r = remains("remains_mossy", EntityType.COW, -4, net.minecraft.world.level.block.Blocks.MOSS_BLOCK, CorpseEntity.MOSSY, 0.05);
+        if (r != null) {
+            r.addGrowth(net.minecraft.world.level.block.Blocks.MOSS_CARPET, 0.45F, level.random);
+            r.addGrowth(net.minecraft.world.level.block.Blocks.BROWN_MUSHROOM, 0.6F, level.random);
+            r.addGrowth(net.minecraft.world.level.block.Blocks.RED_MUSHROOM, 0.6F, level.random);
+        }
+        r = remains("remains_piglin", EntityType.PIGLIN, -1, net.minecraft.world.level.block.Blocks.CRIMSON_NYLIUM, CorpseEntity.CHARRED, 0.05);
+        if (r != null) {
+            r.giveGear(EquipmentSlot.HEAD, new ItemStack(Items.GOLDEN_HELMET));
+            r.giveGear(EquipmentSlot.MAINHAND, new ItemStack(Items.GOLDEN_SWORD));
+            r.addGrowth(net.minecraft.world.level.block.Blocks.CRIMSON_FUNGUS, 0.6F, level.random);
+        }
+        remains("remains_ender", EntityType.ENDERMAN, 2, net.minecraft.world.level.block.Blocks.END_STONE, CorpseEntity.ENDER, 0.05);
+        r = remains("remains_bleached", EntityType.ZOMBIE, 5, net.minecraft.world.level.block.Blocks.SAND, CorpseEntity.BLEACHED, 0.3);
+        if (r != null) r.giveGear(EquipmentSlot.MAINHAND, new ItemStack(Items.IRON_SHOVEL));
+        r = remains("remains_cave", EntityType.SKELETON, 8, net.minecraft.world.level.block.Blocks.DEEPSLATE, CorpseEntity.DARK, 0.05);
+        if (r != null) {
+            r.giveGear(EquipmentSlot.MAINHAND, new ItemStack(Items.BOW));
+            r.giveGear(EquipmentSlot.FEET, new ItemStack(Items.LEATHER_BOOTS));
+            r.addGrowth(net.minecraft.world.level.block.Blocks.COBWEB, 0.9F, level.random);
+        }
+        // fossils in the rock: a wall of deepslate and stone with two skeletons in it, and the small ones on show
+        for (int x = -10; x <= 10; x++) {
+            for (int y = 0; y < 8; y++) {
+                net.minecraft.world.level.block.Block rock = x < 0 ? net.minecraft.world.level.block.Blocks.DEEPSLATE : net.minecraft.world.level.block.Blocks.STONE;
+                level.setBlockAndUpdate(new net.minecraft.core.BlockPos(x, ground + y, 18), rock.defaultBlockState());
+            }
+        }
+        com.harold.corpsedecay.world.FossilBedFeature.placeSkeleton(level, new net.minecraft.core.BlockPos(-5, ground + 4, 18), level.random,
+                com.harold.corpsedecay.world.FossilBedFeature.SKELETONS[2], 0F, 0.5F, net.minecraft.core.Direction.EAST);
+        com.harold.corpsedecay.world.FossilBedFeature.placeSkeleton(level, new net.minecraft.core.BlockPos(5, ground + 4, 18), level.random,
+                com.harold.corpsedecay.world.FossilBedFeature.SKELETONS[1], 0F, 0.5F, net.minecraft.core.Direction.WEST);
+        int sx = -6;
+        for (com.harold.corpsedecay.block.FossilBlocks.Host host : com.harold.corpsedecay.block.FossilBlocks.Host.values()) {
+            for (com.harold.corpsedecay.block.FossilBlocks.Piece piece : new com.harold.corpsedecay.block.FossilBlocks.Piece[] {
+                    com.harold.corpsedecay.block.FossilBlocks.Piece.AMMONITE, com.harold.corpsedecay.block.FossilBlocks.Piece.TRILOBITE,
+                    com.harold.corpsedecay.block.FossilBlocks.Piece.FISH, com.harold.corpsedecay.block.FossilBlocks.Piece.FERN}) {
+                level.setBlockAndUpdate(new net.minecraft.core.BlockPos(sx++, ground, 17),
+                        com.harold.corpsedecay.block.FossilBlocks.state(host, piece, net.minecraft.core.Direction.NORTH));
+            }
+        }
         camera(0.5, ground + 6.5, -8.5, 0F, 32F);
     }
 
-    private static void fossil(String name, EntityType<?> type, int x, net.minecraft.world.level.block.Block rock, int material, double sink) {
+    private static CorpseEntity remains(String name, EntityType<?> type, int x, net.minecraft.world.level.block.Block rock, int material, double sink) {
         ServerLevel level = level();
-        for (int dx = -2; dx <= 2; dx++) {
-            for (int dz = -2; dz <= 2; dz++) level.setBlockAndUpdate(new net.minecraft.core.BlockPos(x + dx, ground - 1, 13 + dz), rock.defaultBlockState());
+        for (int dx = -1; dx <= 1; dx++) {
+            for (int dz = -1; dz <= 1; dz++) level.setBlockAndUpdate(new net.minecraft.core.BlockPos(x + dx, ground - 1, 13 + dz), rock.defaultBlockState());
         }
         net.minecraft.world.phys.Vec3 top = new net.minecraft.world.phys.Vec3(x + 0.5, ground, 13.5);
-        CorpseEntity f = CorpseEntity.fossil(level, type, top, level.random, material, sink);
-        if (f != null && level.addFreshEntity(f)) corpseOf.put(name, f.getUUID());
+        CorpseEntity f = CorpseEntity.remains(level, type, top, level.random, material, sink);
+        if (f == null) return null;
+        if (!level.addFreshEntity(f)) return null;
+        corpseOf.put(name, f.getUUID());
+        return f;
     }
 
     private static Mob spawn(String name, EntityType<? extends Mob> type, double x, double z) {
@@ -292,7 +347,7 @@ public final class ClientSelfTest {
             CorpseEntity best = null;
             double bd = Double.MAX_VALUE;
             for (CorpseEntity c : level.getEntitiesOfClass(CorpseEntity.class, new AABB(-50, -100, -50, 50, 400, 50))) {
-                if (!c.mobType().equals(type) || c.kind() == com.harold.corpsedecay.CorpseKind.FOSSIL) continue;
+                if (!c.mobType().equals(type) || c.kind() == com.harold.corpsedecay.CorpseKind.REMAINS) continue;
                 double d = c.position().distanceToSqr(m.position());
                 if (d < bd) {
                     bd = d;
@@ -307,7 +362,7 @@ public final class ClientSelfTest {
     private static void ageAll(float frac) {
         ServerLevel level = level();
         for (CorpseEntity c : level.getEntitiesOfClass(CorpseEntity.class, new AABB(-50, -100, -50, 50, 400, 50))) {
-            if (c.kind() == com.harold.corpsedecay.CorpseKind.FOSSIL) continue;
+            if (c.kind() == com.harold.corpsedecay.CorpseKind.REMAINS) continue;
             c.setDeathTime(level.getGameTime() - Math.round(frac * c.decayTicks()));
         }
     }
@@ -351,7 +406,7 @@ public final class ClientSelfTest {
                 LOG.warn("CLIENTTEST no corpse for {}", name);
                 return;
             }
-            if (c.kind() != com.harold.corpsedecay.CorpseKind.FOSSIL) c.setDeathTime(level.getGameTime() - Math.round(frac * c.decayTicks()));
+            if (c.kind() != com.harold.corpsedecay.CorpseKind.REMAINS) c.setDeathTime(level.getGameTime() - Math.round(frac * c.decayTicks()));
             double size = Math.max(1.0, Math.max(c.bodyDepth(), c.bodyHeight()));
             ServerPlayer p = player();
             p.setGameMode(GameType.SPECTATOR);

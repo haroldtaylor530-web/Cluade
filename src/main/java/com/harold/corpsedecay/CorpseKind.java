@@ -15,15 +15,17 @@ public enum CorpseKind {
     NO_BONES,
     /** Doesn't rot at all (golems, shulkers): stays as it fell until it crumbles. */
     NO_DECAY,
-    /** Bones turned to stone long ago, found in the world. */
-    FOSSIL;
+    /** Old bones of something that died long ago, found lying about the world. */
+    REMAINS;
 
     public static final TagKey<EntityType<?>> NO_CORPSE = tag("no_corpse");
     public static final TagKey<EntityType<?>> ALREADY_BONES = tag("already_bones");
     public static final TagKey<EntityType<?>> NO_SKELETON = tag("no_skeleton");
     public static final TagKey<EntityType<?>> DOES_NOT_ROT = tag("does_not_rot");
-    /** mobs whose fossils can be found in the world */
-    public static final TagKey<EntityType<?>> FOSSIL_MOBS = tag("fossil_mobs");
+    /** mobs whose old remains can be found lying about the overworld, the nether and the end */
+    public static final TagKey<EntityType<?>> REMAINS_MOBS = tag("remains_mobs");
+    public static final TagKey<EntityType<?>> NETHER_REMAINS_MOBS = tag("nether_remains_mobs");
+    public static final TagKey<EntityType<?>> END_REMAINS_MOBS = tag("end_remains_mobs");
 
     private static TagKey<EntityType<?>> tag(String name) {
         return TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(CorpseDecay.MODID, name));

@@ -65,16 +65,19 @@ public class CorpseRenderer extends EntityRenderer<CorpseEntity> {
         LivingEntityRenderer renderer = cc.renderer;
 
         CorpseKind kind = corpse.kind();
-        float decay = kind == CorpseKind.BONES || kind == CorpseKind.NO_DECAY ? 0F : kind == CorpseKind.FOSSIL ? 1F : corpse.decay(partial);
+        boolean remains = kind == CorpseKind.REMAINS;
+        float decay = kind == CorpseKind.BONES || kind == CorpseKind.NO_DECAY ? 0F : remains ? 1F : corpse.decay(partial);
         ResourceLocation original = renderer.getTextureLocation(puppet);
         boolean burnt = corpse.burnt();
         DeathCause cause = corpse.cause();
-        int variant = kind == CorpseKind.FOSSIL ? DecayTextures.FOSSIL + corpse.material()
+        // old remains are drawn like a rotted-away body of their own kind, then weathered
+        CorpseKind texKind = remains ? (CorpseKind.of(puppet.getType()) == CorpseKind.BONES ? CorpseKind.BONES : CorpseKind.FLESH) : kind;
+        int variant = remains ? DecayTextures.REMAINS + corpse.material()
                 : burnt ? DecayTextures.BURNT
                 : cause == DeathCause.DROWNED ? DecayTextures.DROWNED
                 : cause == DeathCause.FROZEN ? DecayTextures.FROZEN
                 : cause == DeathCause.WITHERED ? DecayTextures.WITHERED : DecayTextures.NORMAL;
-        ResourceLocation tex = DecayTextures.get(original, cc.info, kind, variant, decay);
+        ResourceLocation tex = DecayTextures.get(original, cc.info, texKind, variant, decay);
         RenderType type = null;
         if (tex != null && tex != original) {
             boolean fading = kind == CorpseKind.NO_BONES && decay > 0.8F;
@@ -90,14 +93,14 @@ public class CorpseRenderer extends EntityRenderer<CorpseEntity> {
         RenderContext ctx = new RenderContext(puppet, type);
         cc.applyPoses(ctx, partial);
         if (cause == DeathCause.EXPLODED) cc.hideMissingLimbs(corpse, ctx);
+        renderGrowths(corpse, ps, buffers, light);
         List<RenderLayer> layers = layersOf(renderer);
         List<RenderLayer> saved = layers == null ? null : new ArrayList<>(layers);
         ctx.begin();
         try {
-            final boolean fossil = kind == CorpseKind.FOSSIL;
             final boolean blownUp = cause == DeathCause.EXPLODED;
             if (layers != null) {
-                layers.removeIf(l -> fossil || hideLayer(l, kind, burnt, decay)
+                layers.removeIf(l -> hideLayer(l, texKind, burnt, decay)
                         || (blownUp && l instanceof net.minecraft.client.renderer.entity.layers.ItemInHandLayer));
             }
             renderer.render(puppet, 0F, 0F, ps, buffers, light);
@@ -147,6 +150,37 @@ public class CorpseRenderer extends EntityRenderer<CorpseEntity> {
         if (layer instanceof DrownedOuterLayer) return decay > 0.5F;
         if (layer instanceof MushroomCowMushroomLayer) return decay > 0.45F;
         return false;
+    }
+
+    /**
+     * Whatever grows on old remains (mushrooms, moss, roots, snow, cobwebs), drawn upright on the
+     * side of the body facing up. Called inside the body's frame, centred on its middle.
+     */
+    private void renderGrowths(CorpseEntity corpse, PoseStack ps, MultiBufferSource buffers, int light) {
+        ListTag list = corpse.growths();
+        if (list.isEmpty()) return;
+        org.joml.Quaternionf inv = new org.joml.Quaternionf(corpse.orientation()).conjugate();
+        var blocks = net.minecraft.client.Minecraft.getInstance().getBlockRenderer();
+        for (int i = 0; i < list.size(); i++) {
+            CompoundTag t = list.getCompound(i);
+            net.minecraft.world.level.block.Block block = net.minecraftforge.registries.ForgeRegistries.BLOCKS
+                    .getValue(new ResourceLocation(t.getString("Block")));
+            if (block == null || block == net.minecraft.world.level.block.Blocks.AIR) continue;
+            float sc = t.getFloat("Scale");
+            ps.pushPose();
+            ps.translate(t.getFloat("X"), t.getFloat("Y") + corpse.bodyHeight() / 2F, t.getFloat("Z"));
+            ps.mulPose(inv); // stand up straight in the world, whichever way the body lies
+            ps.mulPose(com.mojang.math.Axis.YP.rotationDegrees(t.getFloat("Yaw")));
+            ps.scale(sc, sc, sc);
+            ps.translate(-0.5, 0, -0.5);
+            try {
+                blocks.renderSingleBlock(block.defaultBlockState(), ps, buffers, light, net.minecraft.client.renderer.texture.OverlayTexture.NO_OVERLAY,
+                        net.minecraftforge.client.model.data.ModelData.EMPTY, null);
+            } catch (Throwable ignored) {
+                // a block that can't be drawn on its own is left off
+            }
+            ps.popPose();
+        }
     }
 
     /** Arrows stay stuck where they went in. */

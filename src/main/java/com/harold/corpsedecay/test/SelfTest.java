@@ -329,44 +329,120 @@ public final class SelfTest {
         });
     }
 
-    /** Fossils: placed like world generation places them, they last, and break into bones. */
+    /** Remains: placed like world generation places them, they last, can be looted and break into bones. */
     private static void fossilTest(MinecraftServer server) {
-        check(server.registryAccess().registryOrThrow(net.minecraft.core.registries.Registries.PLACED_FEATURE)
-                .containsKey(new net.minecraft.resources.ResourceLocation("corpsedecay", "cave_fossil")), "cave fossil placement is loaded");
-        check(server.registryAccess().registryOrThrow(net.minecraft.core.registries.Registries.PLACED_FEATURE)
-                .containsKey(new net.minecraft.resources.ResourceLocation("corpsedecay", "surface_fossil")), "surface fossil placement is loaded");
-        check(server.registryAccess().registryOrThrow(net.minecraftforge.registries.ForgeRegistries.Keys.BIOME_MODIFIERS)
-                .containsKey(new net.minecraft.resources.ResourceLocation("corpsedecay", "cave_fossils")), "fossils are added to overworld biomes");
-        check(net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getTag(com.harold.corpsedecay.CorpseKind.FOSSIL_MOBS)
-                .map(t -> t.size() > 10).orElse(false), "there's a list of mobs that can become fossils");
+        var placed = server.registryAccess().registryOrThrow(net.minecraft.core.registries.Registries.PLACED_FEATURE);
+        for (String f : new String[] {"cave_remains", "surface_remains", "nether_remains", "end_remains", "fossil_bed", "fossil_bed_sandstone",
+                "ammonite_fossil", "trilobite_fossil", "fish_fossil", "fern_fossil"}) {
+            check(placed.containsKey(new net.minecraft.resources.ResourceLocation("corpsedecay", f)), f + " placement is loaded");
+        }
+        var mods = server.registryAccess().registryOrThrow(net.minecraftforge.registries.ForgeRegistries.Keys.BIOME_MODIFIERS);
+        for (String m : new String[] {"cave_remains", "surface_remains", "nether_remains", "end_remains", "fossil_beds", "small_fossils"}) {
+            check(mods.containsKey(new net.minecraft.resources.ResourceLocation("corpsedecay", m)), m + " is added to biomes");
+        }
+        check(net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getTag(CorpseKind.REMAINS_MOBS)
+                .map(t -> t.size() > 10).orElse(false), "there's a list of mobs whose remains turn up");
         net.minecraft.util.RandomSource rand = net.minecraft.util.RandomSource.create(5);
-        EntityType<?>[] mobs = {EntityType.COW, EntityType.HORSE, EntityType.VILLAGER, EntityType.SNIFFER};
+        EntityType<?>[] mobs = {EntityType.COW, EntityType.HORSE, EntityType.SKELETON, EntityType.SNIFFER};
         for (int i = 0; i < mobs.length; i++) {
             BlockPos floor = new BlockPos(40 + i * 5, groundY - 1, 50);
-            boolean ok = com.harold.corpsedecay.world.FossilFeature.placeFossil(level, level, floor, mobs[i], rand, i, i == 3 ? 0.4 : 0.1);
-            check(ok, "fossil " + i + " placed");
+            CorpseEntity r = com.harold.corpsedecay.world.RemainsFeature.placeBody(level, level, floor, mobs[i], rand, i, i == 3 ? 0.4 : 0.1);
+            check(r != null, "remains " + i + " made");
+            if (r == null) continue;
+            if (mobs[i] == EntityType.SKELETON) {
+                r.giveGear(net.minecraft.world.entity.EquipmentSlot.MAINHAND, new net.minecraft.world.item.ItemStack(Items.IRON_SWORD));
+                r.addOldArrow(rand);
+                r.addGrowth(net.minecraft.world.level.block.Blocks.BROWN_MUSHROOM, 0.5F, rand);
+            }
+            level.addFreshEntity(r);
         }
+        // whole finds, the way world generation lays them out
+        int finds = 0;
+        for (int i = 0; i < 3; i++) {
+            BlockPos floor = new BlockPos(40 + i * 6, groundY - 1, 58);
+            if (com.harold.corpsedecay.world.RemainsFeature.placeRemains(level, level, floor, rand,
+                    com.harold.corpsedecay.world.RemainsFeature.Where.SURFACE) != null) finds++;
+        }
+        check(finds == 3, "whole finds laid out (" + finds + ")");
+        final int extra = finds;
+        fossilBlockTest(server);
         later(server, 60, () -> {
-            List<CorpseEntity> fossils = corpses(new AABB(37, groundY - 4, 47, 62, groundY + 6, 53));
-            check(fossils.size() == 4, "fossils stay put (" + fossils.size() + ")");
-            boolean allFossil = true;
-            for (CorpseEntity f : fossils) allFossil &= f.kind() == CorpseKind.FOSSIL && f.settled();
-            check(allFossil, "fossils lie still as fossils");
-            CorpseEntity sniffer = byType(fossils, "minecraft:sniffer");
+            List<CorpseEntity> remains = corpses(new AABB(37, groundY - 4, 47, 62, groundY + 6, 53));
+            check(remains.size() == 4, "remains stay put (" + remains.size() + ")");
+            boolean all = true;
+            for (CorpseEntity f : remains) all &= f.kind() == CorpseKind.REMAINS && f.settled();
+            check(all, "remains lie still");
+            CorpseEntity sniffer = byType(remains, "minecraft:sniffer");
             check(sniffer != null && sniffer.getY() < groundY + sniffer.getBoundingBox().getYsize() / 2 - 0.05,
-                    "surface fossils are half buried");
-            if (!fossils.isEmpty()) {
-                CorpseEntity f = fossils.get(0);
+                    "remains can lie half buried");
+            CorpseEntity adventurer = byType(remains, "minecraft:skeleton");
+            check(adventurer != null && adventurer.growths().size() == 1 && adventurer.arrows().size() == 1, "remains carry growths and old arrows");
+            if (adventurer != null) {
+                FakePlayer looter = FakePlayerFactory.getMinecraft(level);
+                looter.moveTo(adventurer.getX(), adventurer.getY(), adventurer.getZ() - 1.5);
+                adventurer.interact(looter, net.minecraft.world.InteractionHand.MAIN_HAND);
+                check(!level.getEntitiesOfClass(ItemEntity.class, adventurer.getBoundingBox().inflate(3),
+                        it -> it.getItem().is(Items.IRON_SWORD)).isEmpty(), "an adventurer's sword can be taken off its remains");
+            }
+            CorpseEntity f = byType(remains, "minecraft:cow");
+            if (f != null) {
                 FakePlayer p = FakePlayerFactory.getMinecraft(level);
                 p.moveTo(f.getX(), f.getY(), f.getZ() - 1.5);
                 p.setShiftKeyDown(true);
                 f.hurt(level.damageSources().playerAttack(p), 1F);
                 p.setShiftKeyDown(false);
-                check(f.isRemoved() && !items(Items.BONE).isEmpty() || f.isRemoved() && !level.getEntitiesOfClass(ItemEntity.class,
-                        f.getBoundingBox().inflate(3), it -> it.getItem().is(Items.BONE)).isEmpty(), "breaking a fossil gives bones");
+                check(f.isRemoved() && !level.getEntitiesOfClass(ItemEntity.class,
+                        f.getBoundingBox().inflate(3), it -> it.getItem().is(Items.BONE)).isEmpty(), "breaking remains gives bones");
             }
+            remainsLeft = 3 + extra;
             limitTest(server);
         });
+    }
+
+    private static int remainsLeft;
+
+    /** Fossil blocks: a skeleton set into rock, matching the rock, and they drop themselves. */
+    private static void fossilBlockTest(MinecraftServer server) {
+        int y0 = groundY + 12;
+        for (int x = -24; x <= -4; x++) {
+            for (int y = 0; y < 8; y++) {
+                for (int z = -6; z <= -4; z++) {
+                    var rock = x < -14 ? net.minecraft.world.level.block.Blocks.DEEPSLATE : net.minecraft.world.level.block.Blocks.STONE;
+                    level.setBlock(new BlockPos(x, y0 + y, z), rock.defaultBlockState(), 2);
+                }
+            }
+        }
+        String[] rows = com.harold.corpsedecay.world.FossilBedFeature.SKELETONS[0];
+        int want = 0;
+        for (String r : rows) want += r.replace(" ", "").length();
+        int got = com.harold.corpsedecay.world.FossilBedFeature.placeSkeleton(level, new BlockPos(-14, y0 + 4, -5),
+                net.minecraft.util.RandomSource.create(1), rows, 0F, 0.75F, net.minecraft.core.Direction.EAST);
+        check(got == want, "a whole fossil skeleton goes into the rock (" + got + "/" + want + ")");
+        int stone = 0, deep = 0, skulls = 0;
+        for (BlockPos p : BlockPos.betweenClosed(-24, y0, -6, -4, y0 + 7, -4)) {
+            var st = level.getBlockState(p);
+            var key = net.minecraftforge.registries.ForgeRegistries.BLOCKS.getKey(st.getBlock());
+            if (key == null || !key.getNamespace().equals("corpsedecay")) continue;
+            if (key.getPath().startsWith("stone_")) stone++;
+            if (key.getPath().startsWith("deepslate_")) deep++;
+            if (key.getPath().endsWith("skull_fossil")) {
+                skulls++;
+                check(st.getValue(com.harold.corpsedecay.block.FossilBlocks.Pointing.FACING) == net.minecraft.core.Direction.EAST, "the skull points the way the head does");
+            }
+        }
+        check(stone > 0 && deep > 0, "fossils take on the rock they're in (" + stone + " stone, " + deep + " deepslate)");
+        check(skulls == 1, "the skeleton has one skull (" + skulls + ")");
+        int notInRock = com.harold.corpsedecay.world.FossilBedFeature.placeSkeleton(level, new BlockPos(0, groundY + 40, 0),
+                net.minecraft.util.RandomSource.create(1), rows, 0F, 0.75F);
+        check(notInRock == 0, "no fossil skeleton is left hanging in the air");
+        var block = com.harold.corpsedecay.block.FossilBlocks.get(com.harold.corpsedecay.block.FossilBlocks.Host.SANDSTONE,
+                com.harold.corpsedecay.block.FossilBlocks.Piece.AMMONITE);
+        BlockPos at = new BlockPos(-10, y0 + 9, -5);
+        level.setBlock(at, block.defaultBlockState(), 2);
+        var drops = net.minecraft.world.level.block.Block.getDrops(block.defaultBlockState(), level, at, null, null,
+                new net.minecraft.world.item.ItemStack(Items.IRON_PICKAXE));
+        check(drops.size() == 1 && drops.get(0).is(block.asItem()), "mining a fossil block gives the fossil (" + drops + ")");
+        check(block.defaultBlockState().is(net.minecraft.tags.BlockTags.MINEABLE_WITH_PICKAXE), "fossil blocks are mined with a pickaxe");
     }
 
     private static void limitTest(MinecraftServer server) {
@@ -379,10 +455,10 @@ public final class SelfTest {
             int count = corpses(new AABB(-100, groundY - 10, -100, 100, groundY + 20, 100)).size();
             int fossilsLeft = 0;
             for (CorpseEntity c : corpses(new AABB(-100, groundY - 10, -100, 100, groundY + 20, 100))) {
-                if (c.kind() == CorpseKind.FOSSIL) fossilsLeft++;
+                if (c.kind() == CorpseKind.REMAINS) fossilsLeft++;
             }
             check(count - fossilsLeft <= max, "no more than " + max + " corpses at once (" + (count - fossilsLeft) + ")");
-            check(fossilsLeft == 3, "fossils don't count towards the limit and never crumble (" + fossilsLeft + " left)");
+            check(fossilsLeft == remainsLeft, "remains don't count towards the limit and never crumble (" + fossilsLeft + " left of " + remainsLeft + ")");
             for (CorpseEntity c : corpses(new AABB(-100, groundY - 10, -100, 100, groundY + 20, 100))) c.discard();
             finish(server);
         });
