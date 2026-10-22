@@ -143,8 +143,9 @@ public class CorpseRenderer extends EntityRenderer<CorpseEntity> {
             e.setXRot(xRot);
             e.xRotO = xRot;
             ps.pushPose();
-            // the arrow's middle sits a little outside the wound so its tip is buried in the body
-            ps.translate(a.getFloat("X") - dx * 0.25F, a.getFloat("Y") - dy * 0.25F, a.getFloat("Z") - dz * 0.25F);
+            // an arrow is drawn mostly behind its position (the tip is ~0.22 in front), so pushing the
+            // position a little past the wound buries the tip in the body like a real hit
+            ps.translate(a.getFloat("X") + dx * 0.14F, a.getFloat("Y") + dy * 0.14F, a.getFloat("Z") + dz * 0.14F);
             try {
                 EntityRenderer<? super AbstractArrow> r = entityRenderDispatcher.getRenderer(e);
                 r.render(e, yRot, 0F, ps, buffers, light);
