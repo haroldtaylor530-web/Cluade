@@ -41,6 +41,10 @@ public final class Ragdoll {
     /** keep pushing until the body has actually gone over (up to this many ticks) */
     private int collapseUntilDown;
     private double collapseStop = 0.55;
+    /** this body is meant to end up lying down (not a flat spider) */
+    private boolean toppling;
+    private int blockedTicks;
+    private int retries;
 
     private int stillTicks;
     private int age;
@@ -89,6 +93,9 @@ public final class Ragdoll {
         collapseZ = dz / len * strength;
         collapseTicks = ticks;
         collapseUntilDown = untilDown;
+        toppling = untilDown > 0;
+        retries = 0;
+        blockedTicks = 0;
     }
 
     /** How upright the body is: 1 = standing, 0 = lying on its side or back. */
@@ -177,6 +184,26 @@ public final class Ragdoll {
         for (int i = 0; i < 8; i++) {
             double dx = p[i][0] - start[i * 3], dy = p[i][1] - start[i * 3 + 1], dz = p[i][2] - start[i * 3 + 2];
             maxMove = Math.max(maxMove, Math.sqrt(dx * dx + dy * dy + dz * dz));
+        }
+        // propped up against a wall or wedged in a gap: try falling another way
+        if (toppling && retries < 4 && uprightness() > 0.75) {
+            if (maxMove < 0.012) blockedTicks++;
+            else blockedTicks = 0;
+            if (blockedTicks > 6) {
+                retries++;
+                double ox = collapseX, oz = collapseZ;
+                switch (retries) {
+                    case 1 -> { collapseX = -ox; collapseZ = -oz; }
+                    case 2 -> { collapseX = -oz; collapseZ = ox; }
+                    case 3 -> { collapseX = -collapseX; collapseZ = -collapseZ; }
+                    default -> { collapseX = ox * 1.6; collapseZ = oz * 1.6; }
+                }
+                collapseTicks = 6;
+                collapseUntilDown = 40;
+                blockedTicks = 0;
+                stillTicks = 0;
+                return false;
+            }
         }
         if (maxMove < 0.006 && collapseTicks == 0) stillTicks++;
         else stillTicks = 0;

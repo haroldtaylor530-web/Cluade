@@ -87,6 +87,7 @@ public class CorpseEntity extends Entity {
     /** extra lootable items stored in the mob's own data (saddles, horse armour, llama carpets): key -> stack */
     private CompoundTag extraLoot = new CompoundTag();
     private final boolean ready;
+    private boolean checkedUpright;
 
     public CorpseEntity(EntityType<? extends CorpseEntity> type, Level level) {
         super(type, level);
@@ -267,6 +268,16 @@ public class CorpseEntity extends Entity {
             if (clientTick != null) clientTick.accept(this);
             return;
         }
+        if (settled() && !checkedUpright) {
+            // a body left standing (wedged against something) gets another chance to fall over
+            checkedUpright = true;
+            Vector3f up = orientation().transform(new Vector3f(0, 1, 0));
+            if (up.y > 0.85F && !flatBody()) {
+                wake();
+                double a = random.nextDouble() * Math.PI * 2;
+                ragdoll.collapse(Math.cos(a), Math.sin(a), Math.max(0.04, 1.35 * 0.08 * bodyWidth() / bodyHeight()), 6, 60, 0.55);
+            }
+        }
         if (!settled()) {
             if (ragdoll == null) {
                 ragdoll = new Ragdoll(bodyWidth(), bodyHeight(), bodyDepth());
@@ -439,7 +450,12 @@ public class CorpseEntity extends Entity {
         }
         wake();
         ragdoll.push(dir.scale(strength), true);
+        if (ragdoll.uprightness() > 0.7 && !flatBody()) ragdoll.collapse(dir.x, dir.z, 0.05, 6, 40, 0.55);
         return true;
+    }
+
+    private boolean flatBody() {
+        return bodyWidth() >= bodyHeight() * 1.5F;
     }
 
     private void wake() {

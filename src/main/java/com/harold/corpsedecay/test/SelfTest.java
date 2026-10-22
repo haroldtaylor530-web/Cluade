@@ -239,6 +239,27 @@ public final class SelfTest {
             check(cowNow != null && cowNow.decay(0) >= 1F, "a cow skeleton stays once the flesh has gone");
             check(byType(left, "minecraft:villager") == null, "an old skeleton crumbles away");
             check(zombieCorpse.arrows().size() == 1, "an arrow shot into a corpse sticks in it");
+            wallTest(server);
+        });
+    }
+
+    /** A mob killed while pushed against a wall must still end up lying down, not propped up. */
+    private static void wallTest(MinecraftServer server) {
+        for (int y = 0; y < 4; y++) {
+            for (int x = 18; x <= 22; x++) level.setBlockAndUpdate(new BlockPos(x, groundY + y, 21), net.minecraft.world.level.block.Blocks.STONE.defaultBlockState());
+        }
+        Mob victim = spawn(EntityType.ZOMBIE, 20, 20);
+        victim.moveTo(20.5, groundY, 20.65, 0, 0);
+        Mob attacker = spawn(EntityType.ZOMBIE, 20, 18);
+        victim.hurt(level.damageSources().mobAttack(attacker), 1000F);
+        attacker.discard();
+        later(server, 120, () -> {
+            CorpseEntity c = byType(corpses(new AABB(17, groundY - 2, 17, 24, groundY + 4, 24)), "minecraft:zombie");
+            check(c != null, "zombie by the wall leaves a corpse");
+            if (c != null) {
+                Vector3f up = c.orientation().transform(new Vector3f(0, 1, 0));
+                check(up.y < 0.6F, "body killed against a wall still ends up lying down (up y=" + up.y + ")");
+            }
             limitTest(server);
         });
     }
