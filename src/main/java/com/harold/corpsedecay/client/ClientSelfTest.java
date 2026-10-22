@@ -129,11 +129,12 @@ public final class ClientSelfTest {
             t += 20;
         }
         // close-ups from low down: fresh, rotting, skeleton
-        String[] who = {"zombie_armour", "zombie", "villager", "pillager", "cow", "sheep", "horse", "pig", "chicken", "wolf", "skeleton"};
+        String[] who = {"zombie_burnt", "cow_burnt", "zombie_armour", "zombie", "villager", "pillager", "cow", "sheep", "horse", "pig", "chicken", "wolf", "skeleton"};
         float[] when = {0.0F, 0.5F, 1.0F};
         int n = 10;
         for (String w : who) {
-            for (float f : when) {
+            float[] times = w.endsWith("_burnt") ? new float[] {0.75F, 0.88F, 1.0F} : when;
+            for (float f : times) {
                 final String name = String.format("%02d_%s_%03d", n, w, Math.round(f * 100));
                 final float frac = f;
                 at(t, () -> closeUp(w, frac));
@@ -188,6 +189,9 @@ public final class ClientSelfTest {
         pillager.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.CROSSBOW));
         spawn("spider", EntityType.SPIDER, 3.8, 4);
         spawn("wolf", EntityType.WOLF, 6.4, 4);
+        // these two die burning
+        spawn("zombie_burnt", EntityType.ZOMBIE, 8.8, 0);
+        spawn("cow_burnt", EntityType.COW, 8.8, 4);
         camera(0.5, ground + 6.5, -8.5, 0F, 32F);
     }
 
@@ -225,10 +229,17 @@ public final class ClientSelfTest {
     private static void killAll() {
         ServerPlayer p = player();
         p.setGameMode(GameType.CREATIVE);
-        for (Mob m : mobs) {
+        for (int k = 0; k < mobs.size(); k++) {
+            Mob m = mobs.get(k);
             if (!m.isAlive()) continue;
             m.invulnerableTime = 0;
-            m.hurt(level().damageSources().playerAttack(p), 1000F);
+            if (names.get(k).endsWith("_burnt")) {
+                m.setSecondsOnFire(5);
+                m.hurt(level().damageSources().onFire(), 1000F);
+            } else {
+                m.clearFire(); // undead catch fire in the noon sun; these should die normally
+                m.hurt(level().damageSources().playerAttack(p), 1000F);
+            }
         }
         p.setGameMode(GameType.SPECTATOR);
     }

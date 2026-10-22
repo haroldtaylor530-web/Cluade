@@ -13,6 +13,12 @@ there, rotting through stages down to a bare skeleton, still wearing whatever it
 - **Decay.** Bodies go pale, then bloat green and purple, turn black and wet with flesh and bone
   showing through, dry out to leathery scraps, and end as a bare skeleton. Flies buzz around
   them while they rot. By default it takes one Minecraft day (20 minutes) to reach the bone.
+- **Burnt bodies.** A mob that dies burning (a zombie caught in the sun, fire, lava edges, fire
+  aspect, flaming arrows) leaves a charred body: it starts at the stage just before the
+  skeleton, blackened and cracked with embers glowing in the cracks, scorched bones showing
+  through and clothes, wool and fur burnt away (armour survives). It burns for a few seconds,
+  then smokes for a while. A body that catches fire later, from a fire block or flint and steel,
+  chars the same way.
 - **Real skeletons for every mob.** The skeleton is built from each mob's own model: a skull with
   eye sockets and teeth, a ribcage and spine running the length of the body (upright for zombies
   and villagers, horizontal for animals), a pelvis, leg bones with knobbly joints, tail

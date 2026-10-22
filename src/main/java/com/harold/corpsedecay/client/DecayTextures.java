@@ -29,6 +29,8 @@ import net.minecraft.util.Mth;
  */
 public final class DecayTextures {
     public static final int STAGES = 16;
+    /** decay a burnt body starts at (matches CorpseEntity.BURNT_DECAY) */
+    static final float BURNT_START = 0.75F;
 
     private static final Map<String, Source> SOURCES = new HashMap<>();
     private static int counter;
@@ -51,10 +53,10 @@ public final class DecayTextures {
     }
 
     /** The texture to draw a corpse with, or the original if it can't be made. */
-    public static ResourceLocation get(ResourceLocation original, ModelInfo info, CorpseKind kind, float decay) {
+    public static ResourceLocation get(ResourceLocation original, ModelInfo info, CorpseKind kind, boolean burnt, float decay) {
         if (kind == CorpseKind.NO_DECAY || original == null) return original;
-        String key = original + "|" + System.identityHashCode(info) + "|" + kind.ordinal();
-        Source src = SOURCES.computeIfAbsent(key, k -> Source.build(original, info, kind));
+        String key = original + "|" + System.identityHashCode(info) + "|" + kind.ordinal() + (burnt ? "|burnt" : "");
+        Source src = SOURCES.computeIfAbsent(key, k -> Source.build(original, info, kind, burnt));
         if (src.failed) return original;
         int stage = stageFor(decay);
         if (src.stages[stage] == null) src.stages[stage] = src.makeStage(stage);
@@ -72,12 +74,14 @@ public final class DecayTextures {
         boolean[] painted;
         float[] hole, blot, tear;
         CorpseKind kind;
+        boolean burnt;
         String id;
         final ResourceLocation[] stages = new ResourceLocation[STAGES];
 
-        static Source build(ResourceLocation original, ModelInfo info, CorpseKind kind) {
+        static Source build(ResourceLocation original, ModelInfo info, CorpseKind kind, boolean burnt) {
             Source s = new Source();
             s.kind = kind;
+            s.burnt = burnt;
             try {
                 Optional<Resource> res = Minecraft.getInstance().getResourceManager().getResource(original);
                 if (res.isEmpty()) {
@@ -95,7 +99,7 @@ public final class DecayTextures {
                         }
                     }
                 }
-                s.id = Integer.toHexString(original.toString().hashCode()) + "_" + (counter++);
+                s.id = Integer.toHexString(original.toString().hashCode()) + (burnt ? "_b" : "") + "_" + (counter++);
                 s.analyse(info, original.toString().hashCode());
             } catch (Throwable t) {
                 CorpseDecayClientLog.warn("Couldn't make decay textures for " + original + ": " + t);
@@ -277,6 +281,7 @@ public final class DecayTextures {
             int c = argb[i];
             int a = c >>> 24;
             if (a == 0) return 0;
+            if (burnt) return charred(i, c, a, p, last);
             if (kind == CorpseKind.BONES) {
                 return withAlpha(mix(c, 0xFFCDC3A0, 0.18F * p), a);
             }
@@ -297,6 +302,36 @@ public final class DecayTextures {
                 return withAlpha(skin, fade);
             }
             return withAlpha(skin, a);
+        }
+
+        /**
+         * A burnt body: blackened, cracked skin with the odd glowing ember, scorched bones showing
+         * through, clothes mostly burnt away. As it carries on rotting the char flakes off down to
+         * dark, scorched bone.
+         */
+        private int charred(int i, int c, int a, float p, boolean last) {
+            if (kind == CorpseKind.BONES) return withAlpha(mix(c, 0xFF3A3028, 0.5F), a);
+            if (what[i] == BonePainter.HORN) return withAlpha(scale(c, 0.35F), a);
+            float gone = smooth(BURNT_START, 1F, p);
+            if (clothes[i] && tear[i] > 0.62F - 0.3F * gone) {
+                return withAlpha(mix(scale(c, 0.45F), 0xFF1A1512, 0.55F), a);
+            }
+            boolean exposed = last || (painted[i] && hole[i] < 0.38F + 0.7F * gone) || clothes[i];
+            if (exposed) {
+                if (kind == CorpseKind.FLESH && bone[i] != 0) {
+                    int b = bone[i];
+                    if (what[i] == BonePainter.BONE) b = mix(b, 0xFF4A3E34, 0.6F - 0.25F * gone);
+                    return withAlpha(b, a);
+                }
+                return 0;
+            }
+            int coal = mix(0xFF2C2622, 0xFF141110, blot[i]);
+            coal = mix(coal, c, 0.08F);
+            if (tear[i] < 0.07F && p < 0.9F) coal = mix(coal, 0xFF9A3412, 0.75F); // embers in the cracks
+            if (kind == CorpseKind.NO_BONES && p > 0.82F) {
+                return withAlpha(coal, Math.round(a * (1F - smooth(0.82F, 1F, p))));
+            }
+            return withAlpha(coal, a);
         }
 
         /** What shows where the skin has rotted away. */

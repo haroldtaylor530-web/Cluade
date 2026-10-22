@@ -66,7 +66,8 @@ public class CorpseRenderer extends EntityRenderer<CorpseEntity> {
         CorpseKind kind = corpse.kind();
         float decay = kind == CorpseKind.BONES || kind == CorpseKind.NO_DECAY ? 0F : corpse.decay(partial);
         ResourceLocation original = renderer.getTextureLocation(puppet);
-        ResourceLocation tex = DecayTextures.get(original, cc.info, kind, decay);
+        boolean burnt = corpse.burnt();
+        ResourceLocation tex = DecayTextures.get(original, cc.info, kind, burnt, decay);
         RenderType type = null;
         if (tex != null && tex != original) {
             boolean fading = kind == CorpseKind.NO_BONES && decay > 0.8F;
@@ -83,7 +84,7 @@ public class CorpseRenderer extends EntityRenderer<CorpseEntity> {
         List<RenderLayer> saved = layers == null ? null : new ArrayList<>(layers);
         ctx.begin();
         try {
-            if (layers != null) layers.removeIf(l -> hideLayer(l, kind, decay));
+            if (layers != null) layers.removeIf(l -> hideLayer(l, kind, burnt, decay));
             renderer.render(puppet, 0F, 0F, ps, buffers, light);
         } catch (Throwable t) {
             // a renderer that can't cope with a stand-in mob just doesn't draw
@@ -115,10 +116,16 @@ public class CorpseRenderer extends EntityRenderer<CorpseEntity> {
 
     /** Glowing eyes go out, wool falls off, skin markings rot away; armour and clothes stay. */
     @SuppressWarnings("rawtypes")
-    private static boolean hideLayer(RenderLayer layer, CorpseKind kind, float decay) {
+    private static boolean hideLayer(RenderLayer layer, CorpseKind kind, boolean burnt, float decay) {
         if (layer instanceof EyesLayer || layer instanceof EnergySwirlLayer) return true;
         String name = layer.getClass().getSimpleName();
         if (name.contains("Eyes") || name.contains("Emissive") || name.contains("Glow")) return true;
+        // fire takes wool, fur, skin markings and cloth outfits (armour survives)
+        if (burnt && (layer instanceof SheepFurLayer || layer instanceof HorseMarkingLayer || layer instanceof TropicalFishPatternLayer
+                || layer instanceof DrownedOuterLayer || layer instanceof MushroomCowMushroomLayer || name.contains("Profession")
+                || layer instanceof net.minecraft.client.renderer.entity.layers.LlamaDecorLayer)) {
+            return true;
+        }
         if (kind != CorpseKind.FLESH && kind != CorpseKind.NO_BONES) return false;
         if (layer instanceof SheepFurLayer) return decay > 0.38F;
         if (layer instanceof HorseMarkingLayer || layer instanceof TropicalFishPatternLayer) return decay > 0.3F;

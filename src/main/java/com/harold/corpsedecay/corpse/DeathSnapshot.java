@@ -39,6 +39,8 @@ public final class DeathSnapshot {
     public CompoundTag extraLoot = new CompoundTag();
     public Component name;
     public CorpseKind kind;
+    /** died on fire (or from fire): leaves a charred body */
+    public boolean burning;
 
     public static DeathSnapshot of(LivingEntity mob, DamageSource source) {
         DeathSnapshot s = new DeathSnapshot();
@@ -67,6 +69,7 @@ public final class DeathSnapshot {
         s.arrows = StuckArrows.of(mob);
         s.name = mob.getCustomName();
         s.kind = CorpseKind.of(mob.getType());
+        s.burning = mob.isOnFire() || source.is(net.minecraft.tags.DamageTypeTags.IS_FIRE);
         return s;
     }
 

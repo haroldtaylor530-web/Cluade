@@ -75,6 +75,7 @@ public final class CorpseClient {
         if (!c.ensurePuppet(corpse)) return;
         c.tickLimbs(corpse);
         c.flies(corpse);
+        c.smoke(corpse);
     }
 
     public Quaternionf body(float partial) {
@@ -312,6 +313,22 @@ public final class CorpseClient {
         return new float[] {x, y, z};
     }
 
+    // ---- smoke from a burnt body -------------------------------------------------------------------
+
+    private void smoke(CorpseEntity corpse) {
+        if (!corpse.burnt()) return;
+        long since = corpse.level().getGameTime() - corpse.burnTime();
+        if (since < 0 || since > 900) return;
+        RandomSource rand = corpse.level().random;
+        float chance = since < 200 ? 0.45F : 0.45F * (1F - (since - 200) / 700F);
+        if (rand.nextFloat() > chance) return;
+        AABB box = corpse.getBoundingBox();
+        double x = box.minX + rand.nextDouble() * box.getXsize();
+        double z = box.minZ + rand.nextDouble() * box.getZsize();
+        corpse.level().addParticle(rand.nextInt(4) == 0 ? net.minecraft.core.particles.ParticleTypes.LARGE_SMOKE
+                : net.minecraft.core.particles.ParticleTypes.SMOKE, x, box.maxY, z, 0, 0.03, 0);
+    }
+
     // ---- flies -------------------------------------------------------------------------------------
 
     private void flies(CorpseEntity corpse) {
@@ -319,7 +336,7 @@ public final class CorpseClient {
         CorpseKind kind = corpse.kind();
         if (kind != CorpseKind.FLESH && kind != CorpseKind.NO_BONES) return;
         float d = corpse.decay(0);
-        if (d < 0.06F || d > 0.8F) return;
+        if (d < 0.06F || d > 0.8F || corpse.burnt()) return;
         RandomSource rand = corpse.level().random;
         float size = corpse.bodyWidth() * corpse.bodyHeight();
         float chance = 0.04F + 0.05F * Math.min(2F, size);

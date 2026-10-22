@@ -260,6 +260,27 @@ public final class SelfTest {
                 Vector3f up = c.orientation().transform(new Vector3f(0, 1, 0));
                 check(up.y < 0.6F, "body killed against a wall still ends up lying down (up y=" + up.y + ")");
             }
+            fireTest(server);
+        });
+    }
+
+    /** Burning to death leaves a charred body; setting a body alight chars it too. */
+    private static void fireTest(MinecraftServer server) {
+        Mob cow = spawn(EntityType.COW, 26, 26);
+        cow.setSecondsOnFire(5);
+        cow.hurt(level.damageSources().onFire(), 1000F);
+        CorpseEntity plain = zombieCorpse;
+        boolean wasBurnt = plain != null && plain.burnt();
+        if (plain != null) {
+            plain.setDeathTime(level.getGameTime());
+            plain.hurt(level.damageSources().inFire(), 1F);
+        }
+        later(server, 3, () -> {
+            CorpseEntity c = byType(corpses(new AABB(23, groundY - 2, 23, 30, groundY + 4, 30)), "minecraft:cow");
+            check(c != null && c.burnt(), "a cow that burns to death leaves a charred body");
+            check(c != null && c.decay(0) >= 0.74F && c.decay(0) < 0.9F, "a charred body starts just short of a skeleton (" + (c == null ? -1 : c.decay(0)) + ")");
+            check(c != null && c.isOnFire(), "a charred body keeps burning for a moment");
+            check(!wasBurnt && plain != null && plain.burnt() && plain.decay(0) >= 0.74F, "setting an old body alight chars it");
             limitTest(server);
         });
     }

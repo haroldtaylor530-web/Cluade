@@ -56,6 +56,7 @@ public class CorpseEntity extends Entity {
     private static final EntityDataAccessor<Quaternionf> ORIENT = SynchedEntityData.defineId(CorpseEntity.class, EntityDataSerializers.QUATERNION);
     private static final EntityDataAccessor<Boolean> SETTLED = SynchedEntityData.defineId(CorpseEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Long> DEATH_TIME = SynchedEntityData.defineId(CorpseEntity.class, EntityDataSerializers.LONG);
+    private static final EntityDataAccessor<Long> BURN_TIME = SynchedEntityData.defineId(CorpseEntity.class, EntityDataSerializers.LONG);
     private static final EntityDataAccessor<Integer> DECAY_TICKS = SynchedEntityData.defineId(CorpseEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Byte> KIND = SynchedEntityData.defineId(CorpseEntity.class, EntityDataSerializers.BYTE);
     private static final EntityDataAccessor<Integer> LOOT_MASK = SynchedEntityData.defineId(CorpseEntity.class, EntityDataSerializers.INT);
@@ -105,6 +106,7 @@ public class CorpseEntity extends Entity {
         entityData.define(ORIENT, new Quaternionf());
         entityData.define(SETTLED, false);
         entityData.define(DEATH_TIME, 0L);
+        entityData.define(BURN_TIME, 0L);
         entityData.define(DECAY_TICKS, 24000);
         entityData.define(KIND, (byte) 0);
         entityData.define(LOOT_MASK, 0);
@@ -191,6 +193,37 @@ public class CorpseEntity extends Entity {
         entityData.set(ORIENT, q);
         entityData.set(SETTLED, false);
         lookVersion++;
+        if (s.burning) burn();
+    }
+
+    /** How far through decay a burnt body jumps to: charred, just short of bare bone. */
+    public static final float BURNT_DECAY = 0.75F;
+
+    /**
+     * Chars the body: it jumps to the stage just before skeleton (blackened instead of rotten),
+     * burns for a few seconds and smokes for a while after.
+     */
+    public void burn() {
+        if (level().isClientSide) return;
+        CorpseKind kind = kind();
+        if (kind == CorpseKind.NO_DECAY) return;
+        if (burnTime() > 0) return;
+        long now = level().getGameTime();
+        entityData.set(BURN_TIME, now);
+        if (kind == CorpseKind.FLESH || kind == CorpseKind.NO_BONES) {
+            long target = (long) (BURNT_DECAY * decayTicks());
+            if (now - deathTime() < target) entityData.set(DEATH_TIME, now - target);
+        }
+        setSecondsOnFire(4);
+    }
+
+    /** Game time the body was burnt, or 0 if it never was. */
+    public long burnTime() {
+        return entityData.get(BURN_TIME);
+    }
+
+    public boolean burnt() {
+        return burnTime() > 0;
     }
 
     // ---- getters used by the renderer ----------------------------------------------------------
@@ -423,7 +456,11 @@ public class CorpseEntity extends Entity {
     @Override
     public boolean hurt(DamageSource source, float amount) {
         if (level().isClientSide || isRemoved() || isInvulnerableTo(source)) return false;
-        if (source.is(DamageTypeTags.IS_FIRE) || source.is(DamageTypeTags.IS_FALL) || source.is(DamageTypeTags.IS_DROWNING)) {
+        if (source.is(DamageTypeTags.IS_FIRE)) {
+            burn();
+            return false;
+        }
+        if (source.is(DamageTypeTags.IS_FALL) || source.is(DamageTypeTags.IS_DROWNING)) {
             return false;
         }
         Entity direct = source.getDirectEntity();
@@ -531,6 +568,7 @@ public class CorpseEntity extends Entity {
         }
         entityData.set(SETTLED, tag.getBoolean("Settled"));
         entityData.set(DEATH_TIME, tag.getLong("DeathTime"));
+        entityData.set(BURN_TIME, tag.getLong("BurnTime"));
         entityData.set(DECAY_TICKS, Math.max(20, tag.getInt("DecayTicks")));
         skeletonTicks = tag.getLong("SkeletonTicks");
         entityData.set(KIND, tag.getByte("Kind"));
@@ -562,6 +600,7 @@ public class CorpseEntity extends Entity {
         tag.put("Orient", o);
         tag.putBoolean("Settled", settled());
         tag.putLong("DeathTime", deathTime());
+        tag.putLong("BurnTime", burnTime());
         tag.putInt("DecayTicks", decayTicks());
         tag.putLong("SkeletonTicks", skeletonTicks);
         tag.putByte("Kind", entityData.get(KIND));
