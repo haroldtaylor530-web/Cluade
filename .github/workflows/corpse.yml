@@ -40,6 +40,7 @@ jobs:
         run: |
           mkdir -p run-selftest && echo "eula=true" > run-selftest/eula.txt
           printf 'online-mode=false\nspawn-protection=0\nlevel-type=minecraft\\:flat\nspawn-monsters=false\nspawn-animals=false\nspawn-npcs=false\ngenerate-structures=false\n' > run-selftest/server.properties
+          echo 'generator-settings={"layers":[{"block":"minecraft:bedrock","height":1},{"block":"minecraft:stone","height":3},{"block":"minecraft:dirt","height":2},{"block":"minecraft:grass_block","height":1}],"biome":"minecraft:plains"}' >> run-selftest/server.properties
           timeout 900 ./gradlew runServer -Pselftest -Prundir=run-selftest 2>&1 | tee selftest.log || true
           grep -q "SELFTEST PASS" selftest.log
 

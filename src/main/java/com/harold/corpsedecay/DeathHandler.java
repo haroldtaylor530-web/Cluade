@@ -34,6 +34,8 @@ import net.minecraftforge.registries.ForgeRegistries;
  */
 public final class DeathHandler {
     private static final Map<LivingEntity, DeathSnapshot> PENDING = new IdentityHashMap<>();
+    private static final org.slf4j.Logger LOG = com.mojang.logging.LogUtils.getLogger();
+    private static final boolean VERBOSE = Boolean.getBoolean("corpsedecay.selftest");
 
     private DeathHandler() {
     }
@@ -52,6 +54,7 @@ public final class DeathHandler {
         if (mob.level().isClientSide || !eligible(mob)) return;
         if (Config.ONLY_PLAYER_KILLS.get() && !(e.getSource().getEntity() instanceof Player)) return;
         PENDING.put(mob, DeathSnapshot.of(mob, e.getSource()));
+        if (VERBOSE) LOG.info("corpsedecay: {} died at {}", mob.getType(), mob.position());
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST, receiveCanceled = true)
@@ -97,7 +100,8 @@ public final class DeathHandler {
         CorpseEntity corpse = ModRegistry.CORPSE.get().create(level);
         if (corpse == null) return null;
         corpse.setup(s);
-        level.addFreshEntity(corpse);
+        boolean added = level.addFreshEntity(corpse);
+        if (VERBOSE) LOG.info("corpsedecay: corpse of {} at {} added={}", s.type, corpse.position(), added);
         enforceLimit(level);
         return corpse;
     }

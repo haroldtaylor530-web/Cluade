@@ -161,6 +161,10 @@ public final class SelfTest {
         check(zombie.isRemoved(), "dead zombie is removed straight away (no vanilla poof)");
         List<CorpseEntity> corpses = corpses(new AABB(-20, groundY - 5, -20, 20, groundY + 10, 20));
         LOG.info("SELFTEST corpses found: {}", corpses.size());
+        for (CorpseEntity c : corpses) LOG.info("SELFTEST   {} at {}", c.mobType(), c.position());
+        for (Entity en : level.getAllEntities()) {
+            if (en instanceof CorpseEntity c) LOG.info("SELFTEST   (anywhere) {} at {} removed={}", c.mobType(), c.position(), c.isRemoved());
+        }
         check(corpses.size() == 6, "six mobs leave six corpses (armour stand leaves none), got " + corpses.size());
         zombieCorpse = nearest(corpses, 0.5, 0.5);
         check(zombieCorpse != null && zombieCorpse.mobType().equals("minecraft:zombie"), "zombie corpse where the zombie died");
@@ -216,8 +220,8 @@ public final class SelfTest {
         check(!zombieCorpse.settled(), "hitting the body makes it ragdoll again");
 
         // arrows hitting a corpse stick in it
-        Arrow arrow = new Arrow(level, zombieCorpse.getX(), zombieCorpse.getY() + 0.1, zombieCorpse.getZ() - 3);
-        arrow.shoot(0, 0, 1, 2.0F, 0F);
+        Arrow arrow = new Arrow(level, zombieCorpse.getX(), zombieCorpse.getY() + 0.9, zombieCorpse.getZ() - 3);
+        arrow.shoot(0, -0.28, 1, 2.0F, 0F);
         level.addFreshEntity(arrow);
 
         // rotting away

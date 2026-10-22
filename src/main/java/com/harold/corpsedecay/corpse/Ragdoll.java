@@ -183,29 +183,37 @@ public final class Ragdoll {
             // push out through the face the point came in through (falls back to the shallowest face)
             double[] mins = {b.minX, b.minY, b.minZ};
             double[] maxs = {b.maxX, b.maxY, b.maxZ};
+            int[] base = {pos.getX(), pos.getY(), pos.getZ()};
             int axis = -1;
             double target = 0;
             double best = Double.MAX_VALUE;
-            // faces the point actually crossed this step win; otherwise the shallowest face
-            for (int pass = 0; pass < 2 && axis < 0; pass++) {
-                for (int k = 0; k < 3; k++) {
-                    double dLow = a[k] - mins[k];
-                    double dHigh = maxs[k] - a[k];
-                    boolean low = pass == 1 || o[k] <= mins[k];
-                    boolean high = pass == 1 || o[k] >= maxs[k];
-                    if (high && dHigh < best) {
-                        best = dHigh;
-                        axis = k;
-                        target = maxs[k] + 1e-4;
+            // push out through a face that opens onto free space (never down into the block
+            // below), preferring the face the point actually came in through, then the shallowest
+            for (int k = 0; k < 3; k++) {
+                for (int dir = -1; dir <= 1; dir += 2) {
+                    double face = dir > 0 ? maxs[k] : mins[k];
+                    boolean onEdge = dir > 0 ? face >= base[k] + 1 - 1e-6 : face <= base[k] + 1e-6;
+                    if (onEdge) {
+                        BlockPos n = pos.relative(net.minecraft.core.Direction.fromAxisAndDirection(
+                                net.minecraft.core.Direction.Axis.values()[k],
+                                dir > 0 ? net.minecraft.core.Direction.AxisDirection.POSITIVE : net.minecraft.core.Direction.AxisDirection.NEGATIVE));
+                        if (level.getBlockState(n).isCollisionShapeFullBlock(level, n)) continue;
                     }
-                    if (low && dLow < best) {
-                        best = dLow;
+                    double depth = dir > 0 ? maxs[k] - a[k] : a[k] - mins[k];
+                    boolean came = dir > 0 ? o[k] >= maxs[k] - 1e-6 : o[k] <= mins[k] + 1e-6;
+                    double score = depth - (came ? 2.0 : 0.0) - (k == 1 && dir > 0 ? 0.05 : 0.0);
+                    if (score < best) {
+                        best = score;
                         axis = k;
-                        target = mins[k] - 1e-4;
+                        target = face + dir * 1e-4;
                     }
                 }
             }
-            if (axis < 0) return;
+            if (axis < 0) {
+                // buried on every side: lift it out of the top
+                axis = 1;
+                target = maxs[1] + 1e-4;
+            }
             double v = a[axis] - o[axis];
             if (axis == 1 && v < 0) {
                 if (!landed) {
