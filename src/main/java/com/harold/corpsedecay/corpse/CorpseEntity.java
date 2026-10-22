@@ -176,9 +176,15 @@ public class CorpseEntity extends Entity {
             dx = right.x * Math.signum(side);
             dz = right.z * Math.signum(side);
         }
-        double strength = 0.02 + 0.01 * Math.min(2.0, force);
-        if (flat) strength = 0.004; // flat bodies (spiders) just slump
-        ragdoll.collapse(dx, dz, strength, upright ? 14 : 10, flat ? 0 : 60);
+        // push the top over hard enough to beat gravity holding a wide body up, and only until it
+        // has passed its tipping point (so square bodies like pigs don't roll right onto their back)
+        double strength = Math.max(0.02 + 0.01 * Math.min(2.0, force), 1.35 * 0.08 * s.width / s.height);
+        double stop = upright ? 0.55 : Math.cos(Math.atan(s.width / s.height) + 0.03);
+        if (flat) {
+            ragdoll.collapse(dx, dz, 0.004, 10, 0, 1.0); // flat bodies (spiders) just slump
+        } else {
+            ragdoll.collapse(dx, dz, strength, upright ? 14 : 0, 60, stop);
+        }
 
         setPos(center);
         entityData.set(ORIENT, q);

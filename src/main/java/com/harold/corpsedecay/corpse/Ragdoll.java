@@ -40,6 +40,7 @@ public final class Ragdoll {
     private int collapseTicks;
     /** keep pushing until the body has actually gone over (up to this many ticks) */
     private int collapseUntilDown;
+    private double collapseStop = 0.55;
 
     private int stillTicks;
     private int age;
@@ -80,7 +81,8 @@ public final class Ragdoll {
     }
 
     /** Makes the body tip over towards (dx, dz) for the first ticks. */
-    public void collapse(double dx, double dz, double strength, int ticks, int untilDown) {
+    public void collapse(double dx, double dz, double strength, int ticks, int untilDown, double stopUpright) {
+        collapseStop = stopUpright;
         double len = Math.sqrt(dx * dx + dz * dz);
         if (len < 1e-6) return;
         collapseX = dx / len * strength;
@@ -168,7 +170,7 @@ public final class Ragdoll {
         if (collapseTicks > 0) collapseTicks--;
         if (collapseUntilDown > 0) {
             collapseUntilDown--;
-            if (collapseTicks == 0 && uprightness() > 0.55) collapseTicks = 1;
+            if (collapseTicks == 0 && uprightness() > collapseStop) collapseTicks = 1;
         }
 
         double maxMove = 0;
