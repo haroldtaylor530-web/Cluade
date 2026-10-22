@@ -219,10 +219,16 @@ public final class SelfTest {
         zombieCorpse.hurt(level.damageSources().playerAttack(player), 3F);
         check(!zombieCorpse.settled(), "hitting the body makes it ragdoll again");
 
-        // arrows hitting a corpse stick in it
-        Arrow arrow = new Arrow(level, zombieCorpse.getX(), zombieCorpse.getY() + 0.9, zombieCorpse.getZ() - 3);
-        arrow.shoot(0, -0.28, 1, 2.0F, 0F);
-        level.addFreshEntity(arrow);
+        // arrows hitting a corpse stick in it (aimed at the golem's body, which is lying still)
+        CorpseEntity golem = byType(corpses(new AABB(-20, groundY - 5, -20, 20, groundY + 10, 20)), "minecraft:iron_golem");
+        if (golem != null) {
+            net.minecraft.world.phys.Vec3 target = golem.getBoundingBox().getCenter();
+            net.minecraft.world.phys.Vec3 from = target.add(0, 1.2, -3);
+            Arrow arrow = new Arrow(level, from.x, from.y, from.z);
+            net.minecraft.world.phys.Vec3 dir = target.subtract(from).normalize();
+            arrow.shoot(dir.x, dir.y, dir.z, 2.5F, 0F);
+            level.addFreshEntity(arrow);
+        }
 
         // rotting away
         CorpseEntity spider = byType(corpses(new AABB(-20, groundY - 5, -20, 20, groundY + 10, 20)), "minecraft:spider");
@@ -238,7 +244,8 @@ public final class SelfTest {
             CorpseEntity cowNow = byType(left, "minecraft:cow");
             check(cowNow != null && cowNow.decay(0) >= 1F, "a cow skeleton stays once the flesh has gone");
             check(byType(left, "minecraft:villager") == null, "an old skeleton crumbles away");
-            check(zombieCorpse.arrows().size() == 1, "an arrow shot into a corpse sticks in it");
+            CorpseEntity golemNow = byType(left, "minecraft:iron_golem");
+            check(golemNow != null && golemNow.arrows().size() == 1, "an arrow shot into a corpse sticks in it");
             wallTest(server);
         });
     }
