@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:ender_dragon",
+    "minecraft:wither",
+    "minecraft:armor_stand",
+    "minecraft:player",
+    "minecraft:slime",
+    "minecraft:magma_cube"
+  ]
+}

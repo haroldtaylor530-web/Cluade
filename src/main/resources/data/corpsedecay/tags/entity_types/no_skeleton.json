@@ -1,0 +1,17 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:spider",
+    "minecraft:cave_spider",
+    "minecraft:silverfish",
+    "minecraft:endermite",
+    "minecraft:bee",
+    "minecraft:squid",
+    "minecraft:glow_squid",
+    "minecraft:blaze",
+    "minecraft:ghast",
+    "minecraft:vex",
+    "minecraft:allay",
+    "minecraft:snow_golem"
+  ]
+}

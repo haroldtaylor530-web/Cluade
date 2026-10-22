@@ -5,7 +5,10 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "corpsedecay.refmap.json",
   "mixins": [],
-  "client": [],
+  "client": [
+    "LivingEntityRendererMixin",
+    "ModelPartMixin"
+  ],
   "injectors": {
     "defaultRequire": 1
   }
