@@ -21,6 +21,8 @@ public final class RenderContext {
     private final RenderType renderType;
     private final Map<String, float[]> poses = new HashMap<>();
     private final Map<ModelPart, float[]> saved = new IdentityHashMap<>();
+    private final java.util.Set<String> hidden = new java.util.HashSet<>();
+    private final Map<ModelPart, Boolean> savedSkip = new IdentityHashMap<>();
 
     public RenderContext(LivingEntity puppet, RenderType renderType) {
         this.puppet = puppet;
@@ -31,6 +33,11 @@ public final class RenderContext {
         poses.put(name, new float[] {x, y, z});
     }
 
+    /** Leaves this part (and everything attached to it) out, in every model drawn on the body. */
+    public void hide(String name) {
+        hidden.add(name);
+    }
+
     public RenderType renderType() {
         return renderType;
     }
@@ -38,12 +45,19 @@ public final class RenderContext {
     /** Called from ModelPart.translateAndRotate. */
     public void apply(ModelPart part, String name) {
         if (name == null) return;
+        if (!hidden.isEmpty() && hidden.contains(name)) skip(part);
         float[] r = poses.get(name);
         if (r == null) return;
         saved.computeIfAbsent(part, p -> new float[] {p.xRot, p.yRot, p.zRot});
         part.xRot = r[0];
         part.yRot = r[1];
         part.zRot = r[2];
+    }
+
+    private void skip(ModelPart part) {
+        savedSkip.putIfAbsent(part, part.skipDraw);
+        part.skipDraw = true;
+        for (ModelPart c : ModelInfo.childrenOf(part).values()) skip(c);
     }
 
     public void begin() {
@@ -60,5 +74,7 @@ public final class RenderContext {
             p.zRot = r[2];
         }
         saved.clear();
+        for (Map.Entry<ModelPart, Boolean> e : savedSkip.entrySet()) e.getKey().skipDraw = e.getValue();
+        savedSkip.clear();
     }
 }

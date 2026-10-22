@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.harold.corpsedecay.CorpseKind;
+import com.harold.corpsedecay.DeathCause;
 import com.harold.corpsedecay.corpse.CorpseEntity;
 import com.harold.corpsedecay.corpse.StuckArrows;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -64,10 +65,16 @@ public class CorpseRenderer extends EntityRenderer<CorpseEntity> {
         LivingEntityRenderer renderer = cc.renderer;
 
         CorpseKind kind = corpse.kind();
-        float decay = kind == CorpseKind.BONES || kind == CorpseKind.NO_DECAY ? 0F : corpse.decay(partial);
+        float decay = kind == CorpseKind.BONES || kind == CorpseKind.NO_DECAY ? 0F : kind == CorpseKind.FOSSIL ? 1F : corpse.decay(partial);
         ResourceLocation original = renderer.getTextureLocation(puppet);
         boolean burnt = corpse.burnt();
-        ResourceLocation tex = DecayTextures.get(original, cc.info, kind, burnt, decay);
+        DeathCause cause = corpse.cause();
+        int variant = kind == CorpseKind.FOSSIL ? DecayTextures.FOSSIL + corpse.material()
+                : burnt ? DecayTextures.BURNT
+                : cause == DeathCause.DROWNED ? DecayTextures.DROWNED
+                : cause == DeathCause.FROZEN ? DecayTextures.FROZEN
+                : cause == DeathCause.WITHERED ? DecayTextures.WITHERED : DecayTextures.NORMAL;
+        ResourceLocation tex = DecayTextures.get(original, cc.info, kind, variant, decay);
         RenderType type = null;
         if (tex != null && tex != original) {
             boolean fading = kind == CorpseKind.NO_BONES && decay > 0.8F;
@@ -76,15 +83,23 @@ public class CorpseRenderer extends EntityRenderer<CorpseEntity> {
 
         ps.pushPose();
         ps.mulPose(cc.body(partial));
+        float squash = corpse.squash();
+        if (squash < 1F) ps.scale(1F + (1F - squash) * 0.25F, squash, 1F + (1F - squash) * 0.25F); // crushed flat
         ps.translate(0, -corpse.bodyHeight() / 2F, 0);
 
         RenderContext ctx = new RenderContext(puppet, type);
         cc.applyPoses(ctx, partial);
+        if (cause == DeathCause.EXPLODED) cc.hideMissingLimbs(corpse, ctx);
         List<RenderLayer> layers = layersOf(renderer);
         List<RenderLayer> saved = layers == null ? null : new ArrayList<>(layers);
         ctx.begin();
         try {
-            if (layers != null) layers.removeIf(l -> hideLayer(l, kind, burnt, decay));
+            final boolean fossil = kind == CorpseKind.FOSSIL;
+            final boolean blownUp = cause == DeathCause.EXPLODED;
+            if (layers != null) {
+                layers.removeIf(l -> fossil || hideLayer(l, kind, burnt, decay)
+                        || (blownUp && l instanceof net.minecraft.client.renderer.entity.layers.ItemInHandLayer));
+            }
             renderer.render(puppet, 0F, 0F, ps, buffers, light);
         } catch (Throwable t) {
             // a renderer that can't cope with a stand-in mob just doesn't draw

@@ -288,6 +288,83 @@ public final class SelfTest {
             check(c != null && c.decay(0) >= 0.74F && c.decay(0) < 0.9F, "a charred body starts just short of a skeleton (" + (c == null ? -1 : c.decay(0)) + ")");
             check(c != null && c.isOnFire(), "a charred body keeps burning for a moment");
             check(!wasBurnt && plain != null && plain.burnt() && plain.decay(0) >= 0.74F, "setting an old body alight chars it");
+            causeTest(server);
+        });
+    }
+
+    /** Each way of dying leaves its own kind of remains. */
+    private static void causeTest(MinecraftServer server) {
+        var ds = level.damageSources();
+        Object[][] cases = {
+                {ds.drown(), com.harold.corpsedecay.DeathCause.DROWNED},
+                {ds.freeze(), com.harold.corpsedecay.DeathCause.FROZEN},
+                {ds.explosion(null, null), com.harold.corpsedecay.DeathCause.EXPLODED},
+                {ds.wither(), com.harold.corpsedecay.DeathCause.WITHERED},
+                {ds.fall(), com.harold.corpsedecay.DeathCause.FELL},
+                {ds.anvil(null), com.harold.corpsedecay.DeathCause.CRUSHED},
+        };
+        for (int i = 0; i < cases.length; i++) {
+            Mob cow = spawn(EntityType.COW, 40 + i * 4, 40);
+            cow.hurt((net.minecraft.world.damagesource.DamageSource) cases[i][0], 1000F);
+        }
+        later(server, 3, () -> {
+            int base = (int) Math.max(20, com.harold.corpsedecay.Config.MINUTES_TO_SKELETON.get() * 1200.0);
+            for (int i = 0; i < cases.length; i++) {
+                com.harold.corpsedecay.DeathCause want = (com.harold.corpsedecay.DeathCause) cases[i][1];
+                CorpseEntity c = nearest(corpses(new AABB(37 + i * 4, groundY - 3, 37, 43 + i * 4, groundY + 5, 43)), 40.5 + i * 4, 40.5);
+                check(c != null && c.cause() == want, "a cow killed by " + want + " leaves " + want + " remains (" + (c == null ? "none" : c.cause()) + ")");
+                if (c == null) continue;
+                if (want == com.harold.corpsedecay.DeathCause.FROZEN) check(c.decayTicks() == base * 4, "frozen bodies rot four times slower");
+                if (want == com.harold.corpsedecay.DeathCause.WITHERED) check(c.decay(0) >= 0.54F, "withered bodies start as a dried husk");
+                if (want == com.harold.corpsedecay.DeathCause.CRUSHED) check(c.squash() < 0.5F, "crushed bodies are flattened");
+            }
+            later(server, 100, () -> {
+                CorpseEntity crushed = nearest(corpses(new AABB(57, groundY - 3, 37, 63, groundY + 5, 43)), 60.5, 40.5);
+                if (crushed != null) {
+                    Vector3f up = crushed.orientation().transform(new Vector3f(0, 1, 0));
+                    check(up.y > 0.9F && crushed.getY() < groundY + 0.5, "a crushed body stays squashed flat where it stood (y=" + crushed.getY() + ")");
+                }
+                fossilTest(server);
+            });
+        });
+    }
+
+    /** Fossils: placed like world generation places them, they last, and break into bones. */
+    private static void fossilTest(MinecraftServer server) {
+        check(server.registryAccess().registryOrThrow(net.minecraft.core.registries.Registries.PLACED_FEATURE)
+                .containsKey(new net.minecraft.resources.ResourceLocation("corpsedecay", "cave_fossil")), "cave fossil placement is loaded");
+        check(server.registryAccess().registryOrThrow(net.minecraft.core.registries.Registries.PLACED_FEATURE)
+                .containsKey(new net.minecraft.resources.ResourceLocation("corpsedecay", "surface_fossil")), "surface fossil placement is loaded");
+        check(server.registryAccess().registryOrThrow(net.minecraftforge.registries.ForgeRegistries.Keys.BIOME_MODIFIERS)
+                .containsKey(new net.minecraft.resources.ResourceLocation("corpsedecay", "cave_fossils")), "fossils are added to overworld biomes");
+        check(net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getTag(com.harold.corpsedecay.CorpseKind.FOSSIL_MOBS)
+                .map(t -> t.size() > 10).orElse(false), "there's a list of mobs that can become fossils");
+        net.minecraft.util.RandomSource rand = net.minecraft.util.RandomSource.create(5);
+        EntityType<?>[] mobs = {EntityType.COW, EntityType.HORSE, EntityType.VILLAGER, EntityType.SNIFFER};
+        for (int i = 0; i < mobs.length; i++) {
+            BlockPos floor = new BlockPos(40 + i * 5, groundY - 1, 50);
+            boolean ok = com.harold.corpsedecay.world.FossilFeature.placeFossil(level, level, floor, mobs[i], rand, i, i == 3 ? 0.4 : 0.1);
+            check(ok, "fossil " + i + " placed");
+        }
+        later(server, 60, () -> {
+            List<CorpseEntity> fossils = corpses(new AABB(37, groundY - 4, 47, 62, groundY + 6, 53));
+            check(fossils.size() == 4, "fossils stay put (" + fossils.size() + ")");
+            boolean allFossil = true;
+            for (CorpseEntity f : fossils) allFossil &= f.kind() == CorpseKind.FOSSIL && f.settled();
+            check(allFossil, "fossils lie still as fossils");
+            CorpseEntity sniffer = byType(fossils, "minecraft:sniffer");
+            check(sniffer != null && sniffer.getY() < groundY + sniffer.getBoundingBox().getYsize() / 2 - 0.05,
+                    "surface fossils are half buried");
+            if (!fossils.isEmpty()) {
+                CorpseEntity f = fossils.get(0);
+                FakePlayer p = FakePlayerFactory.getMinecraft(level);
+                p.moveTo(f.getX(), f.getY(), f.getZ() - 1.5);
+                p.setShiftKeyDown(true);
+                f.hurt(level.damageSources().playerAttack(p), 1F);
+                p.setShiftKeyDown(false);
+                check(f.isRemoved() && !items(Items.BONE).isEmpty() || f.isRemoved() && !level.getEntitiesOfClass(ItemEntity.class,
+                        f.getBoundingBox().inflate(3), it -> it.getItem().is(Items.BONE)).isEmpty(), "breaking a fossil gives bones");
+            }
             limitTest(server);
         });
     }
@@ -300,7 +377,12 @@ public final class SelfTest {
         }
         later(server, 3, () -> {
             int count = corpses(new AABB(-100, groundY - 10, -100, 100, groundY + 20, 100)).size();
-            check(count <= max, "no more than " + max + " corpses at once (" + count + ")");
+            int fossilsLeft = 0;
+            for (CorpseEntity c : corpses(new AABB(-100, groundY - 10, -100, 100, groundY + 20, 100))) {
+                if (c.kind() == CorpseKind.FOSSIL) fossilsLeft++;
+            }
+            check(count - fossilsLeft <= max, "no more than " + max + " corpses at once (" + (count - fossilsLeft) + ")");
+            check(fossilsLeft == 3, "fossils don't count towards the limit and never crumble (" + fossilsLeft + " left)");
             for (CorpseEntity c : corpses(new AABB(-100, groundY - 10, -100, 100, groundY + 20, 100))) c.discard();
             finish(server);
         });

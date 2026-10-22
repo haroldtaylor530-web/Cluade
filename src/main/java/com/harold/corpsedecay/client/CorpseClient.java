@@ -156,6 +156,7 @@ public final class CorpseClient {
 
     private void tickLimbs(CorpseEntity corpse) {
         if (info == null || info.limbs.isEmpty()) return;
+        if (corpse.cause() == com.harold.corpsedecay.DeathCause.CRUSHED) return; // squashed flat as it stood
         boolean bodyMoving = !corpse.settled() || prevBody.dot(curBody) < 0.99999F;
         if (!warmed && corpse.settled()) {
             // a body that was already lying here when it came into view: settle its limbs at once
@@ -194,7 +195,8 @@ public final class CorpseClient {
             if (u.lengthSquared() < 1e-6F) continue;
             u.normalize();
             Vector3f r = rest.transform(new Vector3f(u));
-            Vector3f t = limitTowards(r, g, l.cls.swing());
+            float swing = l.cls.swing() * (corpse.cause() == com.harold.corpsedecay.DeathCause.FELL ? 1.9F : 1F);
+            Vector3f t = limitTowards(r, g, swing);
             Quaternionf target = new Quaternionf().rotationTo(r, t).mul(rest);
 
             Quaternionf cur = limbCur[i];
@@ -264,6 +266,25 @@ public final class CorpseClient {
             if (box.move(pos).contains(p)) return true;
         }
         return false;
+    }
+
+    /** A body blown apart is missing some of its limbs (chosen the same way every time). */
+    public void hideMissingLimbs(CorpseEntity corpse, RenderContext ctx) {
+        if (info == null) return;
+        int missing = 0;
+        for (int i = 0; i < info.limbs.size(); i++) {
+            ModelInfo.Part l = info.limbs.get(i);
+            if (l.name == null || l == info.head) continue;
+            int h = corpse.getUUID().hashCode() * 31 + i * 7919;
+            h ^= h >>> 15;
+            h *= 0x2c1b3c6d;
+            h ^= h >>> 12;
+            if ((h & 0xFF) < 115 && missing < info.limbs.size() - 2) {
+                ctx.hide(l.name);
+                for (ModelInfo.Part p : info.parts) if (p.follows == l && p.name != null) ctx.hide(p.name);
+                missing++;
+            }
+        }
     }
 
     /** For the CI log: where each limb ended up. */
@@ -336,7 +357,14 @@ public final class CorpseClient {
         CorpseKind kind = corpse.kind();
         if (kind != CorpseKind.FLESH && kind != CorpseKind.NO_BONES) return;
         float d = corpse.decay(0);
-        if (d < 0.06F || d > 0.8F || corpse.burnt()) return;
+        com.harold.corpsedecay.DeathCause cause = corpse.cause();
+        if (cause == com.harold.corpsedecay.DeathCause.FROZEN && d < 0.4F && corpse.level().random.nextFloat() < 0.04F) {
+            AABB b = corpse.getBoundingBox();
+            corpse.level().addParticle(net.minecraft.core.particles.ParticleTypes.SNOWFLAKE,
+                    b.minX + corpse.level().random.nextDouble() * b.getXsize(), b.maxY, b.minZ + corpse.level().random.nextDouble() * b.getZsize(), 0, 0, 0);
+        }
+        if (d < 0.06F || d > 0.8F || corpse.burnt() || cause == com.harold.corpsedecay.DeathCause.WITHERED
+                || (cause == com.harold.corpsedecay.DeathCause.FROZEN && d < 0.5F)) return;
         RandomSource rand = corpse.level().random;
         float size = corpse.bodyWidth() * corpse.bodyHeight();
         float chance = 0.04F + 0.05F * Math.min(2F, size);

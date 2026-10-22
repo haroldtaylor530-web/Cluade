@@ -47,6 +47,8 @@ public final class Ragdoll {
     private int retries;
 
     private int stillTicks;
+    /** drowned bodies float to the surface */
+    public boolean buoyant;
     private int age;
     private boolean landed;
     private double impactSpeed;
@@ -133,7 +135,7 @@ public final class Ragdoll {
                 double[] o = prev[i];
                 boolean water = inWater(level, a);
                 double drag = water ? WATER_DRAG : AIR_DRAG;
-                double g = water ? GRAVITY * 0.08 : GRAVITY;
+                double g = water ? (buoyant ? -GRAVITY * 0.3 : GRAVITY * 0.08) : GRAVITY;
                 double vx = (a[0] - o[0]) * drag;
                 double vy = (a[1] - o[1]) * drag - g;
                 double vz = (a[2] - o[2]) * drag;

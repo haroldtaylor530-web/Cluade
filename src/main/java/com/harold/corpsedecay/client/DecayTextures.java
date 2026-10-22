@@ -53,10 +53,13 @@ public final class DecayTextures {
     }
 
     /** The texture to draw a corpse with, or the original if it can't be made. */
-    public static ResourceLocation get(ResourceLocation original, ModelInfo info, CorpseKind kind, boolean burnt, float decay) {
+    /** Looks a body can have besides plain rotting. */
+    public static final int NORMAL = 0, BURNT = 1, DROWNED = 2, FROZEN = 3, WITHERED = 5, FOSSIL = 10;
+
+    public static ResourceLocation get(ResourceLocation original, ModelInfo info, CorpseKind kind, int variant, float decay) {
         if (kind == CorpseKind.NO_DECAY || original == null) return original;
-        String key = original + "|" + System.identityHashCode(info) + "|" + kind.ordinal() + (burnt ? "|burnt" : "");
-        Source src = SOURCES.computeIfAbsent(key, k -> Source.build(original, info, kind, burnt));
+        String key = original + "|" + System.identityHashCode(info) + "|" + kind.ordinal() + "|" + variant;
+        Source src = SOURCES.computeIfAbsent(key, k -> Source.build(original, info, kind, variant));
         if (src.failed) return original;
         int stage = stageFor(decay);
         if (src.stages[stage] == null) src.stages[stage] = src.makeStage(stage);
@@ -75,13 +78,15 @@ public final class DecayTextures {
         float[] hole, blot, tear;
         CorpseKind kind;
         boolean burnt;
+        int variant;
         String id;
         final ResourceLocation[] stages = new ResourceLocation[STAGES];
 
-        static Source build(ResourceLocation original, ModelInfo info, CorpseKind kind, boolean burnt) {
+        static Source build(ResourceLocation original, ModelInfo info, CorpseKind kind, int variant) {
             Source s = new Source();
             s.kind = kind;
-            s.burnt = burnt;
+            s.variant = variant;
+            s.burnt = variant == BURNT;
             try {
                 Optional<Resource> res = Minecraft.getInstance().getResourceManager().getResource(original);
                 if (res.isEmpty()) {
@@ -99,7 +104,7 @@ public final class DecayTextures {
                         }
                     }
                 }
-                s.id = Integer.toHexString(original.toString().hashCode()) + (burnt ? "_b" : "") + "_" + (counter++);
+                s.id = Integer.toHexString(original.toString().hashCode()) + "_v" + variant + "_" + (counter++);
                 s.analyse(info, original.toString().hashCode());
             } catch (Throwable t) {
                 CorpseDecayClientLog.warn("Couldn't make decay textures for " + original + ": " + t);
@@ -281,7 +286,14 @@ public final class DecayTextures {
             int c = argb[i];
             int a = c >>> 24;
             if (a == 0) return 0;
+            if (kind == CorpseKind.FOSSIL) return fossil(i, a);
             if (burnt) return charred(i, c, a, p, last);
+            if (variant == WITHERED) return withered(i, c, a, p, last);
+            if (variant == DROWNED || variant == FROZEN) return tinted(i, normal(i, c, a, p, last), p);
+            return normal(i, c, a, p, last);
+        }
+
+        private int normal(int i, int c, int a, float p, boolean last) {
             if (kind == CorpseKind.BONES) {
                 return withAlpha(mix(c, 0xFFCDC3A0, 0.18F * p), a);
             }
@@ -332,6 +344,60 @@ public final class DecayTextures {
                 return withAlpha(coal, Math.round(a * (1F - smooth(0.82F, 1F, p))));
             }
             return withAlpha(coal, a);
+        }
+
+        /** Pale and waterlogged, or frosted over. */
+        private int tinted(int i, int c, float p) {
+            if ((c >>> 24) == 0) return c;
+            if (variant == DROWNED) {
+                float f = 0.55F * (1F - smooth(0.4F, 1F, p));
+                int waxy = mix(gray(c), 0xFFAAB8BC, 0.5F);
+                return mix(c, waxy, f);
+            }
+            float f = 0.55F * (1F - 0.7F * smooth(0.2F, 1F, p));
+            int out = mix(c, 0xFFD6ECFA, f);
+            if (Noise.hash(i % w, i / w, 77) > 0.93F) out = mix(out, 0xFFF6FCFF, 0.8F * (1F - p)); // ice crystals
+            return out;
+        }
+
+        /** A withered body: shrivelled to an ashen grey-black husk with dark veins. */
+        private int withered(int i, int c, int a, float p, boolean last) {
+            if (kind == CorpseKind.BONES) return withAlpha(mix(c, 0xFF4A4644, 0.45F), a);
+            if (what[i] == BonePainter.HORN) return withAlpha(scale(c, 0.5F), a);
+            boolean exposed = last || (painted[i] && hole[i] < smooth(0.5F, 1F, p) * 1.05F);
+            if (clothes[i] && !exposed) return withAlpha(mix(scale(c, 0.6F), 0xFF2E2A28, 0.4F), a);
+            if (exposed) {
+                if (kind == CorpseKind.FLESH && bone[i] != 0) {
+                    int b = bone[i];
+                    if (what[i] == BonePainter.BONE) b = mix(b, 0xFF5E5A56, 0.45F);
+                    return withAlpha(b, a);
+                }
+                return 0;
+            }
+            int husk = mix(mix(gray(c), 0xFF3A3634, 0.75F), 0xFF1E1C1B, blot[i] * 0.6F);
+            if (tear[i] < 0.1F) husk = mix(husk, 0xFF0C0B0B, 0.8F); // dark veins
+            if (kind == CorpseKind.NO_BONES && p > 0.82F) return withAlpha(husk, Math.round(a * (1F - smooth(0.82F, 1F, p))));
+            return withAlpha(husk, a);
+        }
+
+        /** Bones turned to stone: only the skeleton, in the colour of the rock it lay in. */
+        private int fossil(int i, int a) {
+            if (bone[i] == 0) return 0;
+            int x = i % w, y = i / w;
+            if (what[i] == BonePainter.DARK) return withAlpha(0xFF201E1C, a);
+            int rock = switch (variant - FOSSIL) {
+                case 1 -> 0xFFCDB98C; // sandstone
+                case 2 -> 0xFF55555C; // deepslate
+                case 3 -> 0xFFE9E3D2; // bleached
+                default -> 0xFF8E8E8A; // stone
+            };
+            float shade = brightness(bone[i]) / 220F;
+            int out = scale(rock, Math.min(1.15F, shade));
+            float n = Noise.hash(x, y, 313);
+            if (n > 0.86F) out = scale(out, 0.78F);       // mineral flecks
+            else if (n < 0.08F) out = scale(out, 1.12F);
+            if (variant - FOSSIL == 3 && tear[i] < 0.08F) out = scale(out, 0.72F); // weathering cracks
+            return withAlpha(out, a);
         }
 
         /** Burnt bone stays burnt: charcoal grey, blackened in patches, chalky where it burnt hottest. */
@@ -417,6 +483,10 @@ public final class DecayTextures {
         int g = Mth.clamp(Math.round(((c >> 8) & 255) * f), 0, 255);
         int b = Mth.clamp(Math.round((c & 255) * f), 0, 255);
         return (c & 0xFF000000) | r << 16 | g << 8 | b;
+    }
+
+    static float brightness(int c) {
+        return ((c >> 16) & 255) * 0.3F + ((c >> 8) & 255) * 0.59F + (c & 255) * 0.11F;
     }
 
     static int gray(int c) {

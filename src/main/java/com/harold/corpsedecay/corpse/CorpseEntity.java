@@ -7,6 +7,7 @@ import org.joml.Vector3f;
 
 import com.harold.corpsedecay.Config;
 import com.harold.corpsedecay.CorpseKind;
+import com.harold.corpsedecay.DeathCause;
 
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ItemParticleOption;
@@ -59,6 +60,9 @@ public class CorpseEntity extends Entity {
     private static final EntityDataAccessor<Long> BURN_TIME = SynchedEntityData.defineId(CorpseEntity.class, EntityDataSerializers.LONG);
     private static final EntityDataAccessor<Integer> DECAY_TICKS = SynchedEntityData.defineId(CorpseEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Byte> KIND = SynchedEntityData.defineId(CorpseEntity.class, EntityDataSerializers.BYTE);
+    private static final EntityDataAccessor<Byte> CAUSE = SynchedEntityData.defineId(CorpseEntity.class, EntityDataSerializers.BYTE);
+    private static final EntityDataAccessor<Float> SQUASH = SynchedEntityData.defineId(CorpseEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Byte> MATERIAL = SynchedEntityData.defineId(CorpseEntity.class, EntityDataSerializers.BYTE);
     private static final EntityDataAccessor<Integer> LOOT_MASK = SynchedEntityData.defineId(CorpseEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<CompoundTag> ARROWS = SynchedEntityData.defineId(CorpseEntity.class, EntityDataSerializers.COMPOUND_TAG);
     @SuppressWarnings("unchecked")
@@ -109,6 +113,9 @@ public class CorpseEntity extends Entity {
         entityData.define(BURN_TIME, 0L);
         entityData.define(DECAY_TICKS, 24000);
         entityData.define(KIND, (byte) 0);
+        entityData.define(CAUSE, (byte) 0);
+        entityData.define(SQUASH, 1F);
+        entityData.define(MATERIAL, (byte) 0);
         entityData.define(LOOT_MASK, 0);
         entityData.define(ARROWS, new CompoundTag());
         for (EntityDataAccessor<ItemStack> a : EQUIP) entityData.define(a, ItemStack.EMPTY);
@@ -118,7 +125,7 @@ public class CorpseEntity extends Entity {
     public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
         super.onSyncedDataUpdated(key);
         if (key == MOB_TYPE || key == RENDER_TAG) lookVersion++;
-        if (key == BODY_W || key == BODY_H || key == BODY_D || key == ORIENT) {
+        if (key == BODY_W || key == BODY_H || key == BODY_D || key == ORIENT || key == SQUASH) {
             if (ready) setBoundingBox(makeBoundingBox());
         }
     }
@@ -140,6 +147,10 @@ public class CorpseEntity extends Entity {
         entityData.set(DECAY_TICKS, (int) Math.max(20, Config.MINUTES_TO_SKELETON.get() * 1200.0));
         skeletonTicks = (long) (Config.SKELETON_MINUTES.get() * 1200.0);
         entityData.set(KIND, (byte) s.kind.ordinal());
+        DeathCause cause = s.cause;
+        entityData.set(CAUSE, (byte) cause.ordinal());
+        if (cause == DeathCause.FROZEN) entityData.set(DECAY_TICKS, decayTicks() * 4); // frozen bodies keep
+        if (cause == DeathCause.CRUSHED) entityData.set(SQUASH, 0.3F);
         int mask = 0;
         for (int i = 0; i < 6; i++) {
             entityData.set(EQUIP[i], s.equipment[i]);
@@ -161,7 +172,12 @@ public class CorpseEntity extends Entity {
             vel = new Vec3(vel.x * 0.3, Math.min(vel.y, 0.15), vel.z * 0.3);
         }
         if (vel.lengthSqr() > 1.0) vel = vel.normalize();
-        ragdoll = new Ragdoll(s.width, s.height, depth);
+        if (cause == DeathCause.CRUSHED) {
+            // flattened where it stood
+            vel = Vec3.ZERO;
+            center = s.feet.add(0, s.height * squash() / 2.0, 0);
+        }
+        ragdoll = makeRagdoll();
         ragdoll.place(center, q, vel, new Vector3f());
 
         // which way the body goes down: upright bodies topple the way they were hit,
@@ -183,7 +199,9 @@ public class CorpseEntity extends Entity {
         // has passed its tipping point (so square bodies like pigs don't roll right onto their back)
         double strength = Math.max(0.02 + 0.01 * Math.min(2.0, force), 1.35 * 0.08 * s.width / s.height);
         double stop = upright ? 0.55 : Math.cos(Math.atan(s.width / s.height) + 0.03);
-        if (flat) {
+        if (cause == DeathCause.CRUSHED) {
+            // no toppling: it's been squashed flat
+        } else if (flat) {
             ragdoll.collapse(dx, dz, 0.004, 10, 0, 1.0); // flat bodies (spiders) just slump
         } else {
             ragdoll.collapse(dx, dz, strength, upright ? 14 : 0, 60, stop);
@@ -194,6 +212,69 @@ public class CorpseEntity extends Entity {
         entityData.set(SETTLED, false);
         lookVersion++;
         if (s.burning) burn();
+        if (cause == DeathCause.WITHERED) {
+            long target = (long) (WITHERED_DECAY * decayTicks());
+            entityData.set(DEATH_TIME, level().getGameTime() - target);
+        }
+    }
+
+    /** How far through decay a withered body starts: already a shrivelled husk. */
+    public static final float WITHERED_DECAY = 0.55F;
+
+    private Ragdoll makeRagdoll() {
+        Ragdoll r = new Ragdoll(bodyWidth(), bodyHeight() * squash(), bodyDepth());
+        r.buoyant = cause() == DeathCause.DROWNED;
+        return r;
+    }
+
+    public DeathCause cause() {
+        return DeathCause.byId(entityData.get(CAUSE));
+    }
+
+    /** 1 normally; less for a body squashed flat. */
+    public float squash() {
+        return entityData.get(SQUASH);
+    }
+
+    /** Fossil rock: 0 stone, 1 sandstone, 2 deepslate, 3 bleached (surface bones). */
+    public int material() {
+        return entityData.get(MATERIAL);
+    }
+
+    public static final int STONE = 0, SANDSTONE = 1, DEEPSLATE = 2, BLEACHED = 3;
+
+    /**
+     * A fossil: the bones of a mob that died long ago, lying on {@code ground} (the top of the
+     * block it rests on), turned to {@code material} and sunk {@code sink} (0..1) of its thickness
+     * into the ground.
+     */
+    public static CorpseEntity fossil(ServerLevel level, EntityType<?> mob, Vec3 ground, net.minecraft.util.RandomSource rand, int material, double sink) {
+        CorpseEntity c = com.harold.corpsedecay.ModRegistry.CORPSE.get().create(level);
+        if (c == null) return null;
+        float w = mob.getWidth(), h = mob.getHeight();
+        boolean upright = h > w * 1.9F;
+        boolean flat = w >= h * 1.5F;
+        c.entityData.set(MOB_TYPE, String.valueOf(net.minecraftforge.registries.ForgeRegistries.ENTITY_TYPES.getKey(mob)));
+        c.entityData.set(BODY_W, w);
+        c.entityData.set(BODY_H, h);
+        c.entityData.set(BODY_D, upright || flat ? w : Math.max(w, h * 1.3F));
+        c.entityData.set(KIND, (byte) CorpseKind.FOSSIL.ordinal());
+        c.entityData.set(MATERIAL, (byte) material);
+        c.entityData.set(DECAY_TICKS, 20);
+        c.entityData.set(DEATH_TIME, 0L);
+        c.skeletonTicks = 0;
+        float yaw = rand.nextFloat() * Mth.TWO_PI;
+        float side = rand.nextBoolean() ? Mth.HALF_PI : -Mth.HALF_PI;
+        Quaternionf q = new Quaternionf().rotationY(yaw);
+        if (upright) q.rotateX(side);
+        else if (!flat) q.rotateZ(side);
+        c.entityData.set(ORIENT, q);
+        c.entityData.set(SETTLED, true);
+        c.checkedUpright = true;
+        AABB box = c.makeBoundingBox();
+        double half = box.getYsize() / 2.0;
+        c.setPos(ground.x, ground.y + half - sink * 2 * half, ground.z);
+        return c;
     }
 
     /** How far through decay a burnt body jumps to: charred, just short of bare bone. */
@@ -206,7 +287,7 @@ public class CorpseEntity extends Entity {
     public void burn() {
         if (level().isClientSide) return;
         CorpseKind kind = kind();
-        if (kind == CorpseKind.NO_DECAY) return;
+        if (kind == CorpseKind.NO_DECAY || kind == CorpseKind.FOSSIL) return;
         if (burnTime() > 0) return;
         long now = level().getGameTime();
         entityData.set(BURN_TIME, now);
@@ -305,7 +386,7 @@ public class CorpseEntity extends Entity {
             // a body left standing (wedged against something) gets another chance to fall over
             checkedUpright = true;
             Vector3f up = orientation().transform(new Vector3f(0, 1, 0));
-            if (up.y > 0.85F && !flatBody()) {
+            if (up.y > 0.85F && !flatBody() && cause() != DeathCause.CRUSHED && kind() != CorpseKind.FOSSIL) {
                 wake();
                 double a = random.nextDouble() * Math.PI * 2;
                 ragdoll.collapse(Math.cos(a), Math.sin(a), Math.max(0.04, 1.35 * 0.08 * bodyWidth() / bodyHeight()), 6, 60, 0.55);
@@ -313,7 +394,7 @@ public class CorpseEntity extends Entity {
         }
         if (!settled()) {
             if (ragdoll == null) {
-                ragdoll = new Ragdoll(bodyWidth(), bodyHeight(), bodyDepth());
+                ragdoll = makeRagdoll();
                 ragdoll.place(position(), orientation(), Vec3.ZERO, new Vector3f());
             }
             boolean rest = ragdoll.tick(level());
@@ -332,7 +413,7 @@ public class CorpseEntity extends Entity {
                 entityData.set(SETTLED, true);
             }
         }
-        if (tickCount % 20 == 0) {
+        if (tickCount % 20 == 0 && kind() != CorpseKind.FOSSIL) {
             long age = level().getGameTime() - deathTime();
             long end = decayTicks() + skeletonTicks;
             CorpseKind kind = kind();
@@ -342,6 +423,15 @@ public class CorpseEntity extends Entity {
                 crumble(false);
             }
         }
+    }
+
+    private net.minecraft.world.level.block.Block fossilRock() {
+        return switch (material()) {
+            case SANDSTONE -> Blocks.SANDSTONE;
+            case DEEPSLATE -> Blocks.DEEPSLATE;
+            case BLEACHED -> Blocks.BONE_BLOCK;
+            default -> Blocks.STONE;
+        };
     }
 
     private void burnUp() {
@@ -356,6 +446,15 @@ public class CorpseEntity extends Entity {
     public void crumble(boolean dropLoot) {
         if (!(level() instanceof ServerLevel sl)) return;
         if (dropLoot) dropAllLoot();
+        if (kind() == CorpseKind.FOSSIL) {
+            if (dropLoot) spawnAtLocation(new ItemStack(Items.BONE, 2 + random.nextInt(4)), 0.3F);
+            sl.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, fossilRock().defaultBlockState()), getX(), getY(), getZ(),
+                    30, bodyWidth() / 2, 0.2, bodyWidth() / 2, 0.05);
+            playSound(SoundEvents.STONE_BREAK, 0.9F, 0.9F);
+            level().broadcastEntityEvent(this, EVENT_CRUMBLE);
+            discard();
+            return;
+        }
         boolean bones = kind() == CorpseKind.BONES || decay(0) > 0.75F;
         ParticleOptions particle = bones
                 ? new BlockParticleOption(ParticleTypes.BLOCK, Blocks.BONE_BLOCK.defaultBlockState())
@@ -497,7 +596,7 @@ public class CorpseEntity extends Entity {
 
     private void wake() {
         if (ragdoll == null) {
-            ragdoll = new Ragdoll(bodyWidth(), bodyHeight(), bodyDepth());
+            ragdoll = makeRagdoll();
             ragdoll.place(position(), orientation(), Vec3.ZERO, new Vector3f());
         }
         entityData.set(SETTLED, false);
@@ -527,7 +626,7 @@ public class CorpseEntity extends Entity {
     @Override
     protected AABB makeBoundingBox() {
         if (!ready) return super.makeBoundingBox();
-        float hw = bodyWidth() / 2F, hh = bodyHeight() / 2F, hd = bodyDepth() / 2F;
+        float hw = bodyWidth() / 2F, hh = bodyHeight() * squash() / 2F, hd = bodyDepth() / 2F;
         Quaternionf q = orientation();
         Vector3f v = new Vector3f();
         float ex = 0, ey = 0, ez = 0;
@@ -569,6 +668,9 @@ public class CorpseEntity extends Entity {
         entityData.set(SETTLED, tag.getBoolean("Settled"));
         entityData.set(DEATH_TIME, tag.getLong("DeathTime"));
         entityData.set(BURN_TIME, tag.getLong("BurnTime"));
+        entityData.set(CAUSE, tag.getByte("Cause"));
+        entityData.set(SQUASH, tag.contains("Squash") ? tag.getFloat("Squash") : 1F);
+        entityData.set(MATERIAL, tag.getByte("Material"));
         entityData.set(DECAY_TICKS, Math.max(20, tag.getInt("DecayTicks")));
         skeletonTicks = tag.getLong("SkeletonTicks");
         entityData.set(KIND, tag.getByte("Kind"));
@@ -601,6 +703,9 @@ public class CorpseEntity extends Entity {
         tag.putBoolean("Settled", settled());
         tag.putLong("DeathTime", deathTime());
         tag.putLong("BurnTime", burnTime());
+        tag.putByte("Cause", entityData.get(CAUSE));
+        tag.putFloat("Squash", squash());
+        tag.putByte("Material", entityData.get(MATERIAL));
         tag.putInt("DecayTicks", decayTicks());
         tag.putLong("SkeletonTicks", skeletonTicks);
         tag.putByte("Kind", entityData.get(KIND));

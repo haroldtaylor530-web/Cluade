@@ -19,6 +19,19 @@ there, rotting through stages down to a bare skeleton, still wearing whatever it
   through and clothes, wool and fur burnt away (armour survives). It burns for a few seconds,
   then smokes for a while. A body that catches fire later, from a fire block or flint and steel,
   chars the same way.
+- **Different remains for different deaths.**
+  - Drowned: pale, waxy and waterlogged, and the body floats.
+  - Frozen (powder snow): frosted over with ice crystals, and rots four times slower.
+  - Blown up: torn apart, with some limbs missing.
+  - Withered (the wither effect, the Wither, wither skeletons): a shrivelled grey-black husk.
+  - Fell to its death: crumpled, limbs bent at broken angles.
+  - Crushed by an anvil or falling block: squashed flat where it stood.
+- **Fossils.** New chunks can hold the remains of things that died long ago. In caves, skeletons
+  turned to the stone they lay in (grey in stone, tan in sandstone, near black in deepslate) lie on
+  the cave floor; in deserts, badlands and beaches, old bleached bones lie half buried in the sand.
+  They're mostly animals (sniffers included) with the odd villager or zombie; which mobs is the
+  tag `#corpsedecay:fossil_mobs`. Fossils never crumble and don't count towards the corpse limit.
+  Sneak and hit one to break it up for bones.
 - **Real skeletons for every mob.** The skeleton is built from each mob's own model: a skull with
   eye sockets and teeth, a ribcage and spine running the length of the body (upright for zombies
   and villagers, horizontal for animals), a pelvis, leg bones with knobbly joints, tail
@@ -61,6 +74,7 @@ These are entity type tags (`#corpsedecay:no_corpse`, `already_bones`, `no_skele
 | `ragdollForce` | 1.0 | How hard killing blows throw bodies |
 | `lootAllEquipment` | false | Let players take everything off a body, not just what would have dropped |
 | `flies` | true | Flies around rotting bodies |
+| `fossils` | true | Fossils in newly generated chunks |
 | `excludedMobs` | [] | Mob ids that never leave a corpse |
 
 ## Installing

@@ -111,7 +111,7 @@ public final class DeathHandler {
         int max = Config.MAX_CORPSES.get();
         List<CorpseEntity> all = new ArrayList<>();
         for (Entity e : level.getAllEntities()) {
-            if (e instanceof CorpseEntity c && !c.isRemoved()) all.add(c);
+            if (e instanceof CorpseEntity c && !c.isRemoved() && c.kind() != CorpseKind.FOSSIL) all.add(c);
         }
         if (all.size() <= max) return;
         all.sort(Comparator.comparingLong(CorpseEntity::deathTime));

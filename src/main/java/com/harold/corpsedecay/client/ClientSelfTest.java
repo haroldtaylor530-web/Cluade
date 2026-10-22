@@ -129,11 +129,16 @@ public final class ClientSelfTest {
             t += 20;
         }
         // close-ups from low down: fresh, rotting, skeleton
-        String[] who = {"zombie_burnt", "cow_burnt", "zombie_armour", "zombie", "villager", "pillager", "cow", "sheep", "horse", "pig", "chicken", "wolf", "skeleton"};
+        String[] who = {"cow_drowned", "zombie_frozen", "cow_exploded", "zombie_withered", "zombie_fell", "cow_crushed",
+                "fossil_stone", "fossil_sand", "fossil_deep", "fossil_bleached", "zombie_burnt", "cow_burnt", "zombie_armour", "zombie", "villager", "pillager", "cow", "sheep", "horse", "pig", "chicken", "wolf", "skeleton"};
         float[] when = {0.0F, 0.5F, 1.0F};
         int n = 10;
         for (String w : who) {
-            float[] times = w.endsWith("_burnt") ? new float[] {0.75F, 0.88F, 1.0F} : when;
+            float[] times = w.endsWith("_burnt") ? new float[] {0.75F, 0.88F, 1.0F}
+                    : w.startsWith("fossil") ? new float[] {1.0F}
+                    : w.endsWith("_withered") ? new float[] {0.6F, 1.0F}
+                    : (w.endsWith("_drowned") || w.endsWith("_frozen") || w.endsWith("_exploded") || w.endsWith("_fell") || w.endsWith("_crushed"))
+                    ? new float[] {0.15F, 0.6F} : when;
             for (float f : times) {
                 final String name = String.format("%02d_%s_%03d", n, w, Math.round(f * 100));
                 final float frac = f;
@@ -192,7 +197,35 @@ public final class ClientSelfTest {
         // these two die burning
         spawn("zombie_burnt", EntityType.ZOMBIE, 8.8, 0);
         spawn("cow_burnt", EntityType.COW, 8.8, 4);
+        // a row dying other ways; the drowned cow in a pool so it floats
+        for (int dx = -1; dx <= 1; dx++) {
+            for (int dz = -1; dz <= 1; dz++) {
+                level.setBlockAndUpdate(new net.minecraft.core.BlockPos(-6 + dx, ground - 1, 8 + dz), net.minecraft.world.level.block.Blocks.WATER.defaultBlockState());
+                level.setBlockAndUpdate(new net.minecraft.core.BlockPos(-6 + dx, ground - 2, 8 + dz), net.minecraft.world.level.block.Blocks.WATER.defaultBlockState());
+            }
+        }
+        spawn("cow_drowned", EntityType.COW, -6, 8);
+        spawn("zombie_frozen", EntityType.ZOMBIE, -3, 8);
+        spawn("cow_exploded", EntityType.COW, 0, 8);
+        spawn("zombie_withered", EntityType.ZOMBIE, 3, 8);
+        spawn("zombie_fell", EntityType.ZOMBIE, 6, 8);
+        spawn("cow_crushed", EntityType.COW, 9, 8);
+        // fossils, each on its own kind of rock
+        fossil("fossil_stone", EntityType.COW, -5, net.minecraft.world.level.block.Blocks.STONE, com.harold.corpsedecay.corpse.CorpseEntity.STONE, 0.1);
+        fossil("fossil_sand", EntityType.HORSE, -1, net.minecraft.world.level.block.Blocks.SANDSTONE, com.harold.corpsedecay.corpse.CorpseEntity.SANDSTONE, 0.1);
+        fossil("fossil_deep", EntityType.VILLAGER, 3, net.minecraft.world.level.block.Blocks.DEEPSLATE, com.harold.corpsedecay.corpse.CorpseEntity.DEEPSLATE, 0.1);
+        fossil("fossil_bleached", EntityType.SNIFFER, 7, net.minecraft.world.level.block.Blocks.SAND, com.harold.corpsedecay.corpse.CorpseEntity.BLEACHED, 0.4);
         camera(0.5, ground + 6.5, -8.5, 0F, 32F);
+    }
+
+    private static void fossil(String name, EntityType<?> type, int x, net.minecraft.world.level.block.Block rock, int material, double sink) {
+        ServerLevel level = level();
+        for (int dx = -2; dx <= 2; dx++) {
+            for (int dz = -2; dz <= 2; dz++) level.setBlockAndUpdate(new net.minecraft.core.BlockPos(x + dx, ground - 1, 13 + dz), rock.defaultBlockState());
+        }
+        net.minecraft.world.phys.Vec3 top = new net.minecraft.world.phys.Vec3(x + 0.5, ground, 13.5);
+        CorpseEntity f = CorpseEntity.fossil(level, type, top, level.random, material, sink);
+        if (f != null && level.addFreshEntity(f)) corpseOf.put(name, f.getUUID());
     }
 
     private static Mob spawn(String name, EntityType<? extends Mob> type, double x, double z) {
@@ -233,9 +266,16 @@ public final class ClientSelfTest {
             Mob m = mobs.get(k);
             if (!m.isAlive()) continue;
             m.invulnerableTime = 0;
-            if (names.get(k).endsWith("_burnt")) {
+            String n = names.get(k);
+            var ds = level().damageSources();
+            if (n.endsWith("_burnt")) {
                 m.setSecondsOnFire(5);
-                m.hurt(level().damageSources().onFire(), 1000F);
+                m.hurt(ds.onFire(), 1000F);
+            } else if (n.endsWith("_drowned") || n.endsWith("_frozen") || n.endsWith("_exploded") || n.endsWith("_withered")
+                    || n.endsWith("_fell") || n.endsWith("_crushed")) {
+                m.clearFire();
+                m.hurt(n.endsWith("_drowned") ? ds.drown() : n.endsWith("_frozen") ? ds.freeze() : n.endsWith("_exploded") ? ds.explosion(null, null)
+                        : n.endsWith("_withered") ? ds.wither() : n.endsWith("_fell") ? ds.fall() : ds.anvil(null), 1000F);
             } else {
                 m.clearFire(); // undead catch fire in the noon sun; these should die normally
                 m.hurt(level().damageSources().playerAttack(p), 1000F);
@@ -252,14 +292,14 @@ public final class ClientSelfTest {
             CorpseEntity best = null;
             double bd = Double.MAX_VALUE;
             for (CorpseEntity c : level.getEntitiesOfClass(CorpseEntity.class, new AABB(-50, -100, -50, 50, 400, 50))) {
-                if (!c.mobType().equals(type)) continue;
+                if (!c.mobType().equals(type) || c.kind() == com.harold.corpsedecay.CorpseKind.FOSSIL) continue;
                 double d = c.position().distanceToSqr(m.position());
                 if (d < bd) {
                     bd = d;
                     best = c;
                 }
             }
-            if (best != null) corpseOf.put(names.get(k), best.getUUID());
+            if (best != null) corpseOf.putIfAbsent(names.get(k), best.getUUID());
         }
         LOG.info("CLIENTTEST matched {} corpses", corpseOf.size());
     }
@@ -267,6 +307,7 @@ public final class ClientSelfTest {
     private static void ageAll(float frac) {
         ServerLevel level = level();
         for (CorpseEntity c : level.getEntitiesOfClass(CorpseEntity.class, new AABB(-50, -100, -50, 50, 400, 50))) {
+            if (c.kind() == com.harold.corpsedecay.CorpseKind.FOSSIL) continue;
             c.setDeathTime(level.getGameTime() - Math.round(frac * c.decayTicks()));
         }
     }
@@ -310,7 +351,7 @@ public final class ClientSelfTest {
                 LOG.warn("CLIENTTEST no corpse for {}", name);
                 return;
             }
-            c.setDeathTime(level.getGameTime() - Math.round(frac * c.decayTicks()));
+            if (c.kind() != com.harold.corpsedecay.CorpseKind.FOSSIL) c.setDeathTime(level.getGameTime() - Math.round(frac * c.decayTicks()));
             double size = Math.max(1.0, Math.max(c.bodyDepth(), c.bodyHeight()));
             ServerPlayer p = player();
             p.setGameMode(GameType.SPECTATOR);

@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#corpsedecay:has_surface_fossils",
+  "features": "corpsedecay:surface_fossil",
+  "step": "vegetal_decoration"
+}
