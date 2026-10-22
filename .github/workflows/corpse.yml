@@ -1,0 +1,80 @@
+name: Build Corpse Decay
+
+on:
+  push:
+    branches: [corpse-decay]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: corpse-build
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Build
+        id: build
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          chmod +x gradlew
+          ./gradlew build --stacktrace 2>&1 | tee build.log
+
+      - name: Self-test on a dedicated server
+        id: selftest
+        if: steps.build.outcome == 'success' && hashFiles('src/main/java/com/harold/corpsedecay/test/SelfTest.java') != ''
+        continue-on-error: true
+        run: |
+          mkdir -p run-selftest && echo "eula=true" > run-selftest/eula.txt
+          printf 'online-mode=false\nspawn-protection=0\nlevel-type=minecraft\\:flat\nspawn-monsters=false\nspawn-animals=false\nspawn-npcs=false\ngenerate-structures=false\n' > run-selftest/server.properties
+          timeout 900 ./gradlew runServer -Pselftest -Prundir=run-selftest 2>&1 | tee selftest.log || true
+          grep -q "SELFTEST PASS" selftest.log
+
+      - name: Client screenshots on a virtual screen
+        id: clienttest
+        if: steps.selftest.outcome == 'success'
+        continue-on-error: true
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq xvfb mesa-utils libgl1-mesa-dri libglx-mesa0 > /dev/null
+          mkdir -p run-client/saves && cp -r run-selftest/world run-client/saves/test
+          printf 'onboardAccessibility:false\nskipMultiplayerWarning:true\njoinedFirstServer:true\ntutorialStep:none\nrenderDistance:5\nsimulationDistance:5\npauseOnLostFocus:false\nfullscreen:false\nsoundCategory_master:0.0\nguiScale:2\nfov:0.0\n' > run-client/options.txt
+          export LIBGL_ALWAYS_SOFTWARE=1 MESA_GL_VERSION_OVERRIDE=4.5 MESA_GLSL_VERSION_OVERRIDE=450
+          timeout 1500 xvfb-run -a -s "-screen 0 1280x720x24 +extension GLX +render -noreset" ./gradlew runClient -Pclienttest -Prundir=run-client 2>&1 | tee clienttest.log || true
+          grep -q "CLIENTTEST DONE" clienttest.log
+
+      - name: Publish result
+        if: always()
+        run: |
+          mkdir -p /tmp/out
+          cp build.log /tmp/out/ || true
+          cp selftest.log /tmp/out/ 2>/dev/null || true
+          cp run-selftest/logs/latest.log /tmp/out/server-latest.log 2>/dev/null || true
+          cp clienttest.log /tmp/out/ 2>/dev/null || true
+          cp run-client/logs/latest.log /tmp/out/client-latest.log 2>/dev/null || true
+          cp run-client/screenshots/*.png /tmp/out/ 2>/dev/null || true
+          cp build/libs/*.jar /tmp/out/ 2>/dev/null || true
+          echo "build=${{ steps.build.outcome }} selftest=${{ steps.selftest.outcome }} clienttest=${{ steps.clienttest.outcome }} $GITHUB_SHA" > /tmp/out/STATUS
+          if ! git ls-remote --exit-code origin refs/heads/corpse-mc-classpath >/dev/null; then
+            ./gradlew dumpClasspath -q || true
+            mkdir -p /tmp/cprepo && ls -la build/cp | tee /tmp/out/CLASSPATH
+            find ~/.gradle/caches -name "*mapped_official*" | tee -a /tmp/out/CLASSPATH
+            SRC=$(find ~/.gradle/caches -name "*mapped_official*sources*.jar" | head -1)
+            if [ -n "$SRC" ]; then cp "$SRC" build/cp/zz-mc-sources.jar; fi
+            tar -cf /tmp/cprepo/cp.tar -C build/cp .
+            (cd /tmp/cprepo && split -b 45m cp.tar cp.tar.part- && rm cp.tar && git init -q && git -c user.name=ci -c user.email=ci@example.com add -A && git -c user.name=ci -c user.email=ci@example.com commit -qm classpath && git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" HEAD:refs/heads/corpse-mc-classpath)
+          fi
+          cd /tmp/out && git init -q && git add -A && git -c user.name=ci -c user.email=ci@example.com commit -qm "build $GITHUB_SHA"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" HEAD:refs/heads/ci-corpse
