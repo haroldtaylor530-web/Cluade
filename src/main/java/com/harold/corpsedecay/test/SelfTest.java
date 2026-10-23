@@ -439,7 +439,7 @@ public final class SelfTest {
                 if (level.getBlockState(p).is(net.minecraft.world.level.block.Blocks.ICE)) iceBlocks++;
             }
         }
-        check(ice != null && ice.mummy() == CorpseEntity.ICE && iceBlocks >= 4, "a frozen mummy is locked in ice (" + iceBlocks + " ice)");
+        check(ice != null && ice.mummy() == CorpseEntity.ICE && iceBlocks >= 4, "a frozen mummy is melting out of the ice (" + iceBlocks + " ice)");
         if (ice != null) extraRemains++;
         if (bog != null) {
             FakePlayer p = FakePlayerFactory.getMinecraft(level);

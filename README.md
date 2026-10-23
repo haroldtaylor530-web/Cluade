@@ -48,7 +48,7 @@ there, rotting through stages down to a bare skeleton, still wearing whatever it
   with lily pads over them: people in skin caps and leather capes, and now and then an animal.
   Frozen biomes hold freeze-dried hunters in their furs with a flint hand axe or a bow, sometimes
   with an arrow still in their back, and animals caught by the cold. Some lie in the snow and
-  some are still locked in a lump of clear ice. Break one up for its dried skin (leather) and
+  some are melting out of a sheet of clear ice, frozen into it up to their middle. Break one up for its dried skin (leather) and
   bones.
 - **Whale falls.** Somewhere in the oceans, rarely, whales have gone down to die on the same stretch
   of sea floor, and their full-size skeletons lie there together: blue whales, humpbacks with their

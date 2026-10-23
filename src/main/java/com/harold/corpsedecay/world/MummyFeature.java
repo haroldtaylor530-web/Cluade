@@ -25,7 +25,7 @@ import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConf
  * the peat long ago and came out tanned dark as old leather, still in their skin caps and cloaks,
  * lying sunk in the mud. In frozen places, mummies freeze-dried in the ice: hunters in their furs
  * with an axe or bow, sometimes an arrow still in their back, or animals caught by the cold, some
- * lying in the snow and some still locked in a lump of clear ice.
+ * lying in the snow and some melting out of a sheet of clear ice.
  */
 public class MummyFeature extends Feature<NoneFeatureConfiguration> {
     public enum Where { BOG, ICE }
@@ -110,15 +110,15 @@ public class MummyFeature extends Feature<NoneFeatureConfiguration> {
             EntityType.HORSE, EntityType.LLAMA, EntityType.RABBIT, EntityType.SHEEP};
 
     /**
-     * A freeze-dried body at {@code floor}: lying in the snow, or (if {@code inIce}) locked in a lump
-     * of clear ice half sunk in the ground. Returns it, or null.
+     * A freeze-dried body at {@code floor}: lying in the snow, or (if {@code inIce}) frozen into a
+     * sheet of clear ice up to its middle. Returns it, or null.
      */
     public static CorpseEntity iceMummy(WorldGenLevel level, BlockPos floor, RandomSource rand, boolean inIce) {
         boolean person = rand.nextFloat() < 0.55F;
         EntityType<?> mob = person ? (rand.nextFloat() < 0.75F ? EntityType.VILLAGER : EntityType.PILLAGER)
                 : ICE_ANIMALS[rand.nextInt(ICE_ANIMALS.length)];
         CorpseEntity body = RemainsFeature.placeBody(level.getLevel(), level, floor, mob, rand, CorpseEntity.ICE_MUMMY,
-                inIce ? 0.04 : 0.08 + rand.nextDouble() * 0.1);
+                inIce ? 0.45 : 0.08 + rand.nextDouble() * 0.1);
         if (body == null) return null;
         if (person) {
             // furs, and what a hunter carried
@@ -132,7 +132,7 @@ public class MummyFeature extends Feature<NoneFeatureConfiguration> {
             if (rand.nextFloat() < 0.3F) body.addOldArrow(rand); // shot in the back, like the iceman
         }
         if (inIce) {
-            encase(level, body, rand);
+            encase(level, body, floor, rand);
         } else {
             for (int i = 0; i < 2; i++) body.addGrowth(Blocks.SNOW, 0.6F, rand);
             for (int dx = -2; dx <= 2; dx++) {
@@ -149,25 +149,31 @@ public class MummyFeature extends Feature<NoneFeatureConfiguration> {
         return body;
     }
 
-    /** A block of clear ice frozen round the body where it lies, with the odd chunk of packed ice. */
-    private static void encase(WorldGenLevel level, CorpseEntity body, RandomSource rand) {
+    /**
+     * A sheet of clear ice the body is frozen into up to its middle, the way the iceman was found
+     * melting out of a glacier: the ground under and round it turned to ice, a rim of packed ice.
+     */
+    private static void encase(WorldGenLevel level, CorpseEntity body, BlockPos floor, RandomSource rand) {
         var box = body.getBoundingBox();
-        int floorY = (int) Math.floor(box.minY + 0.05);
-        int top = (int) Math.floor(box.maxY - 0.05); // one clear layer over it, so it shows through
-        int ax = (int) Math.floor(box.minX - 0.6), bx = (int) Math.floor(box.maxX + 0.6);
-        int az = (int) Math.floor(box.minZ - 0.6), bz = (int) Math.floor(box.maxZ + 0.6);
+        int ax = (int) Math.floor(box.minX - 1.2), bx = (int) Math.floor(box.maxX + 1.2);
+        int az = (int) Math.floor(box.minZ - 1.2), bz = (int) Math.floor(box.maxZ + 1.2);
+        double cx = (ax + bx + 1) / 2.0, cz = (az + bz + 1) / 2.0, rx = (bx - ax + 1) / 2.0, rz = (bz - az + 1) / 2.0;
         for (int x = ax; x <= bx; x++) {
             for (int z = az; z <= bz; z++) {
-                boolean edgeX = x == ax || x == bx, edgeZ = z == az || z == bz;
-                int h = top - (edgeX && edgeZ ? 1 : 0) - (rand.nextFloat() < 0.3F ? 1 : 0);
-                for (int y = floorY; y <= Math.max(floorY, h); y++) {
+                double dx = (x + 0.5 - cx) / rx, dz = (z + 0.5 - cz) / rz;
+                double d = dx * dx + dz * dz;
+                if (d > 1.15 + rand.nextFloat() * 0.2) continue;
+                boolean rim = d > 0.6;
+                for (int y = floor.getY() - 1; y <= floor.getY(); y++) {
                     BlockPos p = new BlockPos(x, y, z);
                     BlockState s = level.getBlockState(p);
-                    if (s.isAir() || s.canBeReplaced()) {
-                        boolean packed = (edgeX || edgeZ) && y == floorY && rand.nextFloat() < 0.35F;
-                        level.setBlock(p, (packed ? Blocks.PACKED_ICE : Blocks.ICE).defaultBlockState(), 2);
+                    if (s.isAir() || s.canBeReplaced() || s.is(BlockTags.DIRT) || s.is(Blocks.SNOW_BLOCK) || s.is(Blocks.GRAVEL)
+                            || s.is(BlockTags.SAND) || s.is(Blocks.STONE) || s.is(Blocks.POWDER_SNOW)) {
+                        level.setBlock(p, (rim && rand.nextFloat() < 0.5F ? Blocks.PACKED_ICE : Blocks.ICE).defaultBlockState(), 2);
                     }
                 }
+                BlockPos above = new BlockPos(x, floor.getY() + 1, z);
+                if (level.getBlockState(above).is(Blocks.SNOW)) level.setBlock(above, Blocks.AIR.defaultBlockState(), 2);
             }
         }
     }

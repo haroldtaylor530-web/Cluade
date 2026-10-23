@@ -195,7 +195,7 @@ public final class ClientSelfTest {
         at(t + 40, () -> shot("B0_mummies"));
         at(t + 45, () -> camera(-3.0, groundMummies + 2.0, MUMMY_Z + 4.0, 180F, 30F));
         at(t + 85, () -> shot("B1_bog_bodies"));
-        at(t + 90, () -> camera(12.5, groundMummies + 1.6, MUMMY_Z + 3.5, 180F, 18F));
+        at(t + 90, () -> camera(12.5, groundMummies + 3.0, MUMMY_Z + 3.0, 180F, 40F));
         at(t + 130, () -> shot("B2_ice_mummies"));
         at(t + 135, () -> camera(-100.0, groundSea + 26.0, -164.0, 0F, 45F));
         at(t + 185, () -> shot("B3_whale_fall_above"));
