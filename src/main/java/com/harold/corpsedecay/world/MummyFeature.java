@@ -118,7 +118,7 @@ public class MummyFeature extends Feature<NoneFeatureConfiguration> {
         EntityType<?> mob = person ? (rand.nextFloat() < 0.75F ? EntityType.VILLAGER : EntityType.PILLAGER)
                 : ICE_ANIMALS[rand.nextInt(ICE_ANIMALS.length)];
         CorpseEntity body = RemainsFeature.placeBody(level.getLevel(), level, floor, mob, rand, CorpseEntity.ICE_MUMMY,
-                inIce ? 0.35 : 0.08 + rand.nextDouble() * 0.1);
+                inIce ? 0.04 : 0.08 + rand.nextDouble() * 0.1);
         if (body == null) return null;
         if (person) {
             // furs, and what a hunter carried
@@ -149,22 +149,23 @@ public class MummyFeature extends Feature<NoneFeatureConfiguration> {
         return body;
     }
 
-    /** A lump of clear ice round the body, the bottom of it sunk into the ground. */
+    /** A block of clear ice frozen round the body where it lies, with the odd chunk of packed ice. */
     private static void encase(WorldGenLevel level, CorpseEntity body, RandomSource rand) {
         var box = body.getBoundingBox();
-        double cx = (box.minX + box.maxX) / 2, cz = (box.minZ + box.maxZ) / 2, cy = box.minY + 0.2;
-        double rx = box.getXsize() / 2 + 1.1, rz = box.getZsize() / 2 + 1.1, ry = Math.max(1.6, box.getYsize() / 2 + 1.0);
-        for (int x = (int) Math.floor(cx - rx); x <= (int) Math.ceil(cx + rx); x++) {
-            for (int z = (int) Math.floor(cz - rz); z <= (int) Math.ceil(cz + rz); z++) {
-                for (int y = (int) Math.floor(cy - ry); y <= (int) Math.ceil(cy + ry); y++) {
-                    double dx = (x + 0.5 - cx) / rx, dy = (y + 0.5 - cy) / ry, dz = (z + 0.5 - cz) / rz;
-                    double d = dx * dx + dy * dy + dz * dz;
-                    if (d > 1 + (rand.nextFloat() - 0.5F) * 0.25F) continue;
+        int floorY = (int) Math.floor(box.minY + 0.05);
+        int top = (int) Math.floor(box.maxY + 0.6);
+        int ax = (int) Math.floor(box.minX - 0.6), bx = (int) Math.floor(box.maxX + 0.6);
+        int az = (int) Math.floor(box.minZ - 0.6), bz = (int) Math.floor(box.maxZ + 0.6);
+        for (int x = ax; x <= bx; x++) {
+            for (int z = az; z <= bz; z++) {
+                boolean edgeX = x == ax || x == bx, edgeZ = z == az || z == bz;
+                int h = top - (edgeX && edgeZ ? 1 : 0) - (rand.nextFloat() < 0.3F ? 1 : 0);
+                for (int y = floorY; y <= Math.max(floorY, h); y++) {
                     BlockPos p = new BlockPos(x, y, z);
                     BlockState s = level.getBlockState(p);
-                    if (s.isAir() || s.canBeReplaced() || s.is(BlockTags.DIRT) || s.is(Blocks.SNOW_BLOCK) || s.is(Blocks.GRAVEL)
-                            || s.is(BlockTags.SAND) || s.is(Blocks.STONE) || s.is(Blocks.PACKED_ICE)) {
-                        level.setBlock(p, (d > 0.75 && y < cy && rand.nextFloat() < 0.5F ? Blocks.PACKED_ICE : Blocks.ICE).defaultBlockState(), 2);
+                    if (s.isAir() || s.canBeReplaced()) {
+                        boolean packed = (edgeX || edgeZ) && y == floorY && rand.nextFloat() < 0.35F;
+                        level.setBlock(p, (packed ? Blocks.PACKED_ICE : Blocks.ICE).defaultBlockState(), 2);
                     }
                 }
             }

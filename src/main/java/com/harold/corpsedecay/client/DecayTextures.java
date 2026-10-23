@@ -434,7 +434,8 @@ public final class DecayTextures {
                 if (kind == CorpseKind.FLESH && painted[i] && bone[i] != 0 && hole[i] < 0.08F * f) {
                     return withAlpha(mix(bone[i], 0xFFB8A888, 0.3F), a); // split skin, bone beneath
                 }
-                if (Noise.hash(x, y, 77) > 0.94F) out = mix(out, 0xFFF0F6FA, 0.55F * f); // frost
+                out = mix(out, 0xFFD8E2E8, 0.12F * f); // a grey bloom of frost all over
+                if (Noise.hash(x, y, 77) > 0.9F) out = mix(out, 0xFFF4F8FC, 0.6F * f); // ice crystals
             }
             if (kind == CorpseKind.NO_BONES && p > 0.82F) return withAlpha(out, Math.round(a * (1F - smooth(0.82F, 1F, p))));
             return withAlpha(out, a);
@@ -444,7 +445,7 @@ public final class DecayTextures {
             float lum = brightness(c) / 255F;
             int fresh = skin(c, Math.min(p, 0.1F), blot[i]);
             int dried = bog ? scale(mix(0xFF6E4628, 0xFF3A2414, blot[i]), 0.72F + 0.55F * lum)
-                    : scale(mix(0xFF9A8268, 0xFF6A5644, blot[i]), 0.78F + 0.45F * lum);
+                    : scale(mix(0xFFB4A288, 0xFF8C7A64, blot[i]), 0.8F + 0.4F * lum);
             int out = mix(fresh, dried, f * 0.92F);
             if (tear[i] < 0.14F * f) out = scale(out, 0.62F); // shrunken into creases
             if (bog && blot[i] > 0.7F) out = mix(out, 0xFF22150C, 0.4F * f); // peat stains
