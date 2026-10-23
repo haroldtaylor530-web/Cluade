@@ -1140,38 +1140,37 @@ def petrified_top():
 
 
 def fossil_bone_side():
-    """Bone turned to stone: the grain of a bone block in tan and brown, stained with iron, flecked with mineral."""
+    """Bone turned to stone: the grain of a bone block in pale tan, flecked with mineral, stained here and there."""
     img = Image.new("RGBA", (16, 16))
     for y in range(16):
         for x in range(16):
             streak = (x * 3 + int(1.5 * math.sin(y * 0.5 + x * 1.3))) % 7
-            c = (0xC4, 0xA8, 0x7C) if streak < 4 else (0xA8, 0x8C, 0x64)
+            c = (0xD6, 0xC6, 0xA2) if streak < 4 else (0xC2, 0xAE, 0x88)
             if y in (0, 15):
-                c = (0x8E, 0x74, 0x52)  # the ends of the bone
-            elif y in (1, 14):
-                c = (0xB4, 0x98, 0x6E)
-            c = shade(c, 0.9 + 0.2 * hash01(x, y, 21))
-            n = hash01(x, y, 22)
-            if n > 0.93:
-                c = (0x6A, 0x50, 0x36)  # mineral flecks
-            elif hash01(x // 3, y // 4, 23) > 0.8:
-                c = _mix(c, (0xA0, 0x5C, 0x34), 0.35)  # iron stains
+                c = (0xA8, 0x96, 0x74)  # the ends of the bone
+            c = shade(c, 0.93 + 0.14 * hash01(x, y, 21))
+            if hash01(x, y, 22) > 0.94:
+                c = (0x8C, 0x78, 0x5C)  # mineral flecks
+            elif hash01(x // 3, y // 4, 23) > 0.82:
+                c = _mix(c, (0xB4, 0x84, 0x58), 0.3)  # iron stains
             img.putpixel((x, y), tuple(int(v) for v in c) + (255,))
     return img
 
 
 def fossil_bone_top():
+    """The broken end of a stone bone: a hard pale rim round a spongy middle filled in with rock."""
     img = Image.new("RGBA", (16, 16))
     for y in range(16):
         for x in range(16):
-            r = math.hypot(x - 7.5, y - 7.5)
-            if r > 6.8:
-                c = (0x8E, 0x74, 0x52)
-            elif r > 5.0:
-                c = (0xC4, 0xA8, 0x7C)  # compact bone round the outside
+            edge = x in (0, 15) or y in (0, 15)
+            inner = 3 <= x <= 12 and 3 <= y <= 12 and not ((x in (3, 12)) and (y in (3, 12)))
+            if edge:
+                c = (0xA8, 0x96, 0x74)
+            elif inner:
+                c = (0xC4, 0xB0, 0x8A) if hash01(x, y, 24) > 0.4 else (0x98, 0x86, 0x68)  # spongy, filled with stone
             else:
-                c = (0x9C, 0x80, 0x5A) if hash01(x, y, 24) > 0.45 else (0x6E, 0x56, 0x3C)  # spongy middle, filled with stone
-            img.putpixel((x, y), shade(c, 0.92 + 0.16 * hash01(x, y, 25)) + (255,))
+                c = (0xDC, 0xCC, 0xA8)
+            img.putpixel((x, y), shade(c, 0.94 + 0.12 * hash01(x, y, 25)) + (255,))
     return img
 
 

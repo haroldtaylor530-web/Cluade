@@ -72,7 +72,7 @@ public class MummyFeature extends Feature<NoneFeatureConfiguration> {
         EntityType<?> mob = person ? (rand.nextFloat() < 0.8F ? EntityType.VILLAGER : EntityType.PILLAGER)
                 : BOG_ANIMALS[rand.nextInt(BOG_ANIMALS.length)];
         boolean wet = !level.getFluidState(floor.above()).isEmpty();
-        double sink = wet ? 0.45 + rand.nextDouble() * 0.2 : 0.35 + rand.nextDouble() * 0.15;
+        double sink = wet ? 0.3 + rand.nextDouble() * 0.15 : 0.35 + rand.nextDouble() * 0.15;
         CorpseEntity body = RemainsFeature.placeBody(level.getLevel(), level, floor, mob, rand, CorpseEntity.BOG_MUMMY, sink);
         if (body == null) return null;
         if (person) {
@@ -153,7 +153,7 @@ public class MummyFeature extends Feature<NoneFeatureConfiguration> {
     private static void encase(WorldGenLevel level, CorpseEntity body, RandomSource rand) {
         var box = body.getBoundingBox();
         int floorY = (int) Math.floor(box.minY + 0.05);
-        int top = (int) Math.floor(box.maxY + 0.6);
+        int top = (int) Math.floor(box.maxY - 0.05); // one clear layer over it, so it shows through
         int ax = (int) Math.floor(box.minX - 0.6), bx = (int) Math.floor(box.maxX + 0.6);
         int az = (int) Math.floor(box.minZ - 0.6), bz = (int) Math.floor(box.maxZ + 0.6);
         for (int x = ax; x <= bx; x++) {
