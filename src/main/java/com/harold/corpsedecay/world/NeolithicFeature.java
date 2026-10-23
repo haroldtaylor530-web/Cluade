@@ -169,27 +169,36 @@ public class NeolithicFeature extends Feature<NoneFeatureConfiguration> {
         return true;
     }
 
-    /** A capstone on standing stones, with a burial under it. */
+    /**
+     * A dolmen: two rows of standing stones like the walls of a passage, open at both ends, with a
+     * great flat capstone laid over them, and a burial under it.
+     */
     public static boolean dolmen(WorldGenLevel level, BlockPos centre, RandomSource rand) {
         Block rock = rock(rand);
-        for (int dx = -1; dx <= 1; dx += 2) {
-            for (int dz = -1; dz <= 1; dz += 2) {
-                if (rand.nextFloat() < 0.15F) continue; // one leg gone
-                for (int y = -1; y < 2; y++) level.setBlock(centre.offset(dx, y, dz), rock.defaultBlockState(), 2);
+        Block cap = rand.nextBoolean() ? Blocks.STONE : rock;
+        Direction along = Direction.from2DDataValue(rand.nextInt(4));
+        Direction across = along.getClockWise();
+        for (int a = -1; a <= 1; a++) {
+            for (int b = -1; b <= 1; b += 2) {
+                if (a == 0 && rand.nextFloat() < 0.3F) continue; // a gap between the stones
+                for (int y = -1; y < 2; y++) level.setBlock(centre.relative(along, a).relative(across, b).above(y), rock.defaultBlockState(), 2);
             }
         }
-        for (int dx = -1; dx <= 1; dx++) {
-            for (int dz = -1; dz <= 1; dz++) {
-                if (Math.abs(dx) + Math.abs(dz) == 2 && rand.nextFloat() < 0.4F) continue;
-                level.setBlock(centre.offset(dx, 2, dz), rock.defaultBlockState(), 2);
+        for (int a = -2; a <= 2; a++) {
+            for (int b = -1; b <= 1; b++) {
+                boolean corner = Math.abs(a) == 2 && b != 0;
+                if (corner && rand.nextFloat() < 0.7F) continue;
+                level.setBlock(centre.relative(along, a).relative(across, b).above(2), cap.defaultBlockState(), 2);
             }
         }
-        for (int y = 0; y < 2; y++) level.setBlock(centre.above(y), Blocks.AIR.defaultBlockState(), 2);
+        for (int a = -1; a <= 1; a++) {
+            for (int y = 0; y < 2; y++) level.setBlock(centre.relative(along, a).above(y), Blocks.AIR.defaultBlockState(), 2);
+        }
         if (rand.nextBoolean()) {
             person(level, centre.below(), rand, true);
-            level.setBlock(centre.relative(Direction.from2DDataValue(rand.nextInt(4))), Blocks.DECORATED_POT.defaultBlockState(), 2);
+            level.setBlock(centre.relative(along, 1), Blocks.DECORATED_POT.defaultBlockState(), 2);
         } else {
-            grave(level, centre.below(5), Direction.from2DDataValue(rand.nextInt(4)), rand);
+            grave(level, centre.below(5), along, rand);
         }
         return true;
     }
@@ -241,10 +250,10 @@ public class NeolithicFeature extends Feature<NoneFeatureConfiguration> {
                 }
             }
         }
-        grave(level, centre.below(), along, rand);
+        grave(level, centre.below(2), along, rand);
         // the sealed doorway: a stone slab facing out of the end of the mound
-        for (int y = 0; y < 2; y++) level.setBlock(centre.relative(along, -6).above(y), Blocks.MOSSY_COBBLESTONE.defaultBlockState(), 2);
-        level.setBlock(centre.relative(along, -6).above(2), Blocks.STONE.defaultBlockState(), 2);
+        for (int y = -1; y < 1; y++) level.setBlock(centre.relative(along, -6).above(y), Blocks.MOSSY_COBBLESTONE.defaultBlockState(), 2);
+        level.setBlock(centre.relative(along, -6).above(1), Blocks.STONE.defaultBlockState(), 2);
         if (rand.nextFloat() < 0.3F) {
             for (int y = 0; y < 3; y++) level.setBlock(centre.above(5 + y), rock(rand).defaultBlockState(), 2);
         }
