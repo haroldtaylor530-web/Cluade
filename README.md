@@ -59,8 +59,8 @@ there, rotting through stages down to a bare skeleton, still wearing whatever it
   still have pale scraps of flesh on the head and in the ribcage, furred white with bacteria and
   swarming with hagfish; some only shreds, with red bone worms growing out of the bones; some are
   bare, paler bones coated in white and yellow mats. Octopuses sit on the bones, hagfish and
-  eelpouts weave through them, loose bones lie scattered round about, sea pickles glow, and white
-  and rust-orange bacterial mats spread over the mud. Sneak and hit one to break it up for bones
+  eelpouts weave through them, loose bones lie scattered round about, sea pickles glow, and white,
+  yellow and orange bacterial mats spread over the mud. Sneak and hit one to break it up for bones
   and bone blocks.
 - **The valley of whales.** In deserts lie early whales turned to stone, like the ones in Egypt's
   Wadi Al-Hitan: long, snake-like basilosaurs half buried in the sand, still with their tiny hind

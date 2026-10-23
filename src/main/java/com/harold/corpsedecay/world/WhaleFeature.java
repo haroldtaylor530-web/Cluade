@@ -185,7 +185,7 @@ public class WhaleFeature extends Feature<NoneFeatureConfiguration> {
         whale.setPos(floor.getX() + 0.5, floor.getY() + 1.0, floor.getZ() + 0.5);
         whale.setup(k, length, angle, rand.nextInt(), whole, flesh);
         if (!level.addFreshEntity(whale)) return null;
-        // the mud round it: white and rust-orange mats of bacteria feeding off it, and sea pickles lighting it up
+        // the mud round it: white, yellow and orange mats of bacteria feeding off it, and sea pickles lighting it up
         float c = (float) Math.cos(angle), s = (float) Math.sin(angle);
         int pickles = 0;
         for (int i = 0; i < 60; i++) {
@@ -196,7 +196,7 @@ public class WhaleFeature extends Feature<NoneFeatureConfiguration> {
             BlockState g = level.getBlockState(top);
             if (g.is(BlockTags.SAND) || g.is(Blocks.GRAVEL) || g.is(Blocks.CLAY) || g.is(BlockTags.DIRT)) {
                 float m = rand.nextFloat();
-                level.setBlock(top, (m < 0.45F ? Blocks.CALCITE : m < 0.75F ? Blocks.TERRACOTTA : Blocks.BROWN_TERRACOTTA).defaultBlockState(), 2);
+                level.setBlock(top, (m < 0.5F ? Blocks.CALCITE : m < 0.75F ? Blocks.YELLOW_TERRACOTTA : Blocks.ORANGE_TERRACOTTA).defaultBlockState(), 2);
             }
             if (pickles < 6 && i % 5 == 0 && level.getBlockState(top.above()).is(Blocks.WATER)) {
                 level.setBlock(top.above(), Blocks.SEA_PICKLE.defaultBlockState().setValue(SeaPickleBlock.PICKLES, 1 + rand.nextInt(4))

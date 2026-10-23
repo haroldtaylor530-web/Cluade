@@ -80,10 +80,10 @@ public final class WhaleSkeleton {
 
     /** Whale bone on the sea floor: yellow-brown and oily while fresh, paler and chalky when old. */
     private int boneColour() {
-        int fresh = mix(0xD8C08A, 0xB8955A, rand.nextFloat() * 0.8F);
-        int old = mix(0xE4DCC6, 0xC8BCA0, rand.nextFloat());
+        int fresh = mix(0xDCCFAE, 0xC2B08A, rand.nextFloat() * 0.8F);
+        int old = mix(0xE8E3D6, 0xD4CCB8, rand.nextFloat());
         int c = mix(old, fresh, Math.min(1F, 0.25F + flesh * 1.4F));
-        if (rand.nextFloat() < 0.18F) c = mix(c, 0x7A5A36, 0.35F); // oil stains
+        if (rand.nextFloat() < 0.18F) c = mix(c, 0x8E7A5A, 0.3F); // oil stains
         return shade(c, 0.88F + rand.nextFloat() * 0.12F);
     }
 
@@ -424,7 +424,7 @@ public final class WhaleSkeleton {
             float maxY = inChest ? spineHeight * 0.9F : len * 0.05F;
             float size = (0.5F + rand.nextFloat() * 1.1F) * (0.5F + flesh) * len / 24F;
             float y = Math.min(maxY, size * 0.4F + rand.nextFloat() * maxY * 0.6F);
-            int base = rand.nextFloat() < 0.3F ? mix(0x8A7462, 0x6A5444, rand.nextFloat()) : mix(0xB8AE9C, 0x9C9282, rand.nextFloat());
+            int base = rand.nextFloat() < 0.25F ? mix(0x9C8C80, 0x847468, rand.nextFloat()) : mix(0xCEC4BA, 0xB4AAA0, rand.nextFloat());
             for (int k = 0; k < 2 + rand.nextInt(3); k++) {
                 float s = size * (0.6F + rand.nextFloat() * 0.5F);
                 box(x + (rand.nextFloat() - 0.5F) * size, y + (rand.nextFloat() - 0.3F) * size * 0.4F, z + (rand.nextFloat() - 0.5F) * size,
@@ -433,10 +433,11 @@ public final class WhaleSkeleton {
                         shade(base, 0.85F + rand.nextFloat() * 0.2F));
             }
             // the white fur of bacteria over it
-            if (rand.nextFloat() < 0.75F) {
-                float s = size * (0.8F + rand.nextFloat() * 0.4F);
-                box(x, y + size * 0.3F, z, s, s * 0.35F, s * 0.9F, new Quaternionf().rotationY(rand.nextFloat() * 6.28F),
-                        mix(0xF2F0E8, 0xE0DCC8, rand.nextFloat()));
+            for (int k = 0; k < 1 + rand.nextInt(3); k++) {
+                float s = size * (0.5F + rand.nextFloat() * 0.5F);
+                box(x + (rand.nextFloat() - 0.5F) * size * 0.8F, y + size * (0.25F + rand.nextFloat() * 0.2F), z + (rand.nextFloat() - 0.5F) * size * 0.8F,
+                        s, s * 0.3F, s * 0.8F, new Quaternionf().rotationXYZ((rand.nextFloat() - 0.5F) * 0.4F, rand.nextFloat() * 6.28F, (rand.nextFloat() - 0.5F) * 0.4F),
+                        mix(0xF6F4EE, 0xE4E0D4, rand.nextFloat()));
             }
         }
         // dark stringy shreds hanging between the ribs
@@ -456,7 +457,7 @@ public final class WhaleSkeleton {
         for (Bone b : new ArrayList<>(tops)) {
             if (rand.nextFloat() > chance) continue;
             Matrix4f at = new Matrix4f(b.at()).translate(0, b.size().y / 2 + 0.02F, 0);
-            int c = rand.nextFloat() < 0.65F ? mix(0xF4F2EA, 0xE6E2D2, rand.nextFloat()) : mix(0xE8D890, 0xD8C470, rand.nextFloat());
+            int c = rand.nextFloat() < 0.7F ? mix(0xF6F4EE, 0xE8E4D8, rand.nextFloat()) : mix(0xEADFA8, 0xDCCF8C, rand.nextFloat());
             bones.add(new Bone(at, new Vector3f(b.size().x * (0.5F + rand.nextFloat() * 0.45F), 0.05F, b.size().z * 0.9F), c));
         }
     }
