@@ -394,8 +394,113 @@ public final class SelfTest {
                 check(f.isRemoved() && !level.getEntitiesOfClass(ItemEntity.class,
                         f.getBoundingBox().inflate(3), it -> it.getItem().is(Items.BONE)).isEmpty(), "breaking remains gives bones");
             }
-            remainsLeft = 3 + extra + diggers + extraRemains;
-            limitTest(server);
+            mummyAndWhaleTest(server, () -> {
+                remainsLeft = 3 + extra + diggers + extraRemains;
+                limitTest(server);
+            });
+        });
+    }
+
+    /**
+     * Bodies left in a swamp or the frozen north mummify; old bog bodies and frozen mummies; whale
+     * skeletons on the sea floor and in the desert.
+     */
+    private static void mummyAndWhaleTest(MinecraftServer server, Runnable then) {
+        var placed = server.registryAccess().registryOrThrow(net.minecraft.core.registries.Registries.PLACED_FEATURE);
+        var mods = server.registryAccess().registryOrThrow(net.minecraftforge.registries.ForgeRegistries.Keys.BIOME_MODIFIERS);
+        for (String f : new String[] {"bog_body", "ice_mummy", "whale_fall", "desert_whales"}) {
+            check(placed.containsKey(new net.minecraft.resources.ResourceLocation("corpsedecay", f)), f + " placement is loaded");
+        }
+        for (String m : new String[] {"bog_bodies", "ice_mummies", "whale_falls", "desert_whales"}) {
+            check(mods.containsKey(new net.minecraft.resources.ResourceLocation("corpsedecay", m)), m + " is added to biomes");
+        }
+        // a strip of swamp and a strip of snowy plains, and animals dying in each
+        var src = server.createCommandSourceStack().withSuppressedOutput();
+        server.getCommands().performPrefixedCommand(src, "fillbiome 8 " + (groundY - 4) + " -48 19 " + (groundY + 6) + " -38 minecraft:swamp");
+        server.getCommands().performPrefixedCommand(src, "fillbiome 24 " + (groundY - 4) + " -48 35 " + (groundY + 6) + " -38 minecraft:snowy_plains");
+        check(level.getBiome(new BlockPos(12, groundY, -44)).is(net.minecraft.world.level.biome.Biomes.SWAMP), "the test strip is swamp now");
+        spawn(EntityType.COW, 11, -44).hurt(level.damageSources().generic(), 1000F);
+        Mob burnt = spawn(EntityType.COW, 16, -44);
+        burnt.setSecondsOnFire(5);
+        burnt.hurt(level.damageSources().onFire(), 1000F);
+        spawn(EntityType.VILLAGER, 27, -44).hurt(level.damageSources().generic(), 1000F);
+        spawn(EntityType.SKELETON, 32, -44).hurt(level.damageSources().generic(), 1000F);
+        spawn(EntityType.COW, 0, -44).hurt(level.damageSources().generic(), 1000F);
+        // an old bog body and an old frozen hunter in a lump of ice
+        net.minecraft.util.RandomSource rand = net.minecraft.util.RandomSource.create(77);
+        CorpseEntity bog = com.harold.corpsedecay.world.MummyFeature.bogBody(level, new BlockPos(38, groundY - 1, -24), rand);
+        check(bog != null && bog.mummy() == CorpseEntity.BOG && level.getBlockState(new BlockPos(38, groundY - 1, -24)).is(net.minecraft.world.level.block.Blocks.MUD),
+                "a bog body lies in the mud");
+        CorpseEntity ice = com.harold.corpsedecay.world.MummyFeature.iceMummy(level, new BlockPos(44, groundY - 1, -30), rand, true);
+        int iceBlocks = 0;
+        if (ice != null) {
+            for (BlockPos p : BlockPos.betweenClosed(BlockPos.containing(ice.position()).offset(-4, -3, -4), BlockPos.containing(ice.position()).offset(4, 3, 4))) {
+                if (level.getBlockState(p).is(net.minecraft.world.level.block.Blocks.ICE)) iceBlocks++;
+            }
+        }
+        check(ice != null && ice.mummy() == CorpseEntity.ICE && iceBlocks >= 10, "a frozen mummy is locked in ice (" + iceBlocks + " ice)");
+        if (ice != null) extraRemains++;
+        if (bog != null) {
+            FakePlayer p = FakePlayerFactory.getMinecraft(level);
+            p.moveTo(bog.getX(), bog.getY(), bog.getZ() - 1.5);
+            p.setShiftKeyDown(true);
+            bog.hurt(level.damageSources().playerAttack(p), 1F);
+            p.setShiftKeyDown(false);
+            check(bog.isRemoved() && !level.getEntitiesOfClass(ItemEntity.class, bog.getBoundingBox().inflate(3),
+                    it -> it.getItem().is(Items.LEATHER)).isEmpty(), "breaking up a mummy gives its dried skin as leather");
+        }
+        // whales: one on the sea floor (built in the air here), one turned to stone in the sand
+        int bones = com.harold.corpsedecay.world.WhaleFeature.seaWhale(level, new BlockPos(25, groundY + 40, -30), net.minecraft.util.RandomSource.create(5),
+                com.harold.corpsedecay.world.WhaleFeature.Kind.BLUE, net.minecraft.core.Direction.EAST);
+        int ribs = 0;
+        for (int x = 10; x <= 40; x++) {
+            for (int z : new int[] {-33, -32, -28, -27}) {
+                if (level.getBlockState(new BlockPos(x, groundY + 42, z)).is(net.minecraft.world.level.block.Blocks.BONE_BLOCK)
+                        || level.getBlockState(new BlockPos(x, groundY + 43, z)).is(net.minecraft.world.level.block.Blocks.BONE_BLOCK)) ribs++;
+            }
+        }
+        check(bones > 80 && ribs > 6, "a whale skeleton, its spine held up on arching ribs (" + bones + " bones, " + ribs + " rib tops)");
+        int sperm = com.harold.corpsedecay.world.WhaleFeature.seaWhale(level, new BlockPos(25, groundY + 50, -30), net.minecraft.util.RandomSource.create(6),
+                com.harold.corpsedecay.world.WhaleFeature.Kind.SPERM, net.minecraft.core.Direction.EAST);
+        check(sperm > 60, "a sperm whale skeleton (" + sperm + " bones)");
+        for (BlockPos p : BlockPos.betweenClosed(6, groundY + 22, -48, 44, groundY + 24, -12)) {
+            level.setBlock(p, (p.getY() == groundY + 24 ? net.minecraft.world.level.block.Blocks.SAND : net.minecraft.world.level.block.Blocks.SANDSTONE).defaultBlockState(), 2);
+        }
+        int stone = com.harold.corpsedecay.world.WhaleFeature.desertWhale(level, new BlockPos(25, groundY + 24, -30), net.minecraft.util.RandomSource.create(7),
+                net.minecraft.core.Direction.SOUTH);
+        int fossilBones = 0;
+        for (BlockPos p : BlockPos.betweenClosed(6, groundY + 24, -48, 44, groundY + 25, -12)) {
+            if (level.getBlockState(p).is(com.harold.corpsedecay.block.FossilBlocks.FOSSIL_BONE.get())) fossilBones++;
+        }
+        check(stone > 20 && fossilBones > 15, "a stone whale lies half buried in the sand (" + fossilBones + " bones showing)");
+        int cells = 0;
+        for (int cx = 0; cx < 300; cx++) {
+            for (int cz = 0; cz < 300; cz++) {
+                if (com.harold.corpsedecay.world.WhaleFeature.graveyard(12345L, cx * com.harold.corpsedecay.world.WhaleFeature.CELL,
+                        cz * com.harold.corpsedecay.world.WhaleFeature.CELL)) cells++;
+            }
+        }
+        check(cells > 90000 * 0.02 && cells < 90000 * 0.04, "whale gatherings are rare (" + cells + " of 90000 stretches of sea)");
+        later(server, 3, () -> {
+            List<CorpseEntity> strip = corpses(new AABB(-4, groundY - 4, -48, 40, groundY + 6, -38));
+            CorpseEntity bogCow = nearest(strip, 11.5, -43.5), burntCow = nearest(strip, 16.5, -43.5);
+            CorpseEntity iceMan = byType(strip, "minecraft:villager"), skel = byType(strip, "minecraft:skeleton");
+            CorpseEntity plainCow = nearest(strip, 0.5, -43.5);
+            check(bogCow != null && bogCow.mummy() == CorpseEntity.BOG, "a cow that dies in a swamp turns into a bog body");
+            check(burntCow != null && burntCow.burnt() && burntCow.mummy() == 0, "but not if it burnt");
+            check(iceMan != null && iceMan.mummy() == CorpseEntity.ICE, "a villager that dies in the snow freeze-dries");
+            check(skel != null && skel.mummy() == 0, "a skeleton has no skin to mummify");
+            check(plainCow != null && plainCow.mummy() == 0, "a cow that dies on the plains rots as usual");
+            long skeletonEnd = (long) (com.harold.corpsedecay.Config.SKELETON_MINUTES.get() * 1200);
+            if (bogCow != null) bogCow.setDeathTime(level.getGameTime() - bogCow.decayTicks() - skeletonEnd - 5);
+            if (plainCow != null) plainCow.setDeathTime(level.getGameTime() - plainCow.decayTicks() - skeletonEnd - 5);
+            later(server, 45, () -> {
+                List<CorpseEntity> left = corpses(new AABB(-4, groundY - 4, -48, 40, groundY + 6, -38));
+                check(bogCow != null && !bogCow.isRemoved() && bogCow.decay(0) >= 1F, "a mummy keeps long after a skeleton would have crumbled");
+                check(plainCow != null && plainCow.isRemoved(), "while an ordinary skeleton of the same age has crumbled");
+                for (CorpseEntity c : left) c.discard();
+                then.run();
+            });
         });
     }
 

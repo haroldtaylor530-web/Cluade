@@ -363,6 +363,8 @@ public final class CorpseClient {
             corpse.level().addParticle(net.minecraft.core.particles.ParticleTypes.SNOWFLAKE,
                     b.minX + corpse.level().random.nextDouble() * b.getXsize(), b.maxY, b.minZ + corpse.level().random.nextDouble() * b.getZsize(), 0, 0, 0);
         }
+        int mummy = corpse.mummy();
+        if (mummy == CorpseEntity.ICE || (mummy == CorpseEntity.BOG && d > 0.3F)) return; // nothing for flies on a mummy
         if (d < 0.06F || d > 0.8F || corpse.burnt() || cause == com.harold.corpsedecay.DeathCause.WITHERED
                 || (cause == com.harold.corpsedecay.DeathCause.FROZEN && d < 0.5F)) return;
         RandomSource rand = corpse.level().random;

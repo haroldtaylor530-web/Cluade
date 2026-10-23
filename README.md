@@ -26,6 +26,12 @@ there, rotting through stages down to a bare skeleton, still wearing whatever it
   - Withered (the wither effect, the Wither, wither skeletons): a shrivelled grey-black husk.
   - Fell to its death: crumpled, limbs bent at broken angles.
   - Crushed by an anvil or falling block: squashed flat where it stood.
+- **Mummies.** A body that dies in a swamp or mangrove swamp doesn't rot to bones: the peat tans
+  it into a bog body, dark brown and leathery, shrunken into creases, with its skin and clothes
+  still on. A body that dies in a frozen biome freeze-dries the same way, into grey-brown
+  parchment with frost on it and bone showing where the skin has split. Mummies don't bloat or draw
+  flies and last four times as long as a skeleton. Burnt, blown-up and withered bodies don't
+  mummify. Which biomes do it is the tags `#corpsedecay:mummifies_in_bog` and `mummifies_in_ice`.
 - **Remains of the long dead.** New chunks can hold the bones of things that died long ago, lying
   where they fell. Adventurers lie in their battered armour with their sword, bow or pickaxe, old
   arrows still in them, sometimes with a chest of their belongings beside them; animals lie as
@@ -38,6 +44,21 @@ there, rotting through stages down to a bare skeleton, still wearing whatever it
   them. They never crumble and don't count towards the corpse limit; sneak and hit them to break
   them up for bones. Which mobs turn up is the tags `#corpsedecay:remains_mobs`,
   `nether_remains_mobs` and `end_remains_mobs`.
+- **Old mummies.** Swamps hold bog bodies from long ago, sunk in patches of mud or under the water
+  with lily pads over them: people in skin caps and leather capes, and now and then an animal.
+  Frozen biomes hold freeze-dried hunters in their furs with a flint hand axe or a bow, sometimes
+  with an arrow still in their back, and animals caught by the cold. Some lie in the snow and
+  some are still locked in a lump of clear ice. Break one up for its dried skin (leather) and
+  bones.
+- **Whale falls.** Somewhere in the oceans, rarely, whales have gone down to die on the same stretch
+  of sea floor, and their full-size skeletons lie there together: blue whales, humpbacks with their
+  long flippers, sperm whales with their great basin skulls. The spine is raised on arching ribs,
+  the jaw bones have fallen to either side, and some bones have been scattered. Life gathers on
+  them: glowing sea pickles, red plumes of bone worms, white mats on the mud around.
+- **The valley of whales.** In deserts lie early whales turned to stone, like the ones in Egypt's
+  Wadi Al-Hitan: long, snake-like basilosaurs half buried in the sand, still with their tiny hind
+  legs, among wind-carved pillars of sandstone, with shark teeth and shells in the sandstone
+  beneath. Their bones are a new block, fossilised bone.
 - **Rock formations.** Most fossils lie in formations: great lenses of layered rock, each modelled
   on a real fossil site and holding the fossils of its time, found where that rock belongs. Where
   one meets a cave, a cliff or a hillside you can see its layers.
@@ -143,8 +164,9 @@ These are entity type tags (`#corpsedecay:no_corpse`, `already_bones`, `no_skele
 | `ragdollForce` | 1.0 | How hard killing blows throw bodies |
 | `lootAllEquipment` | false | Let players take everything off a body, not just what would have dropped |
 | `flies` | true | Flies around rotting bodies |
-| `remains` | true | Old remains in newly generated chunks |
-| `fossils` | true | Fossil blocks in the rock of newly generated chunks |
+| `mummify` | true | Bodies in swamps and frozen biomes mummify instead of rotting to bones |
+| `remains` | true | Old remains, mummies and whale falls in newly generated chunks |
+| `fossils` | true | Fossils in the rock and stone whales in the desert, in newly generated chunks |
 | `ancientSites` | true | Stone Age sites in newly generated chunks |
 | `excludedMobs` | [] | Mob ids that never leave a corpse |
 

@@ -66,6 +66,7 @@ public class CorpseEntity extends Entity {
     private static final EntityDataAccessor<Integer> LOOT_MASK = SynchedEntityData.defineId(CorpseEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<CompoundTag> ARROWS = SynchedEntityData.defineId(CorpseEntity.class, EntityDataSerializers.COMPOUND_TAG);
     private static final EntityDataAccessor<CompoundTag> DECOR = SynchedEntityData.defineId(CorpseEntity.class, EntityDataSerializers.COMPOUND_TAG);
+    private static final EntityDataAccessor<Byte> MUMMY = SynchedEntityData.defineId(CorpseEntity.class, EntityDataSerializers.BYTE);
     @SuppressWarnings("unchecked")
     private static final EntityDataAccessor<ItemStack>[] EQUIP = new EntityDataAccessor[6];
 
@@ -120,6 +121,7 @@ public class CorpseEntity extends Entity {
         entityData.define(LOOT_MASK, 0);
         entityData.define(ARROWS, new CompoundTag());
         entityData.define(DECOR, new CompoundTag());
+        entityData.define(MUMMY, (byte) 0);
         for (EntityDataAccessor<ItemStack> a : EQUIP) entityData.define(a, ItemStack.EMPTY);
     }
 
@@ -153,6 +155,8 @@ public class CorpseEntity extends Entity {
         entityData.set(CAUSE, (byte) cause.ordinal());
         if (cause == DeathCause.FROZEN) entityData.set(DECAY_TICKS, decayTicks() * 4); // frozen bodies keep
         if (cause == DeathCause.CRUSHED) entityData.set(SQUASH, 0.3F);
+        entityData.set(MUMMY, (byte) s.mummy);
+        if (s.mummy != 0) skeletonTicks *= 4; // a mummy keeps much longer than bare bones
         int mask = 0;
         for (int i = 0; i < 6; i++) {
             entityData.set(EQUIP[i], s.equipment[i]);
@@ -243,8 +247,45 @@ public class CorpseEntity extends Entity {
         return entityData.get(MATERIAL);
     }
 
-    /** old yellowed bone, sandy, grimy cave bone, sun-bleached, mossy, charred, ender-stained */
-    public static final int OLD = 0, SANDY = 1, DARK = 2, BLEACHED = 3, MOSSY = 4, CHARRED = 5, ENDER = 6;
+    /**
+     * old yellowed bone, sandy, grimy cave bone, sun-bleached, mossy, charred, ender-stained; and two
+     * kinds of mummy, where the skin never rotted off: a dark leathery bog body, and a freeze-dried one
+     */
+    public static final int OLD = 0, SANDY = 1, DARK = 2, BLEACHED = 3, MOSSY = 4, CHARRED = 5, ENDER = 6, BOG_MUMMY = 7, ICE_MUMMY = 8;
+
+    /** How a body mummifies instead of rotting: in a peat bog, or freeze-dried in the cold. */
+    public static final int BOG = 1, ICE = 2;
+
+    public static final net.minecraft.tags.TagKey<net.minecraft.world.level.biome.Biome> MUMMIFIES_IN_BOG = biomeTag("mummifies_in_bog");
+    public static final net.minecraft.tags.TagKey<net.minecraft.world.level.biome.Biome> MUMMIFIES_IN_ICE = biomeTag("mummifies_in_ice");
+
+    private static net.minecraft.tags.TagKey<net.minecraft.world.level.biome.Biome> biomeTag(String name) {
+        return net.minecraft.tags.TagKey.create(net.minecraft.core.registries.Registries.BIOME,
+                new net.minecraft.resources.ResourceLocation(com.harold.corpsedecay.CorpseDecay.MODID, name));
+    }
+
+    /**
+     * Whether a body of this kind, dying this way at {@code pos}, mummifies: bodies with flesh on
+     * them turn into bog bodies in swamps and freeze-dry in frozen places, unless fire or a blast
+     * got to them first.
+     */
+    public static int mummyFor(Level level, net.minecraft.core.BlockPos pos, CorpseKind kind, DeathCause cause) {
+        if (!Config.MUMMIFY.get() || kind != CorpseKind.FLESH) return 0;
+        if (cause == DeathCause.BURNT || cause == DeathCause.EXPLODED || cause == DeathCause.WITHERED) return 0;
+        var biome = level.getBiome(pos);
+        if (biome.is(MUMMIFIES_IN_BOG)) return BOG;
+        if (biome.is(MUMMIFIES_IN_ICE)) return ICE;
+        return 0;
+    }
+
+    /** {@link #BOG}, {@link #ICE} or 0: whether this body is (or is turning into) a mummy. */
+    public int mummy() {
+        if (kind() == CorpseKind.REMAINS) {
+            int m = material();
+            return m == BOG_MUMMY ? BOG : m == ICE_MUMMY ? ICE : 0;
+        }
+        return entityData.get(MUMMY);
+    }
 
     /**
      * Remains: the bones of a mob that died long ago, lying on {@code ground} (the top of the
@@ -503,14 +544,18 @@ public class CorpseEntity extends Entity {
     public void crumble(boolean dropLoot) {
         if (!(level() instanceof ServerLevel sl)) return;
         if (dropLoot) dropAllLoot();
-        if (kind() == CorpseKind.REMAINS && dropLoot) spawnAtLocation(new ItemStack(Items.BONE, 2 + random.nextInt(4)), 0.3F);
-        boolean bones = kind() == CorpseKind.BONES || kind() == CorpseKind.REMAINS || decay(0) > 0.75F;
-        ParticleOptions particle = bones
-                ? new BlockParticleOption(ParticleTypes.BLOCK, Blocks.BONE_BLOCK.defaultBlockState())
+        boolean mummy = mummy() != 0 && (kind() == CorpseKind.REMAINS || decay(0) > 0.5F);
+        if (kind() == CorpseKind.REMAINS && dropLoot) {
+            spawnAtLocation(new ItemStack(Items.BONE, (mummy ? 1 : 2) + random.nextInt(mummy ? 3 : 4)), 0.3F);
+            if (mummy) spawnAtLocation(new ItemStack(Items.LEATHER, 1 + random.nextInt(2)), 0.3F); // the dried skin
+        }
+        boolean bones = !mummy && (kind() == CorpseKind.BONES || kind() == CorpseKind.REMAINS || decay(0) > 0.75F);
+        ParticleOptions particle = mummy ? new ItemParticleOption(ParticleTypes.ITEM, new ItemStack(Items.LEATHER))
+                : bones ? new BlockParticleOption(ParticleTypes.BLOCK, Blocks.BONE_BLOCK.defaultBlockState())
                 : new ItemParticleOption(ParticleTypes.ITEM, new ItemStack(Items.ROTTEN_FLESH));
         AABB box = getBoundingBox();
         sl.sendParticles(particle, getX(), getY(), getZ(), 30, box.getXsize() / 3, box.getYsize() / 3, box.getZsize() / 3, 0.05);
-        playSound(bones ? SoundEvents.BONE_BLOCK_BREAK : SoundEvents.HONEY_BLOCK_BREAK, 0.8F, 0.9F);
+        playSound(bones ? SoundEvents.BONE_BLOCK_BREAK : mummy ? SoundEvents.ARMOR_EQUIP_LEATHER : SoundEvents.HONEY_BLOCK_BREAK, 0.8F, 0.9F);
         level().broadcastEntityEvent(this, EVENT_CRUMBLE);
         discard();
     }
@@ -732,6 +777,7 @@ public class CorpseEntity extends Entity {
         CompoundTag decor = new CompoundTag();
         decor.put("List", tag.getList("Growths", Tag.TAG_COMPOUND));
         entityData.set(DECOR, decor);
+        entityData.set(MUMMY, tag.getByte("Mummy"));
         extraLoot = tag.getCompound("ExtraLoot");
         ragdoll = null;
         setBoundingBox(makeBoundingBox());
@@ -767,6 +813,7 @@ public class CorpseEntity extends Entity {
         tag.put("Equipment", eq);
         tag.put("Arrows", arrows());
         tag.put("Growths", growths());
+        tag.putByte("Mummy", entityData.get(MUMMY));
         tag.put("ExtraLoot", extraLoot);
     }
 

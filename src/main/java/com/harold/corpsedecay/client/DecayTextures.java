@@ -54,7 +54,7 @@ public final class DecayTextures {
 
     /** The texture to draw a corpse with, or the original if it can't be made. */
     /** Looks a body can have besides plain rotting. */
-    public static final int NORMAL = 0, BURNT = 1, DROWNED = 2, FROZEN = 3, WITHERED = 5, REMAINS = 20;
+    public static final int NORMAL = 0, BURNT = 1, DROWNED = 2, FROZEN = 3, WITHERED = 5, BOG = 6, FREEZE_DRIED = 7, REMAINS = 20;
 
     public static ResourceLocation get(ResourceLocation original, ModelInfo info, CorpseKind kind, int variant, float decay) {
         if (kind == CorpseKind.NO_DECAY || original == null) return original;
@@ -289,6 +289,7 @@ public final class DecayTextures {
             if (variant >= REMAINS) return aged(i, c, a);
             if (burnt) return charred(i, c, a, p, last);
             if (variant == WITHERED) return withered(i, c, a, p, last);
+            if (variant == BOG || variant == FREEZE_DRIED) return mummified(i, c, a, p, variant == BOG);
             if (variant == DROWNED || variant == FROZEN) return tinted(i, normal(i, c, a, p, last), p);
             return normal(i, c, a, p, last);
         }
@@ -385,6 +386,7 @@ public final class DecayTextures {
          * grimy, sun-bleached, mossy, charred or stained purple in the end.
          */
         private int aged(int i, int c, int a) {
+            if (variant - REMAINS == 7 || variant - REMAINS == 8) return oldMummy(i, c, a, variant - REMAINS == 7);
             int out = normal(i, c, a, 1F, true);
             if ((out >>> 24) == 0) return out;
             int x = i % w, y = i / w;
@@ -409,6 +411,56 @@ public final class DecayTextures {
                 case 6 -> n > 0.93F ? mix(out, 0xFF9A6CC4, 0.7F) : mix(out, 0xFF4E3D63, 0.6F); // ender
                 default -> scale(mix(out, 0xFFCBBE98, 0.3F), blot[i] > 0.62F ? 0.88F : 1F); // old, yellowed
             };
+            return withAlpha(out, a);
+        }
+
+        /**
+         * A body that mummified instead of rotting. In a bog the acid water tans the skin like leather:
+         * it goes dark brown, shrunken into creases, and stays on, while clothes are stained the colour
+         * of peat. In the cold it freeze-dries: the skin shrinks tight onto the bones and dries to a
+         * grey-brown parchment, frosted, splitting here and there to show bone. No bloating, no rot.
+         */
+        private int mummified(int i, int c, int a, float p, boolean bog) {
+            if (kind == CorpseKind.BONES) return withAlpha(c, a);
+            float f = smooth(0.04F, 0.8F, p);
+            if (what[i] == BonePainter.HORN) return withAlpha(bog ? mix(scale(c, 0.75F), 0xFF2A1A10, 0.45F * f) : scale(c, 0.9F - 0.1F * f), a);
+            int x = i % w, y = i / w;
+            if (clothes[i]) {
+                int cloth = bog ? mix(c, 0xFF3E2C1A, 0.6F * f) : mix(mix(c, gray(c), 0.35F * f), 0xFFDDE6EA, 0.1F * f);
+                return withAlpha(cloth, a);
+            }
+            int out = driedSkin(i, c, p, f, bog);
+            if (!bog) {
+                if (kind == CorpseKind.FLESH && painted[i] && bone[i] != 0 && hole[i] < 0.08F * f) {
+                    return withAlpha(mix(bone[i], 0xFFB8A888, 0.3F), a); // split skin, bone beneath
+                }
+                if (Noise.hash(x, y, 77) > 0.94F) out = mix(out, 0xFFF0F6FA, 0.55F * f); // frost
+            }
+            if (kind == CorpseKind.NO_BONES && p > 0.82F) return withAlpha(out, Math.round(a * (1F - smooth(0.82F, 1F, p))));
+            return withAlpha(out, a);
+        }
+
+        private int driedSkin(int i, int c, float p, float f, boolean bog) {
+            float lum = brightness(c) / 255F;
+            int fresh = skin(c, Math.min(p, 0.1F), blot[i]);
+            int dried = bog ? scale(mix(0xFF6E4628, 0xFF3A2414, blot[i]), 0.72F + 0.55F * lum)
+                    : scale(mix(0xFF9A8268, 0xFF6A5644, blot[i]), 0.78F + 0.45F * lum);
+            int out = mix(fresh, dried, f * 0.92F);
+            if (tear[i] < 0.14F * f) out = scale(out, 0.62F); // shrunken into creases
+            if (bog && blot[i] > 0.7F) out = mix(out, 0xFF22150C, 0.4F * f); // peat stains
+            return out;
+        }
+
+        /** A mummy found lying where it was left long ago: darker still, its clothes worn to rags. */
+        private int oldMummy(int i, int c, int a, boolean bog) {
+            int out;
+            if (clothes[i] && tear[i] < 0.3F) {
+                out = driedSkin(i, 0xFFA88A6C, 1F, 1F, bog); // worn through to the dried skin
+            } else {
+                out = mummified(i, c, a, 1F, bog);
+                if ((out >>> 24) == 0) return out;
+            }
+            out = bog ? mix(out, 0xFF2A1A10, 0.18F) : mix(out, 0xFF8E8478, 0.15F);
             return withAlpha(out, a);
         }
 

@@ -58,6 +58,15 @@ public final class ModRegistry {
     public static final RegistryObject<com.harold.corpsedecay.world.DigSiteFeature> DIG_SITE =
             FEATURES.register("dig_site", com.harold.corpsedecay.world.DigSiteFeature::new);
 
+    public static final RegistryObject<com.harold.corpsedecay.world.MummyFeature> BOG_BODY =
+            FEATURES.register("bog_body", () -> new com.harold.corpsedecay.world.MummyFeature(com.harold.corpsedecay.world.MummyFeature.Where.BOG));
+    public static final RegistryObject<com.harold.corpsedecay.world.MummyFeature> ICE_MUMMY =
+            FEATURES.register("ice_mummy", () -> new com.harold.corpsedecay.world.MummyFeature(com.harold.corpsedecay.world.MummyFeature.Where.ICE));
+    public static final RegistryObject<com.harold.corpsedecay.world.WhaleFeature> WHALE_FALL =
+            FEATURES.register("whale_fall", () -> new com.harold.corpsedecay.world.WhaleFeature(com.harold.corpsedecay.world.WhaleFeature.Where.SEA));
+    public static final RegistryObject<com.harold.corpsedecay.world.WhaleFeature> DESERT_WHALES =
+            FEATURES.register("desert_whales", () -> new com.harold.corpsedecay.world.WhaleFeature(com.harold.corpsedecay.world.WhaleFeature.Where.DESERT));
+
     public static final RegistryObject<SimpleParticleType> FLY = PARTICLES.register("fly", () -> new SimpleParticleType(false));
 
     private ModRegistry() {

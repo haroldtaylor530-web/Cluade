@@ -1139,6 +1139,42 @@ def petrified_top():
     return img
 
 
+def fossil_bone_side():
+    """Bone turned to stone: the grain of a bone block in tan and brown, stained with iron, flecked with mineral."""
+    img = Image.new("RGBA", (16, 16))
+    for y in range(16):
+        for x in range(16):
+            streak = (x * 3 + int(1.5 * math.sin(y * 0.5 + x * 1.3))) % 7
+            c = (0xC4, 0xA8, 0x7C) if streak < 4 else (0xA8, 0x8C, 0x64)
+            if y in (0, 15):
+                c = (0x8E, 0x74, 0x52)  # the ends of the bone
+            elif y in (1, 14):
+                c = (0xB4, 0x98, 0x6E)
+            c = shade(c, 0.9 + 0.2 * hash01(x, y, 21))
+            n = hash01(x, y, 22)
+            if n > 0.93:
+                c = (0x6A, 0x50, 0x36)  # mineral flecks
+            elif hash01(x // 3, y // 4, 23) > 0.8:
+                c = _mix(c, (0xA0, 0x5C, 0x34), 0.35)  # iron stains
+            img.putpixel((x, y), tuple(int(v) for v in c) + (255,))
+    return img
+
+
+def fossil_bone_top():
+    img = Image.new("RGBA", (16, 16))
+    for y in range(16):
+        for x in range(16):
+            r = math.hypot(x - 7.5, y - 7.5)
+            if r > 6.8:
+                c = (0x8E, 0x74, 0x52)
+            elif r > 5.0:
+                c = (0xC4, 0xA8, 0x7C)  # compact bone round the outside
+            else:
+                c = (0x9C, 0x80, 0x5A) if hash01(x, y, 24) > 0.45 else (0x6E, 0x56, 0x3C)  # spongy middle, filled with stone
+            img.putpixel((x, y), shade(c, 0.92 + 0.16 * hash01(x, y, 25)) + (255,))
+    return img
+
+
 def egg_texture():
     img = Image.new("RGBA", (16, 16))
     for y in range(16):
@@ -1704,6 +1740,14 @@ def extras(lang, tex_dir):
     simple_block("petrified_wood", "Petrified Wood", {"parent": "minecraft:block/cube_all", "textures": {
         "all": f"{MODID}:block/fossil/petrified_log"}}, lang)
     ids += ["petrified_log", "petrified_wood"]
+    fossil_bone_side().save(os.path.join(tex_dir, "fossil_bone.png"))
+    fossil_bone_top().save(os.path.join(tex_dir, "fossil_bone_top.png"))
+    simple_block("fossil_bone", "Fossilised Bone Block", {"parent": "minecraft:block/cube_column", "textures": {
+        "side": f"{MODID}:block/fossil/fossil_bone", "end": f"{MODID}:block/fossil/fossil_bone_top"}}, lang,
+        variants={"axis=y": {"model": f"{MODID}:block/fossil_bone"},
+                  "axis=x": {"model": f"{MODID}:block/fossil_bone", "x": 90, "y": 90},
+                  "axis=z": {"model": f"{MODID}:block/fossil_bone", "x": 90}})
+    ids.append("fossil_bone")
 
     egg_texture().save(os.path.join(tex_dir, "fossil_egg.png"))
     # one, two or three eggs lying in a clutch

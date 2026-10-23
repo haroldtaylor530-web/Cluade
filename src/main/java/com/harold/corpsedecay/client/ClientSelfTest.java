@@ -129,12 +129,13 @@ public final class ClientSelfTest {
             t += 20;
         }
         // close-ups from low down: fresh, rotting, skeleton
-        String[] who = {"cow_drowned", "zombie_frozen", "cow_exploded", "zombie_withered", "zombie_fell", "cow_crushed",
+        String[] who = {"bog_villager", "bog_cow", "ice_villager", "ice_wolf", "cow_drowned", "zombie_frozen", "cow_exploded", "zombie_withered", "zombie_fell", "cow_crushed",
                 "remains_adventurer", "remains_mossy", "remains_piglin", "remains_ender", "remains_bleached", "remains_cave", "zombie_burnt", "cow_burnt", "zombie_armour", "zombie", "villager", "pillager", "cow", "sheep", "horse", "pig", "chicken", "wolf", "skeleton"};
         float[] when = {0.0F, 0.5F, 1.0F};
         int n = 10;
         for (String w : who) {
-            float[] times = w.endsWith("_burnt") ? new float[] {0.75F, 0.88F, 1.0F}
+            float[] times = w.startsWith("bog_") || w.startsWith("ice_") ? new float[] {0.25F, 0.6F, 1.0F}
+                    : w.endsWith("_burnt") ? new float[] {0.75F, 0.88F, 1.0F}
                     : w.startsWith("remains") ? new float[] {1.0F}
                     : w.endsWith("_withered") ? new float[] {0.6F, 1.0F}
                     : (w.endsWith("_drowned") || w.endsWith("_frozen") || w.endsWith("_exploded") || w.endsWith("_fell") || w.endsWith("_crushed"))
@@ -189,6 +190,27 @@ public final class ClientSelfTest {
             at(t + 40, () -> shot(name));
             t += 45;
         }
+        // mummies, whale falls, stone whales
+        at(t, () -> camera(4.0, ground + 5.5, -26.0, 180F, 28F));
+        at(t + 40, () -> shot("B0_mummies"));
+        at(t + 45, () -> camera(-2.5, ground + 2.2, -36.0, 160F, 25F));
+        at(t + 85, () -> shot("B1_bog_bodies"));
+        at(t + 90, () -> camera(15.5, ground + 2.6, -36.0, 200F, 25F));
+        at(t + 130, () -> shot("B2_ice_mummies"));
+        at(t + 135, () -> camera(-100.0, ground + 30.0, -168.0, 0F, 45F));
+        at(t + 185, () -> shot("B3_whale_fall_above"));
+        at(t + 190, () -> server(() -> player().addEffect(new net.minecraft.world.effect.MobEffectInstance(
+                net.minecraft.world.effect.MobEffects.NIGHT_VISION, 2000, 0, false, false))));
+        at(t + 192, () -> camera(-124.0, ground + 6.0, -136.0, -55F, 18F));
+        at(t + 260, () -> shot("B4_whale_fall_under"));
+        at(t + 262, () -> camera(-80.0, ground + 6.0, -100.5, 150F, 15F));
+        at(t + 330, () -> shot("B5_whale_fall_sperm"));
+        at(t + 335, () -> server(() -> player().removeEffect(net.minecraft.world.effect.MobEffects.NIGHT_VISION)));
+        at(t + 337, () -> camera(85.0, ground + 16.0, -168.0, 0F, 38F));
+        at(t + 380, () -> shot("B6_desert_whales"));
+        at(t + 385, () -> camera(DESERT_X - 9.0, ground + 4.0, DESERT_Z - 9.0, -45F, 22F));
+        at(t + 425, () -> shot("B7_desert_whale_close"));
+        t += 430;
         at(t + 5, () -> {
             LOG.info("CLIENTTEST DONE");
             Minecraft.getInstance().stop();
@@ -284,7 +306,79 @@ public final class ClientSelfTest {
             r.addGrowth(net.minecraft.world.level.block.Blocks.COBWEB, 0.9F, level.random);
         }
         fossilGallery(level);
+        mummiesAndWhales(level);
         camera(0.5, ground + 6.5, -8.5, 0F, 32F);
+    }
+
+    static final int DESERT_X = 85, DESERT_Z = -125;
+
+    /**
+     * A strip of swamp and one of snow where animals and villagers die and mummify; old bog bodies
+     * in mud and a pool; frozen mummies in snow and ice; a tank of sea with a whale fall in it; a
+     * patch of desert with stone whales.
+     */
+    private static void mummiesAndWhales(ServerLevel level) {
+        var src = level.getServer().createCommandSourceStack().withSuppressedOutput();
+        level.getServer().getCommands().performPrefixedCommand(src, "fillbiome -10 " + (ground - 6) + " -48 3 " + (ground + 10) + " -14 minecraft:swamp");
+        level.getServer().getCommands().performPrefixedCommand(src, "fillbiome 4 " + (ground - 6) + " -48 20 " + (ground + 10) + " -14 minecraft:snowy_plains");
+        for (int x = 4; x <= 20; x++) {
+            for (int z = -48; z <= -14; z++) level.setBlock(new net.minecraft.core.BlockPos(x, ground - 1, z), net.minecraft.world.level.block.Blocks.SNOW_BLOCK.defaultBlockState(), 2);
+        }
+        spawn("bog_villager", EntityType.VILLAGER, -7, -18);
+        spawn("bog_cow", EntityType.COW, -3, -18);
+        spawn("bog_horse", EntityType.HORSE, 1, -18);
+        Mob iceMan = spawn("ice_villager", EntityType.VILLAGER, 8, -18);
+        iceMan.setItemSlot(EquipmentSlot.CHEST, new ItemStack(Items.LEATHER_CHESTPLATE));
+        spawn("ice_wolf", EntityType.WOLF, 12, -18);
+        spawn("ice_cow", EntityType.COW, 16, -18);
+        net.minecraft.util.RandomSource r = net.minecraft.util.RandomSource.create(1234);
+        // old bog bodies: two in the mud, one under a pool
+        for (int x = -6; x <= 0; x++) {
+            for (int z = -44; z <= -40; z++) {
+                level.setBlock(new net.minecraft.core.BlockPos(x, ground - 1, z), net.minecraft.world.level.block.Blocks.WATER.defaultBlockState(), 2);
+                level.setBlock(new net.minecraft.core.BlockPos(x, ground - 2, z), net.minecraft.world.level.block.Blocks.DIRT.defaultBlockState(), 2);
+            }
+        }
+        com.harold.corpsedecay.world.MummyFeature.bogBody(level, new net.minecraft.core.BlockPos(-3, ground - 2, -42), r);
+        com.harold.corpsedecay.world.MummyFeature.bogBody(level, new net.minecraft.core.BlockPos(-8, ground - 1, -34), r);
+        com.harold.corpsedecay.world.MummyFeature.bogBody(level, new net.minecraft.core.BlockPos(1, ground - 1, -32), r);
+        // frozen: two locked in ice, one in the snow
+        com.harold.corpsedecay.world.MummyFeature.iceMummy(level, new net.minecraft.core.BlockPos(9, ground - 1, -42), r, true);
+        com.harold.corpsedecay.world.MummyFeature.iceMummy(level, new net.minecraft.core.BlockPos(15, ground - 1, -42), r, true);
+        com.harold.corpsedecay.world.MummyFeature.iceMummy(level, new net.minecraft.core.BlockPos(12, ground - 1, -34), r, false);
+
+        // a tank of sea with a whale fall on its floor
+        int x0 = -132, x1 = -68, z0 = -152, z1 = -98, depth = 12;
+        for (int x = x0; x <= x1; x++) {
+            for (int z = z0; z <= z1; z++) {
+                boolean wall = x == x0 || x == x1 || z == z0 || z == z1;
+                level.setBlock(new net.minecraft.core.BlockPos(x, ground - 1, z), (wall ? net.minecraft.world.level.block.Blocks.GLASS
+                        : (x + z) % 7 == 0 ? net.minecraft.world.level.block.Blocks.GRAVEL : net.minecraft.world.level.block.Blocks.SAND).defaultBlockState(), 2);
+                for (int y = 0; y < depth; y++) {
+                    level.setBlock(new net.minecraft.core.BlockPos(x, ground + y, z), (wall ? net.minecraft.world.level.block.Blocks.GLASS
+                            : net.minecraft.world.level.block.Blocks.WATER).defaultBlockState(), 2);
+                }
+            }
+        }
+        com.harold.corpsedecay.world.WhaleFeature.seaWhale(level, new net.minecraft.core.BlockPos(-108, ground - 1, -126), net.minecraft.util.RandomSource.create(3),
+                com.harold.corpsedecay.world.WhaleFeature.Kind.BLUE, net.minecraft.core.Direction.EAST);
+        com.harold.corpsedecay.world.WhaleFeature.seaWhale(level, new net.minecraft.core.BlockPos(-88, ground - 1, -110), net.minecraft.util.RandomSource.create(4),
+                com.harold.corpsedecay.world.WhaleFeature.Kind.SPERM, net.minecraft.core.Direction.WEST);
+        com.harold.corpsedecay.world.WhaleFeature.seaWhale(level, new net.minecraft.core.BlockPos(-92, ground - 1, -135), net.minecraft.util.RandomSource.create(5),
+                com.harold.corpsedecay.world.WhaleFeature.Kind.HUMPBACK, net.minecraft.core.Direction.NORTH);
+
+        // a patch of desert with stone whales and wind-carved rocks
+        level.getServer().getCommands().performPrefixedCommand(src, "fillbiome 55 " + (ground - 6) + " -155 115 " + (ground + 20) + " -95 minecraft:desert");
+        for (int x = 55; x <= 115; x++) {
+            for (int z = -155; z <= -95; z++) {
+                level.setBlock(new net.minecraft.core.BlockPos(x, ground - 1, z), net.minecraft.world.level.block.Blocks.SAND.defaultBlockState(), 2);
+                level.setBlock(new net.minecraft.core.BlockPos(x, ground - 2, z), net.minecraft.world.level.block.Blocks.SANDSTONE.defaultBlockState(), 2);
+                level.setBlock(new net.minecraft.core.BlockPos(x, ground - 3, z), net.minecraft.world.level.block.Blocks.SANDSTONE.defaultBlockState(), 2);
+            }
+        }
+        com.harold.corpsedecay.world.WhaleFeature.desertWhale(level, new net.minecraft.core.BlockPos(DESERT_X, ground - 1, DESERT_Z), net.minecraft.util.RandomSource.create(8),
+                net.minecraft.core.Direction.EAST);
+        com.harold.corpsedecay.world.WhaleFeature.valley(level, new net.minecraft.core.BlockPos(DESERT_X, ground, DESERT_Z - 2), net.minecraft.util.RandomSource.create(9));
     }
 
     static final int GALLERY_Z = 80, GALLERY_STEP = 22, GALLERY_PER_ROW = 9;

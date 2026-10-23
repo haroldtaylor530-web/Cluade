@@ -74,6 +74,8 @@ public class CorpseRenderer extends EntityRenderer<CorpseEntity> {
         CorpseKind texKind = remains ? (CorpseKind.of(puppet.getType()) == CorpseKind.BONES ? CorpseKind.BONES : CorpseKind.FLESH) : kind;
         int variant = remains ? DecayTextures.REMAINS + corpse.material()
                 : burnt ? DecayTextures.BURNT
+                : corpse.mummy() == CorpseEntity.BOG ? DecayTextures.BOG
+                : corpse.mummy() == CorpseEntity.ICE ? DecayTextures.FREEZE_DRIED
                 : cause == DeathCause.DROWNED ? DecayTextures.DROWNED
                 : cause == DeathCause.FROZEN ? DecayTextures.FROZEN
                 : cause == DeathCause.WITHERED ? DecayTextures.WITHERED : DecayTextures.NORMAL;

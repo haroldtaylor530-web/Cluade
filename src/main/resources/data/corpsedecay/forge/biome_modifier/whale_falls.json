@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#corpsedecay:has_whale_falls",
+  "features": "corpsedecay:whale_fall",
+  "step": "local_modifications"
+}

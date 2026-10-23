@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=y": {
+      "model": "corpsedecay:block/fossil_bone"
+    },
+    "axis=x": {
+      "model": "corpsedecay:block/fossil_bone",
+      "x": 90,
+      "y": 90
+    },
+    "axis=z": {
+      "model": "corpsedecay:block/fossil_bone",
+      "x": 90
+    }
+  }
+}

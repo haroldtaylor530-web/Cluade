@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#corpsedecay:has_desert_whales",
+  "features": "corpsedecay:desert_whales",
+  "step": "surface_structures"
+}

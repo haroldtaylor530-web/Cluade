@@ -42,6 +42,8 @@ public final class DeathSnapshot {
     /** died on fire (or from fire): leaves a charred body */
     public boolean burning;
     public com.harold.corpsedecay.DeathCause cause = com.harold.corpsedecay.DeathCause.NORMAL;
+    /** whether the body will mummify where it lies: {@link CorpseEntity#BOG}, {@link CorpseEntity#ICE} or 0 */
+    public int mummy;
 
     public static DeathSnapshot of(LivingEntity mob, DamageSource source) {
         DeathSnapshot s = new DeathSnapshot();
@@ -72,6 +74,7 @@ public final class DeathSnapshot {
         s.kind = CorpseKind.of(mob.getType());
         s.cause = com.harold.corpsedecay.DeathCause.of(mob, source);
         s.burning = s.cause == com.harold.corpsedecay.DeathCause.BURNT;
+        s.mummy = CorpseEntity.mummyFor(mob.level(), mob.blockPosition(), s.kind, s.cause);
         return s;
     }
 

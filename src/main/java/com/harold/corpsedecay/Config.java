@@ -16,6 +16,7 @@ public final class Config {
     public static final ForgeConfigSpec.DoubleValue RAGDOLL_FORCE;
     public static final ForgeConfigSpec.BooleanValue LOOT_ALL_EQUIPMENT;
     public static final ForgeConfigSpec.BooleanValue FLIES;
+    public static final ForgeConfigSpec.BooleanValue MUMMIFY;
     public static final ForgeConfigSpec.BooleanValue REMAINS;
     public static final ForgeConfigSpec.BooleanValue FOSSILS;
     public static final ForgeConfigSpec.BooleanValue ANCIENT_SITES;
@@ -37,9 +38,11 @@ public final class Config {
         LOOT_ALL_EQUIPMENT = b.comment("Let players take every piece of armour and held item off a corpse, not only what the mob would normally drop.")
                 .define("lootAllEquipment", false);
         FLIES = b.comment("Flies buzz around rotting bodies.").define("flies", true);
-        REMAINS = b.comment("New chunks can have the remains of things that died long ago: adventurers in their armour, animals, with moss, mushrooms or cobwebs growing on them.")
+        MUMMIFY = b.comment("Bodies left in swamps turn into dark leathery bog bodies, and bodies left in frozen places freeze-dry, instead of rotting to bones.")
+                .define("mummify", true);
+        REMAINS = b.comment("New chunks can have the remains of things that died long ago: adventurers in their armour, animals, with moss, mushrooms or cobwebs growing on them; bog bodies and frozen mummies; gatherings of whale skeletons on the sea floor.")
                 .define("remains", true);
-        FOSSILS = b.comment("New chunks can have fossils in the rock: whole skeletons of fossil blocks, and ammonites, trilobites, fish and ferns.")
+        FOSSILS = b.comment("New chunks can have fossils in the rock: whole skeletons of fossil blocks, and ammonites, trilobites, fish and ferns; fossil whales lying in the desert.")
                 .define("fossils", true);
         ANCIENT_SITES = b.comment("New chunks can have Stone Age sites: painted caves, stone circles, dolmens, burial mounds, mammoth-bone huts.")
                 .define("ancientSites", true);

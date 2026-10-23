@@ -87,6 +87,8 @@ public final class FossilBlocks {
     public static final RegistryObject<Block> PETRIFIED_LOG;
     public static final RegistryObject<Block> PETRIFIED_WOOD;
     public static final RegistryObject<Block> FOSSIL_EGG;
+    /** bone turned to stone, as the old whales in the desert are */
+    public static final RegistryObject<Block> FOSSIL_BONE;
     public static final RegistryObject<Item> FLINT_HAND_AXE;
     public static final RegistryObject<Item> BONE_FLUTE;
     public static final RegistryObject<Item> OCHRE;
@@ -135,6 +137,8 @@ public final class FossilBlocks {
         AMBER_BEETLE = extra("amber_beetle", () -> new Block(amberProps()));
         PETRIFIED_LOG = extra("petrified_log", () -> new RotatedPillarBlock(petrifiedProps()));
         PETRIFIED_WOOD = extra("petrified_wood", () -> new Block(petrifiedProps()));
+        FOSSIL_BONE = extra("fossil_bone", () -> new RotatedPillarBlock(BlockBehaviour.Properties.of().mapColor(MapColor.SAND)
+                .strength(2.5F, 6F).sound(SoundType.BONE_BLOCK).requiresCorrectToolForDrops()));
         FOSSIL_EGG = extra("fossil_egg", () -> new FossilEggBlock(BlockBehaviour.Properties.of().mapColor(MapColor.SAND)
                 .strength(1.5F, 6F).sound(SoundType.BONE_BLOCK).noOcclusion()));
         FLINT_HAND_AXE = item("flint_hand_axe", () -> new net.minecraft.world.item.AxeItem(net.minecraft.world.item.Tiers.STONE, 6F, -3.2F,

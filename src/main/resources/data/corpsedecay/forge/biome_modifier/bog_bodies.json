@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#corpsedecay:has_bog_bodies",
+  "features": "corpsedecay:bog_body",
+  "step": "vegetal_decoration"
+}

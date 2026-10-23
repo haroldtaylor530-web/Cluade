@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#corpsedecay:has_ice_mummies",
+  "features": "corpsedecay:ice_mummy",
+  "step": "vegetal_decoration"
+}

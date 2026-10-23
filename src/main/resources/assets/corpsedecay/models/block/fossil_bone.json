@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "side": "corpsedecay:block/fossil/fossil_bone",
+    "end": "corpsedecay:block/fossil/fossil_bone_top"
+  }
+}
