@@ -22,13 +22,13 @@ import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConf
 import net.minecraft.world.level.material.Fluids;
 
 /**
- * Whale skeletons, built full size out of bone blocks.
+ * Whale skeletons, full size.
  * <p>
  * Under the sea, a whale fall: somewhere out in the ocean whales have gone down to die in the same
- * stretch of sea floor, and their skeletons lie there together: the long spine raised on arching
- * ribs, the great flat skull, the jaw bones fallen to either side, the flippers splayed. Life
- * gathers on the bones: glowing sea pickles, red plumes of bone worms, white mats spreading over
- * the mud.
+ * stretch of sea floor, and their skeletons lie there together (as whale remains entities, drawn
+ * bone by bone): the long spine raised on arching ribs, the great flat skull, the jaw bones fallen
+ * to either side, the flippers splayed. Life gathers on them: glowing sea pickles, red plumes of
+ * bone worms, white mats spreading over the mud.
  * <p>
  * In the desert, the valley of whales: long, snake-like early whales, turned to stone and half buried
  * in the sand where an ancient sea once was, with their tiny hind legs still there, among
@@ -66,7 +66,7 @@ public class WhaleFeature extends Feature<NoneFeatureConfiguration> {
             BlockPos floor = new BlockPos(x, level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.OCEAN_FLOOR_WG, x, z) - 1, z);
             if (!level.getFluidState(floor.above(6)).is(Fluids.WATER)) return false; // too shallow
             Kind k = rand.nextFloat() < 0.3F ? Kind.SPERM : rand.nextFloat() < 0.4F ? Kind.HUMPBACK : Kind.BLUE;
-            return seaWhale(level, floor, rand, k, Direction.from2DDataValue(rand.nextInt(4))) > 0;
+            return seaWhale(level, floor, rand, k, Direction.from2DDataValue(rand.nextInt(4))) != null;
         }
         if (!Config.FOSSILS.get()) return false;
         return valley(level, new BlockPos(x, o.getY(), z), rand) > 0;
@@ -148,169 +148,43 @@ public class WhaleFeature extends Feature<NoneFeatureConfiguration> {
     }
 
     /**
-     * One whale's bones on the sea floor (the top of {@code floor} is the mud they lie on), with what
-     * lives on them. Returns how many bone blocks went down.
+     * One whale's skeleton lying on the sea floor (the top of {@code floor} is the mud it lies on):
+     * a whale remains entity, with sea pickles glowing and white mats spreading on the mud round it.
+     * Returns it, or null.
      */
-    public static int seaWhale(WorldGenLevel level, BlockPos floor, RandomSource rand, Kind kind, Direction facing) {
-        Builder b = new Builder(level, floor.above(), facing, Blocks.BONE_BLOCK, true, rand);
-        float whole = 0.75F + rand.nextFloat() * 0.25F; // how much the scavengers have scattered
-        switch (kind) {
-            case SPERM -> sperm(b, 18 + rand.nextInt(5), whole);
-            case HUMPBACK -> baleen(b, 20 + rand.nextInt(5), whole, true);
-            default -> baleen(b, 24 + rand.nextInt(7), whole, false);
-        }
-        life(b);
-        return b.placed.size();
-    }
-
-    /** A blue whale (or a humpback, with its long flippers): a broad flat skull, the jaw in two halves. */
-    static void baleen(Builder b, int length, float whole, boolean longFlippers) {
-        RandomSource rand = b.rand;
-        int tail = -length / 2, snout = length / 2;
-        int skullLen = Math.round(length * 0.26F), skull = snout - skullLen;
-        int h = length >= 26 ? 3 : 2, w = length >= 26 ? 4 : 3;
-        spine(b, tail, skull - 1, h, whole, length);
-        // ribs, from just behind the head back along the chest
-        int ribEnd = skull - Math.round(length * 0.42F);
-        for (int u = skull - 2; u >= ribEnd; u -= 2) {
-            int ww = u < ribEnd + 4 ? w - 1 : w;
-            for (int side : new int[] {-1, 1}) {
-                if (rand.nextFloat() > whole + 0.1F) {
-                    fallenRib(b, u, side, ww + 1);
-                } else {
-                    b.rib(u, side, ww, h);
-                }
+    public static com.harold.corpsedecay.corpse.WhaleRemainsEntity seaWhale(WorldGenLevel level, BlockPos floor, RandomSource rand, Kind kind, Direction facing) {
+        var whale = com.harold.corpsedecay.ModRegistry.WHALE.get().create(level.getLevel());
+        if (whale == null) return null;
+        float length = switch (kind) {
+            case SPERM -> 17 + rand.nextFloat() * 5;
+            case HUMPBACK -> 19 + rand.nextFloat() * 5;
+            default -> 23 + rand.nextFloat() * 7;
+        };
+        int k = kind == Kind.SPERM ? com.harold.corpsedecay.corpse.WhaleRemainsEntity.SPERM
+                : kind == Kind.HUMPBACK ? com.harold.corpsedecay.corpse.WhaleRemainsEntity.HUMPBACK : com.harold.corpsedecay.corpse.WhaleRemainsEntity.BLUE;
+        float angle = (float) Math.atan2(facing.getStepZ(), facing.getStepX()) + (rand.nextFloat() - 0.5F) * 0.6F;
+        whale.setPos(floor.getX() + 0.5, floor.getY() + 1.0, floor.getZ() + 0.5);
+        whale.setup(k, length, angle, rand.nextInt(), 0.7F + rand.nextFloat() * 0.3F);
+        if (!level.addFreshEntity(whale)) return null;
+        // the mud round it: white mats, and sea pickles lighting it up
+        float c = (float) Math.cos(angle), s = (float) Math.sin(angle);
+        int pickles = 0;
+        for (int i = 0; i < 60; i++) {
+            float u = (rand.nextFloat() - 0.5F) * length, v = (rand.nextFloat() - 0.5F) * length * 0.3F;
+            int x = floor.getX() + Math.round(u * c - v * s), z = floor.getZ() + Math.round(u * s + v * c);
+            BlockPos top = new BlockPos(x, level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.OCEAN_FLOOR_WG, x, z) - 1, z);
+            if (Math.abs(top.getY() - floor.getY()) > 3) continue;
+            BlockState g = level.getBlockState(top);
+            if (g.is(BlockTags.SAND) || g.is(Blocks.GRAVEL) || g.is(Blocks.CLAY) || g.is(BlockTags.DIRT)) {
+                level.setBlock(top, Blocks.CALCITE.defaultBlockState(), 2);
             }
-        }
-        // the skull: a wide back, then a long flat snout narrowing to the tip
-        for (int u = skull; u <= snout; u++) {
-            int back = u - skull;
-            int hw = back < 3 ? w - 1 : Math.max(0, Math.round((w - 1) * (1F - (back - 3F) / (skullLen - 2F))));
-            for (int v = -hw; v <= hw; v++) b.put(u, v, 0, 'u');
-            if (back < 3) for (int v = -hw + 1; v <= hw - 1; v++) b.put(u, v, 1, 'u');
-        }
-        // the two halves of the lower jaw, bowed outwards, lying either side
-        for (int side : new int[] {-1, 1}) {
-            boolean shifted = rand.nextFloat() > whole;
-            int off = shifted ? 2 : 0, du = shifted ? -2 - rand.nextInt(3) : 0;
-            for (int u = skull + 1; u <= snout + 1; u++) {
-                int back = u - skull;
-                int hw = back < 3 ? w - 1 : Math.max(0, Math.round((w - 1) * (1F - (back - 3F) / (skullLen - 2F))));
-                int bow = back > 2 && back < skullLen - 1 ? 1 : 0;
-                b.put(u + du, side * (hw + 1 + bow + off), 0, 'u');
-            }
-        }
-        flippers(b, skull - 2, w, longFlippers ? 7 : 3);
-        // little leftover hip bones, all a whale has of legs
-        int hip = tail + Math.round(length * 0.32F);
-        b.put(hip, -2, 0, 'v');
-        b.put(hip, 2, 0, 'v');
-    }
-
-    /** A sperm whale: a huge basin of a skull with a high crest at the back, and one long narrow jaw. */
-    static void sperm(Builder b, int length, float whole) {
-        RandomSource rand = b.rand;
-        int tail = -length / 2, snout = length / 2;
-        int skullLen = Math.round(length * 0.32F), skull = snout - skullLen;
-        int h = 2, w = 3;
-        spine(b, tail, skull - 1, h, whole, length);
-        int ribEnd = skull - Math.round(length * 0.38F);
-        for (int u = skull - 2; u >= ribEnd; u -= 2) {
-            for (int side : new int[] {-1, 1}) {
-                if (rand.nextFloat() > whole + 0.1F) fallenRib(b, u, side, w + 1);
-                else b.rib(u, side, w, h);
-            }
-        }
-        for (int u = skull; u <= snout; u++) {
-            int back = u - skull;
-            if (back < 2) {
-                for (int v = -3; v <= 3; v++) for (int y = 0; y <= 3 - Math.abs(v) / 3; y++) b.put(u, v, y, 'y'); // the crest
-            } else if (back < 5) {
-                for (int v = -3; v <= 3; v++) b.put(u, v, 0, 'u'); // the basin
-                b.put(u, -3, 1, 'u');
-                b.put(u, 3, 1, 'u');
-            } else {
-                int hw = u >= snout - 1 ? 0 : 1;
-                for (int v = -hw; v <= hw; v++) b.put(u, v, 0, 'u');
-            }
-        }
-        // the jaw, fallen away to one side
-        int side = rand.nextBoolean() ? 1 : -1;
-        int off = 4 + rand.nextInt(2);
-        for (int u = skull + 1; u <= snout; u++) {
-            int back = u - skull;
-            if (back < skullLen / 2) {
-                b.put(u, side * off - 1, 0, 'u');
-                b.put(u, side * off + 1, 0, 'u');
-            } else {
-                b.put(u, side * off, 0, 'u');
-            }
-        }
-        flippers(b, skull - 2, w, 2);
-    }
-
-    /** The backbone, raised on the ribs over the chest and sloping down to the floor along the tail. */
-    static void spine(Builder b, int tail, int neck, int h, float whole, int length) {
-        RandomSource rand = b.rand;
-        int tailLen = Math.round(length * 0.35F);
-        for (int u = tail; u <= neck; u++) {
-            int y = u < tail + tailLen ? Math.round(h * (u - tail) / (float) tailLen) : h;
-            if (rand.nextFloat() > whole + 0.12F) {
-                // this one's been knocked off and lies on the floor nearby
-                b.put(u + rand.nextInt(3) - 1, (rand.nextBoolean() ? 1 : -1) * (2 + rand.nextInt(3)), 0, rand.nextBoolean() ? 'u' : 'v');
-                continue;
-            }
-            b.put(u, 0, y, 'u');
-            // the spines sticking up off the back
-            if (y == h && (u & 1) == 0 && rand.nextFloat() < 0.7F) b.put(u, 0, y + 1, 'y');
-            // fill in under the backbone where the ribs don't hold it up
-            for (int yy = 0; yy < y; yy++) {
-                if (u < tail + tailLen) b.put(u, 0, yy, 'u');
-            }
-        }
-    }
-
-    static void fallenRib(Builder b, int u, int side, int len) {
-        int du = b.rand.nextBoolean() ? 1 : -1;
-        for (int v = 1; v <= len; v++) b.put(u + (v > len / 2 ? du : 0), side * v, 0, 'v');
-    }
-
-    static void flippers(Builder b, int u, int w, int len) {
-        for (int side : new int[] {-1, 1}) {
-            b.put(u, side * (w + 1), 0, 'u'); // shoulder blade
-            b.put(u - 1, side * (w + 1), 0, 'u');
-            for (int k = 1; k <= len; k++) b.put(u + k / 2, side * (w + 1 + k), 0, 'v');
-        }
-    }
-
-    /** What lives on a whale fall: sea pickles, red bone worms, and white mats on the mud around it. */
-    static void life(Builder b) {
-        RandomSource rand = b.rand;
-        WorldGenLevel level = b.level;
-        int pickles = 0, worms = 0;
-        for (BlockPos p : b.placed) {
-            BlockPos up = p.above();
-            if (b.placed.contains(up) || !level.getBlockState(up).is(Blocks.WATER)) continue;
-            float r = rand.nextFloat();
-            if (r < 0.06F && pickles < 10) {
-                level.setBlock(up, Blocks.SEA_PICKLE.defaultBlockState().setValue(SeaPickleBlock.PICKLES, 1 + rand.nextInt(4))
+            if (pickles < 6 && i % 5 == 0 && level.getBlockState(top.above()).is(Blocks.WATER)) {
+                level.setBlock(top.above(), Blocks.SEA_PICKLE.defaultBlockState().setValue(SeaPickleBlock.PICKLES, 1 + rand.nextInt(4))
                         .setValue(SeaPickleBlock.WATERLOGGED, true), 2);
                 pickles++;
-            } else if (r < 0.14F && worms < 16) {
-                level.setBlock(up, Blocks.FIRE_CORAL_FAN.defaultBlockState(), 2);
-                worms++;
             }
         }
-        // bacterial mats spreading on the mud round the bones
-        for (BlockPos p : new java.util.ArrayList<>(b.placed)) {
-            if (rand.nextFloat() > 0.25F) continue;
-            BlockPos g = p.offset(rand.nextInt(3) - 1, 0, rand.nextInt(3) - 1);
-            while (!b.placed.contains(g) && level.getBlockState(g).is(Blocks.WATER) && g.getY() > b.base.getY() - 3) g = g.below();
-            BlockState s = level.getBlockState(g);
-            if (!b.placed.contains(g) && (s.is(BlockTags.SAND) || s.is(Blocks.GRAVEL) || s.is(Blocks.CLAY) || s.is(BlockTags.DIRT))) {
-                level.setBlock(g, Blocks.CALCITE.defaultBlockState(), 2);
-            }
-        }
+        return whale;
     }
 
     // ---- the valley of whales -------------------------------------------------------------------------

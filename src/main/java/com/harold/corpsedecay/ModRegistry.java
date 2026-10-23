@@ -27,6 +27,13 @@ public final class ModRegistry {
                     .updateInterval(1)
                     .build("corpse"));
 
+    public static final RegistryObject<EntityType<com.harold.corpsedecay.corpse.WhaleRemainsEntity>> WHALE = ENTITIES.register("whale_remains",
+            () -> EntityType.Builder.<com.harold.corpsedecay.corpse.WhaleRemainsEntity>of(com.harold.corpsedecay.corpse.WhaleRemainsEntity::new, MobCategory.MISC)
+                    .sized(1F, 1F)
+                    .clientTrackingRange(10)
+                    .updateInterval(40)
+                    .build("whale_remains"));
+
     static {
         for (RemainsFeature.Where w : RemainsFeature.Where.values()) {
             FEATURES.register(w.name().toLowerCase(java.util.Locale.ROOT) + "_remains", () -> new RemainsFeature(w));

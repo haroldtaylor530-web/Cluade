@@ -391,5 +391,6 @@
   "block.corpsedecay.fossil_egg": "Fossil Egg",
   "item.corpsedecay.flint_hand_axe": "Flint Hand Axe",
   "item.corpsedecay.bone_flute": "Bone Flute",
-  "item.corpsedecay.ochre": "Ochre"
+  "item.corpsedecay.ochre": "Ochre",
+  "entity.corpsedecay.whale_remains": "Whale Skeleton"
 }

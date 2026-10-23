@@ -450,20 +450,31 @@ public final class SelfTest {
             check(bog.isRemoved() && !level.getEntitiesOfClass(ItemEntity.class, bog.getBoundingBox().inflate(3),
                     it -> it.getItem().is(Items.LEATHER)).isEmpty(), "breaking up a mummy gives its dried skin as leather");
         }
-        // whales: one on the sea floor (built in the air here), one turned to stone in the sand
-        int bones = com.harold.corpsedecay.world.WhaleFeature.seaWhale(level, new BlockPos(25, groundY + 40, -30), net.minecraft.util.RandomSource.create(5),
+        // whales: skeletons lying on the floor, one turned to stone in the sand
+        var blue = com.harold.corpsedecay.world.WhaleFeature.seaWhale(level, new BlockPos(25, groundY - 1, -22), net.minecraft.util.RandomSource.create(5),
                 com.harold.corpsedecay.world.WhaleFeature.Kind.BLUE, net.minecraft.core.Direction.EAST);
-        int ribs = 0;
-        for (int x = 10; x <= 40; x++) {
-            for (int z : new int[] {-33, -32, -28, -27}) {
-                if (level.getBlockState(new BlockPos(x, groundY + 42, z)).is(net.minecraft.world.level.block.Blocks.BONE_BLOCK)
-                        || level.getBlockState(new BlockPos(x, groundY + 43, z)).is(net.minecraft.world.level.block.Blocks.BONE_BLOCK)) ribs++;
-            }
+        var sperm = com.harold.corpsedecay.world.WhaleFeature.seaWhale(level, new BlockPos(20, groundY - 1, -12), net.minecraft.util.RandomSource.create(6),
+                com.harold.corpsedecay.world.WhaleFeature.Kind.SPERM, net.minecraft.core.Direction.WEST);
+        check(blue != null && blue.length() >= 23 && blue.getBoundingBox().getXsize() > 20 && sperm != null
+                && sperm.kind() == com.harold.corpsedecay.corpse.WhaleRemainsEntity.SPERM, "whale skeletons lie on the sea floor, full size");
+        if (sperm != null) {
+            FakePlayer p = FakePlayerFactory.getMinecraft(level);
+            p.moveTo(sperm.getX(), sperm.getY(), sperm.getZ() - 3);
+            sperm.hurt(level.damageSources().playerAttack(p), 1F);
+            boolean stays = !sperm.isRemoved();
+            p.setShiftKeyDown(true);
+            sperm.hurt(level.damageSources().playerAttack(p), 1F);
+            p.setShiftKeyDown(false);
+            check(stays && sperm.isRemoved() && !level.getEntitiesOfClass(ItemEntity.class, sperm.getBoundingBox().inflate(3),
+                    it -> it.getItem().is(Items.BONE)).isEmpty(), "a whale skeleton stays put until broken up for bones");
         }
-        check(bones > 80 && ribs > 6, "a whale skeleton, its spine held up on arching ribs (" + bones + " bones, " + ribs + " rib tops)");
-        int sperm = com.harold.corpsedecay.world.WhaleFeature.seaWhale(level, new BlockPos(25, groundY + 50, -30), net.minecraft.util.RandomSource.create(6),
-                com.harold.corpsedecay.world.WhaleFeature.Kind.SPERM, net.minecraft.core.Direction.EAST);
-        check(sperm > 60, "a sperm whale skeleton (" + sperm + " bones)");
+        if (blue != null) {
+            CompoundTag saved = new CompoundTag();
+            blue.saveWithoutId(saved);
+            var copy = com.harold.corpsedecay.ModRegistry.WHALE.get().create(level);
+            copy.load(saved);
+            check(copy.length() == blue.length() && copy.seed() == blue.seed() && copy.facing() == blue.facing(), "a whale skeleton saves and loads");
+        }
         for (BlockPos p : BlockPos.betweenClosed(6, groundY + 22, -48, 44, groundY + 24, -12)) {
             level.setBlock(p, (p.getY() == groundY + 24 ? net.minecraft.world.level.block.Blocks.SAND : net.minecraft.world.level.block.Blocks.SANDSTONE).defaultBlockState(), 2);
         }

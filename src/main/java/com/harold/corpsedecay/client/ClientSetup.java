@@ -29,6 +29,7 @@ public final class ClientSetup {
 
     private static void renderers(EntityRenderersEvent.RegisterRenderers e) {
         e.registerEntityRenderer(ModRegistry.CORPSE.get(), CorpseRenderer::new);
+        e.registerEntityRenderer(ModRegistry.WHALE.get(), WhaleRenderer::new);
     }
 
     private static void particles(RegisterParticleProvidersEvent e) {

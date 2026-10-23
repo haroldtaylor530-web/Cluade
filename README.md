@@ -53,8 +53,11 @@ there, rotting through stages down to a bare skeleton, still wearing whatever it
 - **Whale falls.** Somewhere in the oceans, rarely, whales have gone down to die on the same stretch
   of sea floor, and their full-size skeletons lie there together: blue whales, humpbacks with their
   long flippers, sperm whales with their great basin skulls. The spine is raised on arching ribs,
-  the jaw bones have fallen to either side, and some bones have been scattered. Life gathers on
-  them: glowing sea pickles, red plumes of bone worms, white mats on the mud around.
+  the jaw bones have fallen to either side, and some bones have been scattered. Like other remains
+  they're drawn bone by bone (vertebrae, curved ribs, the plates of the skull, finger bones in the
+  flippers, a sperm whale's teeth) rather than built from blocks. Life gathers on them: glowing
+  sea pickles, red plumes of bone worms, white mats on the mud around. Sneak and hit one to break
+  it up for bones and bone blocks.
 - **The valley of whales.** In deserts lie early whales turned to stone, like the ones in Egypt's
   Wadi Al-Hitan: long, snake-like basilosaurs half buried in the sand, still with their tiny hind
   legs, among wind-carved pillars of sandstone, with shark teeth and shells in the sandstone
