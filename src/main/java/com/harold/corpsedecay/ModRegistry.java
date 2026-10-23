@@ -33,6 +33,16 @@ public final class ModRegistry {
         }
     }
     public static final RegistryObject<FossilBedFeature> FOSSIL_BED = FEATURES.register("fossil_bed", FossilBedFeature::new);
+    public static final RegistryObject<com.harold.corpsedecay.world.FootprintTrailFeature> FOOTPRINT_TRAIL =
+            FEATURES.register("footprint_trail", () -> new com.harold.corpsedecay.world.FootprintTrailFeature(false));
+    public static final RegistryObject<com.harold.corpsedecay.world.FootprintTrailFeature> CAVE_FOOTPRINT_TRAIL =
+            FEATURES.register("cave_footprint_trail", () -> new com.harold.corpsedecay.world.FootprintTrailFeature(true));
+    public static final RegistryObject<com.harold.corpsedecay.world.PetrifiedTreeFeature> PETRIFIED_TREE =
+            FEATURES.register("petrified_tree", com.harold.corpsedecay.world.PetrifiedTreeFeature::new);
+    public static final RegistryObject<com.harold.corpsedecay.world.FossilNestFeature> FOSSIL_NEST =
+            FEATURES.register("fossil_nest", com.harold.corpsedecay.world.FossilNestFeature::new);
+    public static final RegistryObject<com.harold.corpsedecay.world.DigSiteFeature> DIG_SITE =
+            FEATURES.register("dig_site", com.harold.corpsedecay.world.DigSiteFeature::new);
 
     public static final RegistryObject<SimpleParticleType> FLY = PARTICLES.register("fly", () -> new SimpleParticleType(false));
 

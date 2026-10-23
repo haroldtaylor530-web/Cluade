@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "eggs=1": {
+      "model": "corpsedecay:block/fossil_egg"
+    },
+    "eggs=2": {
+      "model": "corpsedecay:block/fossil_egg_2"
+    },
+    "eggs=3": {
+      "model": "corpsedecay:block/fossil_egg_3"
+    }
+  }
+}

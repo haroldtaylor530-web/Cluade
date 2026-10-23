@@ -1,0 +1,10 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#minecraft:is_overworld",
+  "features": [
+    "corpsedecay:amber",
+    "corpsedecay:amber_mosquito",
+    "corpsedecay:amber_beetle"
+  ],
+  "step": "underground_ores"
+}

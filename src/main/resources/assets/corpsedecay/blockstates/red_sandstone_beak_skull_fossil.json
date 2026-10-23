@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "corpsedecay:block/red_sandstone_beak_skull_fossil"
+    },
+    "facing=east": {
+      "model": "corpsedecay:block/red_sandstone_beak_skull_fossil",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "corpsedecay:block/red_sandstone_beak_skull_fossil",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "corpsedecay:block/red_sandstone_beak_skull_fossil",
+      "y": 270
+    }
+  }
+}

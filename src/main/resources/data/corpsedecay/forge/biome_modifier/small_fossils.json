@@ -5,7 +5,17 @@
     "corpsedecay:ammonite_fossil",
     "corpsedecay:trilobite_fossil",
     "corpsedecay:fish_fossil",
-    "corpsedecay:fern_fossil"
+    "corpsedecay:fern_fossil",
+    "corpsedecay:scallop_fossil",
+    "corpsedecay:snail_fossil",
+    "corpsedecay:crab_fossil",
+    "corpsedecay:starfish_fossil",
+    "corpsedecay:urchin_fossil",
+    "corpsedecay:crinoid_fossil",
+    "corpsedecay:dragonfly_fossil",
+    "corpsedecay:feather_fossil",
+    "corpsedecay:leaf_fossil",
+    "corpsedecay:shark_tooth_fossil"
   ],
   "step": "underground_ores"
 }

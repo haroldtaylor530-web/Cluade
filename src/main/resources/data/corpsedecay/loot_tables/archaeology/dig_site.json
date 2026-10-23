@@ -1,0 +1,120 @@
+{
+  "type": "minecraft:archaeology",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "corpsedecay:stone_ammonite_fossil",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "corpsedecay:stone_trilobite_fossil",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "corpsedecay:stone_fish_fossil",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "corpsedecay:stone_fern_fossil",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "corpsedecay:stone_scallop_fossil",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "corpsedecay:stone_snail_fossil",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "corpsedecay:stone_crab_fossil",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "corpsedecay:stone_starfish_fossil",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "corpsedecay:stone_urchin_fossil",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "corpsedecay:stone_crinoid_fossil",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "corpsedecay:stone_dragonfly_fossil",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "corpsedecay:stone_feather_fossil",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "corpsedecay:stone_leaf_fossil",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "corpsedecay:stone_shark_tooth_fossil",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "corpsedecay:stone_skull_fossil",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "corpsedecay:stone_horn_skull_fossil",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "corpsedecay:amber",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "corpsedecay:amber_mosquito",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "corpsedecay:fossil_egg",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:bone",
+          "weight": 10
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:bone_meal",
+          "weight": 6
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:flint",
+          "weight": 4
+        }
+      ]
+    }
+  ]
+}

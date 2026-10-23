@@ -30,6 +30,24 @@
         "state": {
           "Name": "corpsedecay:sandstone_fish_fossil"
         }
+      },
+      {
+        "target": {
+          "predicate_type": "minecraft:block_match",
+          "block": "minecraft:red_sandstone"
+        },
+        "state": {
+          "Name": "corpsedecay:red_sandstone_fish_fossil"
+        }
+      },
+      {
+        "target": {
+          "predicate_type": "minecraft:tag_match",
+          "tag": "minecraft:terracotta"
+        },
+        "state": {
+          "Name": "corpsedecay:terracotta_fish_fossil"
+        }
       }
     ]
   }

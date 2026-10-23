@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#corpsedecay:has_dig_sites",
+  "features": "corpsedecay:dig_site",
+  "step": "surface_structures"
+}

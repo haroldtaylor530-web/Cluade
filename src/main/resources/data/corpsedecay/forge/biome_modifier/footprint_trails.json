@@ -1,0 +1,9 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#minecraft:is_overworld",
+  "features": [
+    "corpsedecay:footprint_trail",
+    "corpsedecay:cave_footprint_trail"
+  ],
+  "step": "underground_decoration"
+}

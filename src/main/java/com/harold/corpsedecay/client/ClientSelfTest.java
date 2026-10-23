@@ -148,11 +148,25 @@ public final class ClientSelfTest {
             }
             n++;
         }
-        at(t, () -> camera(0.5, ground + 3.2, 14.6, 0F, 12F));
-        at(t + 25, () -> shot("90_fossil_wall"));
-        at(t + 30, () -> camera(1.0, ground + 4.5, 7.5, 0F, 30F));
-        at(t + 55, () -> shot("91_remains_row"));
-        t += 60;
+        at(t, () -> camera(1.0, ground + 4.5, 7.5, 0F, 30F));
+        at(t + 30, () -> shot("91_remains_row"));
+        t += 35;
+        for (int col = 0; col < GALLERY_PER_ROW; col++) {
+            final double cx = (col - GALLERY_PER_ROW / 2) * GALLERY_STEP + 0.5;
+            final String name = String.format("92_gallery_%d", col);
+            at(t, () -> camera(cx, ground + 10.5, GALLERY_Z - 15.5, 0F, 0F));
+            at(t + 40, () -> shot(name));
+            t += 45;
+        }
+        at(t, () -> camera(-20.5, ground + 4.0, 21.0, 0F, 8F));
+        at(t + 40, () -> shot("93_small_fossils"));
+        at(t + 45, () -> camera(-28.0, ground + 2.5, 25.0, 0F, 25F));
+        at(t + 85, () -> shot("94_finds"));
+        at(t + 90, () -> camera(28.5, ground + 7.0, 22.0, 0F, 50F));
+        at(t + 130, () -> shot("95_trail"));
+        at(t + 135, () -> camera(0.5, ground + 8.0, 34.0, 0F, 40F));
+        at(t + 175, () -> shot("96_dig_site"));
+        t += 180;
         at(t + 5, () -> {
             LOG.info("CLIENTTEST DONE");
             Minecraft.getInstance().stop();
@@ -247,27 +261,65 @@ public final class ClientSelfTest {
             r.giveGear(EquipmentSlot.FEET, new ItemStack(Items.LEATHER_BOOTS));
             r.addGrowth(net.minecraft.world.level.block.Blocks.COBWEB, 0.9F, level.random);
         }
-        // fossils in the rock: a wall of deepslate and stone with two skeletons in it, and the small ones on show
-        for (int x = -10; x <= 10; x++) {
-            for (int y = 0; y < 8; y++) {
-                net.minecraft.world.level.block.Block rock = x < 0 ? net.minecraft.world.level.block.Blocks.DEEPSLATE : net.minecraft.world.level.block.Blocks.STONE;
-                level.setBlockAndUpdate(new net.minecraft.core.BlockPos(x, ground + y, 18), rock.defaultBlockState());
-            }
-        }
-        com.harold.corpsedecay.world.FossilBedFeature.placeSkeleton(level, new net.minecraft.core.BlockPos(-5, ground + 4, 18), level.random,
-                com.harold.corpsedecay.world.FossilBedFeature.SKELETONS[2], 0F, 0.5F, net.minecraft.core.Direction.EAST);
-        com.harold.corpsedecay.world.FossilBedFeature.placeSkeleton(level, new net.minecraft.core.BlockPos(5, ground + 4, 18), level.random,
-                com.harold.corpsedecay.world.FossilBedFeature.SKELETONS[1], 0F, 0.5F, net.minecraft.core.Direction.WEST);
-        int sx = -6;
-        for (com.harold.corpsedecay.block.FossilBlocks.Host host : com.harold.corpsedecay.block.FossilBlocks.Host.values()) {
-            for (com.harold.corpsedecay.block.FossilBlocks.Piece piece : new com.harold.corpsedecay.block.FossilBlocks.Piece[] {
-                    com.harold.corpsedecay.block.FossilBlocks.Piece.AMMONITE, com.harold.corpsedecay.block.FossilBlocks.Piece.TRILOBITE,
-                    com.harold.corpsedecay.block.FossilBlocks.Piece.FISH, com.harold.corpsedecay.block.FossilBlocks.Piece.FERN}) {
-                level.setBlockAndUpdate(new net.minecraft.core.BlockPos(sx++, ground, 17),
-                        com.harold.corpsedecay.block.FossilBlocks.state(host, piece, net.minecraft.core.Direction.NORTH));
-            }
-        }
+        fossilGallery(level);
         camera(0.5, ground + 6.5, -8.5, 0F, 32F);
+    }
+
+    static final int GALLERY_Z = 80, GALLERY_STEP = 22, GALLERY_PER_ROW = 9;
+
+    /**
+     * A long wall with every kind of fossil skeleton in it, two rows high, each in a different rock;
+     * a display of all the small fossils and the other finds; a footprint trail; a dig site.
+     */
+    private static void fossilGallery(ServerLevel level) {
+        net.minecraft.world.level.block.Block[] rocks = {net.minecraft.world.level.block.Blocks.STONE, net.minecraft.world.level.block.Blocks.DEEPSLATE,
+                net.minecraft.world.level.block.Blocks.SANDSTONE, net.minecraft.world.level.block.Blocks.RED_SANDSTONE,
+                net.minecraft.world.level.block.Blocks.TERRACOTTA};
+        String[][] all = com.harold.corpsedecay.block.FossilShapes.SKELETONS;
+        for (int i = 0; i < all.length; i++) {
+            int col = i % GALLERY_PER_ROW, row = i / GALLERY_PER_ROW;
+            int cx = (col - GALLERY_PER_ROW / 2) * GALLERY_STEP;
+            int base = ground + row * 10;
+            var rock = rocks[i % rocks.length].defaultBlockState();
+            for (int x = cx - GALLERY_STEP / 2; x < cx + GALLERY_STEP / 2; x++) {
+                for (int y = 0; y < 10; y++) level.setBlock(new net.minecraft.core.BlockPos(x, base + y, GALLERY_Z), rock, 2);
+            }
+            com.harold.corpsedecay.world.FossilBedFeature.placeSkeleton(level, new net.minecraft.core.BlockPos(cx, base + 5, GALLERY_Z), level.random,
+                    com.harold.corpsedecay.world.FossilBedFeature.named(all[i][0]), 0F, 0.5F,
+                    i % 2 == 0 ? net.minecraft.core.Direction.EAST : net.minecraft.core.Direction.WEST);
+            LOG.info("CLIENTTEST gallery {} {} at x={} row {}", i, all[i][0], cx, row);
+        }
+        // every small fossil in every rock, and amber, petrified wood and eggs in front
+        java.util.List<String> small = com.harold.corpsedecay.block.FossilBlocks.pieces(com.harold.corpsedecay.block.FossilBlocks.SMALL);
+        com.harold.corpsedecay.block.FossilBlocks.Host[] hosts = com.harold.corpsedecay.block.FossilBlocks.Host.values();
+        for (int h = 0; h < hosts.length; h++) {
+            for (int k = 0; k < small.size(); k++) {
+                level.setBlock(new net.minecraft.core.BlockPos(-30 + k, ground + hosts.length - 1 - h, 30),
+                        com.harold.corpsedecay.block.FossilBlocks.state(hosts[h], small.get(k), net.minecraft.core.Direction.NORTH), 2);
+            }
+        }
+        int ex = -30;
+        for (net.minecraft.world.level.block.Block b : com.harold.corpsedecay.block.FossilBlocks.extras()) {
+            level.setBlock(new net.minecraft.core.BlockPos(ex, ground, 28), b.defaultBlockState(), 2);
+            ex += 2;
+        }
+        level.setBlock(new net.minecraft.core.BlockPos(ex, ground, 28), com.harold.corpsedecay.block.FossilBlocks.FOSSIL_EGG.get().defaultBlockState()
+                .setValue(com.harold.corpsedecay.block.FossilEggBlock.EGGS, 3), 2);
+        // skull pieces of every kind, in a column of each rock
+        java.util.List<String> bones = com.harold.corpsedecay.block.FossilBlocks.pieces(com.harold.corpsedecay.block.FossilBlocks.BONE);
+        for (int k = 0; k < bones.size(); k++) {
+            level.setBlock(new net.minecraft.core.BlockPos(-30 + k, ground + 6, 30),
+                    com.harold.corpsedecay.block.FossilBlocks.state(hosts[k % hosts.length], bones.get(k), net.minecraft.core.Direction.EAST), 2);
+        }
+        // a trail across bare rock
+        for (int x = 20; x <= 36; x++) {
+            for (int z = 24; z <= 34; z++) level.setBlock(new net.minecraft.core.BlockPos(x, ground - 1, z), rocks[4].defaultBlockState(), 2);
+        }
+        com.harold.corpsedecay.world.FootprintTrailFeature.trail(level, new net.minecraft.core.BlockPos(21, ground - 1, 29), level.random,
+                net.minecraft.core.Direction.EAST, 8);
+        // a dig site
+        com.harold.corpsedecay.world.DigSiteFeature.dig(level, new net.minecraft.core.BlockPos(0, ground, 42), level.random,
+                net.minecraft.core.Direction.EAST, false);
     }
 
     private static CorpseEntity remains(String name, EntityType<?> type, int x, net.minecraft.world.level.block.Block rock, int material, double sink) {

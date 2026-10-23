@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "corpsedecay:block/terracotta_ribs_fossil"
+    },
+    "facing=east": {
+      "model": "corpsedecay:block/terracotta_ribs_fossil",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "corpsedecay:block/terracotta_ribs_fossil",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "corpsedecay:block/terracotta_ribs_fossil",
+      "y": 270
+    }
+  }
+}

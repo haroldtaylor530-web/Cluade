@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=y": {
+      "model": "corpsedecay:block/petrified_log"
+    },
+    "axis=x": {
+      "model": "corpsedecay:block/petrified_log",
+      "x": 90,
+      "y": 90
+    },
+    "axis=z": {
+      "model": "corpsedecay:block/petrified_log",
+      "x": 90
+    }
+  }
+}

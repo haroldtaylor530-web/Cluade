@@ -401,25 +401,39 @@ public final class SelfTest {
 
     private static int remainsLeft;
 
-    /** Fossil blocks: a skeleton set into rock, matching the rock, and they drop themselves. */
+    /** Fossil blocks: every kind of skeleton set into rock, bone beds, trees, nests, trails, a dig site. */
     private static void fossilBlockTest(MinecraftServer server) {
-        int y0 = groundY + 12;
-        for (int x = -24; x <= -4; x++) {
-            for (int y = 0; y < 8; y++) {
-                for (int z = -6; z <= -4; z++) {
-                    var rock = x < -14 ? net.minecraft.world.level.block.Blocks.DEEPSLATE : net.minecraft.world.level.block.Blocks.STONE;
-                    level.setBlock(new BlockPos(x, y0 + y, z), rock.defaultBlockState(), 2);
-                }
-            }
+        var placed = server.registryAccess().registryOrThrow(net.minecraft.core.registries.Registries.PLACED_FEATURE);
+        for (String f : new String[] {"fossil_bed_badlands", "footprint_trail", "cave_footprint_trail", "petrified_tree", "fossil_nest",
+                "dig_site", "amber", "amber_mosquito", "scallop_fossil", "shark_tooth_fossil", "crinoid_fossil"}) {
+            check(placed.containsKey(new net.minecraft.resources.ResourceLocation("corpsedecay", f)), f + " placement is loaded");
         }
-        String[] rows = com.harold.corpsedecay.world.FossilBedFeature.SKELETONS[0];
-        int want = 0;
-        for (String r : rows) want += r.replace(" ", "").length();
-        int got = com.harold.corpsedecay.world.FossilBedFeature.placeSkeleton(level, new BlockPos(-14, y0 + 4, -5),
-                net.minecraft.util.RandomSource.create(1), rows, 0F, 0.75F, net.minecraft.core.Direction.EAST);
-        check(got == want, "a whole fossil skeleton goes into the rock (" + got + "/" + want + ")");
+        var mods = server.registryAccess().registryOrThrow(net.minecraftforge.registries.ForgeRegistries.Keys.BIOME_MODIFIERS);
+        for (String m : new String[] {"badlands_fossil_beds", "footprint_trails", "petrified_trees", "fossil_nests", "dig_sites", "amber"}) {
+            check(mods.containsKey(new net.minecraft.resources.ResourceLocation("corpsedecay", m)), m + " is added to biomes");
+        }
+        int y0 = groundY + 12;
+        // a block of rock, deepslate at one end, to set every kind of skeleton into
+        for (BlockPos p : BlockPos.betweenClosed(-44, y0, -44, -2, y0 + 9, -4)) {
+            var rock = p.getX() < -30 ? net.minecraft.world.level.block.Blocks.DEEPSLATE : net.minecraft.world.level.block.Blocks.STONE;
+            level.setBlock(p, rock.defaultBlockState(), 2);
+        }
+        int z = -6, allOk = 0, kinds = 0;
+        for (String[] sk : com.harold.corpsedecay.block.FossilShapes.SKELETONS) {
+            String[] rows = com.harold.corpsedecay.world.FossilBedFeature.named(sk[0]);
+            int want = 0;
+            for (String r : rows) want += r.substring(1).replace(" ", "").length();
+            int got = com.harold.corpsedecay.world.FossilBedFeature.placeSkeleton(level, new BlockPos(-22, y0 + 5, z),
+                    net.minecraft.util.RandomSource.create(1), rows, 0F, 0.75F, net.minecraft.core.Direction.EAST);
+            kinds++;
+            if (got == want) allOk++;
+            else LOG.warn("SELFTEST skeleton {} placed {}/{}", sk[0], got, want);
+            z -= 2;
+        }
+        check(allOk == kinds && kinds >= 15, "every kind of skeleton goes into the rock whole (" + allOk + "/" + kinds + ")");
         int stone = 0, deep = 0, skulls = 0;
-        for (BlockPos p : BlockPos.betweenClosed(-24, y0, -6, -4, y0 + 7, -4)) {
+        boolean facing = true;
+        for (BlockPos p : BlockPos.betweenClosed(-44, y0, -44, -2, y0 + 9, -4)) {
             var st = level.getBlockState(p);
             var key = net.minecraftforge.registries.ForgeRegistries.BLOCKS.getKey(st.getBlock());
             if (key == null || !key.getNamespace().equals("corpsedecay")) continue;
@@ -427,22 +441,70 @@ public final class SelfTest {
             if (key.getPath().startsWith("deepslate_")) deep++;
             if (key.getPath().endsWith("skull_fossil")) {
                 skulls++;
-                check(st.getValue(com.harold.corpsedecay.block.FossilBlocks.Pointing.FACING) == net.minecraft.core.Direction.EAST, "the skull points the way the head does");
+                facing &= st.getValue(com.harold.corpsedecay.block.FossilBlocks.Pointing.FACING) == net.minecraft.core.Direction.EAST;
             }
         }
         check(stone > 0 && deep > 0, "fossils take on the rock they're in (" + stone + " stone, " + deep + " deepslate)");
-        check(skulls == 1, "the skeleton has one skull (" + skulls + ")");
+        check(skulls == kinds && facing, "one skull to each skeleton, pointing the way the head does (" + skulls + ")");
+        // varied lengths still make whole animals
+        net.minecraft.util.RandomSource vr = net.minecraft.util.RandomSource.create(7);
+        boolean varied = false, sound = true;
+        for (int i = 0; i < 200; i++) {
+            String[] base = com.harold.corpsedecay.world.FossilBedFeature.pick(vr);
+            String[] v = com.harold.corpsedecay.world.FossilBedFeature.vary(base, vr);
+            if (v[0].length() != base[0].length()) varied = true;
+            int sk = 0;
+            for (String r : v) for (char ch : r.substring(1).toCharArray()) if ("KHCBG".indexOf(ch) >= 0) sk++;
+            sound &= sk == 1;
+        }
+        check(varied && sound, "skeletons come in different lengths and keep their heads");
         int notInRock = com.harold.corpsedecay.world.FossilBedFeature.placeSkeleton(level, new BlockPos(0, groundY + 40, 0),
-                net.minecraft.util.RandomSource.create(1), rows, 0F, 0.75F);
+                net.minecraft.util.RandomSource.create(1), com.harold.corpsedecay.world.FossilBedFeature.named("tyrant"), 0F, 0.75F);
         check(notInRock == 0, "no fossil skeleton is left hanging in the air");
-        var block = com.harold.corpsedecay.block.FossilBlocks.get(com.harold.corpsedecay.block.FossilBlocks.Host.SANDSTONE,
-                com.harold.corpsedecay.block.FossilBlocks.Piece.AMMONITE);
-        BlockPos at = new BlockPos(-10, y0 + 9, -5);
+        // a bone bed, a petrified tree and a nest in a fresh block of stone
+        for (BlockPos p : BlockPos.betweenClosed(-44, y0 + 12, -44, -2, y0 + 22, -4)) level.setBlock(p, net.minecraft.world.level.block.Blocks.STONE.defaultBlockState(), 2);
+        int bed = com.harold.corpsedecay.world.FossilBedFeature.boneBed(level, new BlockPos(-35, y0 + 17, -12), net.minecraft.util.RandomSource.create(3));
+        check(bed > 5, "a bone bed is a jumble of loose bones (" + bed + ")");
+        int tree = com.harold.corpsedecay.world.PetrifiedTreeFeature.grow(level, new BlockPos(-25, y0 + 17, -12), net.minecraft.util.RandomSource.create(4), false);
+        check(tree >= 4 && level.getBlockState(new BlockPos(-25, y0 + 17, -12)).is(com.harold.corpsedecay.block.FossilBlocks.PETRIFIED_LOG.get()),
+                "a petrified trunk lies in the rock (" + tree + ")");
+        int eggs = com.harold.corpsedecay.world.FossilNestFeature.nest(level, new BlockPos(-12, y0 + 15, -25), net.minecraft.util.RandomSource.create(5));
+        int eggBlocks = 0;
+        for (BlockPos p : BlockPos.betweenClosed(-13, y0 + 16, -26, -11, y0 + 16, -24)) {
+            if (level.getBlockState(p).is(com.harold.corpsedecay.block.FossilBlocks.FOSSIL_EGG.get())) eggBlocks++;
+        }
+        check(eggs > 0 && eggBlocks > 0, "a buried nest holds stone eggs (" + eggs + " eggs)");
+        // footprints across a bare rock floor
+        for (BlockPos p : BlockPos.betweenClosed(56, groundY - 1, -30, 80, groundY - 1, -20)) level.setBlock(p, net.minecraft.world.level.block.Blocks.STONE.defaultBlockState(), 2);
+        int prints = com.harold.corpsedecay.world.FootprintTrailFeature.trail(level, new BlockPos(58, groundY - 1, -25), net.minecraft.util.RandomSource.create(6),
+                net.minecraft.core.Direction.EAST, 8);
+        check(prints >= 6, "a trail of footprints crosses the rock (" + prints + ")");
+        // a dig site
+        BlockPos digAt = new BlockPos(30, groundY, -40);
+        boolean dug = com.harold.corpsedecay.world.DigSiteFeature.dig(level, digAt, net.minecraft.util.RandomSource.create(8), net.minecraft.core.Direction.EAST, false);
+        int chests = 0, suspicious = 0, ladders = 0, wallBones = 0;
+        for (BlockPos p : BlockPos.betweenClosed(20, groundY - 8, -44, 40, groundY + 3, -32)) {
+            var st = level.getBlockState(p);
+            if (st.is(net.minecraft.world.level.block.Blocks.CHEST)) chests++;
+            if (st.is(net.minecraft.world.level.block.Blocks.SUSPICIOUS_GRAVEL) || st.is(net.minecraft.world.level.block.Blocks.SUSPICIOUS_SAND)) suspicious++;
+            if (st.is(net.minecraft.world.level.block.Blocks.LADDER)) ladders++;
+            var key = net.minecraftforge.registries.ForgeRegistries.BLOCKS.getKey(st.getBlock());
+            if (key != null && key.getNamespace().equals("corpsedecay") && key.getPath().endsWith("_fossil")) wallBones++;
+        }
+        check(dug && chests == 1 && ladders > 0 && wallBones > 3, "a dig site: pit, ladder, chest and a skeleton in the wall ("
+                + chests + " chest, " + ladders + " ladder, " + wallBones + " bones, " + suspicious + " suspicious)");
+        // mining
+        var block = com.harold.corpsedecay.block.FossilBlocks.get(com.harold.corpsedecay.block.FossilBlocks.Host.TERRACOTTA, "shark_tooth");
+        BlockPos at = new BlockPos(-10, y0 + 30, -5);
         level.setBlock(at, block.defaultBlockState(), 2);
         var drops = net.minecraft.world.level.block.Block.getDrops(block.defaultBlockState(), level, at, null, null,
                 new net.minecraft.world.item.ItemStack(Items.IRON_PICKAXE));
         check(drops.size() == 1 && drops.get(0).is(block.asItem()), "mining a fossil block gives the fossil (" + drops + ")");
         check(block.defaultBlockState().is(net.minecraft.tags.BlockTags.MINEABLE_WITH_PICKAXE), "fossil blocks are mined with a pickaxe");
+        var three = com.harold.corpsedecay.block.FossilBlocks.FOSSIL_EGG.get().defaultBlockState().setValue(com.harold.corpsedecay.block.FossilEggBlock.EGGS, 3);
+        var eggDrops = net.minecraft.world.level.block.Block.getDrops(three, level, at, null, null, new net.minecraft.world.item.ItemStack(Items.IRON_PICKAXE));
+        check(eggDrops.size() == 1 && eggDrops.get(0).getCount() == 3, "a clutch of three eggs gives three eggs (" + eggDrops + ")");
+        check(com.harold.corpsedecay.block.FossilBlocks.pieces().size() >= 30, "lots of kinds of fossil (" + com.harold.corpsedecay.block.FossilBlocks.pieces().size() + ")");
     }
 
     private static void limitTest(MinecraftServer server) {

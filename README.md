@@ -38,12 +38,29 @@ there, rotting through stages down to a bare skeleton, still wearing whatever it
   them. They never crumble and don't count towards the corpse limit; sneak and hit them to break
   them up for bones. Which mobs turn up is the tags `#corpsedecay:remains_mobs`,
   `nether_remains_mobs` and `end_remains_mobs`.
-- **Fossils in the rock.** Whole skeletons of fossil blocks are set into the stone underground:
-  skull, backbone, ribcage, tail, leg bones and feet, seen side-on like a museum fossil, so you
-  find them mining or exposed in cave walls. Sandstone ones lie under deserts and beaches. Smaller
-  fossils (ammonites, trilobites, fish and ferns) turn up on their own like ores. Each comes in
-  stone, deepslate and sandstone, matching the rock it's in. Mine one with a pickaxe to get the
-  block itself and build your own display; they're in their own creative tab.
+- **Fossils in the rock.** Whole skeletons of fossil blocks are set into the rock underground, seen
+  side-on like a museum fossil, so you find them mining or exposed in cave walls and badlands
+  cliffs. There are 18 kinds: long-necked giants, tyrants, raptors with sickle claws, horned and
+  crested plant eaters, plated and sail-backed beasts, long-necked sea serpents, fish lizards,
+  fliers with raised wings, sabre-toothed cats, mammoths with tusks, turtles, serpents, whales,
+  terror birds and more, and no two are quite the same length. They're built from 20 kinds of
+  bone: five kinds of skull, curving neck pieces, backbone, ribcage, back plates, shell, tail and
+  tail tip, wing, tusk, legs, feet, claws and flippers.
+- **Bone beds**: jumbles of loose bones and shells where lots of things died together.
+- **Small fossils** turn up on their own like ores: ammonites, trilobites, fish, ferns, scallops,
+  snails, crabs, starfish, sea urchins, sea lilies, dragonflies, feathers, leaves and shark teeth.
+- **Footprint trails** cross bare rock on the surface (badlands, stony peaks and shores) and cave
+  floors, left, right, left.
+- **Petrified trees**: fallen trunks and standing stumps turned to stone, with lumps of amber
+  against them, sometimes with a mosquito or beetle caught inside. Amber turns up on its own too.
+- **Buried nests**: sealed hollows in the rock with clutches of fossil eggs, sometimes with the
+  parent's skeleton in the wall.
+- **Dig sites** in deserts, badlands and savannas: an abandoned pit beside a half-dug skeleton, with
+  a ladder, scaffolding, suspicious sand or gravel to brush (fossils, amber and eggs inside), a camp
+  with torches, a chest of the diggers' things and a cold campfire, and now and then the digger.
+- Every fossil comes in stone, deepslate, sandstone, red sandstone and terracotta to match the rock
+  it's in. Mine one with a pickaxe to get the block itself and build your own display; they're all
+  in their own creative tab. Fossil eggs stack up to three in a clutch like turtle eggs.
 - **Real skeletons for every mob.** The skeleton is built from each mob's own model: a skull with
   eye sockets and teeth, a ribcage and spine running the length of the body (upright for zombies
   and villagers, horizontal for animals), a pelvis, leg bones with knobbly joints, tail
