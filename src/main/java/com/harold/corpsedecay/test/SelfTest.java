@@ -394,12 +394,13 @@ public final class SelfTest {
                 check(f.isRemoved() && !level.getEntitiesOfClass(ItemEntity.class,
                         f.getBoundingBox().inflate(3), it -> it.getItem().is(Items.BONE)).isEmpty(), "breaking remains gives bones");
             }
-            remainsLeft = 3 + extra;
+            remainsLeft = 3 + extra + diggers;
             limitTest(server);
         });
     }
 
     private static int remainsLeft;
+    private static int diggers;
 
     /** Fossil blocks: every kind of skeleton set into rock, bone beds, trees, nests, trails, a dig site. */
     private static void fossilBlockTest(MinecraftServer server) {
@@ -491,6 +492,7 @@ public final class SelfTest {
             var key = net.minecraftforge.registries.ForgeRegistries.BLOCKS.getKey(st.getBlock());
             if (key != null && key.getNamespace().equals("corpsedecay") && key.getPath().endsWith("_fossil")) wallBones++;
         }
+        diggers = corpses(new AABB(20, groundY - 8, -44, 40, groundY + 3, -32)).size();
         check(dug && chests == 1 && ladders > 0 && wallBones > 3, "a dig site: pit, ladder, chest and a skeleton in the wall ("
                 + chests + " chest, " + ladders + " ladder, " + wallBones + " bones, " + suspicious + " suspicious)");
         // mining
