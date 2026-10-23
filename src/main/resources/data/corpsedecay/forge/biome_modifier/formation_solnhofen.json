@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#corpsedecay:has_solnhofen",
+  "features": "corpsedecay:solnhofen",
+  "step": "underground_structures"
+}

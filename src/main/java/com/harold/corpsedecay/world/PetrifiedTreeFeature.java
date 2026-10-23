@@ -64,6 +64,11 @@ public class PetrifiedTreeFeature extends Feature<NoneFeatureConfiguration> {
 
     static void amber(WorldGenLevel level, BlockPos p, RandomSource rand) {
         if (FossilBlocks.hostFor(level.getBlockState(p)) == null) return;
+        amberIn(level, p, rand);
+    }
+
+    /** A lump of amber at {@code p}, whatever is there now; now and then with an insect in it. */
+    static void amberIn(WorldGenLevel level, BlockPos p, RandomSource rand) {
         float r = rand.nextFloat();
         Block b = r < 0.15F ? FossilBlocks.AMBER_MOSQUITO.get() : r < 0.3F ? FossilBlocks.AMBER_BEETLE.get() : FossilBlocks.AMBER.get();
         level.setBlock(p, b.defaultBlockState(), 2);

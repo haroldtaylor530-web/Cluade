@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "corpsedecay:block/limestone_neck_base_fossil"
+    },
+    "facing=east": {
+      "model": "corpsedecay:block/limestone_neck_base_fossil",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "corpsedecay:block/limestone_neck_base_fossil",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "corpsedecay:block/limestone_neck_base_fossil",
+      "y": 270
+    }
+  }
+}

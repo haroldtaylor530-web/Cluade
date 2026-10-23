@@ -44,10 +44,7 @@ public class FootprintTrailFeature extends Feature<NoneFeatureConfiguration> {
             BlockPos foot = onFloor(level, i % 2 == 0 ? at : at.relative(side));
             if (foot != null) {
                 Host h = FossilBlocks.hostFor(level.getBlockState(foot));
-                if (h != null) {
-                    level.setBlock(foot, FossilBlocks.state(h, "footprint", dir), 2);
-                    placed++;
-                }
+                if (h != null && FossilBlocks.place(level, foot, h, "footprint", dir)) placed++;
                 at = foot;
             }
             if (rand.nextFloat() < 0.15F) dir = rand.nextBoolean() ? dir.getClockWise() : dir.getCounterClockWise();

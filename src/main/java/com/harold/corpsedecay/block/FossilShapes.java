@@ -61,6 +61,14 @@ public final class FossilShapes {
         {"painting_spiral", 4, true},
     };
 
+    /** rock id, then the pieces fossils in it come as (rocks not listed have every piece) */
+    public static final String[][] HOST_PIECES = {
+        {"shale", "skull", "beak_skull", "neck_base", "neck", "neck_top", "spine", "ribs", "tail", "tail_tip", "flipper", "ammonite", "trilobite", "fish", "fern", "crinoid", "dragonfly", "feather", "leaf", "anomalocaris_head", "anomalocaris_tail", "opabinia", "hallucigenia", "wiwaxia", "marrella", "pikaia", "jellyfish", "archaeocyath", "burrows", "footprint"},
+        {"limestone", "skull", "beak_skull", "neck_base", "neck", "neck_top", "spine", "ribs", "shell", "tail", "tail_tip", "wing", "limb", "foot", "claw", "flipper", "ammonite", "trilobite", "fish", "scallop", "snail", "crab", "starfish", "urchin", "crinoid", "dragonfly", "feather", "shark_tooth", "jellyfish", "archaeocyath", "footprint", "painting_aurochs", "painting_deer", "painting_horse", "painting_mammoth", "painting_hunters", "painting_hands", "painting_spiral"},
+        {"chalk", "skull", "beak_skull", "neck_base", "neck", "neck_top", "spine", "ribs", "shell", "tail", "tail_tip", "wing", "limb", "foot", "flipper", "ammonite", "fish", "scallop", "snail", "crab", "starfish", "urchin", "shark_tooth", "footprint", "painting_aurochs", "painting_deer", "painting_horse", "painting_mammoth", "painting_hunters", "painting_hands", "painting_spiral"},
+        {"permafrost", "skull", "beak_skull", "fang_skull", "neck_base", "neck", "neck_top", "spine", "ribs", "tail", "tail_tip", "tusk", "limb", "foot", "claw", "snail", "feather", "leaf"},
+    };
+
     /** letter in a skeleton drawing to piece id */
     public static final String[][] LETTERS = {
         {"K", "skull"},

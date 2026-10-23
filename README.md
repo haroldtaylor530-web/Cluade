@@ -38,6 +38,28 @@ there, rotting through stages down to a bare skeleton, still wearing whatever it
   them. They never crumble and don't count towards the corpse limit; sneak and hit them to break
   them up for bones. Which mobs turn up is the tags `#corpsedecay:remains_mobs`,
   `nether_remains_mobs` and `end_remains_mobs`.
+- **Rock formations.** Most fossils lie in formations: great lenses of layered rock, each modelled
+  on a real fossil site and holding the fossils of its time, found where that rock belongs. Where
+  one meets a cave, a cliff or a hillside you can see its layers.
+
+  | Formation | Age | Rock | Where | Fossils |
+  |---|---|---|---|---|
+  | Burgess Shale | Cambrian | dark shale with pale bands, steeply tilted | inside mountains | Cambrian sea creatures, anomalocaris, trilobites |
+  | Reef Limestone | Devonian | limestone and calcite | under warm seas | sea lilies, trilobites, shells, fish, shark teeth |
+  | Coal Measures | Carboniferous | sandstone, shale and coal seams | under swamps, forests, jungles | ferns, leaves, giant dragonflies, standing stone trunks, early tetrapods |
+  | Red Beds | Triassic–Jurassic | red sandstone and banded mudstone | badlands, savanna plateaus | long necks, plated and sail backs, hunters, nests, footprints, stone logs |
+  | Blue Lias | Jurassic | grey limestone and shale | coasts and seas | ammonites, fish lizards, sea serpents |
+  | Solnhofen Limestone | Jurassic | thin limestone slabs | under plains and forests | fliers, feathers, dragonflies, crabs, jellyfish |
+  | Chalk | Cretaceous | white chalk with bands of flint | coasts and chalk downs | sea urchins, shark teeth, ammonites, sea reptiles, turtles |
+  | Hell Creek | Late Cretaceous | sandstone, mudstone and lignite | plains and savannas | tyrants, horned and duckbilled dinosaurs, raptors, amber |
+  | Flaming Cliffs | Cretaceous | orange sandstone | under deserts | raptors, horned dinosaurs, nests of eggs |
+  | Fossil ash beds | Eocene | volcanic tuff, white ash, paper shale | windswept savannas, meadows | leaves, insects, feathers, terror birds, stone stumps |
+  | Permafrost | Ice Age | frozen silt, ice lenses, gravel | snowy biomes, near the surface | mammoths, sabre-tooths |
+
+  Tar pits in savannas, plains and deserts hold the blackened skeletons of the animals they
+  trapped; tar is slow to walk through. New rocks come with them: shale, limestone, chalk, chalk
+  with flint (mine it for flint), coal seams (mine them for coal), lignite (burns as fuel),
+  permafrost and tar. Outside the formations fossils are rare.
 - **Fossils in the rock.** Whole skeletons of fossil blocks are set into the rock underground, seen
   side-on like a museum fossil, so you find them mining or exposed in cave walls and badlands
   cliffs. There are 18 kinds: long-necked giants, tyrants, raptors with sickle claws, horned and

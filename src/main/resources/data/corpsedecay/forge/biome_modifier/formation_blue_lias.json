@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#corpsedecay:has_blue_lias",
+  "features": "corpsedecay:blue_lias",
+  "step": "underground_structures"
+}

@@ -143,8 +143,7 @@ public class FossilBedFeature extends Feature<NoneFeatureConfiguration> {
                         continue;
                     }
                     if (h == null || rand.nextFloat() < wear) continue;
-                    level.setBlock(p, FossilBlocks.state(h, piece, head), 2);
-                    placed++;
+                    if (FossilBlocks.place(level, p, h, piece, head)) placed++;
                 }
             }
             if (pass == 0 && (cells == 0 || inRock < cells * minRock)) return 0;
@@ -166,8 +165,7 @@ public class FossilBedFeature extends Feature<NoneFeatureConfiguration> {
             Host h = FossilBlocks.hostFor(level.getBlockState(p));
             if (h == null) continue;
             String piece = rand.nextFloat() < 0.2F ? small.get(rand.nextInt(small.size())) : bones.get(rand.nextInt(bones.size()));
-            level.setBlock(p, FossilBlocks.state(h, piece, Direction.from2DDataValue(rand.nextInt(4))), 2);
-            placed++;
+            if (FossilBlocks.place(level, p, h, piece, Direction.from2DDataValue(rand.nextInt(4)))) placed++;
         }
         return placed;
     }

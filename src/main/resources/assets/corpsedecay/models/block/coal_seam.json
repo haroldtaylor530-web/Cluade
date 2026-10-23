@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "side": "corpsedecay:block/coal_seam",
+    "end": "corpsedecay:block/coal_seam_top"
+  }
+}

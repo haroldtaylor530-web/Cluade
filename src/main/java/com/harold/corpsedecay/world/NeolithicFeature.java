@@ -99,8 +99,7 @@ public class NeolithicFeature extends Feature<NoneFeatureConfiguration> {
             if (placed >= want) break;
             if (w.facing() != first.facing() || w.rock().distManhattan(first.rock()) > 6 || used.contains(w.rock())) continue;
             Host h = FossilBlocks.hostFor(level.getBlockState(w.rock()));
-            if (h == null) continue;
-            level.setBlock(w.rock(), FossilBlocks.state(h, paintings.get(rand.nextInt(paintings.size())), w.facing()), 2);
+            if (h == null || !FossilBlocks.place(level, w.rock(), h, paintings.get(rand.nextInt(paintings.size())), w.facing())) continue;
             used.add(w.rock());
             placed++;
         }

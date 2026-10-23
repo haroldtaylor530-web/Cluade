@@ -48,6 +48,13 @@ public final class ModRegistry {
             FEATURES.register(k.name().toLowerCase(java.util.Locale.ROOT), () -> new com.harold.corpsedecay.world.NeolithicFeature(k));
         }
     }
+    static {
+        for (com.harold.corpsedecay.world.FormationFeature.Formation f : com.harold.corpsedecay.world.FormationFeature.Formation.values()) {
+            FEATURES.register(f.id(), () -> new com.harold.corpsedecay.world.FormationFeature(f));
+        }
+    }
+    public static final RegistryObject<com.harold.corpsedecay.world.TarPitFeature> TAR_PIT =
+            FEATURES.register("tar_pit", com.harold.corpsedecay.world.TarPitFeature::new);
     public static final RegistryObject<com.harold.corpsedecay.world.DigSiteFeature> DIG_SITE =
             FEATURES.register("dig_site", com.harold.corpsedecay.world.DigSiteFeature::new);
 

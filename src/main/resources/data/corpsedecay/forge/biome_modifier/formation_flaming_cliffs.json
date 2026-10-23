@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#corpsedecay:has_flaming_cliffs",
+  "features": "corpsedecay:flaming_cliffs",
+  "step": "underground_structures"
+}

@@ -2,7 +2,6 @@
   "type": "forge:add_features",
   "biomes": "#minecraft:is_overworld",
   "features": [
-    "corpsedecay:cambrian_bed",
     "corpsedecay:opabinia_fossil",
     "corpsedecay:hallucigenia_fossil",
     "corpsedecay:wiwaxia_fossil",

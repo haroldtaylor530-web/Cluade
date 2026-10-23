@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#corpsedecay:has_burgess_shale",
+  "features": "corpsedecay:burgess_shale",
+  "step": "underground_structures"
+}

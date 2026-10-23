@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#corpsedecay:has_tar_pits",
+  "features": "corpsedecay:tar_pit",
+  "step": "surface_structures"
+}

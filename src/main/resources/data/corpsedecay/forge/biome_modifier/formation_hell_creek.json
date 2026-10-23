@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#corpsedecay:has_hell_creek",
+  "features": "corpsedecay:hell_creek",
+  "step": "underground_structures"
+}

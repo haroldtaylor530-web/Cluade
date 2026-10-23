@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#corpsedecay:has_coal_measures",
+  "features": "corpsedecay:coal_measures",
+  "step": "underground_structures"
+}

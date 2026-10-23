@@ -332,7 +332,7 @@ public final class SelfTest {
     /** Remains: placed like world generation places them, they last, can be looted and break into bones. */
     private static void fossilTest(MinecraftServer server) {
         var placed = server.registryAccess().registryOrThrow(net.minecraft.core.registries.Registries.PLACED_FEATURE);
-        for (String f : new String[] {"cave_remains", "surface_remains", "nether_remains", "end_remains", "fossil_bed", "fossil_bed_sandstone",
+        for (String f : new String[] {"cave_remains", "surface_remains", "nether_remains", "end_remains", "fossil_bed",
                 "ammonite_fossil", "trilobite_fossil", "fish_fossil", "fern_fossil"}) {
             check(placed.containsKey(new net.minecraft.resources.ResourceLocation("corpsedecay", f)), f + " placement is loaded");
         }
@@ -406,12 +406,12 @@ public final class SelfTest {
     /** Fossil blocks: every kind of skeleton set into rock, bone beds, trees, nests, trails, a dig site. */
     private static void fossilBlockTest(MinecraftServer server) {
         var placed = server.registryAccess().registryOrThrow(net.minecraft.core.registries.Registries.PLACED_FEATURE);
-        for (String f : new String[] {"fossil_bed_badlands", "footprint_trail", "cave_footprint_trail", "petrified_tree", "fossil_nest",
+        for (String f : new String[] {"footprint_trail", "cave_footprint_trail", "petrified_tree", "fossil_nest",
                 "dig_site", "amber", "amber_mosquito", "scallop_fossil", "shark_tooth_fossil", "crinoid_fossil"}) {
             check(placed.containsKey(new net.minecraft.resources.ResourceLocation("corpsedecay", f)), f + " placement is loaded");
         }
         var mods = server.registryAccess().registryOrThrow(net.minecraftforge.registries.ForgeRegistries.Keys.BIOME_MODIFIERS);
-        for (String m : new String[] {"badlands_fossil_beds", "footprint_trails", "petrified_trees", "fossil_nests", "dig_sites", "amber"}) {
+        for (String m : new String[] {"footprint_trails", "petrified_trees", "fossil_nests", "dig_sites", "amber"}) {
             check(mods.containsKey(new net.minecraft.resources.ResourceLocation("corpsedecay", m)), m + " is added to biomes");
         }
         int y0 = groundY + 12;
@@ -511,6 +511,48 @@ public final class SelfTest {
         cambrianAndNeolithicTest(server, y0);
     }
 
+    /** Every rock formation, laid into a block of stone up in the air, and a tar pit. */
+    private static void formationTest(MinecraftServer server) {
+        var placed = server.registryAccess().registryOrThrow(net.minecraft.core.registries.Registries.PLACED_FEATURE);
+        var mods = server.registryAccess().registryOrThrow(net.minecraftforge.registries.ForgeRegistries.Keys.BIOME_MODIFIERS);
+        var all = com.harold.corpsedecay.world.FormationFeature.Formation.values();
+        int good = 0;
+        for (int i = 0; i < all.length; i++) {
+            var f = all[i];
+            check(placed.containsKey(new net.minecraft.resources.ResourceLocation("corpsedecay", f.id()))
+                    && mods.containsKey(new net.minecraft.resources.ResourceLocation("corpsedecay", "formation_" + f.id())), f.id() + " generates in its biomes");
+            int cx = -32 + (i % 3) * 30, cz = -32 + ((i / 3) % 3) * 30, cy = groundY + 70 + (i / 9) * 22;
+            for (BlockPos p : BlockPos.betweenClosed(cx - 12, cy - 9, cz - 12, cx + 12, cy + 9, cz + 12)) {
+                level.setBlock(p, net.minecraft.world.level.block.Blocks.STONE.defaultBlockState(), 2);
+            }
+            var r = com.harold.corpsedecay.world.FormationFeature.lay(level, new BlockPos(cx, cy, cz), net.minecraft.util.RandomSource.create(20 + i), f, 10, 5, 10);
+            int stoneLeft = 0;
+            for (BlockPos p : BlockPos.betweenClosed(cx - 3, cy - 2, cz - 3, cx + 3, cy + 2, cz + 3)) {
+                if (level.getBlockState(p).is(net.minecraft.world.level.block.Blocks.STONE)) stoneLeft++;
+            }
+            boolean ok = r.rock() > 1500 && r.fossils() >= 3 && stoneLeft < 10;
+            LOG.info("SELFTEST formation {}: {} rock, {} fossils, {} stone left in the middle", f.id(), r.rock(), r.fossils(), stoneLeft);
+            if (ok) good++;
+        }
+        check(good == all.length, "every formation lays down its layers and fossils (" + good + "/" + all.length + ")");
+        check(com.harold.corpsedecay.block.FossilBlocks.has(com.harold.corpsedecay.block.FossilBlocks.Host.SHALE, "opabinia")
+                && !com.harold.corpsedecay.block.FossilBlocks.has(com.harold.corpsedecay.block.FossilBlocks.Host.CHALK, "opabinia")
+                && com.harold.corpsedecay.block.FossilBlocks.has(com.harold.corpsedecay.block.FossilBlocks.Host.PERMAFROST, "tusk"),
+                "each rock holds the fossils of its time");
+        var flint = net.minecraft.world.level.block.Block.getDrops(com.harold.corpsedecay.block.FossilBlocks.CHALK_FLINT.get().defaultBlockState(),
+                level, new BlockPos(0, groundY + 100, 0), null, null, new net.minecraft.world.item.ItemStack(Items.IRON_PICKAXE));
+        check(!flint.isEmpty() && flint.get(0).is(Items.FLINT), "chalk gives up its flint (" + flint + ")");
+        var coal = net.minecraft.world.level.block.Block.getDrops(com.harold.corpsedecay.block.FossilBlocks.COAL_SEAM.get().defaultBlockState(),
+                level, new BlockPos(0, groundY + 100, 0), null, null, new net.minecraft.world.item.ItemStack(Items.IRON_PICKAXE));
+        check(!coal.isEmpty() && coal.get(0).is(Items.COAL), "coal seams give coal (" + coal + ")");
+        check(net.minecraftforge.common.ForgeHooks.getBurnTime(new net.minecraft.world.item.ItemStack(com.harold.corpsedecay.block.FossilBlocks.LIGNITE.get()), null) > 0,
+                "lignite burns");
+        int animals = com.harold.corpsedecay.world.TarPitFeature.pit(level, new BlockPos(-20, groundY, 0), net.minecraft.util.RandomSource.create(30));
+        check(animals > 0 && level.getBlockState(new BlockPos(-20, groundY - 1, 0)).is(com.harold.corpsedecay.block.FossilBlocks.TAR.get()),
+                "a tar pit with animals caught in it (" + animals + ")");
+        extraRemains += animals;
+    }
+
     /** The Cambrian beds deep down, and the Stone Age sites. */
     private static void cambrianAndNeolithicTest(MinecraftServer server, int y0) {
         var placed = server.registryAccess().registryOrThrow(net.minecraft.core.registries.Registries.PLACED_FEATURE);
@@ -575,6 +617,7 @@ public final class SelfTest {
         for (String r : new String[] {"flint_hand_axe", "bone_flute", "red_dye_from_ochre"}) {
             check(recipes.byKey(new net.minecraft.resources.ResourceLocation("corpsedecay", r)).isPresent(), r + " can be crafted");
         }
+        formationTest(server);
         check(com.harold.corpsedecay.block.FossilBlocks.pieces(com.harold.corpsedecay.block.FossilBlocks.CAMBRIAN).size() == 10
                 && com.harold.corpsedecay.block.FossilBlocks.pieces(com.harold.corpsedecay.block.FossilBlocks.PAINTING).size() == 7,
                 "ten Cambrian fossils and seven cave paintings");

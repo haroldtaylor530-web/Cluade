@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#corpsedecay:has_permafrost",
+  "features": "corpsedecay:permafrost",
+  "step": "underground_structures"
+}

@@ -50,8 +50,7 @@ public class CambrianBedFeature extends Feature<NoneFeatureConfiguration> {
             spots.add(p.immutable());
             if (rand.nextFloat() > 0.3F) continue;
             String piece = creatures.get(rand.nextInt(creatures.size()));
-            level.setBlock(p, FossilBlocks.state(h, piece, Direction.from2DDataValue(rand.nextInt(4))), 2);
-            placed++;
+            if (FossilBlocks.place(level, p, h, piece, Direction.from2DDataValue(rand.nextInt(4)))) placed++;
         }
         int hunters = rand.nextInt(3);
         for (int i = 0; i < hunters && !spots.isEmpty(); i++) placed += anomalocaris(level, spots.get(rand.nextInt(spots.size())), rand);
@@ -63,7 +62,7 @@ public class CambrianBedFeature extends Feature<NoneFeatureConfiguration> {
         Direction d = Direction.from2DDataValue(rand.nextInt(4));
         BlockPos tail = head.relative(d.getOpposite());
         Host h1 = FossilBlocks.hostFor(level.getBlockState(head)), h2 = FossilBlocks.hostFor(level.getBlockState(tail));
-        if (h1 == null || h2 == null) return 0;
+        if (h1 == null || h2 == null || !FossilBlocks.has(h1, "anomalocaris_head") || !FossilBlocks.has(h2, "anomalocaris_tail")) return 0;
         level.setBlock(head, FossilBlocks.state(h1, "anomalocaris_head", d), 2);
         level.setBlock(tail, FossilBlocks.state(h2, "anomalocaris_tail", d), 2);
         return 2;

@@ -42,6 +42,34 @@ HOSTS = {
         "bone": ((0xF0, 0xE2, 0xC6), (0xD8, 0xC4, 0x9E), (0xA8, 0x90, 0x6C)),
         "hollow": (0x7E, 0x3C, 0x14),
     },
+    "shale": {
+        "name": "Shale",
+        "tex": ("corpsedecay:block/shale", "corpsedecay:block/shale_top", "corpsedecay:block/shale_top"),
+        "bone": ((0xCE, 0xCE, 0xC8), (0xAC, 0xAC, 0xA6), (0x84, 0x84, 0x80)),
+        "hollow": (0x24, 0x24, 0x28),
+        "pieces": "shale",
+    },
+    "limestone": {
+        "name": "Limestone",
+        "tex": ("corpsedecay:block/limestone", "corpsedecay:block/limestone_top", "corpsedecay:block/limestone_top"),
+        "bone": ((0x9E, 0x7E, 0x5A), (0x80, 0x62, 0x42), (0x5C, 0x46, 0x30)),
+        "hollow": (0x9C, 0x94, 0x80),
+        "pieces": "limestone",
+    },
+    "chalk": {
+        "name": "Chalk",
+        "tex": ("corpsedecay:block/chalk", "corpsedecay:block/chalk_top", "corpsedecay:block/chalk_top"),
+        "bone": ((0x96, 0x82, 0x6A), (0x74, 0x62, 0x4C), (0x52, 0x44, 0x34)),
+        "hollow": (0xC4, 0xC0, 0xB4),
+        "pieces": "chalk",
+    },
+    "permafrost": {
+        "name": "Permafrost",
+        "tex": ("corpsedecay:block/permafrost", "corpsedecay:block/permafrost_top", "corpsedecay:block/permafrost_top"),
+        "bone": ((0xDE, 0xCE, 0xA6), (0xBC, 0xA8, 0x80), (0x8E, 0x7A, 0x5A)),
+        "hollow": (0x2A, 0x20, 0x18),
+        "pieces": "permafrost",
+    },
     "terracotta": {
         "name": "Terracotta",
         "tex": ("minecraft:block/terracotta", "minecraft:block/terracotta", "minecraft:block/terracotta"),
@@ -1546,6 +1574,26 @@ ORDER = ["skull", "horn_skull", "crest_skull", "beak_skull", "fang_skull", "neck
     + ["footprint"] + PAINTINGS
 assert sorted(ORDER) == sorted(PIECES), set(ORDER) ^ set(PIECES)
 
+# which fossils each of the formation rocks holds (the older rocks hold everything)
+_MARINE = ["skull", "beak_skull", "neck_base", "neck", "neck_top", "spine", "ribs", "tail", "tail_tip", "flipper"]
+HOST_PIECES = {
+    "shale": CAMBRIAN + ["trilobite", "ammonite", "fish", "fern", "leaf", "dragonfly", "crinoid", "feather", "footprint"] + _MARINE,
+    "limestone": ["ammonite", "trilobite", "scallop", "snail", "crinoid", "urchin", "starfish", "crab", "shark_tooth", "fish",
+                  "jellyfish", "dragonfly", "feather", "archaeocyath", "footprint"] + _MARINE
+                 + ["wing", "limb", "foot", "shell", "claw"] + PAINTINGS,
+    "chalk": ["urchin", "shark_tooth", "ammonite", "scallop", "starfish", "crab", "fish", "snail", "footprint"] + _MARINE
+             + ["wing", "shell", "limb", "foot"] + PAINTINGS,
+    "permafrost": ["skull", "fang_skull", "beak_skull", "tusk", "neck_base", "neck", "neck_top", "spine", "ribs", "tail",
+                   "tail_tip", "limb", "foot", "claw", "feather", "leaf", "snail"],
+}
+for _h, _ps in HOST_PIECES.items():
+    assert all(p in PIECES for p in _ps), (_h, [p for p in _ps if p not in PIECES])
+
+
+def host_pieces(host):
+    key = HOSTS[host].get("pieces")
+    return [p for p in ORDER if key is None or p in HOST_PIECES[key]]
+
 
 def shade(c, f):
     return tuple(max(0, min(255, round(v * f))) for v in c)
@@ -1698,6 +1746,13 @@ def write_java():
         lines.append(f'        {{"{p}", {kind}, {"true" if PIECES[p]["dir"] else "false"}}},')
     lines.append("    };")
     lines.append("")
+    lines.append("    /** rock id, then the pieces fossils in it come as (rocks not listed have every piece) */")
+    lines.append("    public static final String[][] HOST_PIECES = {")
+    for h in HOSTS:
+        if HOSTS[h].get("pieces"):
+            lines.append(f'        {{"{h}", ' + ", ".join(f'"{p}"' for p in host_pieces(h)) + "},")
+    lines.append("    };")
+    lines.append("")
     lines.append("    /** letter in a skeleton drawing to piece id */")
     lines.append("    public static final String[][] LETTERS = {")
     letters = {"K": "skull", "H": "horn_skull", "C": "crest_skull", "B": "beak_skull", "G": "fang_skull", "S": "spine",
@@ -1720,18 +1775,155 @@ def write_java():
         f.write("\n".join(lines) + "\n")
 
 
+# ---- rocks of the formations ------------------------------------------------------------------------
+
+
+def _noise_img(fn):
+    img = Image.new("RGBA", (16, 16))
+    for y in range(16):
+        for x in range(16):
+            img.putpixel((x, y), tuple(max(0, min(255, int(v))) for v in fn(x, y)) + (255,))
+    return img
+
+
+def _mix(a, b, t):
+    return tuple(a[i] + (b[i] - a[i]) * t for i in range(3))
+
+
+def rock_textures():
+    """Textures for the new rocks: (side, top) pictures for each."""
+    def shale_side(x, y):
+        band = (y * 7 + int(2 * math.sin(x * 0.7 + y))) % 5
+        c = (0x46, 0x46, 0x4C) if band < 3 else (0x36, 0x36, 0x3C)
+        if y % 5 == 0 and hash01(x, y, 1) > 0.3:
+            c = (0x5A, 0x5A, 0x60)  # a paler lamina
+        return shade(c, 0.9 + 0.2 * hash01(x, y, 2))
+
+    def shale_top(x, y):
+        return shade((0x40, 0x40, 0x46), 0.85 + 0.3 * hash01(x, y, 3))
+
+    def limestone_side(x, y):
+        c = (0xC6, 0xBE, 0xA8)
+        if y in (5, 11) and hash01(x, y, 4) > 0.25:
+            c = (0xA8, 0xA0, 0x8C)  # bedding
+        n = hash01(x, y, 5)
+        if n > 0.93:
+            c = (0xE6, 0xDE, 0xC8)  # shell bits
+        elif n < 0.05:
+            c = (0x96, 0x8E, 0x7A)
+        return shade(c, 0.94 + 0.12 * hash01(x, y, 6))
+
+    def limestone_top(x, y):
+        c = (0xC2, 0xBA, 0xA4)
+        if hash01(x, y, 7) > 0.92:
+            c = (0xE2, 0xDA, 0xC4)
+        return shade(c, 0.94 + 0.12 * hash01(x, y, 8))
+
+    def chalk(x, y):
+        c = (0xEC, 0xEA, 0xE2)
+        if hash01(x, y, 9) > 0.9:
+            c = (0xD8, 0xD6, 0xCC)
+        return shade(c, 0.96 + 0.06 * hash01(x, y, 10))
+
+    def chalk_flint(x, y):
+        for cx, cy, r in ((4, 5, 2.6), (11.5, 9, 3.0), (6, 12.5, 1.8)):
+            d = math.hypot(x - cx, (y - cy) * 1.3)
+            if d < r:
+                return shade((0x2C, 0x2E, 0x36), 0.85 + 0.35 * hash01(x, y, 11)) if d < r - 0.8 else (0x9A, 0x98, 0x94)
+        return chalk(x, y)
+
+    def coal_seam(x, y):
+        c = (0x1E, 0x1C, 0x1C) if (y + int(hash01(x // 4, y, 12) * 2)) % 4 else (0x2A, 0x28, 0x28)
+        if hash01(x, y, 13) > 0.95:
+            c = (0x6A, 0x66, 0x70)  # glints
+        return shade(c, 0.9 + 0.2 * hash01(x, y, 14))
+
+    def lignite(x, y):
+        streak = (x * 3 + int(3 * math.sin(y * 0.4))) % 7
+        c = (0x3E, 0x2C, 0x1E) if streak < 4 else (0x2C, 0x20, 0x16)
+        return shade(c, 0.9 + 0.2 * hash01(x, y, 15))
+
+    def permafrost_side(x, y):
+        c = (0x50, 0x42, 0x36)
+        lens = (y in (3, 4) and 2 < x < 10) or (y == 9 and x > 6) or (y in (13, 14) and x < 7)
+        if lens:
+            c = (0xB4, 0xD0, 0xE2) if hash01(x, y, 16) > 0.15 else (0xE2, 0xF0, 0xF8)
+        elif hash01(x, y, 17) > 0.9:
+            c = (0x6C, 0x5C, 0x4C)
+        return shade(c, 0.92 + 0.16 * hash01(x, y, 18))
+
+    def permafrost_top(x, y):
+        c = (0x4C, 0x40, 0x36)
+        if hash01(x, y, 19) > 0.85:
+            c = (0xA8, 0xC4, 0xD6)
+        return shade(c, 0.92 + 0.16 * hash01(x, y, 20))
+
+    def tar(x, y):
+        c = (0x16, 0x14, 0x16)
+        r = math.hypot(x - 5, y - 5)
+        if 1.2 < r < 2.4 and x < 6 and y < 6:
+            c = (0x48, 0x44, 0x4E)  # a glossy shine
+        elif hash01(x, y, 21) > 0.94:
+            c = (0x30, 0x2C, 0x30)
+        return c
+
+    return {
+        "shale": (shale_side, shale_top), "limestone": (limestone_side, limestone_top), "chalk": (chalk, chalk),
+        "chalk_flint": (chalk_flint, chalk), "coal_seam": (coal_seam, coal_seam), "lignite": (lignite, lignite),
+        "permafrost": (permafrost_side, permafrost_top), "tar": (tar, tar),
+    }
+
+
+ROCK_NAMES = {"shale": "Shale", "limestone": "Limestone", "chalk": "Chalk", "chalk_flint": "Chalk with Flint",
+              "coal_seam": "Coal Seam", "lignite": "Lignite", "permafrost": "Permafrost", "tar": "Tar"}
+
+
+def ore_loot(bid, item, lo, hi):
+    """Drops the block with silk touch, otherwise the item (more with fortune)."""
+    silk = {"condition": "minecraft:match_tool", "predicate": {"enchantments": [{"enchantment": "minecraft:silk_touch",
+                                                                                   "levels": {"min": 1}}]}}
+    return {"type": "minecraft:block", "pools": [{"rolls": 1, "entries": [{"type": "minecraft:alternatives", "children": [
+        {"type": "minecraft:item", "name": f"{MODID}:{bid}", "conditions": [silk]},
+        {"type": "minecraft:item", "name": item, "functions": [
+            {"function": "minecraft:set_count", "count": {"type": "minecraft:uniform", "min": lo, "max": hi}},
+            {"function": "minecraft:apply_bonus", "enchantment": "minecraft:fortune", "formula": "minecraft:ore_drops"},
+            {"function": "minecraft:explosion_decay"}]}]}]}]}
+
+
+def rocks(lang):
+    tex = os.path.join(ASSETS, "textures", "block")
+    ids = []
+    for bid, (side, top) in rock_textures().items():
+        _noise_img(side).save(os.path.join(tex, bid + ".png"))
+        _noise_img(top).save(os.path.join(tex, bid + "_top.png"))
+        model = {"parent": "minecraft:block/cube_column", "textures": {"side": f"{MODID}:block/{bid}", "end": f"{MODID}:block/{bid}_top"}}
+        loot = None
+        if bid == "chalk_flint":
+            loot = ore_loot(bid, "minecraft:flint", 1, 2)
+        elif bid == "coal_seam":
+            loot = ore_loot(bid, "minecraft:coal", 1, 2)
+        simple_block(bid, ROCK_NAMES[bid], model, lang, loot=loot)
+        ids.append(bid)
+    return ids
+
+
+
 def main():
     tex_dir = os.path.join(ASSETS, "textures", "block", "fossil")
     os.makedirs(tex_dir, exist_ok=True)
+    for f in os.listdir(tex_dir):
+        os.remove(os.path.join(tex_dir, f))
     for host in HOSTS:
+        needed = {PIECES[p]["faces"][d].split("|")[0] for p in host_pieces(host) for d in PIECES[p]["faces"]}
         for i, (name, pic) in enumerate(PICTURES.items()):
-            render(pic, host, i * 31 + len(host)).save(os.path.join(tex_dir, f"{host}_{name}.png"))
+            if name in needed:
+                render(pic, host, i * 31 + len(host)).save(os.path.join(tex_dir, f"{host}_{name}.png"))
 
     ids = []
     lang = {}
     for host, h in HOSTS.items():
         side, top, bottom = h["tex"]
-        for piece in ORDER:
+        for piece in host_pieces(host):
             spec = PIECES[piece]
             bid = f"{host}_{piece}_fossil"
             ids.append(bid)
@@ -1781,6 +1973,7 @@ def main():
                 }],
             })
 
+    ids += rocks(lang)
     ids += extras(lang, tex_dir)
     items(lang)
     write_java()
@@ -1796,7 +1989,8 @@ def main():
 
     # a contact sheet to look at
     rock = {"stone": (0x7D, 0x7D, 0x7D), "deepslate": (0x4A, 0x4A, 0x4F), "sandstone": (0xD8, 0xCB, 0x9B),
-            "red_sandstone": (0xBA, 0x63, 0x24), "terracotta": (0x98, 0x5E, 0x43)}
+            "red_sandstone": (0xBA, 0x63, 0x24), "terracotta": (0x98, 0x5E, 0x43), "shale": (0x42, 0x42, 0x48),
+            "limestone": (0xC4, 0xBC, 0xA6), "chalk": (0xEA, 0xE8, 0xE0), "permafrost": (0x4E, 0x40, 0x36)}
     sheet = Image.new("RGBA", (len(PICTURES) * 18, len(HOSTS) * 18), (40, 40, 40, 255))
     for j, host in enumerate(HOSTS):
         for i, name in enumerate(PICTURES):
@@ -1804,7 +1998,9 @@ def main():
             for y in range(16):
                 for x in range(16):
                     tile.putpixel((x, y), shade(rock[host], 0.85 + 0.3 * hash01(x, y, 5)) + (255,))
-            tile.alpha_composite(Image.open(os.path.join(tex_dir, f"{host}_{name}.png")))
+            f = os.path.join(tex_dir, f"{host}_{name}.png")
+            if os.path.exists(f):
+                tile.alpha_composite(Image.open(f))
             sheet.paste(tile, (i * 18 + 1, j * 18 + 1))
     out = os.environ.get("FOSSIL_SHEET")
     if out:

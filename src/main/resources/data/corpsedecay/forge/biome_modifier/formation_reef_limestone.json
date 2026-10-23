@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#corpsedecay:has_reef_limestone",
+  "features": "corpsedecay:reef_limestone",
+  "step": "underground_structures"
+}

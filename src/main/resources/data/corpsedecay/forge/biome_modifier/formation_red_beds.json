@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#corpsedecay:has_red_beds",
+  "features": "corpsedecay:red_beds",
+  "step": "underground_structures"
+}

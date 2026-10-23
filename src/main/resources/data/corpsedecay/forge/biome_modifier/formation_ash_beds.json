@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#corpsedecay:has_ash_beds",
+  "features": "corpsedecay:ash_beds",
+  "step": "underground_structures"
+}

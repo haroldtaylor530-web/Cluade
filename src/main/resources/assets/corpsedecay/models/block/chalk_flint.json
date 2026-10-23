@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "side": "corpsedecay:block/chalk_flint",
+    "end": "corpsedecay:block/chalk_flint_top"
+  }
+}

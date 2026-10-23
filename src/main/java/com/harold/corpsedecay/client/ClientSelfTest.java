@@ -178,7 +178,17 @@ public final class ClientSelfTest {
         at(t + 405, () -> shot("99_dolmen"));
         at(t + 410, () -> camera(-22.5, ground + 7.0, 108.0, 0F, 25F));
         at(t + 450, () -> shot("99_barrow"));
-        t += 455;
+        at(t + 455, () -> camera(66.5, ground + 8.0, 114.0, 0F, 40F));
+        at(t + 495, () -> shot("99_tar_pit"));
+        t += 500;
+        var forms = com.harold.corpsedecay.world.FormationFeature.Formation.values();
+        for (int i = 0; i < forms.length; i++) {
+            final double fx = FORMATION_X0 + i * FORMATION_STEP + 0.5;
+            final String name = String.format("A%d_formation_%s", i, forms[i].id());
+            at(t, () -> camera(fx, ground + 10.5, FORMATION_Z - 17.0, 0F, 2F));
+            at(t + 40, () -> shot(name));
+            t += 45;
+        }
         at(t + 5, () -> {
             LOG.info("CLIENTTEST DONE");
             Minecraft.getInstance().stop();
@@ -306,8 +316,7 @@ public final class ClientSelfTest {
         com.harold.corpsedecay.block.FossilBlocks.Host[] hosts = com.harold.corpsedecay.block.FossilBlocks.Host.values();
         for (int h = 0; h < hosts.length; h++) {
             for (int k = 0; k < small.size(); k++) {
-                level.setBlock(new net.minecraft.core.BlockPos(-30 + k, ground + hosts.length - 1 - h, 30),
-                        com.harold.corpsedecay.block.FossilBlocks.state(hosts[h], small.get(k), net.minecraft.core.Direction.NORTH), 2);
+                com.harold.corpsedecay.block.FossilBlocks.place(level, new net.minecraft.core.BlockPos(-30 + k, ground + hosts.length - 1 - h, 30), hosts[h], small.get(k), net.minecraft.core.Direction.NORTH);
             }
         }
         int ex = -30;
@@ -320,8 +329,7 @@ public final class ClientSelfTest {
         // skull pieces of every kind, in a column of each rock
         java.util.List<String> bones = com.harold.corpsedecay.block.FossilBlocks.pieces(com.harold.corpsedecay.block.FossilBlocks.BONE);
         for (int k = 0; k < bones.size(); k++) {
-            level.setBlock(new net.minecraft.core.BlockPos(-30 + k, ground + 6, 30),
-                    com.harold.corpsedecay.block.FossilBlocks.state(hosts[k % hosts.length], bones.get(k), net.minecraft.core.Direction.EAST), 2);
+            com.harold.corpsedecay.block.FossilBlocks.place(level, new net.minecraft.core.BlockPos(-30 + k, ground + 6, 30), hosts[k % hosts.length], bones.get(k), net.minecraft.core.Direction.EAST);
         }
         // a trail across bare rock
         for (int x = 20; x <= 36; x++) {
@@ -339,17 +347,15 @@ public final class ClientSelfTest {
         }
         for (int k = 0; k < cambrian.size(); k++) {
             var d = cambrian.get(k).startsWith("anomalocaris") ? net.minecraft.core.Direction.WEST : net.minecraft.core.Direction.NORTH;
-            level.setBlock(new net.minecraft.core.BlockPos(55 - k, ground + 4, 30),
-                    com.harold.corpsedecay.block.FossilBlocks.state(com.harold.corpsedecay.block.FossilBlocks.Host.DEEPSLATE, cambrian.get(k), d), 2);
-            level.setBlock(new net.minecraft.core.BlockPos(55 - k, ground + 3, 30),
-                    com.harold.corpsedecay.block.FossilBlocks.state(com.harold.corpsedecay.block.FossilBlocks.Host.STONE, cambrian.get(k), d), 2);
+            com.harold.corpsedecay.block.FossilBlocks.place(level, new net.minecraft.core.BlockPos(55 - k, ground + 4, 30), com.harold.corpsedecay.block.FossilBlocks.Host.DEEPSLATE, cambrian.get(k), d);
+            com.harold.corpsedecay.block.FossilBlocks.place(level, new net.minecraft.core.BlockPos(55 - k, ground + 3, 30), com.harold.corpsedecay.block.FossilBlocks.Host.STONE, cambrian.get(k), d);
         }
         java.util.List<String> paintings = com.harold.corpsedecay.block.FossilBlocks.pieces(com.harold.corpsedecay.block.FossilBlocks.PAINTING);
         for (int k = 0; k < paintings.size(); k++) {
             for (int y = 0; y < 2; y++) {
-                level.setBlock(new net.minecraft.core.BlockPos(53 - k, ground + y, 30), com.harold.corpsedecay.block.FossilBlocks.state(
+                com.harold.corpsedecay.block.FossilBlocks.place(level, new net.minecraft.core.BlockPos(53 - k, ground + y, 30), 
                         y == 0 ? com.harold.corpsedecay.block.FossilBlocks.Host.SANDSTONE : com.harold.corpsedecay.block.FossilBlocks.Host.STONE,
-                        paintings.get((k + y * 3) % paintings.size()), net.minecraft.core.Direction.NORTH), 2);
+                        paintings.get((k + y * 3) % paintings.size()), net.minecraft.core.Direction.NORTH);
             }
         }
         // Stone Age sites, beyond the gallery wall
@@ -358,7 +364,24 @@ public final class ClientSelfTest {
         com.harold.corpsedecay.world.NeolithicFeature.dolmen(level, new net.minecraft.core.BlockPos(22, ground, 118), nr);
         com.harold.corpsedecay.world.NeolithicFeature.barrow(level, new net.minecraft.core.BlockPos(-22, ground, 120), nr, net.minecraft.core.Direction.EAST);
         com.harold.corpsedecay.world.NeolithicFeature.boneHut(level, new net.minecraft.core.BlockPos(44, ground, 120), nr, net.minecraft.core.Direction.NORTH);
+        com.harold.corpsedecay.world.TarPitFeature.pit(level, new net.minecraft.core.BlockPos(66, ground, 122), nr);
+        // every formation, laid into a block of stone and cut through to show its layers
+        var forms = com.harold.corpsedecay.world.FormationFeature.Formation.values();
+        for (int i = 0; i < forms.length; i++) {
+            int cx = FORMATION_X0 + i * FORMATION_STEP, cy = ground + 10, cz = FORMATION_Z;
+            for (net.minecraft.core.BlockPos p : net.minecraft.core.BlockPos.betweenClosed(cx - 12, ground, cz - 12, cx + 12, ground + 20, cz + 12)) {
+                level.setBlock(p, net.minecraft.world.level.block.Blocks.STONE.defaultBlockState(), 2);
+            }
+            com.harold.corpsedecay.world.FormationFeature.lay(level, new net.minecraft.core.BlockPos(cx, cy, cz), net.minecraft.util.RandomSource.create(100 + i),
+                    forms[i], 11, 7, 11);
+            for (net.minecraft.core.BlockPos p : net.minecraft.core.BlockPos.betweenClosed(cx - 12, ground, cz - 12, cx + 12, ground + 20, cz - 1)) {
+                level.setBlock(p, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(), 2);
+            }
+            LOG.info("CLIENTTEST formation {} at x={}", forms[i].id(), cx);
+        }
     }
+
+    static final int FORMATION_X0 = -150, FORMATION_STEP = 30, FORMATION_Z = 170;
 
     private static CorpseEntity remains(String name, EntityType<?> type, int x, net.minecraft.world.level.block.Block rock, int material, double sink) {
         ServerLevel level = level();
