@@ -473,8 +473,13 @@ public final class SelfTest {
             blue.saveWithoutId(saved);
             var copy = com.harold.corpsedecay.ModRegistry.WHALE.get().create(level);
             copy.load(saved);
-            check(copy.length() == blue.length() && copy.seed() == blue.seed() && copy.facing() == blue.facing(), "a whale skeleton saves and loads");
+            check(copy.length() == blue.length() && copy.seed() == blue.seed() && copy.facing() == blue.facing() && copy.flesh() == blue.flesh(),
+                    "a whale skeleton saves and loads");
         }
+        var beaked = com.harold.corpsedecay.world.WhaleFeature.seaWhale(level, new BlockPos(30, groundY - 1, -4), net.minecraft.util.RandomSource.create(9),
+                com.harold.corpsedecay.world.WhaleFeature.Kind.BEAKED, net.minecraft.core.Direction.NORTH, 0.6F);
+        check(beaked != null && beaked.kind() == com.harold.corpsedecay.corpse.WhaleRemainsEntity.BEAKED && beaked.flesh() == 0.6F && beaked.length() < 12,
+                "a beaked whale, still with flesh on it");
         for (BlockPos p : BlockPos.betweenClosed(6, groundY + 22, -48, 44, groundY + 24, -12)) {
             level.setBlock(p, (p.getY() == groundY + 24 ? net.minecraft.world.level.block.Blocks.SAND : net.minecraft.world.level.block.Blocks.SANDSTONE).defaultBlockState(), 2);
         }

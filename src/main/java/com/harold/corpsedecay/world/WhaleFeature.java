@@ -44,7 +44,7 @@ public class WhaleFeature extends Feature<NoneFeatureConfiguration> {
     /** each chunk of a gathering's cell has a whale in it this often */
     public static final float WHALE_CHANCE = 0.3F;
 
-    public enum Kind { BLUE, HUMPBACK, SPERM, BASILOSAURUS }
+    public enum Kind { BLUE, HUMPBACK, SPERM, BEAKED, BASILOSAURUS }
 
     private final Where where;
 
@@ -65,7 +65,8 @@ public class WhaleFeature extends Feature<NoneFeatureConfiguration> {
             if (!graveyard(level.getSeed(), o.getX() >> 4, o.getZ() >> 4) || rand.nextFloat() >= WHALE_CHANCE) return false;
             BlockPos floor = new BlockPos(x, level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.OCEAN_FLOOR_WG, x, z) - 1, z);
             if (!level.getFluidState(floor.above(6)).is(Fluids.WATER)) return false; // too shallow
-            Kind k = rand.nextFloat() < 0.3F ? Kind.SPERM : rand.nextFloat() < 0.4F ? Kind.HUMPBACK : Kind.BLUE;
+            float r = rand.nextFloat();
+            Kind k = r < 0.25F ? Kind.SPERM : r < 0.4F ? Kind.BEAKED : r < 0.65F ? Kind.HUMPBACK : Kind.BLUE;
             return seaWhale(level, floor, rand, k, Direction.from2DDataValue(rand.nextInt(4))) != null;
         }
         if (!Config.FOSSILS.get()) return false;
@@ -153,20 +154,38 @@ public class WhaleFeature extends Feature<NoneFeatureConfiguration> {
      * Returns it, or null.
      */
     public static com.harold.corpsedecay.corpse.WhaleRemainsEntity seaWhale(WorldGenLevel level, BlockPos floor, RandomSource rand, Kind kind, Direction facing) {
+        return seaWhale(level, floor, rand, kind, facing, -1F);
+    }
+
+    /**
+     * As above, with {@code flesh} (0..1) of the whale still on its bones; below 0, whatever stage
+     * the whale has got to: still with much of its flesh (scavengers' time), scraps of it left
+     * (bacteria and bone worms' time), or bare bones gone pale and furred with bacteria.
+     */
+    public static com.harold.corpsedecay.corpse.WhaleRemainsEntity seaWhale(WorldGenLevel level, BlockPos floor, RandomSource rand, Kind kind,
+                                                                         Direction facing, float flesh) {
+        float whole;
+        if (flesh < 0) {
+            float r = rand.nextFloat();
+            flesh = r < 0.3F ? 0.5F + rand.nextFloat() * 0.35F : r < 0.7F ? 0.1F + rand.nextFloat() * 0.25F : 0F;
+        }
+        whole = flesh > 0.45F ? 0.92F + rand.nextFloat() * 0.08F : flesh > 0 ? 0.8F + rand.nextFloat() * 0.15F : 0.65F + rand.nextFloat() * 0.2F;
         var whale = com.harold.corpsedecay.ModRegistry.WHALE.get().create(level.getLevel());
         if (whale == null) return null;
         float length = switch (kind) {
             case SPERM -> 17 + rand.nextFloat() * 5;
             case HUMPBACK -> 19 + rand.nextFloat() * 5;
+            case BEAKED -> 8 + rand.nextFloat() * 3;
             default -> 23 + rand.nextFloat() * 7;
         };
         int k = kind == Kind.SPERM ? com.harold.corpsedecay.corpse.WhaleRemainsEntity.SPERM
-                : kind == Kind.HUMPBACK ? com.harold.corpsedecay.corpse.WhaleRemainsEntity.HUMPBACK : com.harold.corpsedecay.corpse.WhaleRemainsEntity.BLUE;
+                : kind == Kind.HUMPBACK ? com.harold.corpsedecay.corpse.WhaleRemainsEntity.HUMPBACK
+                : kind == Kind.BEAKED ? com.harold.corpsedecay.corpse.WhaleRemainsEntity.BEAKED : com.harold.corpsedecay.corpse.WhaleRemainsEntity.BLUE;
         float angle = (float) Math.atan2(facing.getStepZ(), facing.getStepX()) + (rand.nextFloat() - 0.5F) * 0.6F;
         whale.setPos(floor.getX() + 0.5, floor.getY() + 1.0, floor.getZ() + 0.5);
-        whale.setup(k, length, angle, rand.nextInt(), 0.7F + rand.nextFloat() * 0.3F);
+        whale.setup(k, length, angle, rand.nextInt(), whole, flesh);
         if (!level.addFreshEntity(whale)) return null;
-        // the mud round it: white mats, and sea pickles lighting it up
+        // the mud round it: white and rust-orange mats of bacteria feeding off it, and sea pickles lighting it up
         float c = (float) Math.cos(angle), s = (float) Math.sin(angle);
         int pickles = 0;
         for (int i = 0; i < 60; i++) {
@@ -176,7 +195,8 @@ public class WhaleFeature extends Feature<NoneFeatureConfiguration> {
             if (Math.abs(top.getY() - floor.getY()) > 3) continue;
             BlockState g = level.getBlockState(top);
             if (g.is(BlockTags.SAND) || g.is(Blocks.GRAVEL) || g.is(Blocks.CLAY) || g.is(BlockTags.DIRT)) {
-                level.setBlock(top, Blocks.CALCITE.defaultBlockState(), 2);
+                float m = rand.nextFloat();
+                level.setBlock(top, (m < 0.45F ? Blocks.CALCITE : m < 0.75F ? Blocks.TERRACOTTA : Blocks.BROWN_TERRACOTTA).defaultBlockState(), 2);
             }
             if (pickles < 6 && i % 5 == 0 && level.getBlockState(top.above()).is(Blocks.WATER)) {
                 level.setBlock(top.above(), Blocks.SEA_PICKLE.defaultBlockState().setValue(SeaPickleBlock.PICKLES, 1 + rand.nextInt(4))

@@ -52,12 +52,16 @@ there, rotting through stages down to a bare skeleton, still wearing whatever it
   bones.
 - **Whale falls.** Somewhere in the oceans, rarely, whales have gone down to die on the same stretch
   of sea floor, and their full-size skeletons lie there together: blue whales, humpbacks with their
-  long flippers, sperm whales with their great basin skulls. The spine is raised on arching ribs,
-  the jaw bones have fallen to either side, and some bones have been scattered. Like other remains
-  they're drawn bone by bone (vertebrae, curved ribs, the plates of the skull, finger bones in the
-  flippers, a sperm whale's teeth) rather than built from blocks. Life gathers on them: glowing
-  sea pickles, red plumes of bone worms, white mats on the mud around. Sneak and hit one to break
-  it up for bones and bone blocks.
+  long flippers, sperm whales with their great basin skulls and toothed jaws, and small beaked
+  whales with long narrow beaks and crests round the blowhole. They're drawn bone by bone
+  (vertebrae, curved ribs, skull plates, finger bones in the flippers) rather than built from
+  blocks, and the bones are stained yellow-brown and oily. Each whale is at its own stage: some
+  still have pale scraps of flesh on the head and in the ribcage, furred white with bacteria and
+  swarming with hagfish; some only shreds, with red bone worms growing out of the bones; some are
+  bare, paler bones coated in white and yellow mats. Octopuses sit on the bones, hagfish and
+  eelpouts weave through them, loose bones lie scattered round about, sea pickles glow, and white
+  and rust-orange bacterial mats spread over the mud. Sneak and hit one to break it up for bones
+  and bone blocks.
 - **The valley of whales.** In deserts lie early whales turned to stone, like the ones in Egypt's
   Wadi Al-Hitan: long, snake-like basilosaurs half buried in the sand, still with their tiny hind
   legs, among wind-carved pillars of sandstone, with shark teeth and shells in the sandstone

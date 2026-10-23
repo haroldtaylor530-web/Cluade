@@ -37,9 +37,9 @@ public class WhaleRenderer extends EntityRenderer<WhaleRemainsEntity> {
     }
 
     static WhaleSkeleton skeleton(WhaleRemainsEntity e) {
-        String key = e.kind() + "|" + e.length() + "|" + e.seed() + "|" + e.whole();
+        String key = e.kind() + "|" + e.length() + "|" + e.seed() + "|" + e.whole() + "|" + e.flesh();
         if (CACHE.size() > 64) CACHE.clear();
-        return CACHE.computeIfAbsent(key, k -> WhaleSkeleton.build(e.kind(), e.length(), e.seed(), e.whole()));
+        return CACHE.computeIfAbsent(key, k -> WhaleSkeleton.build(e.kind(), e.length(), e.seed(), e.whole(), e.flesh()));
     }
 
     @Override
@@ -51,6 +51,10 @@ public class WhaleRenderer extends EntityRenderer<WhaleRemainsEntity> {
         Matrix4f pose = ps.last().pose();
         Matrix3f normal = ps.last().normal();
         for (WhaleSkeleton.Bone b : s.bones) cube(vc, pose, normal, b, light);
+        float time = (e.tickCount + partial) / 20F;
+        for (WhaleSkeleton.Creature c : s.creatures) {
+            for (WhaleSkeleton.Bone b : WhaleSkeleton.pose(c, time)) cube(vc, pose, normal, b, light);
+        }
         var blocks = Minecraft.getInstance().getBlockRenderer();
         for (WhaleSkeleton.Growth g : s.growths) {
             ps.pushPose();
@@ -85,16 +89,15 @@ public class WhaleRenderer extends EntityRenderer<WhaleRemainsEntity> {
         Matrix4f m = new Matrix4f(pose).mul(b.at());
         Matrix3f n = new Matrix3f(normal).mul(new Matrix3f(b.at()));
         Vector3f h = new Vector3f(b.size()).mul(0.5F);
-        int c = Math.round(255 * b.shade());
+        int rgb = b.rgb();
         for (int[] f : FACES) {
             Vector3f nn = n.transform(new Vector3f(f[0], f[1], f[2])).normalize();
-            // stretch the texture along the bone's length, not across it
-            float shadeFace = f[1] == -1 ? 0.75F : 1F;
-            int cc = Math.round(c * shadeFace);
+            float shadeFace = f[1] == -1 ? 0.7F : 1F;
+            int cr = Math.round(((rgb >> 16) & 255) * shadeFace), cg = Math.round(((rgb >> 8) & 255) * shadeFace), cb = Math.round((rgb & 255) * shadeFace);
             for (int k = 0; k < 4; k++) {
                 float x = f[3 + k * 3] * h.x, y = f[4 + k * 3] * h.y, z = f[5 + k * 3] * h.z;
                 Vector3f p = m.transformPosition(new Vector3f(x, y, z));
-                vc.vertex(p.x, p.y, p.z).color(cc, cc, Math.round(cc * 0.95F), 255).uv(UV[k][0], UV[k][1])
+                vc.vertex(p.x, p.y, p.z).color(cr, cg, cb, 255).uv(UV[k][0], UV[k][1])
                         .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(nn.x, nn.y, nn.z).endVertex();
             }
         }

@@ -205,12 +205,18 @@ public final class ClientSelfTest {
         at(t + 260, () -> shot("B4_whale_fall_under"));
         at(t + 262, () -> camera(-80.0, groundSea + 6.0, -100.5, 150F, 15F));
         at(t + 330, () -> shot("B5_whale_fall_sperm"));
-        at(t + 335, () -> server(() -> player().removeEffect(net.minecraft.world.effect.MobEffects.NIGHT_VISION)));
-        at(t + 337, () -> camera(85.0, groundDesert + 16.0, -168.0, 0F, 38F));
-        at(t + 380, () -> shot("B6_desert_whales"));
-        at(t + 385, () -> camera(DESERT_X - 9.0, groundDesert + 4.0, DESERT_Z - 9.0, -45F, 22F));
-        at(t + 425, () -> shot("B7_desert_whale_close"));
-        t += 430;
+        at(t + 332, () -> camera(-101.0, groundSea + 4.5, -133.0, -15F, 30F));
+        at(t + 372, () -> shot("B8_whale_fall_flesh"));
+        at(t + 374, () -> camera(-98.0, groundSea + 4.0, -121.0, -160F, 25F));
+        at(t + 414, () -> shot("B9_whale_fall_humpback"));
+        at(t + 416, () -> camera(-120.0, groundSea + 3.0, -112.0, -30F, 30F));
+        at(t + 456, () -> shot("BA_beaked_whale"));
+        at(t + 458, () -> server(() -> player().removeEffect(net.minecraft.world.effect.MobEffects.NIGHT_VISION)));
+        at(t + 460, () -> camera(85.0, groundDesert + 16.0, -168.0, 0F, 38F));
+        at(t + 500, () -> shot("B6_desert_whales"));
+        at(t + 505, () -> camera(DESERT_X - 9.0, groundDesert + 4.0, DESERT_Z - 9.0, -45F, 22F));
+        at(t + 545, () -> shot("B7_desert_whale_close"));
+        t += 550;
         at(t + 5, () -> {
             LOG.info("CLIENTTEST DONE");
             Minecraft.getInstance().stop();
@@ -370,11 +376,13 @@ public final class ClientSelfTest {
             }
         }
         com.harold.corpsedecay.world.WhaleFeature.seaWhale(level, new net.minecraft.core.BlockPos(-108, sg - 1, -126), net.minecraft.util.RandomSource.create(3),
-                com.harold.corpsedecay.world.WhaleFeature.Kind.BLUE, net.minecraft.core.Direction.EAST);
+                com.harold.corpsedecay.world.WhaleFeature.Kind.BLUE, net.minecraft.core.Direction.EAST, 0.7F);
         com.harold.corpsedecay.world.WhaleFeature.seaWhale(level, new net.minecraft.core.BlockPos(-88, sg - 1, -110), net.minecraft.util.RandomSource.create(4),
-                com.harold.corpsedecay.world.WhaleFeature.Kind.SPERM, net.minecraft.core.Direction.WEST);
+                com.harold.corpsedecay.world.WhaleFeature.Kind.SPERM, net.minecraft.core.Direction.WEST, 0F);
         com.harold.corpsedecay.world.WhaleFeature.seaWhale(level, new net.minecraft.core.BlockPos(-92, sg - 1, -135), net.minecraft.util.RandomSource.create(5),
-                com.harold.corpsedecay.world.WhaleFeature.Kind.HUMPBACK, net.minecraft.core.Direction.NORTH);
+                com.harold.corpsedecay.world.WhaleFeature.Kind.HUMPBACK, net.minecraft.core.Direction.NORTH, 0.25F);
+        com.harold.corpsedecay.world.WhaleFeature.seaWhale(level, new net.minecraft.core.BlockPos(-118, sg - 1, -107), net.minecraft.util.RandomSource.create(6),
+                com.harold.corpsedecay.world.WhaleFeature.Kind.BEAKED, net.minecraft.core.Direction.EAST, 0.3F);
 
         // a patch of desert with stone whales and wind-carved rocks
         int dg = groundDesert = groundAt(level, DESERT_X, DESERT_Z);

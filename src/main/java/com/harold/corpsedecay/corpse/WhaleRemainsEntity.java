@@ -33,9 +33,10 @@ public class WhaleRemainsEntity extends Entity {
     private static final EntityDataAccessor<Float> FACING = SynchedEntityData.defineId(WhaleRemainsEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Integer> SEED = SynchedEntityData.defineId(WhaleRemainsEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Float> WHOLE = SynchedEntityData.defineId(WhaleRemainsEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Float> FLESH = SynchedEntityData.defineId(WhaleRemainsEntity.class, EntityDataSerializers.FLOAT);
 
-    /** blue whale, humpback (long flippers), sperm whale (basin skull, toothed jaw) */
-    public static final int BLUE = 0, HUMPBACK = 1, SPERM = 2;
+    /** blue whale, humpback (long flippers), sperm whale (basin skull, toothed jaw), beaked whale (long narrow beak, crested skull) */
+    public static final int BLUE = 0, HUMPBACK = 1, SPERM = 2, BEAKED = 3;
 
     private final boolean ready;
 
@@ -47,7 +48,8 @@ public class WhaleRemainsEntity extends Entity {
     }
 
     /** A whale of this kind and length lying with its head pointing {@code facing} radians round from +x. */
-    public void setup(int kind, float length, float facing, int seed, float whole) {
+    public void setup(int kind, float length, float facing, int seed, float whole, float flesh) {
+        entityData.set(FLESH, flesh);
         entityData.set(KIND, (byte) kind);
         entityData.set(LENGTH, length);
         entityData.set(FACING, facing);
@@ -63,6 +65,7 @@ public class WhaleRemainsEntity extends Entity {
         entityData.define(FACING, 0F);
         entityData.define(SEED, 0);
         entityData.define(WHOLE, 1F);
+        entityData.define(FLESH, 0F);
     }
 
     @Override
@@ -91,6 +94,11 @@ public class WhaleRemainsEntity extends Entity {
     /** 1 = every bone in place; less = more scattered by scavengers. */
     public float whole() {
         return entityData.get(WHOLE);
+    }
+
+    /** How much of the whale's flesh is still on its bones: 0 = bare bones. */
+    public float flesh() {
+        return entityData.get(FLESH);
     }
 
     @Override
@@ -158,6 +166,7 @@ public class WhaleRemainsEntity extends Entity {
         entityData.set(FACING, tag.getFloat("Facing"));
         entityData.set(SEED, tag.getInt("Seed"));
         entityData.set(WHOLE, tag.contains("Whole") ? tag.getFloat("Whole") : 1F);
+        entityData.set(FLESH, tag.getFloat("Flesh"));
         setBoundingBox(makeBoundingBox());
     }
 
@@ -168,6 +177,7 @@ public class WhaleRemainsEntity extends Entity {
         tag.putFloat("Facing", facing());
         tag.putInt("Seed", seed());
         tag.putFloat("Whole", whole());
+        tag.putFloat("Flesh", flesh());
     }
 
     @Override
