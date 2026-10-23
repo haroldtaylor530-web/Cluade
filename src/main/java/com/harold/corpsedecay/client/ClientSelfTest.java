@@ -166,7 +166,19 @@ public final class ClientSelfTest {
         at(t + 130, () -> shot("95_trail"));
         at(t + 135, () -> camera(0.5, ground + 8.0, 34.0, 0F, 40F));
         at(t + 175, () -> shot("96_dig_site"));
-        t += 180;
+        at(t + 180, () -> camera(49.5, ground + 2.5, 23.5, 0F, 5F));
+        at(t + 220, () -> shot("97_cambrian_and_paintings"));
+        at(t + 225, () -> camera(10.5, ground + 22.0, 92.0, 0F, 35F));
+        at(t + 270, () -> shot("98_stone_age_sites"));
+        at(t + 275, () -> camera(0.5, ground + 12.0, 113.0, 0F, 38F));
+        at(t + 315, () -> shot("99_stone_circle"));
+        at(t + 320, () -> camera(44.5, ground + 9.0, 111.0, 0F, 42F));
+        at(t + 360, () -> shot("99_bone_hut"));
+        at(t + 365, () -> camera(22.5, ground + 3.0, 112.0, 0F, 12F));
+        at(t + 405, () -> shot("99_dolmen"));
+        at(t + 410, () -> camera(-22.5, ground + 7.0, 108.0, 0F, 25F));
+        at(t + 450, () -> shot("99_barrow"));
+        t += 455;
         at(t + 5, () -> {
             LOG.info("CLIENTTEST DONE");
             Minecraft.getInstance().stop();
@@ -320,6 +332,32 @@ public final class ClientSelfTest {
         // a dig site
         com.harold.corpsedecay.world.DigSiteFeature.dig(level, new net.minecraft.core.BlockPos(0, ground, 42), level.random,
                 net.minecraft.core.Direction.EAST, false);
+        // Cambrian creatures in deepslate and stone over a wall of cave paintings
+        java.util.List<String> cambrian = com.harold.corpsedecay.block.FossilBlocks.pieces(com.harold.corpsedecay.block.FossilBlocks.CAMBRIAN);
+        for (int x = 44; x <= 56; x++) {
+            for (int y = 0; y < 5; y++) level.setBlock(new net.minecraft.core.BlockPos(x, ground + y, 31), rocks[0].defaultBlockState(), 2);
+        }
+        for (int k = 0; k < cambrian.size(); k++) {
+            var d = cambrian.get(k).startsWith("anomalocaris") ? net.minecraft.core.Direction.WEST : net.minecraft.core.Direction.NORTH;
+            level.setBlock(new net.minecraft.core.BlockPos(55 - k, ground + 4, 30),
+                    com.harold.corpsedecay.block.FossilBlocks.state(com.harold.corpsedecay.block.FossilBlocks.Host.DEEPSLATE, cambrian.get(k), d), 2);
+            level.setBlock(new net.minecraft.core.BlockPos(55 - k, ground + 3, 30),
+                    com.harold.corpsedecay.block.FossilBlocks.state(com.harold.corpsedecay.block.FossilBlocks.Host.STONE, cambrian.get(k), d), 2);
+        }
+        java.util.List<String> paintings = com.harold.corpsedecay.block.FossilBlocks.pieces(com.harold.corpsedecay.block.FossilBlocks.PAINTING);
+        for (int k = 0; k < paintings.size(); k++) {
+            for (int y = 0; y < 2; y++) {
+                level.setBlock(new net.minecraft.core.BlockPos(53 - k, ground + y, 30), com.harold.corpsedecay.block.FossilBlocks.state(
+                        y == 0 ? com.harold.corpsedecay.block.FossilBlocks.Host.SANDSTONE : com.harold.corpsedecay.block.FossilBlocks.Host.STONE,
+                        paintings.get((k + y * 3) % paintings.size()), net.minecraft.core.Direction.NORTH), 2);
+            }
+        }
+        // Stone Age sites, beyond the gallery wall
+        net.minecraft.util.RandomSource nr = net.minecraft.util.RandomSource.create(42);
+        com.harold.corpsedecay.world.NeolithicFeature.stoneCircle(level, new net.minecraft.core.BlockPos(0, ground, 130), nr, false);
+        com.harold.corpsedecay.world.NeolithicFeature.dolmen(level, new net.minecraft.core.BlockPos(22, ground, 118), nr);
+        com.harold.corpsedecay.world.NeolithicFeature.barrow(level, new net.minecraft.core.BlockPos(-22, ground, 120), nr, net.minecraft.core.Direction.EAST);
+        com.harold.corpsedecay.world.NeolithicFeature.boneHut(level, new net.minecraft.core.BlockPos(44, ground, 120), nr, net.minecraft.core.Direction.NORTH);
     }
 
     private static CorpseEntity remains(String name, EntityType<?> type, int x, net.minecraft.world.level.block.Block rock, int material, double sink) {

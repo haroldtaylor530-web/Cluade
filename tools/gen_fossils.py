@@ -1124,6 +1124,382 @@ def egg_texture():
     return img
 
 
+# ---- the Cambrian: strange sea creatures from the oldest rocks ------------------------------------------
+
+ANOMALOCARIS_HEAD = [  # the front half, pointing right: grasping arms curled under the head, eyes on stalks
+    "................",
+    "................",
+    "...........#.#..",
+    "..........#...#.",
+    ".#.#.#.#.##.##..",
+    "##o##o##o####...",
+    "#############oo.",
+    "##############..",
+    "##############..",
+    "#############oo.",
+    "##o##o##o####...",
+    ".#.#.#.#.##.##..",
+    "..........#...#.",
+    "...........#.#..",
+    "................",
+    "................",
+]
+ANOMALOCARIS_TAIL = [  # the back half: flaps down the sides, a fan of tail blades
+    "................",
+    "................",
+    "................",
+    "##..............",
+    ".###....#.#.#.#.",
+    "..####.#o##o##o#",
+    "...#############",
+    "....############",
+    "....############",
+    "...#############",
+    "..####.#o##o##o#",
+    ".###....#.#.#.#.",
+    "##..............",
+    "................",
+    "................",
+    "................",
+]
+OPABINIA = [  # five eyes on top, a long nozzle ending in a claw
+    "................",
+    "................",
+    "................",
+    ".........#.#.#..",
+    ".........#####..",
+    ".#.#.#.#.######.",
+    "#############...",
+    "##o##o##o####...",
+    "#############...",
+    ".#.#.#.#.###....",
+    "...........###..",
+    ".............##.",
+    "..............#.",
+    ".............#.#",
+    "................",
+    "................",
+]
+HALLUCIGENIA = [  # spines along its back, stilt legs below
+    "................",
+    "................",
+    "................",
+    "..#...#...#...#.",
+    "...#...#...#...#",
+    "....#...#...#...",
+    ".##############.",
+    "################",
+    ".##############.",
+    "..#..#..#..#..#.",
+    ".#..#..#..#..#..",
+    ".#..#..#..#..#..",
+    "................",
+    "................",
+    "................",
+    "................",
+]
+
+
+def wiwaxia():
+    g = blank()
+    for y in range(16):
+        for x in range(16):
+            if ((x - 7.5) / 6.5) ** 2 + ((y - 9.5) / 4.0) ** 2 <= 1:
+                inner = ((x - 7.5) / 5.5) ** 2 + ((y - 9.5) / 3.0) ** 2 <= 1
+                g[y][x] = "o" if inner and (x + 2 * y) % 4 == 0 else "#"
+    for x0, y0, x1, y1 in ((3, 7, 1, 1), (5.5, 6, 4.5, 0), (8, 6, 8.5, 0), (10.5, 6, 11.5, 0), (13, 7, 15, 1)):
+        line(g, x0, y0, x1, y1)
+    return rows(g)
+
+
+def marrella():
+    g = blank()
+    for y in range(4, 15):  # the body, in segments, with little legs
+        g[y][7] = g[y][8] = "#"
+        if y % 2 == 0:
+            g[y][6] = g[y][9] = "#"
+            g[y][5] = g[y][10] = "#" if y > 5 else "."
+    disc(g, 7.5, 3.5, 1.8)
+    for pts in (bezier((6, 3), (1, 4), (1, 14)), bezier((9, 3), (14, 4), (14, 14)),
+                bezier((6, 4), (3, 7), (3, 15)), bezier((9, 4), (12, 7), (12, 15))):
+        for (a, b), (c, d) in zip(pts, pts[1:]):
+            line(g, a, b, c, d)
+    line(g, 6, 2, 3, 0)
+    line(g, 9, 2, 12, 0)
+    return rows(g)
+
+
+def pikaia():
+    g = blank()
+    for x in range(1, 16):
+        cy = 7.5 + 0.9 * math.sin(x / 2.5)
+        w = 2.0 * math.sin(math.pi * x / 17) + 0.5
+        for y in range(16):
+            if abs(y - cy) <= w:
+                g[y][x] = "o" if x % 3 == 0 and abs(y - cy) < w - 0.3 else "#"
+    dot(g, 15, 6)
+    dot(g, 15, 9)
+    return rows(g)
+
+
+def jellyfish():
+    g = blank()
+    for y in range(16):
+        for x in range(16):
+            r = math.hypot(x - 7.5, y - 7.5)
+            if r > 6.9:
+                continue
+            a = math.degrees(math.atan2(y - 7.5, x - 7.5)) % 45
+            canal = (a < 5 or a > 40) and r > 1.2
+            g[y][x] = "o" if canal or abs(r - 3.6) < 0.45 else "#"
+    return rows(g)
+
+
+def archaeocyath():
+    g = blank()
+    for y in range(1, 15):
+        half = 1.2 + (14 - y) * 0.42
+        for x in range(16):
+            d = abs(x - 7.5)
+            if d <= half:
+                hollow = y < 5 and d < half - 2.4
+                pore = not hollow and y % 2 == 0 and int(x + y) % 3 == 0 and d < half - 0.5
+                g[y][x] = "o" if hollow or pore else "#"
+    return rows(g)
+
+
+def burrows():
+    g = blank()
+    for k, (y0, amp, ph) in enumerate(((3.0, 1.6, 0.0), (8.0, 2.2, 1.7), (12.5, 1.3, 3.1))):
+        pts = [(x, y0 + amp * math.sin(x / 2.2 + ph)) for x in range(-1, 18)]
+        for (a, b), (c, d) in zip(pts, pts[1:]):
+            line(g, a, b, c, d)
+    line(g, 4, 3, 4, 8)   # a U-shaped burrow
+    line(g, 11, 4, 11, 9)
+    return rows(g)
+
+
+CAMBRIAN_PICTURES = {
+    "anomalocaris_head": ANOMALOCARIS_HEAD, "anomalocaris_tail": ANOMALOCARIS_TAIL, "opabinia": OPABINIA,
+    "hallucigenia": HALLUCIGENIA, "wiwaxia": wiwaxia(), "marrella": marrella(), "pikaia": pikaia(),
+    "jellyfish": jellyfish(), "archaeocyath": archaeocyath(), "burrows": burrows(),
+}
+CAMBRIAN = ["anomalocaris_head", "anomalocaris_tail", "opabinia", "hallucigenia", "wiwaxia", "marrella", "pikaia",
+            "jellyfish", "archaeocyath", "burrows"]
+
+# ---- the Neolithic: paintings on cave walls, in ochre and charcoal --------------------------------------
+# r red ochre, k charcoal, y yellow ochre
+
+PAINTING_AUROCHS = [
+    "................",
+    "................",
+    "..........k...k.",
+    "..........kk.kk.",
+    "...rrrrrrrrrrrk.",
+    "..rrrrrrrrrrrrkk",
+    ".rkrrrrrrrrrrrr.",
+    ".r.rrrrrrrrrrr..",
+    "...rrrrrrrrr....",
+    "...k.k....k.k...",
+    "...k.k....k.k...",
+    "...k.k....k.k...",
+    "................",
+    "................",
+    "................",
+    "................",
+]
+PAINTING_DEER = [
+    "................",
+    "..........k.k.k.",
+    "...........kkk..",
+    "..........k.k...",
+    "...........kk...",
+    "...........kkk..",
+    "..kkkkkkkkkkk...",
+    ".kkkkkkkkkkk....",
+    "..kkkkkkkkk.....",
+    "..k.k....k.k....",
+    "..k..k...k..k...",
+    ".k...k..k...k...",
+    "................",
+    "................",
+    "................",
+    "................",
+]
+PAINTING_HORSE = [
+    "................",
+    "................",
+    "................",
+    "...........kk...",
+    "..........kkkk..",
+    "...yyyyyyykyyyk.",
+    "..yyyyyyyyyyyy..",
+    ".kyyyyyyyyyyy...",
+    ".k.yyyyyyyyy....",
+    "...k.k...k.k....",
+    "...k.k...k.k....",
+    "..k..k..k..k....",
+    "................",
+    "................",
+    "................",
+    "................",
+]
+PAINTING_MAMMOTH = [
+    "................",
+    "....kkkkkk......",
+    "..kkrrrrrrkk....",
+    ".krrrrrrrrrrk...",
+    ".krrrrrrrrrrrk..",
+    ".krrrrrrrrrrrrk.",
+    ".krrrrrrrrrrrrk.",
+    "..krrrrrrrrrrrk.",
+    "..krrrrrrrrrk.k.",
+    "..krk..krk..k.k.",
+    "..krk..krk.y..k.",
+    "..kkk..kkk..yyk.",
+    "................",
+    "................",
+    "................",
+    "................",
+]
+
+
+def hunters():
+    g = blank()
+    for x in (3, 8, 13):
+        g[2][x] = "r"
+        for y in range(3, 8):
+            g[y][x] = "r"
+        g[4][x - 1] = g[4][x + 1] = "r"
+        g[8][x - 1] = g[9][x - 1] = "r"
+        g[8][x + 1] = g[9][x + 1] = "r"
+        line(g, x + 1, 9, min(15, x + 3), 1, 0, "r")   # a spear
+    line(g, 0, 13, 15, 13, 0, "k")                       # the ground
+    return rows(g)
+
+
+def hands():
+    g = blank()
+    hand = ["r.r.r..", "r.r.r.r", "r.r.r.r", "rrrrrrr", "rrrrrrr", "rrrrrr.", ".rrrr..", ".rrrr.."]
+    for dy, row in enumerate(hand):
+        for dx, ch in enumerate(row):
+            if ch == "r":
+                g[1 + dy][2 + dx] = "r"
+                if 7 + dy < 16 and 8 + dx < 16:
+                    g[7 + dy][8 + dx] = "k"
+    for x, y in ((12, 2), (14, 4), (13, 6), (2, 12), (4, 14)):
+        g[y][x] = "y"
+    return rows(g)
+
+
+def spiral():
+    g = blank()
+    pts = []
+    for i in range(140):
+        t = i / 140 * 3.2 * 2 * math.pi
+        r = 0.4 + t * 6.4 / (3.2 * 2 * math.pi)
+        pts.append((7.5 + r * math.cos(t), 7.5 + r * math.sin(t)))
+    for x, y in pts:
+        dot(g, x, y, "y")
+    for x, y in ((1, 1), (14, 1), (1, 14), (14, 14), (2, 8), (13, 8)):
+        g[y][x] = "r"
+    return rows(g)
+
+
+PAINTING_PICTURES = {
+    "painting_aurochs": PAINTING_AUROCHS, "painting_deer": PAINTING_DEER, "painting_horse": PAINTING_HORSE,
+    "painting_mammoth": PAINTING_MAMMOTH, "painting_hunters": hunters(), "painting_hands": hands(),
+    "painting_spiral": spiral(),
+}
+PAINTINGS = list(PAINTING_PICTURES)
+PAINT = {"r": (0xA8, 0x3E, 0x26), "k": (0x2A, 0x24, 0x22), "y": (0xC8, 0x8E, 0x3A)}
+
+NEW_PICTURES.update(CAMBRIAN_PICTURES)
+NEW_PICTURES.update(PAINTING_PICTURES)
+NEW_PIECES.update({
+    "anomalocaris_head": side_piece("anomalocaris_head", front="tail_end", back="tail_end", top="anomalocaris_head"),
+    "anomalocaris_tail": side_piece("anomalocaris_tail", front="tail_end", back="tail_end", top="anomalocaris_tail"),
+    "opabinia": all_faces("opabinia", True),
+    "hallucigenia": all_faces("hallucigenia", True),
+    "wiwaxia": all_faces("wiwaxia"),
+    "marrella": all_faces("marrella"),
+    "pikaia": all_faces("pikaia", True),
+    "jellyfish": all_faces("jellyfish"),
+    "archaeocyath": all_faces("archaeocyath"),
+    "burrows": all_faces("burrows", True),
+})
+for _p in PAINTINGS:
+    NEW_PIECES[_p] = {"dir": True, "painting": True, "faces": {"north": _p}}
+NEW_PIECE_NAMES.update({
+    "anomalocaris_head": "Anomalocaris Head", "anomalocaris_tail": "Anomalocaris Tail", "opabinia": "Opabinia",
+    "hallucigenia": "Hallucigenia", "wiwaxia": "Wiwaxia", "marrella": "Marrella", "pikaia": "Pikaia",
+    "jellyfish": "Jellyfish", "archaeocyath": "Archaeocyath", "burrows": "Burrow",
+    "painting_aurochs": "Aurochs Painting", "painting_deer": "Deer Painting", "painting_horse": "Horse Painting",
+    "painting_mammoth": "Mammoth Painting", "painting_hunters": "Hunters Painting", "painting_hands": "Handprint Painting",
+    "painting_spiral": "Spiral Painting",
+})
+
+# ---- Neolithic items: a knapped flint hand axe, a bone flute, a lump of ochre ---------------------------
+
+ITEMS = {
+    "flint_hand_axe": ({"a": (0x9A, 0x96, 0xA0), "b": (0x5E, 0x5A, 0x64), "c": (0x36, 0x33, 0x3A)}, [
+        "................",
+        ".........aab....",
+        "........abbbc...",
+        ".......abbcbc...",
+        "......abcbbbc...",
+        ".....abbbcbbc...",
+        "....abcbbbbc....",
+        "....abbbcbbc....",
+        "...abbcbbbc.....",
+        "...abbbbcbc.....",
+        "...abcbbbc......",
+        "....abbbc.......",
+        ".....acc........",
+        "................",
+        "................",
+        "................",
+    ]),
+    "bone_flute": ({"a": (0xF0, 0xE8, 0xD4), "b": (0xD6, 0xCB, 0xAE), "c": (0xA8, 0x9A, 0x7A), "k": (0x3A, 0x30, 0x28)}, [
+        "................",
+        "................",
+        "............aa..",
+        "...........abba.",
+        "..........abbc..",
+        ".........abkc...",
+        "........abbc....",
+        ".......abkc.....",
+        "......abbc......",
+        ".....abkc.......",
+        "....abbc........",
+        "...abbc.........",
+        "..aabc..........",
+        "..abc...........",
+        "................",
+        "................",
+    ]),
+    "ochre": ({"a": (0xD2, 0x7A, 0x4A), "b": (0xA8, 0x50, 0x2E), "c": (0x7A, 0x34, 0x20)}, [
+        "................",
+        "................",
+        "................",
+        "................",
+        "......aab.......",
+        ".....abbbb......",
+        "....abbbbbc.....",
+        "...abbcbbbbc....",
+        "...abbbbbcccc...",
+        "....bbcbbbcc....",
+        ".....cccccc.....",
+        "................",
+        "................",
+        "................",
+        "................",
+        "................",
+    ]),
+}
+ITEM_NAMES = {"flint_hand_axe": "Flint Hand Axe", "bone_flute": "Bone Flute", "ochre": "Ochre"}
+
+
 PICTURES = {
     "skull_side": SKULL_SIDE, "skull_front": SKULL_FRONT, "skull_top": SKULL_TOP,
     "vertebra_end": VERTEBRA_END, "spine_side": SPINE_SIDE, "spine_top": SPINE_TOP,
@@ -1166,7 +1542,8 @@ PIECE_NAMES = {
 PIECE_NAMES.update(NEW_PIECE_NAMES)
 # the order pieces are listed in (and registered in): skeleton first, then small fossils, then the print
 ORDER = ["skull", "horn_skull", "crest_skull", "beak_skull", "fang_skull", "neck_base", "neck", "neck_top", "spine", "ribs",
-         "plates", "shell", "tail", "tail_tip", "wing", "tusk", "limb", "foot", "claw", "flipper"] + SMALL + ["footprint"]
+         "plates", "shell", "tail", "tail_tip", "wing", "tusk", "limb", "foot", "claw", "flipper"] + SMALL + CAMBRIAN \
+    + ["footprint"] + PAINTINGS
 assert sorted(ORDER) == sorted(PIECES), set(ORDER) ^ set(PIECES)
 
 
@@ -1181,6 +1558,8 @@ def hash01(x, y, seed):
 
 
 def render(pic, host, seed):
+    if any(ch in "rky" for row in pic for ch in row):
+        return render_painting(pic, seed)
     light, mid, dark = HOSTS[host]["bone"]
     hollow = HOSTS[host]["hollow"]
     img = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
@@ -1208,6 +1587,34 @@ def render(pic, host, seed):
                 # hollows, and the shadow the bone casts down and to the right into the rock
                 img.putpixel((x, y), hollow + (255,))
     return img
+
+
+def render_painting(pic, seed):
+    """Flat ochre and charcoal, worn away in places."""
+    img = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
+    for y in range(16):
+        for x in range(16):
+            ch = pic[y][x]
+            if ch in PAINT and hash01(x, y, seed) < 0.9:
+                img.putpixel((x, y), shade(PAINT[ch], 0.88 + 0.22 * hash01(x, y, seed + 1)) + (255,))
+    return img
+
+
+def items(lang):
+    tex = os.path.join(ASSETS, "textures", "item")
+    os.makedirs(tex, exist_ok=True)
+    for name, (pal, pic) in ITEMS.items():
+        img = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
+        for y, row in enumerate(pic):
+            assert len(row) == 16, name
+            for x, ch in enumerate(row):
+                if ch in pal:
+                    img.putpixel((x, y), pal[ch] + (255,))
+        img.save(os.path.join(tex, name + ".png"))
+        parent = "minecraft:item/handheld" if name == "flint_hand_axe" else "minecraft:item/generated"
+        write_json(os.path.join(ASSETS, "models", "item", name + ".json"),
+                   {"parent": parent, "textures": {"layer0": f"{MODID}:item/{name}"}})
+        lang[f"item.{MODID}.{name}"] = ITEM_NAMES[name]
 
 
 def write_json(path, obj):
@@ -1284,10 +1691,10 @@ def write_java():
     lines = ["package com.harold.corpsedecay.block;", "",
              "/** Generated by tools/gen_fossils.py: every fossil piece, and the skeletons they make. */",
              "public final class FossilShapes {", "    private FossilShapes() {", "    }", "",
-             "    /** id, kind (0 skeleton bone, 1 small fossil, 2 footprint), points along the body */",
+             "    /** id, kind (0 skeleton bone, 1 small fossil, 2 footprint, 3 Cambrian, 4 cave painting), points along the body */",
              "    public static final Object[][] PIECES = {"]
     for p in ORDER:
-        kind = 2 if PIECES[p].get("print") else 1 if p in SMALL else 0
+        kind = 4 if PIECES[p].get("painting") else 2 if PIECES[p].get("print") else 3 if p in CAMBRIAN else 1 if p in SMALL else 0
         lines.append(f'        {{"{p}", {kind}, {"true" if PIECES[p]["dir"] else "false"}}},')
     lines.append("    };")
     lines.append("")
@@ -1375,6 +1782,7 @@ def main():
             })
 
     ids += extras(lang, tex_dir)
+    items(lang)
     write_java()
     write_json(os.path.join(DATA, "minecraft", "tags", "blocks", "mineable", "pickaxe.json"),
                {"replace": False, "values": [f"{MODID}:{b}" for b in ids]})
@@ -1382,7 +1790,7 @@ def main():
     lang_path = os.path.join(ASSETS, "lang", "en_us.json")
     with open(lang_path) as f:
         existing = json.load(f)
-    existing = {k: v for k, v in existing.items() if not k.startswith(f"block.{MODID}.")}
+    existing = {k: v for k, v in existing.items() if not k.startswith(f"block.{MODID}.") and not k.startswith(f"item.{MODID}.")}
     existing.update(lang)
     write_json(lang_path, existing)
 

@@ -18,6 +18,7 @@ public final class Config {
     public static final ForgeConfigSpec.BooleanValue FLIES;
     public static final ForgeConfigSpec.BooleanValue REMAINS;
     public static final ForgeConfigSpec.BooleanValue FOSSILS;
+    public static final ForgeConfigSpec.BooleanValue ANCIENT_SITES;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> EXCLUDED;
 
     static {
@@ -40,6 +41,8 @@ public final class Config {
                 .define("remains", true);
         FOSSILS = b.comment("New chunks can have fossils in the rock: whole skeletons of fossil blocks, and ammonites, trilobites, fish and ferns.")
                 .define("fossils", true);
+        ANCIENT_SITES = b.comment("New chunks can have Stone Age sites: painted caves, stone circles, dolmens, burial mounds, mammoth-bone huts.")
+                .define("ancientSites", true);
         EXCLUDED = b.comment("Entity ids that never leave a corpse, e.g. [\"minecraft:bat\"]. The tag #corpsedecay:no_corpse works too.")
                 .defineListAllowEmpty("excludedMobs", List.of(), o -> o instanceof String);
         SPEC = b.build();

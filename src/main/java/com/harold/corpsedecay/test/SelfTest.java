@@ -394,13 +394,14 @@ public final class SelfTest {
                 check(f.isRemoved() && !level.getEntitiesOfClass(ItemEntity.class,
                         f.getBoundingBox().inflate(3), it -> it.getItem().is(Items.BONE)).isEmpty(), "breaking remains gives bones");
             }
-            remainsLeft = 3 + extra + diggers;
+            remainsLeft = 3 + extra + diggers + extraRemains;
             limitTest(server);
         });
     }
 
     private static int remainsLeft;
     private static int diggers;
+    private static int extraRemains;
 
     /** Fossil blocks: every kind of skeleton set into rock, bone beds, trees, nests, trails, a dig site. */
     private static void fossilBlockTest(MinecraftServer server) {
@@ -507,6 +508,76 @@ public final class SelfTest {
         var eggDrops = net.minecraft.world.level.block.Block.getDrops(three, level, at, null, null, new net.minecraft.world.item.ItemStack(Items.IRON_PICKAXE));
         check(eggDrops.size() == 1 && eggDrops.get(0).getCount() == 3, "a clutch of three eggs gives three eggs (" + eggDrops + ")");
         check(com.harold.corpsedecay.block.FossilBlocks.pieces().size() >= 30, "lots of kinds of fossil (" + com.harold.corpsedecay.block.FossilBlocks.pieces().size() + ")");
+        cambrianAndNeolithicTest(server, y0);
+    }
+
+    /** The Cambrian beds deep down, and the Stone Age sites. */
+    private static void cambrianAndNeolithicTest(MinecraftServer server, int y0) {
+        var placed = server.registryAccess().registryOrThrow(net.minecraft.core.registries.Registries.PLACED_FEATURE);
+        for (String f : new String[] {"cambrian_bed", "opabinia_fossil", "hallucigenia_fossil", "painted_cave", "stone_circle", "dolmen", "barrow", "bone_hut"}) {
+            check(placed.containsKey(new net.minecraft.resources.ResourceLocation("corpsedecay", f)), f + " placement is loaded");
+        }
+        var mods = server.registryAccess().registryOrThrow(net.minecraftforge.registries.ForgeRegistries.Keys.BIOME_MODIFIERS);
+        for (String m : new String[] {"cambrian_fossils", "painted_caves", "neolithic_sites", "bone_huts"}) {
+            check(mods.containsKey(new net.minecraft.resources.ResourceLocation("corpsedecay", m)), m + " is added to biomes");
+        }
+        // a Cambrian bed, and an anomalocaris, in a fresh block of deepslate
+        for (BlockPos p : BlockPos.betweenClosed(-44, y0 + 32, -44, -2, y0 + 38, -4)) level.setBlock(p, net.minecraft.world.level.block.Blocks.DEEPSLATE.defaultBlockState(), 2);
+        int bed = com.harold.corpsedecay.world.CambrianBedFeature.bed(level, new BlockPos(-30, y0 + 35, -20), net.minecraft.util.RandomSource.create(9));
+        check(bed > 6, "a Cambrian bed is crowded with sea creatures (" + bed + ")");
+        BlockPos head = new BlockPos(-10, y0 + 35, -30);
+        int anomalo = com.harold.corpsedecay.world.CambrianBedFeature.anomalocaris(level, head, net.minecraft.util.RandomSource.create(2));
+        var hs = level.getBlockState(head);
+        boolean whole = anomalo == 2 && hs.getBlock() == com.harold.corpsedecay.block.FossilBlocks.get(com.harold.corpsedecay.block.FossilBlocks.Host.DEEPSLATE, "anomalocaris_head")
+                && level.getBlockState(head.relative(hs.getValue(com.harold.corpsedecay.block.FossilBlocks.Pointing.FACING).getOpposite())).getBlock()
+                == com.harold.corpsedecay.block.FossilBlocks.get(com.harold.corpsedecay.block.FossilBlocks.Host.DEEPSLATE, "anomalocaris_tail");
+        check(whole, "an anomalocaris lies whole, its tail behind its head");
+        // a painted cave: a hollow sealed in stone
+        for (BlockPos p : BlockPos.betweenClosed(-44, y0 + 42, -44, -30, y0 + 50, -30)) level.setBlock(p, net.minecraft.world.level.block.Blocks.STONE.defaultBlockState(), 2);
+        for (BlockPos p : BlockPos.betweenClosed(-40, y0 + 44, -40, -34, y0 + 47, -34)) level.setBlock(p, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(), 2);
+        int paintings = com.harold.corpsedecay.world.NeolithicFeature.paintedCave(level, new BlockPos(-37, y0 + 45, -37), net.minecraft.util.RandomSource.create(10));
+        check(paintings >= 3, "a cave wall gets painted (" + paintings + ")");
+        // the sites on the surface
+        net.minecraft.util.RandomSource nr = net.minecraft.util.RandomSource.create(11);
+        boolean circle = com.harold.corpsedecay.world.NeolithicFeature.stoneCircle(level, new BlockPos(-34, groundY, 36), nr, true);
+        int standing = 0;
+        for (BlockPos p : BlockPos.betweenClosed(-44, groundY, 26, -24, groundY + 4, 46)) {
+            var st = level.getBlockState(p);
+            if (st.is(net.minecraft.world.level.block.Blocks.STONE) || st.is(net.minecraft.world.level.block.Blocks.ANDESITE) || st.is(net.minecraft.world.level.block.Blocks.COBBLESTONE)
+                    || st.is(net.minecraft.world.level.block.Blocks.MOSSY_COBBLESTONE) || st.is(net.minecraft.world.level.block.Blocks.TUFF)) standing++;
+        }
+        check(circle && standing >= 12, "a ring of standing stones (" + standing + " stone blocks)");
+        boolean barrow = com.harold.corpsedecay.world.NeolithicFeature.barrow(level, new BlockPos(-12, groundY, 40), nr, net.minecraft.core.Direction.EAST);
+        int chests = 0, pots = 0, grass = 0;
+        for (BlockPos p : BlockPos.betweenClosed(-20, groundY - 3, 34, -4, groundY + 5, 46)) {
+            var st = level.getBlockState(p);
+            if (st.is(net.minecraft.world.level.block.Blocks.CHEST)) chests++;
+            if (st.is(net.minecraft.world.level.block.Blocks.DECORATED_POT)) pots++;
+            if (st.is(net.minecraft.world.level.block.Blocks.GRASS_BLOCK) && p.getY() > groundY) grass++;
+        }
+        check(barrow && chests == 1 && pots == 2 && grass > 20, "a barrow: a grassy mound over a chamber with grave goods ("
+                + chests + " chest, " + pots + " pots, " + grass + " grass)");
+        boolean hut = com.harold.corpsedecay.world.NeolithicFeature.boneHut(level, new BlockPos(-12, groundY, 22), nr, net.minecraft.core.Direction.NORTH);
+        int bones = 0;
+        boolean hearth = level.getBlockState(new BlockPos(-12, groundY, 22)).is(net.minecraft.world.level.block.Blocks.CAMPFIRE);
+        for (BlockPos p : BlockPos.betweenClosed(-16, groundY, 18, -8, groundY + 3, 26)) {
+            if (level.getBlockState(p).is(net.minecraft.world.level.block.Blocks.BONE_BLOCK)) bones++;
+        }
+        check(hut && hearth && bones > 15, "a mammoth-bone hut round a hearth (" + bones + " bones)");
+        boolean dolmen = com.harold.corpsedecay.world.NeolithicFeature.dolmen(level, new BlockPos(-26, groundY, 14), nr);
+        check(dolmen && !level.getBlockState(new BlockPos(-26, groundY + 2, 14)).isAir(), "a dolmen's capstone stands on its stones");
+        for (CorpseEntity c : corpses(new AABB(-48, groundY - 10, -48, 0, groundY + 20, 48))) {
+            if (c.kind() == CorpseKind.REMAINS) extraRemains++;
+        }
+        // things of the time
+        check(com.harold.corpsedecay.block.FossilBlocks.FLINT_HAND_AXE.get() instanceof net.minecraft.world.item.AxeItem, "a flint hand axe is an axe");
+        var recipes = server.getRecipeManager();
+        for (String r : new String[] {"flint_hand_axe", "bone_flute", "red_dye_from_ochre"}) {
+            check(recipes.byKey(new net.minecraft.resources.ResourceLocation("corpsedecay", r)).isPresent(), r + " can be crafted");
+        }
+        check(com.harold.corpsedecay.block.FossilBlocks.pieces(com.harold.corpsedecay.block.FossilBlocks.CAMBRIAN).size() == 10
+                && com.harold.corpsedecay.block.FossilBlocks.pieces(com.harold.corpsedecay.block.FossilBlocks.PAINTING).size() == 7,
+                "ten Cambrian fossils and seven cave paintings");
     }
 
     private static void limitTest(MinecraftServer server) {

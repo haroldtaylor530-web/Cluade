@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "corpsedecay:item/flint_hand_axe"
+  }
+}

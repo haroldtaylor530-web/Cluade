@@ -61,6 +61,24 @@ there, rotting through stages down to a bare skeleton, still wearing whatever it
 - Every fossil comes in stone, deepslate, sandstone, red sandstone and terracotta to match the rock
   it's in. Mine one with a pickaxe to get the block itself and build your own display; they're all
   in their own creative tab. Fossil eggs stack up to three in a clutch like turtle eggs.
+- **The Cambrian.** Deep down in the oldest rock lie Cambrian beds: thin layers crowded with the
+  strange sea creatures of half a billion years ago: five-eyed opabinia, spiny hallucigenia and
+  wiwaxia, lacy marrella, little pikaia (one of the first animals with a backbone), jellyfish,
+  reef-building archaeocyaths, worm burrows and trilobites, and now and then the great hunter of
+  that sea, anomalocaris, two blocks long. The smaller ones also turn up on their own below y 8.
+- **The Neolithic (New Stone Age).**
+  - Painted caves: aurochs, deer, horses, mammoths, hunters with spears, handprints and spirals in
+    red and yellow ochre and charcoal on cave walls, with a cold hearth below and sometimes the
+    painter's remains.
+  - Stone circles: rings of standing stones, some fallen, sometimes with a dolmen or a hearth in
+    the middle and a grave beneath.
+  - Dolmens: a great capstone on standing stones, over a burial.
+  - Barrows: grassy burial mounds with a sealed stone chamber inside holding the dead with their
+    flint axe, pots and a chest of grave goods (flint, bone, ochre, wheat, clay, pottery sherds).
+  - Mammoth-bone huts on snowy plains: a ring of piled bones and hides around a hearth.
+  - New things from the time: the **flint hand axe** (a stone-tier axe: two flint and a stick),
+    the **bone flute** (bone and flint; play it, looking up for high notes and down for low ones)
+    and **ochre** (crafts into red dye). Cave paintings can be mined and hung up too.
 - **Real skeletons for every mob.** The skeleton is built from each mob's own model: a skull with
   eye sockets and teeth, a ribcage and spine running the length of the body (upright for zombies
   and villagers, horizontal for animals), a pelvis, leg bones with knobbly joints, tail
@@ -105,6 +123,7 @@ These are entity type tags (`#corpsedecay:no_corpse`, `already_bones`, `no_skele
 | `flies` | true | Flies around rotting bodies |
 | `remains` | true | Old remains in newly generated chunks |
 | `fossils` | true | Fossil blocks in the rock of newly generated chunks |
+| `ancientSites` | true | Stone Age sites in newly generated chunks |
 | `excludedMobs` | [] | Mob ids that never leave a corpse |
 
 ## Installing

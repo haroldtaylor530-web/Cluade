@@ -1,0 +1,10 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#corpsedecay:has_neolithic_sites",
+  "features": [
+    "corpsedecay:stone_circle",
+    "corpsedecay:dolmen",
+    "corpsedecay:barrow"
+  ],
+  "step": "surface_structures"
+}

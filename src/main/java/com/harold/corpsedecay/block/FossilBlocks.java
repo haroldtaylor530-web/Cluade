@@ -54,7 +54,7 @@ public final class FossilBlocks {
         }
     }
 
-    public static final int BONE = 0, SMALL = 1, PRINT = 2;
+    public static final int BONE = 0, SMALL = 1, PRINT = 2, CAMBRIAN = 3, PAINTING = 4;
 
     private static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, CorpseDecay.MODID);
     private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, CorpseDecay.MODID);
@@ -71,6 +71,10 @@ public final class FossilBlocks {
     public static final RegistryObject<Block> PETRIFIED_LOG;
     public static final RegistryObject<Block> PETRIFIED_WOOD;
     public static final RegistryObject<Block> FOSSIL_EGG;
+    public static final RegistryObject<Item> FLINT_HAND_AXE;
+    public static final RegistryObject<Item> BONE_FLUTE;
+    public static final RegistryObject<Item> OCHRE;
+    private static final List<RegistryObject<Item>> LOOSE_ITEMS = new ArrayList<>();
 
     static {
         for (Object[] p : FossilShapes.PIECES) {
@@ -85,7 +89,7 @@ public final class FossilBlocks {
                 boolean points = POINTS.get(piece);
                 RegistryObject<Block> b = BLOCKS.register(name, () -> {
                     BlockBehaviour.Properties p = BlockBehaviour.Properties.copy(host.rock);
-                    return kind == PRINT ? new Print(p) : points ? new Pointing(p) : new Block(p);
+                    return kind == PAINTING ? new Painting(p) : kind == PRINT ? new Print(p) : points ? new Pointing(p) : new Block(p);
                 });
                 ITEMS.register(name, () -> new BlockItem(b.get(), new Item.Properties()));
                 m.put(piece, b);
@@ -99,6 +103,10 @@ public final class FossilBlocks {
         PETRIFIED_WOOD = extra("petrified_wood", () -> new Block(petrifiedProps()));
         FOSSIL_EGG = extra("fossil_egg", () -> new FossilEggBlock(BlockBehaviour.Properties.of().mapColor(MapColor.SAND)
                 .strength(1.5F, 6F).sound(SoundType.BONE_BLOCK).noOcclusion()));
+        FLINT_HAND_AXE = item("flint_hand_axe", () -> new net.minecraft.world.item.AxeItem(net.minecraft.world.item.Tiers.STONE, 6F, -3.2F,
+                new Item.Properties()));
+        BONE_FLUTE = item("bone_flute", () -> new BoneFluteItem(new Item.Properties().stacksTo(1)));
+        OCHRE = item("ochre", () -> new Item(new Item.Properties()));
         TABS.register("fossils", () -> CreativeModeTab.builder()
                 .title(Component.translatable("itemGroup." + CorpseDecay.MODID + ".fossils"))
                 .icon(() -> new ItemStack(get(Host.STONE, "horn_skull")))
@@ -107,6 +115,7 @@ public final class FossilBlocks {
                         for (RegistryObject<Block> b : ALL.get(h).values()) out.accept(b.get());
                     }
                     for (RegistryObject<Block> b : EXTRAS) out.accept(b.get());
+                    for (RegistryObject<Item> i : LOOSE_ITEMS) out.accept(i.get());
                 })
                 .build());
     }
@@ -125,6 +134,12 @@ public final class FossilBlocks {
         ITEMS.register(name, () -> new BlockItem(b.get(), new Item.Properties()));
         EXTRAS.add(b);
         return b;
+    }
+
+    private static RegistryObject<Item> item(String name, java.util.function.Supplier<Item> make) {
+        RegistryObject<Item> i = ITEMS.register(name, make);
+        LOOSE_ITEMS.add(i);
+        return i;
     }
 
     private FossilBlocks() {
@@ -196,6 +211,18 @@ public final class FossilBlocks {
         public BlockState getStateForPlacement(BlockPlaceContext ctx) {
             // placed side-on to whoever places it, so they see the bones in profile
             return defaultBlockState().setValue(FACING, ctx.getHorizontalDirection().getClockWise());
+        }
+    }
+
+    /** A painting on the face of the rock, facing whoever put it there. */
+    public static class Painting extends Pointing {
+        public Painting(Properties p) {
+            super(p);
+        }
+
+        @Override
+        public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+            return defaultBlockState().setValue(FACING, ctx.getHorizontalDirection().getOpposite());
         }
     }
 

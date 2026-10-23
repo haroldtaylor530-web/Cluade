@@ -5,7 +5,7 @@ public final class FossilShapes {
     private FossilShapes() {
     }
 
-    /** id, kind (0 skeleton bone, 1 small fossil, 2 footprint), points along the body */
+    /** id, kind (0 skeleton bone, 1 small fossil, 2 footprint, 3 Cambrian, 4 cave painting), points along the body */
     public static final Object[][] PIECES = {
         {"skull", 0, true},
         {"horn_skull", 0, true},
@@ -41,7 +41,24 @@ public final class FossilShapes {
         {"feather", 1, false},
         {"leaf", 1, false},
         {"shark_tooth", 1, false},
+        {"anomalocaris_head", 3, true},
+        {"anomalocaris_tail", 3, true},
+        {"opabinia", 3, false},
+        {"hallucigenia", 3, false},
+        {"wiwaxia", 3, false},
+        {"marrella", 3, false},
+        {"pikaia", 3, false},
+        {"jellyfish", 3, false},
+        {"archaeocyath", 3, false},
+        {"burrows", 3, false},
         {"footprint", 2, true},
+        {"painting_aurochs", 4, true},
+        {"painting_deer", 4, true},
+        {"painting_horse", 4, true},
+        {"painting_mammoth", 4, true},
+        {"painting_hunters", 4, true},
+        {"painting_hands", 4, true},
+        {"painting_spiral", 4, true},
     };
 
     /** letter in a skeleton drawing to piece id */

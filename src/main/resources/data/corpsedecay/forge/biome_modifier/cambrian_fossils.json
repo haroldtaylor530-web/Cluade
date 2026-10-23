@@ -1,0 +1,16 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#minecraft:is_overworld",
+  "features": [
+    "corpsedecay:cambrian_bed",
+    "corpsedecay:opabinia_fossil",
+    "corpsedecay:hallucigenia_fossil",
+    "corpsedecay:wiwaxia_fossil",
+    "corpsedecay:marrella_fossil",
+    "corpsedecay:pikaia_fossil",
+    "corpsedecay:jellyfish_fossil",
+    "corpsedecay:archaeocyath_fossil",
+    "corpsedecay:burrows_fossil"
+  ],
+  "step": "underground_ores"
+}

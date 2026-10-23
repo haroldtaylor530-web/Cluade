@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#corpsedecay:has_bone_huts",
+  "features": "corpsedecay:bone_hut",
+  "step": "surface_structures"
+}

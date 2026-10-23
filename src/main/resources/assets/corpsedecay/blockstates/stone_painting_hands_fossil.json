@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "corpsedecay:block/stone_painting_hands_fossil"
+    },
+    "facing=east": {
+      "model": "corpsedecay:block/stone_painting_hands_fossil",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "corpsedecay:block/stone_painting_hands_fossil",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "corpsedecay:block/stone_painting_hands_fossil",
+      "y": 270
+    }
+  }
+}

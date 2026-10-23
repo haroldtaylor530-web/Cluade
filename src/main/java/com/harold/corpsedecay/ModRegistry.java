@@ -41,6 +41,13 @@ public final class ModRegistry {
             FEATURES.register("petrified_tree", com.harold.corpsedecay.world.PetrifiedTreeFeature::new);
     public static final RegistryObject<com.harold.corpsedecay.world.FossilNestFeature> FOSSIL_NEST =
             FEATURES.register("fossil_nest", com.harold.corpsedecay.world.FossilNestFeature::new);
+    public static final RegistryObject<com.harold.corpsedecay.world.CambrianBedFeature> CAMBRIAN_BED =
+            FEATURES.register("cambrian_bed", com.harold.corpsedecay.world.CambrianBedFeature::new);
+    static {
+        for (com.harold.corpsedecay.world.NeolithicFeature.Kind k : com.harold.corpsedecay.world.NeolithicFeature.Kind.values()) {
+            FEATURES.register(k.name().toLowerCase(java.util.Locale.ROOT), () -> new com.harold.corpsedecay.world.NeolithicFeature(k));
+        }
+    }
     public static final RegistryObject<com.harold.corpsedecay.world.DigSiteFeature> DIG_SITE =
             FEATURES.register("dig_site", com.harold.corpsedecay.world.DigSiteFeature::new);
 
