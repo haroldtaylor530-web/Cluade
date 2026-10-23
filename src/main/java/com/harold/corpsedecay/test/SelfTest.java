@@ -419,6 +419,7 @@ public final class SelfTest {
         server.getCommands().performPrefixedCommand(src, "fillbiome 8 " + (groundY - 4) + " -48 19 " + (groundY + 6) + " -38 minecraft:swamp");
         server.getCommands().performPrefixedCommand(src, "fillbiome 24 " + (groundY - 4) + " -48 35 " + (groundY + 6) + " -38 minecraft:snowy_plains");
         check(level.getBiome(new BlockPos(12, groundY, -44)).is(net.minecraft.world.level.biome.Biomes.SWAMP), "the test strip is swamp now");
+        for (int cx = -1; cx <= 2; cx++) level.setChunkForced(cx, -3, true); // keep the strip ticking
         spawn(EntityType.COW, 11, -44).hurt(level.damageSources().generic(), 1000F);
         Mob burnt = spawn(EntityType.COW, 16, -44);
         burnt.setSecondsOnFire(5);
@@ -498,7 +499,7 @@ public final class SelfTest {
                 List<CorpseEntity> left = corpses(new AABB(-4, groundY - 4, -48, 40, groundY + 6, -38));
                 check(bogCow != null && !bogCow.isRemoved() && bogCow.decay(0) >= 1F, "a mummy keeps long after a skeleton would have crumbled");
                 check(plainCow != null && plainCow.isRemoved(), "while an ordinary skeleton of the same age has crumbled");
-                for (CorpseEntity c : left) c.discard();
+                for (CorpseEntity c : left) if (c.kind() != CorpseKind.REMAINS) c.discard();
                 then.run();
             });
         });
