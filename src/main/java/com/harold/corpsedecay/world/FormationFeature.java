@@ -145,10 +145,13 @@ public class FormationFeature extends Feature<NoneFeatureConfiguration> {
         for (Layer layer : f.layers) period += layer.thickness();
         int phase = rand.nextInt(period);
         double wobble = rand.nextDouble() * Math.PI * 2;
+        double shift = rand.nextDouble();
+        // gentle folds; the mountain shale is crumpled more
+        double fold = f == Formation.BURGESS_SHALE ? 1.6 : 0.4, foldLen = 6 + rand.nextDouble() * 6, foldPhase = rand.nextDouble() * 6.3;
         List<BlockPos> laid = new ArrayList<>();
         for (BlockPos p : BlockPos.betweenClosed(origin.offset(-rx, -ry - 4, -rz), origin.offset(rx, ry + 4, rz))) {
             int dx = p.getX() - origin.getX(), dz = p.getZ() - origin.getZ();
-            double tilt = sx * dx + sz * dz;
+            double tilt = sx * dx + sz * dz + fold * Math.sin((dx * Math.cos(dipAngle) + dz * Math.sin(dipAngle)) / foldLen + foldPhase) - shift;
             double dy = p.getY() - origin.getY() - tilt;
             double edge = 1 + 0.18 * Math.sin(Math.atan2(dz, dx) * 3 + wobble);
             if ((double) dx * dx / (rx * rx) + (double) dz * dz / (rz * rz) + dy * dy / (ry * ry) > edge) continue;
