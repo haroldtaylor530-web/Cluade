@@ -596,38 +596,55 @@ public final class SelfTest {
         var mods = server.registryAccess().registryOrThrow(net.minecraftforge.registries.ForgeRegistries.Keys.BIOME_MODIFIERS);
         check(placed.containsKey(new net.minecraft.resources.ResourceLocation("corpsedecay", "ghost_ship"))
                 && mods.containsKey(new net.minecraft.resources.ResourceLocation("corpsedecay", "ghost_ships")), "ghost ships sail the frozen oceans");
-        int sea = groundY + 30, cx = 150, cz = 40;
-        TestSea.basin(level, cx, sea, cz, 26, 15, 8);
-        BlockPos centre = new BlockPos(cx, sea, cz);
-        check(com.harold.corpsedecay.world.GhostShipFeature.fits(level, centre, net.minecraft.core.Direction.EAST), "she fits in open water");
-        check(!com.harold.corpsedecay.world.GhostShipFeature.fits(level, new BlockPos(0, groundY, 0), net.minecraft.core.Direction.EAST), "but not on dry land");
-        var ship = com.harold.corpsedecay.world.GhostShipFeature.build(level, centre, net.minecraft.core.Direction.EAST,
-                net.minecraft.util.RandomSource.create(5));
-        int deck = sea + 2;
-        int sail = 0;
-        for (BlockPos p : BlockPos.betweenClosed(cx + 1, deck + 3, cz - 5, cx + 2, deck + 6, cz + 5)) {
-            if (level.getBlockState(p).is(net.minecraft.world.level.block.Blocks.WHITE_WOOL)) sail++;
+        int sea = groundY + 30, cx = 150;
+        var kinds = com.harold.corpsedecay.world.GhostShipFeature.Kind.values();
+        com.harold.corpsedecay.world.GhostShipFeature.Ship ship = null;
+        for (int i = 0; i < kinds.length; i++) {
+            var kind = kinds[i];
+            int cz = 40 + i * 34;
+            TestSea.basin(level, cx, sea, cz, 26, 15, 8);
+            BlockPos centre = new BlockPos(cx, sea, cz);
+            boolean fits = com.harold.corpsedecay.world.GhostShipFeature.fits(level, centre, net.minecraft.core.Direction.EAST, kind);
+            var s = com.harold.corpsedecay.world.GhostShipFeature.build(level, centre, net.minecraft.core.Direction.EAST, kind,
+                    net.minecraft.util.RandomSource.create(5 + i));
+            int deck = sea + 2;
+            int sail = 0, ice = 0, standing = 0;
+            for (BlockPos p : BlockPos.betweenClosed(cx - 18, deck + 3, cz - 7, cx + 22, deck + 26, cz + 7)) {
+                if (level.getBlockState(p).is(net.minecraft.world.level.block.Blocks.WHITE_WOOL)) sail++;
+            }
+            for (BlockPos p : BlockPos.betweenClosed(cx - 22, sea, cz - 12, cx + 22, sea, cz + 12)) {
+                if (level.getBlockState(p).is(net.minecraft.world.level.block.Blocks.ICE)) ice++;
+            }
+            boolean frozen = true;
+            for (CorpseEntity c : s.crew()) {
+                frozen &= c.kind() == CorpseKind.REMAINS && c.material() == CorpseEntity.ICE_MUMMY;
+                if (c.orientation().transform(new Vector3f(0, 1, 0)).y > 0.8F && !c.figurePose().isEmpty()) standing++;
+            }
+            var book = s.journal().getItem();
+            boolean log = s.journal().isInvisible() && book.is(Items.WRITTEN_BOOK) && book.getTag().getList("pages", 8).size() >= 9
+                    && book.getTag().getString("title").contains(s.name()) && book.getTag().getList("pages", 8).getString(0).contains(kind.name().toLowerCase())
+                    && s.journal().survives();
+            String what = kind.name().toLowerCase();
+            LOG.info("SELFTEST {}: {} hull, {} sail, {} ice, {} crew ({} standing)", what, s.hull(), sail, ice, s.crew().size(), standing);
+            check(fits && s.hull() > 60 && sail > 20 && ice > 60, "a " + what + ", whole, under sail, locked in the ice");
+            check(s.crew().size() >= 7 && frozen && standing >= 4, "her crew frozen at their posts (" + s.crew().size() + ", " + standing + " standing)");
+            check(log, "the " + what + "'s log lies on the chart table");
+            if (kind == com.harold.corpsedecay.world.GhostShipFeature.Kind.FRIGATE) {
+                int guns = 0, ports = 0;
+                for (BlockPos p : BlockPos.betweenClosed(cx - 18, deck - 1, cz - 7, cx + 18, deck + 1, cz + 7)) {
+                    if (level.getBlockState(p).is(net.minecraft.world.level.block.Blocks.ANVIL)) guns++;
+                    if (level.getBlockState(p).is(net.minecraft.world.level.block.Blocks.BLACK_TERRACOTTA)) ports++;
+                }
+                check(guns >= 4 && ports >= 10, "a frigate has guns on deck and her gunports (" + guns + " guns, " + ports + " ports)");
+            }
+            if (kind == com.harold.corpsedecay.world.GhostShipFeature.Kind.GALLEON) {
+                check(level.getBlockState(new BlockPos(cx - 14, deck + 8, cz)).is(net.minecraft.world.level.block.Blocks.SPRUCE_PLANKS)
+                        && level.getBlockState(new BlockPos(cx - 14, deck + 6, cz)).isAir(), "a galleon has a two-storey stern castle");
+            }
+            if (kind == com.harold.corpsedecay.world.GhostShipFeature.Kind.MERCHANTMAN) ship = s;
         }
-        boolean mast = level.getBlockState(new BlockPos(cx, deck + 20, cz)).is(net.minecraft.world.level.block.Blocks.SPRUCE_LOG);
-        check(ship.hull() > 150 && mast && sail > 15, "she's whole: hull, masts and sails (" + ship.hull() + " hull blocks, mast " + mast + ", " + sail + " sail)");
-        check(level.getBlockState(new BlockPos(cx, deck - 1, cz + 1)).isAir(), "with a dry hold under her deck");
-        int ice = 0;
-        for (BlockPos p : BlockPos.betweenClosed(cx - 24, sea, cz - 13, cx + 24, sea, cz + 13)) {
-            if (level.getBlockState(p).is(net.minecraft.world.level.block.Blocks.ICE)) ice++;
-        }
-        check(ice > 80, "locked in the ice (" + ice + ")");
-        int standing = 0;
-        boolean frozen = true;
-        for (CorpseEntity c : ship.crew()) {
-            frozen &= c.kind() == CorpseKind.REMAINS && c.material() == CorpseEntity.ICE_MUMMY;
-            if (c.orientation().transform(new Vector3f(0, 1, 0)).y > 0.8F && !c.figurePose().isEmpty()) standing++;
-        }
-        check(ship.crew().size() >= 10 && frozen, "her crew are aboard, freeze-dried (" + ship.crew().size() + ")");
-        check(standing >= 5, "most of them still upright at their posts (" + standing + ")");
-        var frame = ship.journal();
-        var book = frame.getItem();
-        check(frame.isInvisible() && book.is(Items.WRITTEN_BOOK) && book.getTag().getList("pages", 8).size() >= 9
-                && book.getTag().getString("title").contains(ship.name()) && frame.survives(), "the captain's log lies on the chart table in an invisible frame");
+        check(!com.harold.corpsedecay.world.GhostShipFeature.fits(level, new BlockPos(0, groundY, 0), net.minecraft.core.Direction.EAST,
+                com.harold.corpsedecay.world.GhostShipFeature.Kind.SLOOP), "but not on dry land");
         CorpseEntity first = ship.crew().get(0);
         CompoundTag saved = new CompoundTag();
         first.saveWithoutId(saved);

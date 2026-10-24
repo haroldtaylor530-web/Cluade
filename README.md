@@ -68,9 +68,12 @@ there, rotting through stages down to a bare skeleton, still wearing whatever it
   have bandanas in faded cloth, shirts, breeches, boots, cutlasses, boarding axes, bows and crossbows,
   all battered and dyed by the sea. Under water they have sea pickles and dead coral growing on them
   and some are drowned. Like all old remains you can take their gear off them. No blood.
-- **Ghost ships.** Now and then, out in the frozen oceans, there is a ship that never came home: a
-  merchant brig still whole, sails set and stiff with frost, locked fast in the pack ice with snow
-  on her decks. Her crew froze where they stood: the helmsman with his hands on the wheel, the mate
+- **Ghost ships.** Now and then, out in the frozen oceans, there is a ship that never came home,
+  still whole, sails set and stiff with frost, locked fast in the pack ice with snow on her decks.
+  She may be a little one-masted sloop with a gaff sail and a jib, a two-masted brigantine, a
+  three-masted merchantman, a frigate with black gunports along a yellow stripe, guns on deck and a
+  forecastle, or a galleon in red and gold with a towering two-storey stern castle and three stern
+  lanterns (and treasure in the captain's chest). Her crew froze where they stood: the helmsman with his hands on the wheel, the mate
   alone at the bow with his spyglass raised, men leaning on the rail and sitting hunched against the
   mainmast, the cook slumped at the galley table below, others still in their bedrolls in the hold.
   The captain sits at the chart table on the quarterdeck, and his log lies open in front of him in

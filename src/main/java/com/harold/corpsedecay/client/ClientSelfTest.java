@@ -230,8 +230,14 @@ public final class ClientSelfTest {
         t += 550;
         // the ghost ship
         final int deck = 0;
-        at(t, () -> camera(SHIP_X - 22.0, shipSea + 16.0, SHIP_Z + 30.0, -140F, 22F));
-        at(t + 45, () -> shot("C0_ghost_ship"));
+        var kinds = com.harold.corpsedecay.world.GhostShipFeature.Kind.values();
+        for (int i = 0; i < kinds.length; i++) {
+            final double z = SHIP_Z0 - i * SHIP_STEP;
+            final String name = String.format("C0_ghost_%d_%s", i, kinds[i].name().toLowerCase());
+            at(t, () -> camera(SHIP_X - 20.0, shipSea + 15.0, z + 26.0, -140F, 22F));
+            at(t + 45, () -> shot(name));
+            t += 50;
+        }
         at(t + 50, () -> camera(SHIP_X - 8.0, shipSea + 10.5, SHIP_Z - 5.0, 45F, 35F));
         at(t + 90, () -> shot("C1_captain"));
         at(t + 95, () -> camera(SHIP_X - 12.5, shipSea + 9.5, SHIP_Z - 3.0, 0F, 75F));
@@ -453,16 +459,22 @@ public final class ClientSelfTest {
         com.harold.corpsedecay.world.WhaleFeature.valley(level, new net.minecraft.core.BlockPos(DESERT_X, dg, DESERT_Z - 2), net.minecraft.util.RandomSource.create(9));
     }
 
-    static final int SHIP_X = 150, SHIP_Z = -40;
+    static final int SHIP_X = 150, SHIP_Z0 = -40, SHIP_STEP = 34;
+    /** where the merchantman lies, for the close-ups */
+    static final int SHIP_Z = SHIP_Z0 - 2 * SHIP_STEP;
     static int shipSea;
 
-    /** A basin of frozen sea with a ghost ship in it, bow to the east. */
+    /** Basins of frozen sea with a ghost ship of each kind in them, bows to the east. */
     private static void ghostShip(ServerLevel level) {
-        shipSea = groundAt(level, SHIP_X + 40, SHIP_Z) + 8;
-        com.harold.corpsedecay.test.TestSea.basin(level, SHIP_X, shipSea, SHIP_Z, 26, 15, 8);
-        var ship = com.harold.corpsedecay.world.GhostShipFeature.build(level, new net.minecraft.core.BlockPos(SHIP_X, shipSea, SHIP_Z),
-                net.minecraft.core.Direction.EAST, net.minecraft.util.RandomSource.create(5));
-        LOG.info("CLIENTTEST ghost ship {} with {} crew", ship.name(), ship.crew().size());
+        shipSea = groundAt(level, SHIP_X + 40, SHIP_Z0) + 8;
+        var kinds = com.harold.corpsedecay.world.GhostShipFeature.Kind.values();
+        for (int i = 0; i < kinds.length; i++) {
+            int z = SHIP_Z0 - i * SHIP_STEP;
+            com.harold.corpsedecay.test.TestSea.basin(level, SHIP_X, shipSea, z, 26, 15, 8);
+            var ship = com.harold.corpsedecay.world.GhostShipFeature.build(level, new net.minecraft.core.BlockPos(SHIP_X, shipSea, z),
+                    net.minecraft.core.Direction.EAST, kinds[i], net.minecraft.util.RandomSource.create(5 + i));
+            LOG.info("CLIENTTEST ghost {} {} with {} crew", kinds[i], ship.name(), ship.crew().size());
+        }
     }
 
     private static Mob mob(String name, EntityType<? extends Mob> type, double x, int y, double z) {
