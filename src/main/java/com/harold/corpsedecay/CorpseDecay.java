@@ -21,6 +21,9 @@ public class CorpseDecay {
         if (Boolean.getBoolean("corpsedecay.selftest")) {
             MinecraftForge.EVENT_BUS.register(com.harold.corpsedecay.test.SelfTest.class);
         }
+        if (Boolean.getBoolean("corpsedecay.gentest")) {
+            MinecraftForge.EVENT_BUS.register(com.harold.corpsedecay.test.GenTest.class);
+        }
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> com.harold.corpsedecay.client.ClientSetup.init(modBus));
     }
 }

@@ -44,6 +44,16 @@ jobs:
           timeout 900 ./gradlew runServer -Pselftest -Prundir=run-selftest 2>&1 | tee selftest.log || true
           grep -q "SELFTEST PASS" selftest.log
 
+      - name: World generation test (real shipwrecks)
+        id: gentest
+        if: steps.build.outcome == 'success'
+        continue-on-error: true
+        run: |
+          mkdir -p run-gentest && echo "eula=true" > run-gentest/eula.txt
+          printf 'online-mode=false\nspawn-protection=0\nspawn-monsters=false\nlevel-seed=2468\ngenerate-structures=true\n' > run-gentest/server.properties
+          timeout 900 ./gradlew runServer -Pgentest -Prundir=run-gentest 2>&1 | tee gentest.log || true
+          grep -q "GENTEST PASS" gentest.log
+
       - name: Client screenshots on a virtual screen
         id: clienttest
         if: steps.selftest.outcome == 'success'
@@ -62,12 +72,13 @@ jobs:
           mkdir -p /tmp/out
           cp build.log /tmp/out/ || true
           cp selftest.log /tmp/out/ 2>/dev/null || true
+          cp gentest.log /tmp/out/ 2>/dev/null || true
           cp run-selftest/logs/latest.log /tmp/out/server-latest.log 2>/dev/null || true
           cp clienttest.log /tmp/out/ 2>/dev/null || true
           cp run-client/logs/latest.log /tmp/out/client-latest.log 2>/dev/null || true
           cp run-client/screenshots/*.png /tmp/out/ 2>/dev/null || true
           cp build/libs/*.jar /tmp/out/ 2>/dev/null || true
-          echo "build=${{ steps.build.outcome }} selftest=${{ steps.selftest.outcome }} clienttest=${{ steps.clienttest.outcome }} $GITHUB_SHA" > /tmp/out/STATUS
+          echo "build=${{ steps.build.outcome }} selftest=${{ steps.selftest.outcome }} clienttest=${{ steps.clienttest.outcome }} gentest=${{ steps.gentest.outcome }} $GITHUB_SHA" > /tmp/out/STATUS
           if ! git ls-remote --exit-code origin refs/heads/corpse-mc-classpath >/dev/null; then
             ./gradlew dumpClasspath -q || true
             mkdir -p /tmp/cprepo && ls -la build/cp | tee /tmp/out/CLASSPATH

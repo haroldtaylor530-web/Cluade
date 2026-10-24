@@ -46,6 +46,9 @@ minecraft {
             if (project.hasProperty('selftest')) {
                 property 'corpsedecay.selftest', 'true'
             }
+            if (project.hasProperty('gentest')) {
+                property 'corpsedecay.gentest', 'true'
+            }
         }
     }
 }
