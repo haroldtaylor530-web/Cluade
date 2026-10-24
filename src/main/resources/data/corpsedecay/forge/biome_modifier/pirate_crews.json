@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#corpsedecay:has_pirate_crews",
+  "features": "corpsedecay:pirate_crew",
+  "step": "local_modifications"
+}

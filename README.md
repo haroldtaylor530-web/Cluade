@@ -62,6 +62,12 @@ there, rotting through stages down to a bare skeleton, still wearing whatever it
   eelpouts weave through them, loose bones lie scattered round about, sea pickles glow, and white,
   yellow and orange bacterial mats spread over the mud. Sneak and hit one to break it up for bones
   and bone blocks.
+- **Pirate crews.** Every shipwreck, in the sea or beached on a shore, has some of its crew still
+  aboard: two to five old bodies lying on the decks and in the hold in a pirate's clothes. There is
+  usually a captain in a dark coat and tricorn hat with a cutlass and a spyglass or compass; the hands
+  have bandanas in faded cloth, shirts, breeches, boots, cutlasses, boarding axes, bows and crossbows,
+  all battered and dyed by the sea. Under water they have sea pickles and dead coral growing on them
+  and some are drowned. Like all old remains you can take their gear off them. No blood.
 - **The valley of whales.** In deserts lie early whales turned to stone, like the ones in Egypt's
   Wadi Al-Hitan: long, snake-like basilosaurs half buried in the sand, still with their tiny hind
   legs, among wind-carved pillars of sandstone, with shark teeth and shells in the sandstone
@@ -172,7 +178,7 @@ These are entity type tags (`#corpsedecay:no_corpse`, `already_bones`, `no_skele
 | `lootAllEquipment` | false | Let players take everything off a body, not just what would have dropped |
 | `flies` | true | Flies around rotting bodies |
 | `mummify` | true | Bodies in swamps and frozen biomes mummify instead of rotting to bones |
-| `remains` | true | Old remains, mummies and whale falls in newly generated chunks |
+| `remains` | true | Old remains, mummies, whale falls and shipwreck crews in newly generated chunks |
 | `fossils` | true | Fossils in the rock and stone whales in the desert, in newly generated chunks |
 | `ancientSites` | true | Stone Age sites in newly generated chunks |
 | `excludedMobs` | [] | Mob ids that never leave a corpse |

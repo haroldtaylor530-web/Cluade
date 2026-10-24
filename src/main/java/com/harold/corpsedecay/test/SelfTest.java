@@ -516,9 +516,65 @@ public final class SelfTest {
                 check(bogCow != null && !bogCow.isRemoved() && bogCow.decay(0) >= 1F, "a mummy keeps long after a skeleton would have crumbled");
                 check(plainCow != null && plainCow.isRemoved(), "while an ordinary skeleton of the same age has crumbled");
                 for (CorpseEntity c : left) if (c.kind() != CorpseKind.REMAINS) c.discard();
+                pirateTest(server);
                 then.run();
             });
         });
+    }
+
+    /** The crews of shipwrecks: dressed as pirates, lying on plank decks, in the right structures. */
+    private static void pirateTest(MinecraftServer server) {
+        var placed = server.registryAccess().registryOrThrow(net.minecraft.core.registries.Registries.PLACED_FEATURE);
+        var mods = server.registryAccess().registryOrThrow(net.minecraftforge.registries.ForgeRegistries.Keys.BIOME_MODIFIERS);
+        check(placed.containsKey(new net.minecraft.resources.ResourceLocation("corpsedecay", "pirate_crew")), "pirate_crew placement is loaded");
+        check(mods.containsKey(new net.minecraft.resources.ResourceLocation("corpsedecay", "pirate_crews")), "pirate_crews is added to biomes");
+        var structures = server.registryAccess().registryOrThrow(net.minecraft.core.registries.Registries.STRUCTURE);
+        boolean ships = true, others = false;
+        for (String id : new String[] {"shipwreck", "shipwreck_beached"}) {
+            var s = structures.get(new net.minecraft.resources.ResourceLocation("minecraft", id));
+            ships &= s != null && com.harold.corpsedecay.world.PirateFeature.isShipwreck(structures, s);
+        }
+        for (String id : new String[] {"village_plains", "ocean_ruin_cold", "mineshaft"}) {
+            var s = structures.get(new net.minecraft.resources.ResourceLocation("minecraft", id));
+            others |= s != null && com.harold.corpsedecay.world.PirateFeature.isShipwreck(structures, s);
+        }
+        check(ships, "both kinds of shipwreck count as ships");
+        check(!others, "villages, ocean ruins and mineshafts don't");
+        // a plank deck: a ship's worth of crew lies on it, once, however often it is asked for
+        int y = groundY;
+        for (BlockPos p : BlockPos.betweenClosed(50, y, -60, 60, y, -44)) {
+            level.setBlock(p, net.minecraft.world.level.block.Blocks.OAK_PLANKS.defaultBlockState(), 2);
+            for (int up = 1; up <= 4; up++) level.setBlock(p.above(up), net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(), 2);
+        }
+        var box = new net.minecraft.world.level.levelgen.structure.BoundingBox(50, y - 1, -60, 60, y + 4, -44);
+        int crew = com.harold.corpsedecay.world.PirateFeature.crewIn(level, List.of(box), null, net.minecraft.util.RandomSource.create(77));
+        List<CorpseEntity> sailors = corpses(new AABB(48, y, -62, 62, y + 4, -42));
+        check(crew >= 1 && sailors.size() == crew, "a crew lies on the deck (" + crew + " of " + sailors.size() + " bodies)");
+        boolean all = true, dressed = false;
+        for (CorpseEntity c : sailors) {
+            all &= c.kind() == CorpseKind.REMAINS && c.getY() > y && c.getY() < y + 2.5;
+            dressed |= !c.equipment(EquipmentSlot.CHEST).isEmpty() || !c.equipment(EquipmentSlot.MAINHAND).isEmpty();
+        }
+        check(all, "they lie on the planks as old remains");
+        check(dressed, "some of them still have their clothes or a weapon");
+        // the same ship asked again chunk by chunk puts the same crew in the same spots, no more
+        for (CorpseEntity c : sailors) c.discard();
+        var rows = new ArrayList<CorpseEntity>();
+        for (int cx = 3; cx <= 3; cx++) {
+            for (int cz = -4; cz <= -3; cz++) {
+                com.harold.corpsedecay.world.PirateFeature.crewIn(level, List.of(box), new net.minecraft.world.level.ChunkPos(cx, cz),
+                        net.minecraft.util.RandomSource.create(77));
+            }
+        }
+        rows.addAll(corpses(new AABB(48, y, -62, 62, y + 4, -42)));
+        check(rows.size() == crew, "asked a chunk at a time the same crew turns up, no more, no fewer (" + rows.size() + " vs " + crew + ")");
+        for (CorpseEntity c : rows) c.discard();
+        // the captain: a tricorn, a coat, a cutlass
+        CorpseEntity cap = com.harold.corpsedecay.world.PirateFeature.crewMember(level, new BlockPos(55, y, -56),
+                net.minecraft.util.RandomSource.create(3), true);
+        check(cap != null && cap.equipment(EquipmentSlot.HEAD).is(Items.LEATHER_HELMET) && cap.equipment(EquipmentSlot.CHEST).is(Items.LEATHER_CHESTPLATE)
+                && cap.equipment(EquipmentSlot.MAINHAND).is(Items.IRON_SWORD), "the captain has a hat, a coat and a cutlass");
+        if (cap != null) cap.discard();
     }
 
     private static int remainsLeft;

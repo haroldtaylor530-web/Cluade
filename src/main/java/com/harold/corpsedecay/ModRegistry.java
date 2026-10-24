@@ -74,6 +74,9 @@ public final class ModRegistry {
     public static final RegistryObject<com.harold.corpsedecay.world.WhaleFeature> DESERT_WHALES =
             FEATURES.register("desert_whales", () -> new com.harold.corpsedecay.world.WhaleFeature(com.harold.corpsedecay.world.WhaleFeature.Where.DESERT));
 
+    public static final RegistryObject<com.harold.corpsedecay.world.PirateFeature> PIRATE_CREW =
+            FEATURES.register("pirate_crew", com.harold.corpsedecay.world.PirateFeature::new);
+
     public static final RegistryObject<SimpleParticleType> FLY = PARTICLES.register("fly", () -> new SimpleParticleType(false));
 
     private ModRegistry() {

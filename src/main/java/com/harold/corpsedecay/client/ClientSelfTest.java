@@ -212,6 +212,14 @@ public final class ClientSelfTest {
         at(t + 416, () -> camera(-120.0, groundSea + 3.0, -112.0, -30F, 30F));
         at(t + 456, () -> shot("BA_beaked_whale"));
         at(t + 458, () -> server(() -> player().removeEffect(net.minecraft.world.effect.MobEffects.NIGHT_VISION)));
+        at(t + 459, () -> camera(-43.0, groundSea + 11.0, -148.0, 0F, 35F));
+        at(t + 462, () -> server(() -> player().addEffect(new net.minecraft.world.effect.MobEffectInstance(
+                net.minecraft.world.effect.MobEffects.NIGHT_VISION, 2000, 0, false, false))));
+        at(t + 500, () -> shot("BB_shipwreck"));
+        at(t + 502, () -> camera(-43.0, groundSea + 6.0, -140.0, 0F, 40F));
+        at(t + 540, () -> shot("BC_shipwreck_close"));
+        at(t + 545, () -> server(() -> player().removeEffect(net.minecraft.world.effect.MobEffects.NIGHT_VISION)));
+        t += 100;
         at(t + 460, () -> camera(85.0, groundDesert + 16.0, -168.0, 0F, 38F));
         at(t + 500, () -> shot("B6_desert_whales"));
         at(t + 505, () -> camera(DESERT_X - 9.0, groundDesert + 4.0, DESERT_Z - 9.0, -45F, 22F));
@@ -383,6 +391,28 @@ public final class ClientSelfTest {
                 com.harold.corpsedecay.world.WhaleFeature.Kind.HUMPBACK, net.minecraft.core.Direction.NORTH, 0.25F);
         com.harold.corpsedecay.world.WhaleFeature.seaWhale(level, new net.minecraft.core.BlockPos(-118, sg - 1, -107), net.minecraft.util.RandomSource.create(6),
                 com.harold.corpsedecay.world.WhaleFeature.Kind.BEAKED, net.minecraft.core.Direction.EAST, 0.3F);
+
+        // a second tank with a real shipwreck in it, and its crew
+        int tx0 = -62, tx1 = -24, tz0b = -152, tz1b = -120;
+        for (int x = tx0; x <= tx1; x++) {
+            for (int z = tz0b; z <= tz1b; z++) {
+                boolean wall = x == tx0 || x == tx1 || z == tz0b || z == tz1b;
+                level.setBlock(new net.minecraft.core.BlockPos(x, sg - 1, z), (wall ? net.minecraft.world.level.block.Blocks.GLASS
+                        : net.minecraft.world.level.block.Blocks.SAND).defaultBlockState(), 2);
+                for (int y = 0; y < 14; y++) {
+                    level.setBlock(new net.minecraft.core.BlockPos(x, sg + y, z), (wall ? net.minecraft.world.level.block.Blocks.GLASS
+                            : net.minecraft.world.level.block.Blocks.WATER).defaultBlockState(), 2);
+                }
+            }
+        }
+        level.getServer().getCommands().performPrefixedCommand(src, "place structure minecraft:shipwreck -43 " + sg + " -136");
+        var shipBox = new net.minecraft.world.level.levelgen.structure.BoundingBox(tx0 + 3, sg - 3, tz0b + 3, tx1 - 3, sg + 12, tz1b - 3);
+        for (int seed = 11; seed < 15; seed++) {
+            com.harold.corpsedecay.world.PirateFeature.crewIn(level, java.util.List.of(shipBox), null, net.minecraft.util.RandomSource.create(seed));
+        }
+        for (CorpseEntity c : level.getEntitiesOfClass(CorpseEntity.class, new AABB(tx0, sg - 4, tz0b, tx1, sg + 14, tz1b))) {
+            LOG.info("CLIENTTEST ship crew at {} {} {}: {}", c.getX(), c.getY(), c.getZ(), c.equipment(EquipmentSlot.CHEST));
+        }
 
         // a patch of desert with stone whales and wind-carved rocks
         int dg = groundDesert = groundAt(level, DESERT_X, DESERT_Z);
