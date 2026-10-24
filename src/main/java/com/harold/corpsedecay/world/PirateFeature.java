@@ -84,6 +84,7 @@ public class PirateFeature extends Feature<NoneFeatureConfiguration> {
         if (boxes.isEmpty()) return 0;
         int crew = 3 + rand.nextInt(4);
         int placed = 0;
+        List<BlockPos> used = new ArrayList<>();
         for (int i = 0; i < crew; i++) {
             RandomSource mine = RandomSource.create(rand.nextLong());
             BoundingBox box = boxes.get(mine.nextInt(boxes.size()));
@@ -100,6 +101,10 @@ public class PirateFeature extends Feature<NoneFeatureConfiguration> {
                 int z = tries == 0 ? hz : minZ + mine.nextInt(maxZ - minZ + 1);
                 BlockPos floor = floorAt(level, x, z, box);
                 if (floor == null) continue;
+                boolean crowded = false;
+                for (BlockPos u : used) crowded |= Math.abs(u.getX() - floor.getX()) + Math.abs(u.getZ() - floor.getZ()) <= 1 && Math.abs(u.getY() - floor.getY()) <= 1;
+                if (crowded) continue;
+                used.add(floor);
                 if (DEBUG) LOG.info("PIRATE member {} at {}", i, floor);
                 if (crewMember(level, floor, mine, captain) != null) placed++;
                 break;
