@@ -39,12 +39,16 @@ import net.minecraft.world.level.levelgen.structure.StructureStart;
  * ship, so each chunk the ship covers adds only the ones that are in it.
  */
 public class PirateFeature extends Feature<NoneFeatureConfiguration> {
+    private static final boolean DEBUG = Boolean.getBoolean("corpsedecay.gentest");
+    private static final org.slf4j.Logger LOG = com.mojang.logging.LogUtils.getLogger();
+
     public PirateFeature() {
         super(NoneFeatureConfiguration.CODEC);
     }
 
     @Override
     public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> ctx) {
+        if (DEBUG) LOG.info("PIRATE feature runs in chunk {}", new ChunkPos(ctx.origin()));
         if (!Config.REMAINS.get()) return false;
         WorldGenLevel level = ctx.level();
         ChunkPos here = new ChunkPos(ctx.origin());
@@ -59,6 +63,7 @@ public class PirateFeature extends Feature<NoneFeatureConfiguration> {
                 if (start == null || !start.isValid()) continue;
                 List<BoundingBox> boxes = new ArrayList<>();
                 for (StructurePiece piece : start.getPieces()) boxes.add(piece.getBoundingBox());
+                if (DEBUG) LOG.info("PIRATE chunk {} sees ship started in {} with {} pieces, box {}", here, sp, boxes.size(), boxes.get(0));
                 RandomSource rand = RandomSource.create(level.getSeed() ^ (packed * 0x9E3779B97F4A7C15L) ^ 0x5EA10FL);
                 any |= crewIn(level, boxes, here, rand) > 0;
             }
@@ -86,6 +91,7 @@ public class PirateFeature extends Feature<NoneFeatureConfiguration> {
             boolean captain = i == 0 && mine.nextFloat() < 0.75F;
             ChunkPos home = new ChunkPos(new BlockPos(hx, 0, hz));
             if (only != null && !home.equals(only)) continue;
+            if (DEBUG) LOG.info("PIRATE member {} home {} in box {}", i, home, box);
             // somewhere on a plank floor in that chunk, starting at its spot
             int minX = Math.max(box.minX(), home.getMinBlockX()), maxX = Math.min(box.maxX(), home.getMaxBlockX());
             int minZ = Math.max(box.minZ(), home.getMinBlockZ()), maxZ = Math.min(box.maxZ(), home.getMaxBlockZ());
@@ -94,6 +100,7 @@ public class PirateFeature extends Feature<NoneFeatureConfiguration> {
                 int z = tries == 0 ? hz : minZ + mine.nextInt(maxZ - minZ + 1);
                 BlockPos floor = floorAt(level, x, z, box);
                 if (floor == null) continue;
+                if (DEBUG) LOG.info("PIRATE member {} at {}", i, floor);
                 if (crewMember(level, floor, mine, captain) != null) placed++;
                 break;
             }
