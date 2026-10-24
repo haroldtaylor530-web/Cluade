@@ -77,16 +77,21 @@ public class GenTest {
                 List<CorpseEntity> crew = level.getEntitiesOfClass(CorpseEntity.class,
                         new AABB(found.getX() - 48, level.getMinBuildHeight(), found.getZ() - 48, found.getX() + 48, level.getMaxBuildHeight(), found.getZ() + 48));
                 if (crew.isEmpty()) continue;
-                // the middle of the crew, to point the camera at
-                double x = 0, y = 0, z = 0;
+                // the crewman nearest the rest of them, to point the camera at, and another
+                CorpseEntity mid = crew.get(0);
+                double best = Double.MAX_VALUE;
                 for (CorpseEntity c : crew) {
-                    x += c.getX();
-                    y += c.getY();
-                    z += c.getZ();
+                    double sum = 0;
+                    for (CorpseEntity o : crew) sum += c.distanceTo(o);
+                    if (sum < best) {
+                        best = sum;
+                        mid = c;
+                    }
                 }
-                CorpseEntity first = crew.get(0);
-                out.append(String.format(java.util.Locale.ROOT, "%.1f %.1f %.1f %.1f %.1f %.1f%n", x / crew.size(), y / crew.size(), z / crew.size(),
-                        first.getX(), first.getY(), first.getZ()));
+                CorpseEntity other = crew.get(crew.size() - 1) == mid ? crew.get(0) : crew.get(crew.size() - 1);
+                for (CorpseEntity c : crew) LOG.info("GENTEST   crewman at {}", c.blockPosition());
+                out.append(String.format(java.util.Locale.ROOT, "%.1f %.1f %.1f %.1f %.1f %.1f%n", mid.getX(), mid.getY(), mid.getZ(),
+                        other.getX(), other.getY(), other.getZ()));
             }
             try {
                 java.nio.file.Files.writeString(server.getServerDirectory().toPath().resolve("wrecks.txt"), out.toString());

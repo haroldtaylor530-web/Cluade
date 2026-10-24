@@ -130,7 +130,7 @@ public final class LateCrews {
         for (StructurePiece piece : start.getPieces()) boxes.add(piece.getBoundingBox());
         if (boxes.isEmpty()) boxes.add(start.getBoundingBox());
         long seed = level.getSeed() ^ (start.getChunkPos().toLong() * 0x9E3779B97F4A7C15L) ^ 0x1A7EL;
-        return PirateFeature.crewIn(level, boxes, null, RandomSource.create(seed));
+        return PirateFeature.crewIn(level, boxes, null, RandomSource.create(seed), true);
     }
 
     /** Which wrecks in this world already have their crew. */

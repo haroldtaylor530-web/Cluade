@@ -81,7 +81,25 @@ public class PirateFeature extends Feature<NoneFeatureConfiguration> {
      * floor in their spot's chunk. Returns how many.
      */
     public static int crewIn(WorldGenLevel level, List<BoundingBox> boxes, ChunkPos only, RandomSource rand) {
+        return crewIn(level, boxes, only, rand, false);
+    }
+
+    /** How far from the middle of another mod's wreck (whose bounds can take in a lot of land round it) to look for deck. */
+    private static final int STRICT_REACH = 20;
+
+    /**
+     * {@code strict}: the boxes may be much bigger than the ship (another mod's wreck), so only look
+     * near their middle, only on planks and slabs, and never under rock or earth (a mineshaft, a cave).
+     */
+    public static int crewIn(WorldGenLevel level, List<BoundingBox> boxes, ChunkPos only, RandomSource rand, boolean strict) {
         if (boxes.isEmpty()) return 0;
+        int cx = 0, cz = 0;
+        for (BoundingBox b : boxes) {
+            cx += b.getCenter().getX();
+            cz += b.getCenter().getZ();
+        }
+        cx /= boxes.size();
+        cz /= boxes.size();
         int crew = 3 + rand.nextInt(4);
         int placed = 0;
         List<BlockPos> used = new ArrayList<>();
@@ -96,10 +114,18 @@ public class PirateFeature extends Feature<NoneFeatureConfiguration> {
             // somewhere on a plank floor in that chunk, starting at its spot
             int minX = Math.max(box.minX(), home.getMinBlockX()), maxX = Math.min(box.maxX(), home.getMaxBlockX());
             int minZ = Math.max(box.minZ(), home.getMinBlockZ()), maxZ = Math.min(box.maxZ(), home.getMaxBlockZ());
-            for (int tries = 0; tries < 80; tries++) {
-                int x = tries == 0 ? hx : minX + mine.nextInt(maxX - minX + 1);
-                int z = tries == 0 ? hz : minZ + mine.nextInt(maxZ - minZ + 1);
-                BlockPos floor = floorAt(level, x, z, box);
+            if (strict) {
+                minX = Math.max(box.minX(), cx - STRICT_REACH);
+                maxX = Math.min(box.maxX(), cx + STRICT_REACH);
+                minZ = Math.max(box.minZ(), cz - STRICT_REACH);
+                maxZ = Math.min(box.maxZ(), cz + STRICT_REACH);
+                if (minX > maxX || minZ > maxZ) continue;
+            }
+            for (int tries = 0; tries < (strict ? 200 : 80); tries++) {
+                int x = tries == 0 && !strict ? hx : minX + mine.nextInt(maxX - minX + 1);
+                int z = tries == 0 && !strict ? hz : minZ + mine.nextInt(maxZ - minZ + 1);
+                if (strict && (x - cx) * (x - cx) + (z - cz) * (z - cz) > STRICT_REACH * STRICT_REACH) continue;
+                BlockPos floor = strict ? strictFloorAt(level, x, z, box) : floorAt(level, x, z, box);
                 if (floor == null) continue;
                 boolean crowded = false;
                 for (BlockPos u : used) crowded |= Math.abs(u.getX() - floor.getX()) + Math.abs(u.getZ() - floor.getZ()) <= 1 && Math.abs(u.getY() - floor.getY()) <= 1;
@@ -124,6 +150,31 @@ public class PirateFeature extends Feature<NoneFeatureConfiguration> {
         }
         if (s.is(BlockTags.WOODEN_SLABS) && s.hasProperty(net.minecraft.world.level.block.SlabBlock.TYPE)) {
             return s.getValue(net.minecraft.world.level.block.SlabBlock.TYPE) != net.minecraft.world.level.block.state.properties.SlabType.BOTTOM;
+        }
+        return false;
+    }
+
+    /** Like {@link #floorAt}, but planks and slabs only, and open to the sky or the sea above (not under rock). */
+    private static BlockPos strictFloorAt(WorldGenLevel level, int x, int z, BoundingBox box) {
+        for (int y = box.maxY(); y >= box.minY(); y--) {
+            BlockPos p = new BlockPos(x, y, z);
+            net.minecraft.world.level.block.state.BlockState s = level.getBlockState(p);
+            if (!s.is(BlockTags.PLANKS) && !(isDeck(s) && s.is(BlockTags.WOODEN_SLABS))) continue;
+            if (!level.getBlockState(p.above()).getCollisionShape(level, p.above()).isEmpty()) continue;
+            if (underGround(level, p)) continue;
+            return p;
+        }
+        return null;
+    }
+
+    /** Whether there's rock or earth over this spot (a mineshaft, a cave, a cellar) rather than sky, sea or the ship. */
+    private static boolean underGround(WorldGenLevel level, BlockPos p) {
+        for (int dy = 1; dy <= 16; dy++) {
+            net.minecraft.world.level.block.state.BlockState s = level.getBlockState(p.above(dy));
+            if (s.is(BlockTags.BASE_STONE_OVERWORLD) || s.is(BlockTags.DIRT) || s.is(BlockTags.SAND) || s.is(Blocks.GRAVEL)
+                    || s.is(BlockTags.TERRACOTTA) || s.is(Blocks.COBBLESTONE) || s.is(Blocks.MOSSY_COBBLESTONE) || s.is(BlockTags.LEAVES)) {
+                return true;
+            }
         }
         return false;
     }
