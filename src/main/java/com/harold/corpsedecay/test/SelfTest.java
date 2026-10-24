@@ -604,10 +604,12 @@ public final class SelfTest {
         var ship = com.harold.corpsedecay.world.GhostShipFeature.build(level, centre, net.minecraft.core.Direction.EAST,
                 net.minecraft.util.RandomSource.create(5));
         int deck = sea + 2;
-        check(ship.hull() > 150 && level.getBlockState(new BlockPos(cx, deck + 20, cz)).is(net.minecraft.world.level.block.Blocks.SPRUCE_LOG)
-                && level.getBlockState(new BlockPos(cx + 1, deck + 5, cz)).is(net.minecraft.world.level.block.Blocks.WHITE_WOOL)
-                        | level.getBlockState(new BlockPos(cx + 1, deck + 5, cz + 1)).is(net.minecraft.world.level.block.Blocks.WHITE_WOOL),
-                "she's whole: hull, masts and sails (" + ship.hull() + " hull blocks)");
+        int sail = 0;
+        for (BlockPos p : BlockPos.betweenClosed(cx + 1, deck + 3, cz - 5, cx + 2, deck + 6, cz + 5)) {
+            if (level.getBlockState(p).is(net.minecraft.world.level.block.Blocks.WHITE_WOOL)) sail++;
+        }
+        boolean mast = level.getBlockState(new BlockPos(cx, deck + 20, cz)).is(net.minecraft.world.level.block.Blocks.SPRUCE_LOG);
+        check(ship.hull() > 150 && mast && sail > 15, "she's whole: hull, masts and sails (" + ship.hull() + " hull blocks, mast " + mast + ", " + sail + " sail)");
         check(level.getBlockState(new BlockPos(cx, deck - 1, cz + 1)).isAir(), "with a dry hold under her deck");
         int ice = 0;
         for (BlockPos p : BlockPos.betweenClosed(cx - 24, sea, cz - 13, cx + 24, sea, cz + 13)) {
