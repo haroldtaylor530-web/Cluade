@@ -58,7 +58,7 @@ public class GenTest {
             LOG.error("GENTEST crashed", t);
         }
         LOG.info("GENTEST {} shipwrecks, {} with a crew, {} bodies, {} dressed", ships, crewed, bodies, dressed);
-        LOG.info(ships >= 2 && crewed >= 1 && dressed >= 1 ? "GENTEST PASS" : "GENTEST FAILED");
+        LOG.info(ships >= 4 && crewed * 4 >= ships * 3 && dressed >= 1 ? "GENTEST PASS" : "GENTEST FAILED");
         server.halt(false);
     }
 }

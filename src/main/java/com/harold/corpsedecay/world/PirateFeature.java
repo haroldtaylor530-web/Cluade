@@ -33,7 +33,7 @@ import net.minecraft.world.level.levelgen.structure.StructureStart;
 
 /**
  * The crews of shipwrecks. Wherever a shipwreck was generated, some of the people aboard went down
- * with it: two to five of them lie on the decks and in the hold, old bones in the clothes of a
+ * with it: three to six of them lie on the decks and in the hold, old bones in the clothes of a
  * pirate crew (a captain in a dark coat and tricorn with a cutlass and a spyglass, hands in
  * bandanas, shirts, boots, boarding axes, bows, crossbows). Which spots they lie in is fixed by the
  * ship, so each chunk the ship covers adds only the ones that are in it.
@@ -77,7 +77,7 @@ public class PirateFeature extends Feature<NoneFeatureConfiguration> {
      */
     public static int crewIn(WorldGenLevel level, List<BoundingBox> boxes, ChunkPos only, RandomSource rand) {
         if (boxes.isEmpty()) return 0;
-        int crew = 2 + rand.nextInt(4);
+        int crew = 3 + rand.nextInt(4);
         int placed = 0;
         for (int i = 0; i < crew; i++) {
             RandomSource mine = RandomSource.create(rand.nextLong());
@@ -89,7 +89,7 @@ public class PirateFeature extends Feature<NoneFeatureConfiguration> {
             // somewhere on a plank floor in that chunk, starting at its spot
             int minX = Math.max(box.minX(), home.getMinBlockX()), maxX = Math.min(box.maxX(), home.getMaxBlockX());
             int minZ = Math.max(box.minZ(), home.getMinBlockZ()), maxZ = Math.min(box.maxZ(), home.getMaxBlockZ());
-            for (int tries = 0; tries < 14; tries++) {
+            for (int tries = 0; tries < 80; tries++) {
                 int x = tries == 0 ? hx : minX + mine.nextInt(maxX - minX + 1);
                 int z = tries == 0 ? hz : minZ + mine.nextInt(maxZ - minZ + 1);
                 BlockPos floor = floorAt(level, x, z, box);
@@ -107,7 +107,6 @@ public class PirateFeature extends Feature<NoneFeatureConfiguration> {
             BlockPos p = new BlockPos(x, y, z);
             if (!level.getBlockState(p).is(BlockTags.PLANKS)) continue;
             if (!level.getBlockState(p.above()).getCollisionShape(level, p.above()).isEmpty()) continue;
-            if (!level.getBlockState(p.above(2)).getCollisionShape(level, p.above(2)).isEmpty()) continue;
             return p;
         }
         return null;

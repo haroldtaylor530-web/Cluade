@@ -63,7 +63,7 @@ there, rotting through stages down to a bare skeleton, still wearing whatever it
   yellow and orange bacterial mats spread over the mud. Sneak and hit one to break it up for bones
   and bone blocks.
 - **Pirate crews.** Every shipwreck, in the sea or beached on a shore, has some of its crew still
-  aboard: two to five old bodies lying on the decks and in the hold in a pirate's clothes. There is
+  aboard: three to six old bodies lying on the decks and in the hold in a pirate's clothes. There is
   usually a captain in a dark coat and tricorn hat with a cutlass and a spyglass or compass; the hands
   have bandanas in faded cloth, shirts, breeches, boots, cutlasses, boarding axes, bows and crossbows,
   all battered and dyed by the sea. Under water they have sea pickles and dead coral growing on them
