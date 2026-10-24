@@ -113,11 +113,26 @@ public class PirateFeature extends Feature<NoneFeatureConfiguration> {
         return placed;
     }
 
+    /**
+     * Something a body can lie on aboard a ship: planks, a log lying on its side, the upper half of
+     * a slab (other mods' wrecks are built of all sorts of wood).
+     */
+    static boolean isDeck(net.minecraft.world.level.block.state.BlockState s) {
+        if (s.is(BlockTags.PLANKS)) return true;
+        if (s.is(BlockTags.LOGS) && s.hasProperty(net.minecraft.world.level.block.RotatedPillarBlock.AXIS)) {
+            return s.getValue(net.minecraft.world.level.block.RotatedPillarBlock.AXIS) != net.minecraft.core.Direction.Axis.Y;
+        }
+        if (s.is(BlockTags.WOODEN_SLABS) && s.hasProperty(net.minecraft.world.level.block.SlabBlock.TYPE)) {
+            return s.getValue(net.minecraft.world.level.block.SlabBlock.TYPE) != net.minecraft.world.level.block.state.properties.SlabType.BOTTOM;
+        }
+        return false;
+    }
+
     /** The top of a plank floor in this column of the ship with room to lie on it, or null. */
     private static BlockPos floorAt(WorldGenLevel level, int x, int z, BoundingBox box) {
         for (int y = box.maxY(); y >= box.minY(); y--) {
             BlockPos p = new BlockPos(x, y, z);
-            if (!level.getBlockState(p).is(BlockTags.PLANKS)) continue;
+            if (!isDeck(level.getBlockState(p))) continue;
             if (!level.getBlockState(p.above()).getCollisionShape(level, p.above()).isEmpty()) continue;
             return p;
         }

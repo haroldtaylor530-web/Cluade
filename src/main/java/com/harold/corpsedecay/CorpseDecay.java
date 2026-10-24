@@ -18,6 +18,7 @@ public class CorpseDecay {
         ModRegistry.register(modBus);
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
         MinecraftForge.EVENT_BUS.register(DeathHandler.class);
+        MinecraftForge.EVENT_BUS.register(com.harold.corpsedecay.world.LateCrews.class);
         if (Boolean.getBoolean("corpsedecay.selftest")) {
             MinecraftForge.EVENT_BUS.register(com.harold.corpsedecay.test.SelfTest.class);
         }

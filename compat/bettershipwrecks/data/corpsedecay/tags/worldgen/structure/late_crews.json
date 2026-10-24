@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    {"id": "bettershipwrecks:shipwreck", "required": false},
+    {"id": "bettershipwrecks:shipwreck_beached", "required": false}
+  ]
+}

@@ -29,36 +29,46 @@ public class GenTest {
     private static int tick;
     private static boolean done;
 
+    private static final List<BlockPos> SHIPS = new java.util.ArrayList<>();
+
     @SubscribeEvent
     public static void onTick(TickEvent.ServerTickEvent e) {
         if (e.phase != TickEvent.Phase.END || done) return;
         MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
-        if (server == null || ++tick != 40) return;
-        done = true;
-        int ships = 0, crewed = 0, bodies = 0, dressed = 0;
+        if (server == null) return;
+        tick++;
+        ServerLevel level = server.overworld();
         try {
-            ServerLevel level = server.overworld();
-            int[][] origins = {{0, 0}, {3000, 0}, {0, 3000}, {-3000, 0}, {0, -3000}, {3000, 3000}, {-3000, -3000}, {3000, -3000}};
-            for (int[] o : origins) {
-                var found = level.findNearestMapStructure(StructureTags.SHIPWRECK, new BlockPos(o[0], 64, o[1]), 60, false);
-                if (found == null) continue;
-                ships++;
-                int cx = found.getX() >> 4, cz = found.getZ() >> 4;
-                for (int x = cx - 3; x <= cx + 3; x++) for (int z = cz - 3; z <= cz + 3; z++) level.getChunk(x, z);
-                List<CorpseEntity> crew = level.getEntitiesOfClass(CorpseEntity.class,
-                        new AABB(found.getX() - 48, level.getMinBuildHeight(), found.getZ() - 48, found.getX() + 48, level.getMaxBuildHeight(), found.getZ() + 48));
-                LOG.info("GENTEST shipwreck near {} has {} bodies", found, crew.size());
-                if (!crew.isEmpty()) crewed++;
-                bodies += crew.size();
-                for (CorpseEntity c : crew) {
-                    if (!c.equipment(EquipmentSlot.CHEST).isEmpty() || !c.equipment(EquipmentSlot.MAINHAND).isEmpty()) dressed++;
+            if (tick == 40) {
+                int[][] origins = {{0, 0}, {3000, 0}, {0, 3000}, {-3000, 0}, {0, -3000}, {3000, 3000}, {-3000, -3000}, {3000, -3000}};
+                for (int[] o : origins) {
+                    var found = level.findNearestMapStructure(StructureTags.SHIPWRECK, new BlockPos(o[0], 64, o[1]), 60, false);
+                    if (found == null) continue;
+                    SHIPS.add(found);
+                    int cx = found.getX() >> 4, cz = found.getZ() >> 4;
+                    for (int x = cx - 3; x <= cx + 3; x++) for (int z = cz - 3; z <= cz + 3; z++) level.setChunkForced(x, z, true);
                 }
+                return;
             }
+            if (tick < 900) return;
         } catch (Throwable t) {
             LOG.error("GENTEST crashed", t);
         }
-        LOG.info("GENTEST {} shipwrecks, {} with a crew, {} bodies, {} dressed", ships, crewed, bodies, dressed);
-        LOG.info(ships >= 4 && crewed * 4 >= ships * 3 && dressed >= 1 ? "GENTEST PASS" : "GENTEST FAILED");
+        done = true;
+        int ships = SHIPS.size(), crewed = 0, bodies = 0, dressed = 0;
+        for (BlockPos found : SHIPS) {
+            List<CorpseEntity> crew = level.getEntitiesOfClass(CorpseEntity.class,
+                    new AABB(found.getX() - 48, level.getMinBuildHeight(), found.getZ() - 48, found.getX() + 48, level.getMaxBuildHeight(), found.getZ() + 48));
+            LOG.info("GENTEST shipwreck near {} has {} bodies", found, crew.size());
+            if (!crew.isEmpty()) crewed++;
+            bodies += crew.size();
+            for (CorpseEntity c : crew) {
+                if (!c.equipment(EquipmentSlot.CHEST).isEmpty() || !c.equipment(EquipmentSlot.MAINHAND).isEmpty()) dressed++;
+            }
+        }
+        int late = com.harold.corpsedecay.world.LateCrews.crewed;
+        LOG.info("GENTEST {} shipwrecks, {} with a crew, {} bodies, {} dressed, {} late crews", ships, crewed, bodies, dressed, late);
+        LOG.info(ships >= 4 && crewed * 4 >= ships * 3 && dressed >= 1 && late >= 2 ? "GENTEST PASS" : "GENTEST FAILED");
         server.halt(false);
     }
 }

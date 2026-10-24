@@ -51,6 +51,10 @@ jobs:
         run: |
           mkdir -p run-gentest && echo "eula=true" > run-gentest/eula.txt
           printf 'online-mode=false\nspawn-protection=0\nspawn-monsters=false\nlevel-seed=2468\ngenerate-structures=true\n' > run-gentest/server.properties
+          # a datapack that hands vanilla wrecks to the late crew placer too, as a compat add-on would its own
+          mkdir -p run-gentest/world/datapacks/latetest/data/corpsedecay/tags/worldgen/structure
+          echo '{"pack":{"pack_format":15,"description":"late crews test"}}' > run-gentest/world/datapacks/latetest/pack.mcmeta
+          echo '{"replace":false,"values":["minecraft:shipwreck","minecraft:shipwreck_beached"]}' > run-gentest/world/datapacks/latetest/data/corpsedecay/tags/worldgen/structure/late_crews.json
           timeout 900 ./gradlew runServer -Pgentest -Prundir=run-gentest 2>&1 | tee gentest.log || true
           grep -q "GENTEST PASS" gentest.log
 

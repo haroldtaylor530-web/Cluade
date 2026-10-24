@@ -79,6 +79,11 @@ there, rotting through stages down to a bare skeleton, still wearing whatever it
   The captain sits at the chart table on the quarterdeck, and his log lies open in front of him in
   an invisible item frame. Take it and read how they came to be there. Blue soul lanterns still
   burn in the cabin and the hold; the captain's sea chest and the ship's stores can be looted.
+- **Other mods' shipwrecks.** Wrecks from mods that build their ships their own way get their crew
+  too, through a small add-on: the structure goes in the `#corpsedecay:late_crews` structure tag
+  and each wreck is crewed once, when its chunks are loaded and the ship is standing there (so ones
+  you'd already found get a crew the next time you visit). `corpsedecay_bettershipwrecks` does this
+  for TONI's Better Shipwrecks.
 - **The valley of whales.** In deserts lie early whales turned to stone, like the ones in Egypt's
   Wadi Al-Hitan: long, snake-like basilosaurs half buried in the sand, still with their tiny hind
   legs, among wind-carved pillars of sandstone, with shark teeth and shells in the sandstone
