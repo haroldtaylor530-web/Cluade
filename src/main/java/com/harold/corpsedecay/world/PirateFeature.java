@@ -174,7 +174,7 @@ public class PirateFeature extends Feature<NoneFeatureConfiguration> {
         if (rand.nextFloat() < 0.1F) body.giveGear(EquipmentSlot.OFFHAND, new ItemStack(Items.COMPASS));
     }
 
-    private static ItemStack dyed(Item item, int colour, RandomSource rand) {
+    static ItemStack dyed(Item item, int colour, RandomSource rand) {
         ItemStack s = new ItemStack(item);
         int r = clamp(((colour >> 16) & 255) + rand.nextInt(13) - 6), g = clamp(((colour >> 8) & 255) + rand.nextInt(13) - 6),
                 b = clamp((colour & 255) + rand.nextInt(13) - 6);

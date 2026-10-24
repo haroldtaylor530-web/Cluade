@@ -228,6 +228,24 @@ public final class ClientSelfTest {
         at(t + 505, () -> camera(DESERT_X - 9.0, groundDesert + 4.0, DESERT_Z - 9.0, -45F, 22F));
         at(t + 545, () -> shot("B7_desert_whale_close"));
         t += 550;
+        // the ghost ship
+        final int deck = 0;
+        at(t, () -> camera(SHIP_X - 22.0, shipSea + 16.0, SHIP_Z + 30.0, -140F, 22F));
+        at(t + 45, () -> shot("C0_ghost_ship"));
+        at(t + 50, () -> camera(SHIP_X - 8.0, shipSea + 10.5, SHIP_Z - 5.0, 45F, 35F));
+        at(t + 90, () -> shot("C1_captain"));
+        at(t + 95, () -> camera(SHIP_X - 12.5, shipSea + 9.5, SHIP_Z - 3.0, 0F, 75F));
+        at(t + 135, () -> shot("C2_journal"));
+        at(t + 140, () -> camera(SHIP_X + 6.0, shipSea + 5.5, SHIP_Z + 6.0, -135F, 20F));
+        at(t + 180, () -> shot("C3_lookout"));
+        at(t + 185, () -> camera(SHIP_X - 7.0, shipSea + 7.5, SHIP_Z, -90F, 25F));
+        at(t + 225, () -> shot("C4_deck"));
+        at(t + 228, () -> server(() -> player().addEffect(new net.minecraft.world.effect.MobEffectInstance(
+                net.minecraft.world.effect.MobEffects.NIGHT_VISION, 2000, 0, false, false))));
+        at(t + 230, () -> camera(SHIP_X + 6.0, shipSea + 0.2, SHIP_Z, 90F, 10F));
+        at(t + 270, () -> shot("C5_hold"));
+        at(t + 275, () -> server(() -> player().removeEffect(net.minecraft.world.effect.MobEffects.NIGHT_VISION)));
+        t += 280;
         at(t + 5, () -> {
             LOG.info("CLIENTTEST DONE");
             Minecraft.getInstance().stop();
@@ -326,6 +344,7 @@ public final class ClientSelfTest {
         }
         fossilGallery(level);
         mummiesAndWhales(level);
+        ghostShip(level);
         camera(0.5, ground + 6.5, -8.5, 0F, 32F);
     }
 
@@ -432,6 +451,18 @@ public final class ClientSelfTest {
         com.harold.corpsedecay.world.WhaleFeature.desertWhale(level, new net.minecraft.core.BlockPos(DESERT_X, dg - 1, DESERT_Z), net.minecraft.util.RandomSource.create(8),
                 net.minecraft.core.Direction.EAST);
         com.harold.corpsedecay.world.WhaleFeature.valley(level, new net.minecraft.core.BlockPos(DESERT_X, dg, DESERT_Z - 2), net.minecraft.util.RandomSource.create(9));
+    }
+
+    static final int SHIP_X = 150, SHIP_Z = -40;
+    static int shipSea;
+
+    /** A basin of frozen sea with a ghost ship in it, bow to the east. */
+    private static void ghostShip(ServerLevel level) {
+        shipSea = groundAt(level, SHIP_X + 40, SHIP_Z) + 8;
+        com.harold.corpsedecay.test.TestSea.basin(level, SHIP_X, shipSea, SHIP_Z, 26, 15, 8);
+        var ship = com.harold.corpsedecay.world.GhostShipFeature.build(level, new net.minecraft.core.BlockPos(SHIP_X, shipSea, SHIP_Z),
+                net.minecraft.core.Direction.EAST, net.minecraft.util.RandomSource.create(5));
+        LOG.info("CLIENTTEST ghost ship {} with {} crew", ship.name(), ship.crew().size());
     }
 
     private static Mob mob(String name, EntityType<? extends Mob> type, double x, int y, double z) {

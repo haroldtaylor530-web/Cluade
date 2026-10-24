@@ -529,6 +529,7 @@ public final class SelfTest {
                 if (squid != null) squid.discard();
                 for (CorpseEntity c : left) if (c.kind() != CorpseKind.REMAINS) c.discard();
                 pirateTest(server);
+                ghostShipTest(server);
                 then.run();
             });
         });
@@ -587,6 +588,51 @@ public final class SelfTest {
         check(cap != null && cap.equipment(EquipmentSlot.HEAD).is(Items.LEATHER_HELMET) && cap.equipment(EquipmentSlot.CHEST).is(Items.LEATHER_CHESTPLATE)
                 && cap.equipment(EquipmentSlot.MAINHAND).is(Items.IRON_SWORD), "the captain has a hat, a coat and a cutlass");
         if (cap != null) cap.discard();
+    }
+
+    /** A frozen ghost ship: whole, her crew standing where they froze, the captain's log on the chart table. */
+    private static void ghostShipTest(MinecraftServer server) {
+        var placed = server.registryAccess().registryOrThrow(net.minecraft.core.registries.Registries.PLACED_FEATURE);
+        var mods = server.registryAccess().registryOrThrow(net.minecraftforge.registries.ForgeRegistries.Keys.BIOME_MODIFIERS);
+        check(placed.containsKey(new net.minecraft.resources.ResourceLocation("corpsedecay", "ghost_ship"))
+                && mods.containsKey(new net.minecraft.resources.ResourceLocation("corpsedecay", "ghost_ships")), "ghost ships sail the frozen oceans");
+        int sea = groundY + 30, cx = 150, cz = 40;
+        TestSea.basin(level, cx, sea, cz, 26, 15, 8);
+        BlockPos centre = new BlockPos(cx, sea, cz);
+        check(com.harold.corpsedecay.world.GhostShipFeature.fits(level, centre, net.minecraft.core.Direction.EAST), "she fits in open water");
+        check(!com.harold.corpsedecay.world.GhostShipFeature.fits(level, new BlockPos(0, groundY, 0), net.minecraft.core.Direction.EAST), "but not on dry land");
+        var ship = com.harold.corpsedecay.world.GhostShipFeature.build(level, centre, net.minecraft.core.Direction.EAST,
+                net.minecraft.util.RandomSource.create(5));
+        int deck = sea + 2;
+        check(ship.hull() > 150 && level.getBlockState(new BlockPos(cx, deck + 20, cz)).is(net.minecraft.world.level.block.Blocks.SPRUCE_LOG)
+                && level.getBlockState(new BlockPos(cx + 1, deck + 5, cz)).is(net.minecraft.world.level.block.Blocks.WHITE_WOOL)
+                        | level.getBlockState(new BlockPos(cx + 1, deck + 5, cz + 1)).is(net.minecraft.world.level.block.Blocks.WHITE_WOOL),
+                "she's whole: hull, masts and sails (" + ship.hull() + " hull blocks)");
+        check(level.getBlockState(new BlockPos(cx, deck - 1, cz + 1)).isAir(), "with a dry hold under her deck");
+        int ice = 0;
+        for (BlockPos p : BlockPos.betweenClosed(cx - 24, sea, cz - 13, cx + 24, sea, cz + 13)) {
+            if (level.getBlockState(p).is(net.minecraft.world.level.block.Blocks.ICE)) ice++;
+        }
+        check(ice > 80, "locked in the ice (" + ice + ")");
+        int standing = 0;
+        boolean frozen = true;
+        for (CorpseEntity c : ship.crew()) {
+            frozen &= c.kind() == CorpseKind.REMAINS && c.material() == CorpseEntity.ICE_MUMMY;
+            if (c.orientation().transform(new Vector3f(0, 1, 0)).y > 0.8F && !c.figurePose().isEmpty()) standing++;
+        }
+        check(ship.crew().size() >= 10 && frozen, "her crew are aboard, freeze-dried (" + ship.crew().size() + ")");
+        check(standing >= 5, "most of them still upright at their posts (" + standing + ")");
+        var frame = ship.journal();
+        var book = frame.getItem();
+        check(frame.isInvisible() && book.is(Items.WRITTEN_BOOK) && book.getTag().getList("pages", 8).size() >= 9
+                && book.getTag().getString("title").contains(ship.name()) && frame.survives(), "the captain's log lies on the chart table in an invisible frame");
+        CorpseEntity first = ship.crew().get(0);
+        CompoundTag saved = new CompoundTag();
+        first.saveWithoutId(saved);
+        CorpseEntity copy = com.harold.corpsedecay.ModRegistry.CORPSE.get().create(level);
+        copy.load(saved);
+        check(copy.figurePose().equals(first.figurePose()) && copy.orientation().equals(first.orientation(), 1e-4F), "a frozen figure keeps its pose when saved");
+        check(first.equipment(EquipmentSlot.HEAD).is(Items.LEATHER_HELMET), "the captain still has his hat on");
     }
 
     private static CorpseEntity squid, spider;

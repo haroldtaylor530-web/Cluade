@@ -66,6 +66,8 @@ public class CorpseEntity extends Entity {
     private static final EntityDataAccessor<Integer> LOOT_MASK = SynchedEntityData.defineId(CorpseEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<CompoundTag> ARROWS = SynchedEntityData.defineId(CorpseEntity.class, EntityDataSerializers.COMPOUND_TAG);
     private static final EntityDataAccessor<CompoundTag> DECOR = SynchedEntityData.defineId(CorpseEntity.class, EntityDataSerializers.COMPOUND_TAG);
+    /** limbs held still in a pose (part name -> x, y, z angles) for a body frozen where it stood */
+    private static final EntityDataAccessor<CompoundTag> FIGURE = SynchedEntityData.defineId(CorpseEntity.class, EntityDataSerializers.COMPOUND_TAG);
     private static final EntityDataAccessor<Byte> MUMMY = SynchedEntityData.defineId(CorpseEntity.class, EntityDataSerializers.BYTE);
     @SuppressWarnings("unchecked")
     private static final EntityDataAccessor<ItemStack>[] EQUIP = new EntityDataAccessor[6];
@@ -106,6 +108,7 @@ public class CorpseEntity extends Entity {
     protected void defineSynchedData() {
         entityData.define(MOB_TYPE, "minecraft:pig");
         entityData.define(RENDER_TAG, new CompoundTag());
+        entityData.define(FIGURE, new CompoundTag());
         entityData.define(BODY_W, 0.6F);
         entityData.define(BODY_H, 1.8F);
         entityData.define(BODY_D, 0.6F);
@@ -319,6 +322,29 @@ public class CorpseEntity extends Entity {
         double half = box.getYsize() / 2.0;
         c.setPos(ground.x, ground.y + half - sink * 2 * half, ground.z);
         return c;
+    }
+
+    /**
+     * A body frozen where it stood: upright with its feet at {@code feet}, facing {@code yaw}
+     * (radians, 0 = +z), leaning forward {@code lean} and sideways {@code tilt}, its limbs held
+     * in {@code pose} (part name -> [x, y, z] angles; parts left out hang as they would at rest).
+     */
+    public static CorpseEntity figure(ServerLevel level, EntityType<?> mob, Vec3 feet, float yaw, float lean, float tilt, int material,
+                                      CompoundTag pose) {
+        CorpseEntity c = remains(level, mob, feet, net.minecraft.util.RandomSource.create(0), material, 0);
+        if (c == null) return null;
+        Quaternionf q = new Quaternionf().rotationY(yaw).rotateX(lean).rotateZ(tilt);
+        c.entityData.set(ORIENT, q);
+        c.entityData.set(FIGURE, pose.copy());
+        Vector3f mid = q.transform(new Vector3f(0, c.bodyHeight() / 2F, 0));
+        c.setPos(feet.x + mid.x, feet.y + mid.y, feet.z + mid.z);
+        c.setBoundingBox(c.makeBoundingBox());
+        return c;
+    }
+
+    /** The pose a frozen figure's limbs are held in; empty for an ordinary body. */
+    public CompoundTag figurePose() {
+        return entityData.get(FIGURE);
     }
 
     /** Puts a piece of gear on the remains, which can be taken off. */
@@ -783,6 +809,7 @@ public class CorpseEntity extends Entity {
         decor.put("List", tag.getList("Growths", Tag.TAG_COMPOUND));
         entityData.set(DECOR, decor);
         entityData.set(MUMMY, tag.getByte("Mummy"));
+        entityData.set(FIGURE, tag.getCompound("Figure"));
         extraLoot = tag.getCompound("ExtraLoot");
         ragdoll = null;
         setBoundingBox(makeBoundingBox());
@@ -792,6 +819,7 @@ public class CorpseEntity extends Entity {
     @Override
     protected void addAdditionalSaveData(CompoundTag tag) {
         tag.putString("MobType", mobType());
+        if (!figurePose().isEmpty()) tag.put("Figure", figurePose());
         tag.put("Render", renderTag());
         tag.putFloat("BodyW", bodyWidth());
         tag.putFloat("BodyH", bodyHeight());

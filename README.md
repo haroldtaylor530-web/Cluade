@@ -68,6 +68,14 @@ there, rotting through stages down to a bare skeleton, still wearing whatever it
   have bandanas in faded cloth, shirts, breeches, boots, cutlasses, boarding axes, bows and crossbows,
   all battered and dyed by the sea. Under water they have sea pickles and dead coral growing on them
   and some are drowned. Like all old remains you can take their gear off them. No blood.
+- **Ghost ships.** Now and then, out in the frozen oceans, there is a ship that never came home: a
+  merchant brig still whole, sails set and stiff with frost, locked fast in the pack ice with snow
+  on her decks. Her crew froze where they stood: the helmsman with his hands on the wheel, the mate
+  alone at the bow with his spyglass raised, men leaning on the rail and sitting hunched against the
+  mainmast, the cook slumped at the galley table below, others still in their bedrolls in the hold.
+  The captain sits at the chart table on the quarterdeck, and his log lies open in front of him in
+  an invisible item frame. Take it and read how they came to be there. Blue soul lanterns still
+  burn in the cabin and the hold; the captain's sea chest and the ship's stores can be looted.
 - **The valley of whales.** In deserts lie early whales turned to stone, like the ones in Egypt's
   Wadi Al-Hitan: long, snake-like basilosaurs half buried in the sand, still with their tiny hind
   legs, among wind-carved pillars of sandstone, with shark teeth and shells in the sandstone
@@ -179,7 +187,7 @@ These are entity type tags (`#corpsedecay:no_corpse`, `already_bones`, `no_skele
 | `lootAllEquipment` | false | Let players take everything off a body, not just what would have dropped |
 | `flies` | true | Flies around rotting bodies |
 | `mummify` | true | Bodies in swamps and frozen biomes mummify instead of rotting to bones |
-| `remains` | true | Old remains, mummies, whale falls and shipwreck crews in newly generated chunks |
+| `remains` | true | Old remains, mummies, whale falls, shipwreck crews and ghost ships in newly generated chunks |
 | `fossils` | true | Fossils in the rock and stone whales in the desert, in newly generated chunks |
 | `ancientSites` | true | Stone Age sites in newly generated chunks |
 | `excludedMobs` | [] | Mob ids that never leave a corpse |

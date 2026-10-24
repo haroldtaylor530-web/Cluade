@@ -156,6 +156,22 @@ public final class CorpseClient {
 
     private void tickLimbs(CorpseEntity corpse) {
         if (info == null || info.limbs.isEmpty()) return;
+        CompoundTag figure = corpse.figurePose();
+        if (!figure.isEmpty()) {
+            // frozen where it stood: every limb held just so, the rest as at rest
+            for (int i = 0; i < limbCur.length; i++) {
+                ModelInfo.Part l = info.limbs.get(i);
+                if (l.name != null && figure.contains(l.name)) {
+                    net.minecraft.nbt.ListTag a = figure.getList(l.name, net.minecraft.nbt.Tag.TAG_FLOAT);
+                    limbCur[i].rotationZYX(a.getFloat(2), a.getFloat(1), a.getFloat(0));
+                } else {
+                    limbCur[i].set(l.restRotation());
+                }
+                limbPrev[i].set(limbCur[i]);
+            }
+            warmed = true;
+            return;
+        }
         if (corpse.cause() == com.harold.corpsedecay.DeathCause.CRUSHED) return; // squashed flat as it stood
         boolean bodyMoving = !corpse.settled() || prevBody.dot(curBody) < 0.99999F;
         if (!warmed && corpse.settled()) {

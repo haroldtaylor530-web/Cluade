@@ -77,6 +77,9 @@ public final class ModRegistry {
     public static final RegistryObject<com.harold.corpsedecay.world.PirateFeature> PIRATE_CREW =
             FEATURES.register("pirate_crew", com.harold.corpsedecay.world.PirateFeature::new);
 
+    public static final RegistryObject<com.harold.corpsedecay.world.GhostShipFeature> GHOST_SHIP =
+            FEATURES.register("ghost_ship", com.harold.corpsedecay.world.GhostShipFeature::new);
+
     public static final RegistryObject<SimpleParticleType> FLY = PARTICLES.register("fly", () -> new SimpleParticleType(false));
 
     private ModRegistry() {

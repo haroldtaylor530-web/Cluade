@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#corpsedecay:has_ghost_ships",
+  "features": "corpsedecay:ghost_ship",
+  "step": "top_layer_modification"
+}
