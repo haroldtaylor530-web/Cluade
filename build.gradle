@@ -37,6 +37,7 @@ minecraft {
         client {
             if (project.hasProperty('clienttest')) {
                 property 'corpsedecay.clienttest', 'true'
+                if (project.hasProperty('shots')) property 'corpsedecay.shots', project.property('shots')
                 args '--quickPlaySingleplayer', 'test'
             }
         }

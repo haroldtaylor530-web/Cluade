@@ -108,7 +108,63 @@ public final class ClientSelfTest {
         Screenshot.grab(mc.gameDirectory, name + ".png", mc.getMainRenderTarget(), c -> LOG.info("CLIENTTEST screenshot {}", name));
     }
 
+    /** Looks from (x, y, z) at (tx, ty, tz). */
+    private static void lookAt(double x, double y, double z, double tx, double ty, double tz) {
+        double dx = tx - x, dy = ty - y, dz = tz - z;
+        float yaw = (float) Math.toDegrees(Math.atan2(-dx, dz));
+        float pitch = (float) -Math.toDegrees(Math.atan2(dy, Math.sqrt(dx * dx + dz * dz)));
+        camera(x, y, z, yaw, pitch);
+    }
+
+    /** Only photographs the wrecks listed in the file (a world made by a real server with other mods). */
+    private static void planWrecks(String file) {
+        List<double[]> wrecks = new ArrayList<>();
+        try {
+            for (String line : java.nio.file.Files.readAllLines(java.nio.file.Path.of(file))) {
+                String[] p = line.trim().split("\\s+");
+                if (p.length < 6) continue;
+                double[] d = new double[6];
+                for (int i = 0; i < 6; i++) d[i] = Double.parseDouble(p[i]);
+                wrecks.add(d);
+            }
+        } catch (Exception e) {
+            LOG.error("CLIENTTEST couldn't read {}", file, e);
+        }
+        LOG.info("CLIENTTEST photographing {} wrecks", wrecks.size());
+        int t = 60;
+        at(t, () -> server(() -> {
+            ServerLevel level = level();
+            GameRules rules = level.getGameRules();
+            rules.getRule(GameRules.RULE_DOMOBSPAWNING).set(false, level.getServer());
+            rules.getRule(GameRules.RULE_DAYLIGHT).set(false, level.getServer());
+            level.setDayTime(6000);
+            level.setWeatherParameters(6000, 0, false, false);
+            player().addEffect(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.NIGHT_VISION, 100000, 0, false, false));
+        }));
+        t += 20;
+        for (int i = 0; i < wrecks.size(); i++) {
+            double[] w = wrecks.get(i);
+            final int n = i;
+            at(t, () -> lookAt(w[0] + 11, w[1] + 8, w[2] + 11, w[0], w[1], w[2]));
+            at(t + 200, () -> shot(String.format("W%d_wreck_wide", n)));
+            at(t + 205, () -> lookAt(w[0] + 5, w[1] + 4, w[2] + 5, w[0], w[1], w[2]));
+            at(t + 260, () -> shot(String.format("W%d_wreck_close", n)));
+            at(t + 265, () -> lookAt(w[3] + 2.2, w[4] + 1.8, w[5] + 2.2, w[3], w[4], w[5]));
+            at(t + 320, () -> shot(String.format("W%d_crewman", n)));
+            t += 330;
+        }
+        at(t + 5, () -> {
+            LOG.info("CLIENTTEST DONE");
+            Minecraft.getInstance().stop();
+        });
+    }
+
     private static void plan() {
+        String shots = System.getProperty("corpsedecay.shots");
+        if (shots != null) {
+            planWrecks(shots);
+            return;
+        }
         int start = 60;
         at(start, () -> server(ClientSelfTest::setup));
         at(start + 30, () -> server(ClientSelfTest::shootSome));

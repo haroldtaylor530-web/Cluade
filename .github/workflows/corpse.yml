@@ -70,6 +70,57 @@ jobs:
           timeout 1500 xvfb-run -a -s "-screen 0 1280x720x24 +extension GLX +render -noreset" ./gradlew runClient -Pclienttest -Prundir=run-client 2>&1 | tee clienttest.log || true
           grep -q "CLIENTTEST DONE" clienttest.log
 
+      - name: Compat world on a real Forge server (Better Shipwrecks)
+        id: compat
+        if: steps.build.outcome == 'success' && hashFiles('libs/bettershipwrecks-1.3.1forge-1.20.1.jar') != ''
+        continue-on-error: true
+        run: |
+          set -x
+          mkdir -p run-compat && cd run-compat
+          curl -sSL -o installer.jar https://maven.minecraftforge.net/net/minecraftforge/forge/1.20.1-47.3.0/forge-1.20.1-47.3.0-installer.jar
+          java -jar installer.jar --installServer . > install.log 2>&1 || (tail -30 install.log; exit 1)
+          echo "eula=true" > eula.txt
+          printf 'online-mode=false\nlevel-seed=2468\nspawn-monsters=false\nview-distance=6\n' > server.properties
+          mkdir -p mods
+          cp $(ls ../build/libs/corpsedecay-*.jar | grep -v sources | head -1) mods/
+          cp ../libs/*.jar mods/
+          (cd ../compat/bettershipwrecks && zip -qr ../../run-compat/mods/corpsedecay_bettershipwrecks-1.0.0.jar META-INF pack.mcmeta data)
+          ls -la mods
+          echo '-Xmx3G -Dcorpsedecay.gentest=true -Dcorpsedecay.compattest=true' > user_jvm_args.txt
+          timeout 1500 bash run.sh nogui > ../compattest.log 2>&1 || true
+          cd ..
+          grep -E "GENTEST|COMPAT|crew aboard|Exception|ERROR" compattest.log | head -60 || true
+          cat run-compat/wrecks.txt || true
+          grep -q "COMPAT PASS" compattest.log
+
+      - name: Compat screenshots
+        id: compatshots
+        if: steps.compat.outcome == 'success'
+        continue-on-error: true
+        run: |
+          sudo apt-get install -y -qq xvfb mesa-utils libgl1-mesa-dri libglx-mesa0 > /dev/null
+          pip install -q nbtlib
+          mkdir -p run-client2/saves && cp -r run-compat/world run-client2/saves/test
+          rm -rf run-client2/saves/test/datapacks
+          python3 - <<'PY'
+          import nbtlib
+          f = nbtlib.load('run-client2/saves/test/level.dat')
+          d = f['Data']
+          dp = d.get('DataPacks')
+          if dp is not None:
+              keep = [x for x in dp['Enabled'] if 'shipwreck' not in str(x) and 'toni' not in str(x)]
+              dp['Enabled'] = nbtlib.List[nbtlib.String](keep)
+          for k in ('fml', 'forge'):
+              if k in f:
+                  del f[k]
+          f.save()
+          print('level.dat cleaned', list(f.keys()))
+          PY
+          printf 'onboardAccessibility:false\nskipMultiplayerWarning:true\njoinedFirstServer:true\ntutorialStep:none\nrenderDistance:6\nsimulationDistance:5\npauseOnLostFocus:false\nfullscreen:false\nsoundCategory_master:0.0\nguiScale:2\nfov:0.0\n' > run-client2/options.txt
+          export LIBGL_ALWAYS_SOFTWARE=1 MESA_GL_VERSION_OVERRIDE=4.5 MESA_GLSL_VERSION_OVERRIDE=450
+          timeout 1500 xvfb-run -a -s "-screen 0 1280x720x24 +extension GLX +render -noreset" ./gradlew runClient -Pclienttest -Pshots=$PWD/run-compat/wrecks.txt -Prundir=run-client2 2>&1 | tee compatclient.log || true
+          grep -q "CLIENTTEST DONE" compatclient.log
+
       - name: Publish result
         if: always()
         run: |
@@ -79,10 +130,13 @@ jobs:
           cp gentest.log /tmp/out/ 2>/dev/null || true
           cp run-selftest/logs/latest.log /tmp/out/server-latest.log 2>/dev/null || true
           cp clienttest.log /tmp/out/ 2>/dev/null || true
+          cp compattest.log compatclient.log run-compat/wrecks.txt /tmp/out/ 2>/dev/null || true
+          cp run-compat/logs/latest.log /tmp/out/compat-server-latest.log 2>/dev/null || true
+          cp run-client2/screenshots/*.png /tmp/out/ 2>/dev/null || true
           cp run-client/logs/latest.log /tmp/out/client-latest.log 2>/dev/null || true
           cp run-client/screenshots/*.png /tmp/out/ 2>/dev/null || true
           cp build/libs/*.jar /tmp/out/ 2>/dev/null || true
-          echo "build=${{ steps.build.outcome }} selftest=${{ steps.selftest.outcome }} clienttest=${{ steps.clienttest.outcome }} gentest=${{ steps.gentest.outcome }} $GITHUB_SHA" > /tmp/out/STATUS
+          echo "build=${{ steps.build.outcome }} selftest=${{ steps.selftest.outcome }} clienttest=${{ steps.clienttest.outcome }} gentest=${{ steps.gentest.outcome }} compat=${{ steps.compat.outcome }} compatshots=${{ steps.compatshots.outcome }} $GITHUB_SHA" > /tmp/out/STATUS
           if ! git ls-remote --exit-code origin refs/heads/corpse-mc-classpath >/dev/null; then
             ./gradlew dumpClasspath -q || true
             mkdir -p /tmp/cprepo && ls -la build/cp | tee /tmp/out/CLASSPATH
