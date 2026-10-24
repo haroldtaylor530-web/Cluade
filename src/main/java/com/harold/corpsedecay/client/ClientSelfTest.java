@@ -130,13 +130,14 @@ public final class ClientSelfTest {
         }
         // close-ups from low down: fresh, rotting, skeleton
         String[] who = {"bog_villager", "bog_cow", "ice_villager", "ice_wolf", "cow_drowned", "zombie_frozen", "cow_exploded", "zombie_withered", "zombie_fell", "cow_crushed",
-                "remains_adventurer", "remains_mossy", "remains_piglin", "remains_ender", "remains_bleached", "remains_cave", "zombie_burnt", "cow_burnt", "zombie_armour", "zombie", "villager", "pillager", "cow", "sheep", "horse", "pig", "chicken", "wolf", "skeleton"};
+                "remains_adventurer", "remains_mossy", "remains_piglin", "remains_ender", "remains_bleached", "remains_cave", "zombie_burnt", "cow_burnt", "zombie_armour", "zombie", "villager", "pillager", "cow", "sheep", "horse", "pig", "chicken", "wolf", "skeleton", "squid", "glow_squid"};
         float[] when = {0.0F, 0.5F, 1.0F};
         int n = 10;
         for (String w : who) {
             float[] times = w.startsWith("bog_") || w.startsWith("ice_") ? new float[] {0.25F, 0.6F, 1.0F}
                     : w.endsWith("_burnt") ? new float[] {0.75F, 0.88F, 1.0F}
                     : w.startsWith("remains") ? new float[] {1.0F}
+                    : w.endsWith("squid") ? new float[] {0.6F, 0.9F, 1.0F}
                     : w.endsWith("_withered") ? new float[] {0.6F, 1.0F}
                     : (w.endsWith("_drowned") || w.endsWith("_frozen") || w.endsWith("_exploded") || w.endsWith("_fell") || w.endsWith("_crushed"))
                     ? new float[] {0.15F, 0.6F} : when;
@@ -276,6 +277,8 @@ public final class ClientSelfTest {
         // these two die burning
         spawn("zombie_burnt", EntityType.ZOMBIE, 8.8, 0);
         spawn("cow_burnt", EntityType.COW, 8.8, 4);
+        spawn("squid", EntityType.SQUID, 11.4, 0);
+        spawn("glow_squid", EntityType.GLOW_SQUID, 11.4, 4);
         // a row dying other ways; the drowned cow in a pool so it floats
         for (int dx = -1; dx <= 1; dx++) {
             for (int dz = -1; dz <= 1; dz++) {

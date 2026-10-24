@@ -420,6 +420,11 @@ public class CorpseEntity extends Entity {
         return entityData.get(MOB_TYPE);
     }
 
+    /** A squid rots away to nothing but its beak and its pen, which lie there like bones. */
+    public boolean leavesBeakAndPen() {
+        return CorpseKind.leavesBeakAndPen(mobType());
+    }
+
     public CompoundTag renderTag() {
         return entityData.get(RENDER_TAG);
     }
@@ -524,7 +529,7 @@ public class CorpseEntity extends Entity {
             long age = level().getGameTime() - deathTime();
             long end = decayTicks() + skeletonTicks;
             CorpseKind kind = kind();
-            if (kind == CorpseKind.NO_BONES && age >= decayTicks()) {
+            if (kind == CorpseKind.NO_BONES && age >= decayTicks() && !leavesBeakAndPen()) {
                 discard(); // faded away
             } else if (skeletonTicks > 0 && age >= end) {
                 crumble(false);

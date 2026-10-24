@@ -120,6 +120,9 @@ public class CorpseRenderer extends EntityRenderer<CorpseEntity> {
             }
             ctx.end();
         }
+        if (decay > 0.78F && !remains && corpse.leavesBeakAndPen()) {
+            SquidBones.render(ps, buffers, light, corpse.mobType().contains("glow"), burnt);
+        }
         renderArrows(corpse, cc, ps, buffers, light);
         ps.popPose();
         super.render(corpse, yaw, partial, ps, buffers, light);

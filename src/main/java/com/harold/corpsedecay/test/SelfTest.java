@@ -427,6 +427,8 @@ public final class SelfTest {
         spawn(EntityType.VILLAGER, 27, -44).hurt(level.damageSources().generic(), 1000F);
         spawn(EntityType.SKELETON, 32, -44).hurt(level.damageSources().generic(), 1000F);
         spawn(EntityType.COW, 0, -44).hurt(level.damageSources().generic(), 1000F);
+        spawn(EntityType.SQUID, -30, -30).hurt(level.damageSources().generic(), 1000F);
+        spawn(EntityType.SPIDER, -34, -30).hurt(level.damageSources().generic(), 1000F);
         // an old bog body and an old frozen hunter in a lump of ice
         net.minecraft.util.RandomSource rand = net.minecraft.util.RandomSource.create(77);
         CorpseEntity bog = com.harold.corpsedecay.world.MummyFeature.bogBody(level, new BlockPos(38, groundY - 1, -24), rand);
@@ -509,12 +511,22 @@ public final class SelfTest {
             check(skel != null && skel.mummy() == 0, "a skeleton has no skin to mummify");
             check(plainCow != null && plainCow.mummy() == 0, "a cow that dies on the plains rots as usual");
             long skeletonEnd = (long) (com.harold.corpsedecay.Config.SKELETON_MINUTES.get() * 1200);
+            List<CorpseEntity> sea = corpses(new AABB(-40, groundY - 4, -36, -24, groundY + 6, -24));
+            squid = byType(sea, "minecraft:squid");
+            spider = byType(sea, "minecraft:spider");
+            check(squid != null && squid.kind() == CorpseKind.NO_BONES && squid.leavesBeakAndPen(), "a squid rots with no bones but leaves a beak and a pen");
+            check(spider != null && spider.kind() == CorpseKind.NO_BONES && !spider.leavesBeakAndPen(), "a spider leaves nothing");
+            if (squid != null) squid.setDeathTime(level.getGameTime() - squid.decayTicks() - 5);
+            if (spider != null) spider.setDeathTime(level.getGameTime() - spider.decayTicks() - 5);
             if (bogCow != null) bogCow.setDeathTime(level.getGameTime() - bogCow.decayTicks() - skeletonEnd - 5);
             if (plainCow != null) plainCow.setDeathTime(level.getGameTime() - plainCow.decayTicks() - skeletonEnd - 5);
             later(server, 45, () -> {
                 List<CorpseEntity> left = corpses(new AABB(-4, groundY - 4, -48, 40, groundY + 6, -38));
                 check(bogCow != null && !bogCow.isRemoved() && bogCow.decay(0) >= 1F, "a mummy keeps long after a skeleton would have crumbled");
                 check(plainCow != null && plainCow.isRemoved(), "while an ordinary skeleton of the same age has crumbled");
+                check(squid != null && !squid.isRemoved() && squid.decay(0) >= 1F, "a squid's beak and pen stay when the rest has rotted away");
+                check(spider != null && spider.isRemoved(), "while a spider fades to nothing");
+                if (squid != null) squid.discard();
                 for (CorpseEntity c : left) if (c.kind() != CorpseKind.REMAINS) c.discard();
                 pirateTest(server);
                 then.run();
@@ -577,6 +589,7 @@ public final class SelfTest {
         if (cap != null) cap.discard();
     }
 
+    private static CorpseEntity squid, spider;
     private static int remainsLeft;
     private static int diggers;
     private static int extraRemains;

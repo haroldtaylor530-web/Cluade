@@ -23,7 +23,7 @@ import net.minecraft.resources.ResourceLocation;
 
 /** Draws a whale's skeleton lying on the sea floor, and what's growing on it. */
 public class WhaleRenderer extends EntityRenderer<WhaleRemainsEntity> {
-    private static final ResourceLocation TEXTURE = new ResourceLocation(CorpseDecay.MODID, "textures/entity/whale_bone.png");
+    static final ResourceLocation TEXTURE = new ResourceLocation(CorpseDecay.MODID, "textures/entity/whale_bone.png");
     private static final Map<String, WhaleSkeleton> CACHE = new HashMap<>();
 
     public WhaleRenderer(EntityRendererProvider.Context ctx) {
@@ -85,7 +85,7 @@ public class WhaleRenderer extends EntityRenderer<WhaleRemainsEntity> {
     };
     private static final float[][] UV = {{0, 1}, {0, 0}, {1, 0}, {1, 1}};
 
-    private static void cube(VertexConsumer vc, Matrix4f pose, Matrix3f normal, WhaleSkeleton.Bone b, int light) {
+    static void cube(VertexConsumer vc, Matrix4f pose, Matrix3f normal, WhaleSkeleton.Bone b, int light) {
         Matrix4f m = new Matrix4f(pose).mul(b.at());
         Matrix3f n = new Matrix3f(normal).mul(new Matrix3f(b.at()));
         Vector3f h = new Vector3f(b.size()).mul(0.5F);

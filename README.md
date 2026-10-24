@@ -156,12 +156,13 @@ Different kinds of mobs break down differently:
 |---|---|
 | Most mobs | Flesh rots down to a skeleton |
 | Skeletons, strays, wither skeletons, skeleton horses | Already bones, they just lie there |
-| Spiders, silverfish, endermites, bees, squid, blazes, ghasts, vexes, allays, snow golems | No skeleton: they shrivel to a husk and fade away |
+| Spiders, silverfish, endermites, bees, blazes, ghasts, vexes, allays, snow golems | No skeleton: they shrivel to a husk and fade away |
+| Squid, glow squid | Soft all through: the body rots away and leaves only the hard parts, a small dark hooked beak and the long thin leaf of the pen, which lie there like bones until they crumble |
 | Iron golems, shulkers | Don't rot |
 | Ender dragon, wither, slimes, magma cubes, armour stands | No corpse |
 
 These are entity type tags (`#corpsedecay:no_corpse`, `already_bones`, `no_skeleton`,
-`does_not_rot`), so a datapack can change them or add modded mobs.
+`does_not_rot`, `beak_and_pen`), so a datapack can change them or add modded mobs.
 
 ## Settings
 
