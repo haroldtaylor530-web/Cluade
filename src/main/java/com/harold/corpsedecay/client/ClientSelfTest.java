@@ -145,11 +145,11 @@ public final class ClientSelfTest {
         for (int i = 0; i < wrecks.size(); i++) {
             double[] w = wrecks.get(i);
             final int n = i;
-            at(t, () -> lookAt(w[0] + 5, w[1] + 22, w[2] + 5, w[0], w[1], w[2]));
+            at(t, () -> lookAt(w[0] + 2, w[1] + 14, w[2] + 2, w[0], w[1], w[2]));
             at(t + 200, () -> shot(String.format("W%d_wreck_wide", n)));
-            at(t + 205, () -> lookAt(w[0] + 3, w[1] + 3, w[2] + 3, w[0], w[1], w[2]));
+            at(t + 205, () -> lookAt(w[0] + 1.5, w[1] + 3.5, w[2] + 1.5, w[0], w[1], w[2]));
             at(t + 260, () -> shot(String.format("W%d_wreck_close", n)));
-            at(t + 265, () -> lookAt(w[3] + 2.5, w[4] + 2.5, w[5] + 2.5, w[3], w[4], w[5]));
+            at(t + 265, () -> lookAt(w[3] + 1.5, w[4] + 3.5, w[5] + 1.5, w[3], w[4], w[5]));
             at(t + 320, () -> shot(String.format("W%d_crewman", n)));
             t += 330;
         }

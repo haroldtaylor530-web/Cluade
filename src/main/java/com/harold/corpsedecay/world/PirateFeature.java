@@ -169,6 +169,9 @@ public class PirateFeature extends Feature<NoneFeatureConfiguration> {
 
     /** Whether there's rock or earth over this spot (a mineshaft, a cave, a cellar) rather than sky, sea or the ship. */
     private static boolean underGround(WorldGenLevel level, BlockPos p) {
+        // well below the sea floor or the land surface here: a cave or a mine, not the wreck
+        int surface = level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.OCEAN_FLOOR, p.getX(), p.getZ());
+        if (p.getY() < surface - 4) return true;
         for (int dy = 1; dy <= 16; dy++) {
             net.minecraft.world.level.block.state.BlockState s = level.getBlockState(p.above(dy));
             if (s.is(BlockTags.BASE_STONE_OVERWORLD) || s.is(BlockTags.DIRT) || s.is(BlockTags.SAND) || s.is(Blocks.GRAVEL)
