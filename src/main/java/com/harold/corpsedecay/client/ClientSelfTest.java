@@ -212,14 +212,16 @@ public final class ClientSelfTest {
         at(t + 416, () -> camera(-120.0, groundSea + 3.0, -112.0, -30F, 30F));
         at(t + 456, () -> shot("BA_beaked_whale"));
         at(t + 458, () -> server(() -> player().removeEffect(net.minecraft.world.effect.MobEffects.NIGHT_VISION)));
-        at(t + 459, () -> camera(-43.0, groundSea + 11.0, -148.0, 0F, 35F));
+        at(t + 459, () -> camera(-50.0, groundSea + 15.0, -128.5, 0F, 88F));
         at(t + 462, () -> server(() -> player().addEffect(new net.minecraft.world.effect.MobEffectInstance(
                 net.minecraft.world.effect.MobEffects.NIGHT_VISION, 2000, 0, false, false))));
         at(t + 500, () -> shot("BB_shipwreck"));
-        at(t + 502, () -> camera(-43.0, groundSea + 6.0, -140.0, 0F, 40F));
+        at(t + 502, () -> camera(-50.0, groundSea + 9.0, -122.0, 180F, 32F));
         at(t + 540, () -> shot("BC_shipwreck_close"));
-        at(t + 545, () -> server(() -> player().removeEffect(net.minecraft.world.effect.MobEffects.NIGHT_VISION)));
-        t += 100;
+        at(t + 542, () -> camera(-47.0, groundSea + 5.0, -134.0, 0F, 20F));
+        at(t + 580, () -> shot("BD_shipwreck_deck"));
+        at(t + 585, () -> server(() -> player().removeEffect(net.minecraft.world.effect.MobEffects.NIGHT_VISION)));
+        t += 140;
         at(t + 460, () -> camera(85.0, groundDesert + 16.0, -168.0, 0F, 38F));
         at(t + 500, () -> shot("B6_desert_whales"));
         at(t + 505, () -> camera(DESERT_X - 9.0, groundDesert + 4.0, DESERT_Z - 9.0, -45F, 22F));
