@@ -62,7 +62,8 @@ public class GenTest {
         int ships = SHIPS.size(), crewed = 0, bodies = 0, dressed = 0;
         for (BlockPos found : SHIPS) {
             List<CorpseEntity> crew = level.getEntitiesOfClass(CorpseEntity.class,
-                    new AABB(found.getX() - 48, level.getMinBuildHeight(), found.getZ() - 48, found.getX() + 48, level.getMaxBuildHeight(), found.getZ() + 48));
+                    new AABB(found.getX() - 48, level.getMinBuildHeight(), found.getZ() - 48, found.getX() + 48, level.getMaxBuildHeight(), found.getZ() + 48),
+                    c -> c.getTags().contains(com.harold.corpsedecay.world.PirateFeature.CREW_TAG));
             LOG.info("GENTEST shipwreck near {} has {} bodies", found, crew.size());
             if (!crew.isEmpty()) crewed++;
             bodies += crew.size();
@@ -75,7 +76,8 @@ public class GenTest {
             StringBuilder out = new StringBuilder();
             for (BlockPos found : SHIPS) {
                 List<CorpseEntity> crew = level.getEntitiesOfClass(CorpseEntity.class,
-                        new AABB(found.getX() - 48, level.getMinBuildHeight(), found.getZ() - 48, found.getX() + 48, level.getMaxBuildHeight(), found.getZ() + 48));
+                        new AABB(found.getX() - 48, level.getMinBuildHeight(), found.getZ() - 48, found.getX() + 48, level.getMaxBuildHeight(), found.getZ() + 48),
+                        c -> c.getTags().contains(com.harold.corpsedecay.world.PirateFeature.CREW_TAG));
                 if (crew.isEmpty()) continue;
                 // the crewman nearest the rest of them, to point the camera at, and another
                 CorpseEntity mid = crew.get(0);

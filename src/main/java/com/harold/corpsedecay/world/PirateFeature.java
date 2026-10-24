@@ -42,6 +42,9 @@ public class PirateFeature extends Feature<NoneFeatureConfiguration> {
     private static final boolean DEBUG = Boolean.getBoolean("corpsedecay.gentest");
     private static final org.slf4j.Logger LOG = com.mojang.logging.LogUtils.getLogger();
 
+    /** every crewman carries this tag */
+    public static final String CREW_TAG = "corpsedecay_crew";
+
     public PirateFeature() {
         super(NoneFeatureConfiguration.CODEC);
     }
@@ -205,6 +208,7 @@ public class PirateFeature extends Feature<NoneFeatureConfiguration> {
         int material = !wet ? CorpseEntity.BLEACHED : rand.nextFloat() < 0.7F ? CorpseEntity.OLD : CorpseEntity.MOSSY;
         CorpseEntity body = RemainsFeature.placeBody(level.getLevel(), level, floor, mob, rand, material, 0.05 + rand.nextDouble() * 0.1);
         if (body == null) return null;
+        body.addTag(CREW_TAG);
         if (captain) dressCaptain(body, rand);
         else dressSailor(body, rand);
         if (rand.nextFloat() < 0.12F) body.addOldArrow(rand);
