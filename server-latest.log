@@ -1,0 +1,503 @@
+[25Oct2026 12:06:12.109] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher running: args [--launchTarget, forgeserveruserdev, --gameDir, ., --fml.forgeVersion, 47.3.0, --fml.mcVersion, 1.20.1, --fml.forgeGroup, net.minecraftforge, --fml.mcpVersion, 20230612.114412, --nogui, --mixin.config, corpsedecay.mixins.json]
+[25Oct2026 12:06:12.112] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher 10.0.9+10.0.9+main.dcd20f30 starting: java version 17.0.20.1 by Eclipse Adoptium; OS Linux arch amd64 version 6.17.0-1022-azure
+[25Oct2026 12:06:12.178] [main/WARN] [net.minecraftforge.fml.loading.FMLConfig/CORE]: Configuration file /home/runner/work/Cluade/Cluade/run-selftest/config/fml.toml is not correct. Correcting
+[25Oct2026 12:06:12.179] [main/INFO] [net.minecraftforge.fml.loading.FMLConfig/CORE]: Incorrect key [earlyWindowSkipGLVersions] was corrected from null to []
+[25Oct2026 12:06:12.180] [main/INFO] [net.minecraftforge.fml.loading.FMLConfig/CORE]: Incorrect key [earlyWindowSquir] was corrected from null to false
+[25Oct2026 12:06:12.180] [main/INFO] [net.minecraftforge.fml.loading.FMLConfig/CORE]: Incorrect key [earlyWindowShowCPU] was corrected from null to false
+[25Oct2026 12:06:12.191] [main/INFO] [net.minecraftforge.fml.loading.ImmediateWindowHandler/]: ImmediateWindowProvider not loading because launch target is forgeserveruserdev
+[25Oct2026 12:06:12.219] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.5 Source=union:/home/runner/.gradle/caches/modules-2/files-2.1/org.spongepowered/mixin/0.8.5/9d1c0c3a304ae6697ecd477218fa61b850bf57fc/mixin-0.8.5.jar%23116!/ Service=ModLauncher Env=SERVER
+[25Oct2026 12:06:12.403] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file /home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/javafmllanguage/1.20.1-47.3.0/d7ebc62120f202109e300e084ca1a31a7b946a62/javafmllanguage-1.20.1-47.3.0.jar is missing mods.toml file
+[25Oct2026 12:06:12.404] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file /home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/lowcodelanguage/1.20.1-47.3.0/1bf3e845ea0ce750096da8c71c8364b188ab74d4/lowcodelanguage-1.20.1-47.3.0.jar is missing mods.toml file
+[25Oct2026 12:06:12.405] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file /home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/mclanguage/1.20.1-47.3.0/6093682e943ddccbabf70539319d7f2fe64db2e7/mclanguage-1.20.1-47.3.0.jar is missing mods.toml file
+[25Oct2026 12:06:12.406] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file /home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/fmlcore/1.20.1-47.3.0/3b6be96aba3e323f3c918e8ef6a96312d82d76ad/fmlcore-1.20.1-47.3.0.jar is missing mods.toml file
+[25Oct2026 12:06:12.440] [main/INFO] [net.minecraftforge.fml.loading.moddiscovery.JarInJarDependencyLocator/]: No dependencies to load found. Skipping!
+[25Oct2026 12:06:13.544] [main/INFO] [mixin/]: Compatibility level set to JAVA_17
+[25Oct2026 12:06:13.547] [main/INFO] [cpw.mods.modlauncher.LaunchServiceHandler/MODLAUNCHER]: Launching target 'forgeserveruserdev' with arguments [--gameDir, ., --nogui]
+[25Oct2026 12:06:13.576] [main/WARN] [mixin/]: Reference map 'corpsedecay.refmap.json' for corpsedecay.mixins.json could not be read. If this is a development environment you can ignore this message
+[25Oct2026 12:06:17.251] [modloading-worker-0/INFO] [net.minecraftforge.common.ForgeMod/FORGEMOD]: Forge mod loading, version 47.3.0, for MC 1.20.1 with MCP 20230612.114412
+[25Oct2026 12:06:17.259] [modloading-worker-0/INFO] [net.minecraftforge.common.MinecraftForge/FORGE]: MinecraftForge v47.3.0 Initialized
+[25Oct2026 12:06:17.519] [main/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Configuration file /home/runner/work/Cluade/Cluade/run-selftest/config/corpsedecay-common.toml is not correct. Correcting
+[25Oct2026 12:06:17.520] [main/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key enabled was corrected from null to its default, true. 
+[25Oct2026 12:06:17.522] [main/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key onlyPlayerKills was corrected from null to its default, false. 
+[25Oct2026 12:06:17.524] [main/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key minutesToSkeleton was corrected from null to its default, 20.0. 
+[25Oct2026 12:06:17.527] [main/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key skeletonMinutes was corrected from null to its default, 60.0. 
+[25Oct2026 12:06:17.529] [main/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key maxCorpses was corrected from null to its default, 60. 
+[25Oct2026 12:06:17.531] [main/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key ragdollForce was corrected from null to its default, 1.0. 
+[25Oct2026 12:06:17.532] [main/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key lootAllEquipment was corrected from null to its default, false. 
+[25Oct2026 12:06:17.535] [main/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key flies was corrected from null to its default, true. 
+[25Oct2026 12:06:17.537] [main/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key mummify was corrected from null to its default, true. 
+[25Oct2026 12:06:17.539] [main/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key remains was corrected from null to its default, true. 
+[25Oct2026 12:06:17.541] [main/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key fossils was corrected from null to its default, true. 
+[25Oct2026 12:06:17.543] [main/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key ancientSites was corrected from null to its default, true. 
+[25Oct2026 12:06:17.545] [main/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key excludedMobs was corrected from null to its default, []. 
+[25Oct2026 12:06:17.782] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [forge] Starting version check at https://files.minecraftforge.net/net/minecraftforge/forge/promotions_slim.json
+[25Oct2026 12:06:18.163] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [forge] Found status: OUTDATED Current: 47.3.0 Target: 47.4.28
+[25Oct2026 12:06:18.303] [main/INFO] [com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService/]: Environment: authHost='https://authserver.mojang.com', accountsHost='https://api.mojang.com', sessionHost='https://sessionserver.mojang.com', servicesHost='https://api.minecraftservices.com', name='PROD'
+[25Oct2026 12:06:18.373] [main/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/home/runner/work/Cluade/Cluade/build/fg_cache/net/minecraftforge/forge/1.20.1-47.3.0_mapped_official_1.20.1/forge-1.20.1-47.3.0_mapped_official_1.20.1.jar%23181!/assets/.mcassetsroot' uses unexpected schema
+[25Oct2026 12:06:18.374] [main/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/home/runner/work/Cluade/Cluade/build/fg_cache/net/minecraftforge/forge/1.20.1-47.3.0_mapped_official_1.20.1/forge-1.20.1-47.3.0_mapped_official_1.20.1.jar%23181!/data/.mcassetsroot' uses unexpected schema
+[25Oct2026 12:06:19.795] [main/INFO] [net.minecraft.world.item.crafting.RecipeManager/]: Loaded 7 recipes
+[25Oct2026 12:06:19.893] [main/INFO] [net.minecraft.advancements.AdvancementList/]: Loaded 1271 advancements
+[25Oct2026 12:06:20.298] [Server thread/INFO] [net.minecraft.server.dedicated.DedicatedServer/]: Starting minecraft server version 1.20.1
+[25Oct2026 12:06:20.298] [Server thread/INFO] [net.minecraft.server.dedicated.DedicatedServer/]: Loading properties
+[25Oct2026 12:06:20.298] [Server thread/INFO] [net.minecraft.server.dedicated.DedicatedServer/]: Default game type: SURVIVAL
+[25Oct2026 12:06:20.298] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Generating keypair
+[25Oct2026 12:06:20.347] [Server thread/INFO] [net.minecraft.server.dedicated.DedicatedServer/]: Starting Minecraft server on *:25565
+[25Oct2026 12:06:20.372] [Server thread/INFO] [net.minecraft.server.network.ServerConnectionListener/]: Using epoll channel type
+[25Oct2026 12:06:20.448] [Server thread/WARN] [net.minecraft.server.dedicated.DedicatedServer/]: **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!
+[25Oct2026 12:06:20.448] [Server thread/WARN] [net.minecraft.server.dedicated.DedicatedServer/]: The server will make no attempt to authenticate usernames. Beware.
+[25Oct2026 12:06:20.448] [Server thread/WARN] [net.minecraft.server.dedicated.DedicatedServer/]: While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.
+[25Oct2026 12:06:20.448] [Server thread/WARN] [net.minecraft.server.dedicated.DedicatedServer/]: To change this, set "online-mode" to "true" in the server.properties file.
+[25Oct2026 12:06:20.463] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Configuration file ./world/serverconfig/forge-server.toml is not correct. Correcting
+[25Oct2026 12:06:20.463] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server was corrected from null to its default, SimpleCommentedConfig:{}. 
+[25Oct2026 12:06:20.463] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.removeErroringBlockEntities was corrected from null to its default, false. 
+[25Oct2026 12:06:20.463] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.removeErroringEntities was corrected from null to its default, false. 
+[25Oct2026 12:06:20.464] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.fullBoundingBoxLadders was corrected from null to its default, false. 
+[25Oct2026 12:06:20.464] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.zombieBaseSummonChance was corrected from null to its default, 0.1. 
+[25Oct2026 12:06:20.464] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.zombieBabyChance was corrected from null to its default, 0.05. 
+[25Oct2026 12:06:20.464] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.permissionHandler was corrected from null to its default, forge:default_handler. 
+[25Oct2026 12:06:20.464] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.advertiseDedicatedServerToLan was corrected from null to its default, true. 
+[25Oct2026 12:06:20.494] [Server thread/INFO] [net.minecraft.server.dedicated.DedicatedServer/]: Preparing level "world"
+[25Oct2026 12:06:20.991] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Preparing start region for dimension minecraft:overworld
+[25Oct2026 12:06:21.556] [Worker-Main-2/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 0%
+[25Oct2026 12:06:21.558] [Worker-Main-2/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 0%
+[25Oct2026 12:06:21.992] [Worker-Main-2/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 16%
+[25Oct2026 12:06:22.492] [Worker-Main-1/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 62%
+[25Oct2026 12:06:22.803] [Server thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Time elapsed: 1812 ms
+[25Oct2026 12:06:22.803] [Server thread/INFO] [net.minecraft.server.dedicated.DedicatedServer/]: Done (2.341s)! For help, type "help"
+[25Oct2026 12:06:22.817] [Server thread/INFO] [net.minecraftforge.gametest.ForgeGameTestHooks/]: Enabled Gametest Namespaces: []
+[25Oct2026 12:06:22.822] [Server thread/INFO] [net.minecraftforge.server.permission.PermissionAPI/]: Successfully initialized permission handler forge:default_handler
+[25Oct2026 12:06:24.772] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ground at y=-57
+[25Oct2026 12:06:25.773] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   zombie survives one arrow
+[25Oct2026 12:06:25.773] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   arrow hit is remembered
+[25Oct2026 12:06:25.779] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.cow died at (4.5, -57.0, 0.5)
+[25Oct2026 12:06:25.784] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.spider died at (-3.5, -57.0, 0.5)
+[25Oct2026 12:06:25.785] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.skeleton died at (0.5, -57.0, 4.5)
+[25Oct2026 12:06:25.787] [Server thread/INFO] [net.minecraft.world.entity.npc.Villager/]: Villager Villager['Villager'/5, l='ServerLevel[world]', x=4.50, y=-57.00, z=4.50] died, message: 'Villager died'
+[25Oct2026 12:06:25.792] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.villager died at (4.5, -57.0, 4.5)
+[25Oct2026 12:06:25.793] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.iron_golem died at (-3.5, -57.0, 4.5)
+[25Oct2026 12:06:25.794] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.zombie died at (0.5, -57.0, 0.5)
+[25Oct2026 12:06:25.827] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:villager at (4.5, -56.02499997615814, 4.5) added=true
+[25Oct2026 12:06:25.828] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:spider at (-3.5, -56.55000001192093, 0.5) added=true
+[25Oct2026 12:06:25.828] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:skeleton at (0.5, -56.00499999523163, 4.5) added=true
+[25Oct2026 12:06:25.829] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:cow at (4.5, -56.30000001192093, 0.5) added=true
+[25Oct2026 12:06:25.829] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:zombie at (0.5, -56.02499997615814, 0.5) added=true
+[25Oct2026 12:06:25.830] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:iron_golem at (-3.5, -55.64999997615814, 4.5) added=true
+[25Oct2026 12:06:25.830] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   dead zombie is removed straight away (no vanilla poof)
+[25Oct2026 12:06:25.830] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST corpses found: 6
+[25Oct2026 12:06:25.830] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST   minecraft:spider at (-3.5, -56.55000001192093, 0.5)
+[25Oct2026 12:06:25.830] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST   minecraft:iron_golem at (-3.5, -55.64999997615814, 4.5)
+[25Oct2026 12:06:25.830] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST   minecraft:villager at (4.5, -56.02499997615814, 4.5)
+[25Oct2026 12:06:25.830] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST   minecraft:skeleton at (0.5, -56.00499999523163, 4.5)
+[25Oct2026 12:06:25.830] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST   minecraft:cow at (4.5, -56.30000001192093, 0.5)
+[25Oct2026 12:06:25.830] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST   minecraft:zombie at (0.5, -56.02499997615814, 0.5)
+[25Oct2026 12:06:25.830] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST   (anywhere) minecraft:villager at (4.5, -56.02499997615814, 4.5) removed=false
+[25Oct2026 12:06:25.830] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST   (anywhere) minecraft:spider at (-3.5, -56.55000001192093, 0.5) removed=false
+[25Oct2026 12:06:25.830] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST   (anywhere) minecraft:skeleton at (0.5, -56.00499999523163, 4.5) removed=false
+[25Oct2026 12:06:25.831] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST   (anywhere) minecraft:cow at (4.5, -56.30000001192093, 0.5) removed=false
+[25Oct2026 12:06:25.831] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST   (anywhere) minecraft:zombie at (0.5, -56.02499997615814, 0.5) removed=false
+[25Oct2026 12:06:25.831] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST   (anywhere) minecraft:iron_golem at (-3.5, -55.64999997615814, 4.5) removed=false
+[25Oct2026 12:06:25.832] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   six mobs leave six corpses (armour stand leaves none), got 6
+[25Oct2026 12:06:25.832] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   zombie corpse where the zombie died
+[25Oct2026 12:06:25.832] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   corpse still wears the chestplate
+[25Oct2026 12:06:25.832] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   chestplate it would have dropped can be taken off it
+[25Oct2026 12:06:25.832] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   corpse still wears the helmet
+[25Oct2026 12:06:25.832] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   helmet it wouldn't have dropped stays on
+[25Oct2026 12:06:25.832] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   corpse still holds its sword
+[25Oct2026 12:06:25.832] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   chestplate didn't also drop on the ground
+[25Oct2026 12:06:25.832] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   the arrow is still in the body
+[25Oct2026 12:06:25.832] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   body is still falling right after death
+[25Oct2026 12:06:25.832] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   cow rots to a skeleton
+[25Oct2026 12:06:25.832] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   spider has no skeleton
+[25Oct2026 12:06:25.832] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   skeleton is already bones
+[25Oct2026 12:06:25.832] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   iron golem doesn't rot
+[25Oct2026 12:06:25.832] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   skeleton's body keeps its bow
+[25Oct2026 12:06:27.273] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST settled after 29 ticks
+[25Oct2026 12:06:27.273] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   body comes to rest
+[25Oct2026 12:06:27.274] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   zombie ends up lying down (up axis y=-1.4758107E-4)
+[25Oct2026 12:06:27.274] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   body rests on the ground (y=-56.70058011005821)
+[25Oct2026 12:06:27.275] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   minecraft:spider didn't sink into the ground (y=-56.55056374139835)
+[25Oct2026 12:06:27.275] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   minecraft:iron_golem didn't sink into the ground (y=-55.487993137531774)
+[25Oct2026 12:06:27.275] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   minecraft:skeleton didn't sink into the ground (y=-56.7006039685866)
+[25Oct2026 12:06:27.275] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   minecraft:zombie didn't sink into the ground (y=-56.70058011005821)
+[25Oct2026 12:06:27.275] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   minecraft:villager didn't sink into the ground (y=-56.70059929772033)
+[25Oct2026 12:06:27.275] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   minecraft:cow didn't sink into the ground (y=-56.55068234070547)
+[25Oct2026 12:06:27.276] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   corpse saves and loads
+[25Oct2026 12:06:27.312] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   right click takes the chestplate off
+[25Oct2026 12:06:27.312] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   right click pulls the arrow out
+[25Oct2026 12:06:27.312] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   chestplate is gone from the body
+[25Oct2026 12:06:27.312] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   helmet stays on
+[25Oct2026 12:06:27.312] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   arrow is gone from the body
+[25Oct2026 12:06:27.312] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   hitting the body makes it ragdoll again
+[25Oct2026 12:06:29.523] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   a spider's husk fades away completely
+[25Oct2026 12:06:29.523] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   a cow skeleton stays once the flesh has gone
+[25Oct2026 12:06:29.523] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   an old skeleton crumbles away
+[25Oct2026 12:06:29.523] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   an arrow shot into a corpse sticks in it
+[25Oct2026 12:06:29.528] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.zombie died at (20.5, -57.0, 20.65)
+[25Oct2026 12:06:29.573] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:zombie at (20.5, -56.02499997615814, 20.65) added=true
+[25Oct2026 12:06:35.522] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   zombie by the wall leaves a corpse
+[25Oct2026 12:06:35.523] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   body killed against a wall still ends up lying down (up y=-1.4740229E-4)
+[25Oct2026 12:06:35.524] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.cow died at (26.5, -57.0, 26.5)
+[25Oct2026 12:06:35.573] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:cow at (26.5, -56.30000001192093, 26.5) added=true
+[25Oct2026 12:06:35.673] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   a cow that burns to death leaves a charred body
+[25Oct2026 12:06:35.673] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   a charred body starts just short of a skeleton (0.7500833)
+[25Oct2026 12:06:35.673] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   a charred body keeps burning for a moment
+[25Oct2026 12:06:35.673] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   setting an old body alight chars it
+[25Oct2026 12:06:35.674] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.cow died at (40.5, -57.0, 40.5)
+[25Oct2026 12:06:35.675] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.cow died at (44.5, -57.0, 40.5)
+[25Oct2026 12:06:35.676] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.cow died at (48.5, -57.0, 40.5)
+[25Oct2026 12:06:35.676] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.cow died at (52.5, -57.0, 40.5)
+[25Oct2026 12:06:35.677] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.cow died at (56.5, -57.0, 40.5)
+[25Oct2026 12:06:35.678] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.cow died at (60.5, -57.0, 40.5)
+[25Oct2026 12:06:35.723] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:cow at (40.5, -56.30000001192093, 40.5) added=true
+[25Oct2026 12:06:35.724] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:cow at (60.5, -56.78999999165535, 40.5) added=true
+[25Oct2026 12:06:35.724] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:cow at (44.5, -56.30000001192093, 40.5) added=true
+[25Oct2026 12:06:35.724] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:cow at (48.5, -56.30000001192093, 40.5) added=true
+[25Oct2026 12:06:35.724] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:cow at (52.5, -56.30000001192093, 40.5) added=true
+[25Oct2026 12:06:35.725] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:cow at (56.5, -56.30000001192093, 40.5) added=true
+[25Oct2026 12:06:35.823] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   a cow killed by DROWNED leaves DROWNED remains (DROWNED)
+[25Oct2026 12:06:35.823] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   a cow killed by FROZEN leaves FROZEN remains (FROZEN)
+[25Oct2026 12:06:35.823] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   frozen bodies rot four times slower
+[25Oct2026 12:06:35.823] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   a cow killed by EXPLODED leaves EXPLODED remains (EXPLODED)
+[25Oct2026 12:06:35.823] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   a cow killed by WITHERED leaves WITHERED remains (WITHERED)
+[25Oct2026 12:06:35.823] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   withered bodies start as a dried husk
+[25Oct2026 12:06:35.823] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   a cow killed by FELL leaves FELL remains (FELL)
+[25Oct2026 12:06:35.823] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   a cow killed by CRUSHED leaves CRUSHED remains (CRUSHED)
+[25Oct2026 12:06:35.823] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   crushed bodies are flattened
+[25Oct2026 12:06:40.822] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   a crushed body stays squashed flat where it stood (y=-56.7909547403599)
+[25Oct2026 12:06:40.822] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   cave_remains placement is loaded
+[25Oct2026 12:06:40.822] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   surface_remains placement is loaded
+[25Oct2026 12:06:40.823] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   nether_remains placement is loaded
+[25Oct2026 12:06:40.823] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   end_remains placement is loaded
+[25Oct2026 12:06:40.823] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   fossil_bed placement is loaded
+[25Oct2026 12:06:40.823] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   ammonite_fossil placement is loaded
+[25Oct2026 12:06:40.823] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   trilobite_fossil placement is loaded
+[25Oct2026 12:06:40.823] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   fish_fossil placement is loaded
+[25Oct2026 12:06:40.823] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   fern_fossil placement is loaded
+[25Oct2026 12:06:40.823] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   cave_remains is added to biomes
+[25Oct2026 12:06:40.823] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   surface_remains is added to biomes
+[25Oct2026 12:06:40.823] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   nether_remains is added to biomes
+[25Oct2026 12:06:40.823] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   end_remains is added to biomes
+[25Oct2026 12:06:40.823] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   fossil_beds is added to biomes
+[25Oct2026 12:06:40.823] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   small_fossils is added to biomes
+[25Oct2026 12:06:40.823] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   there's a list of mobs whose remains turn up
+[25Oct2026 12:06:40.824] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   remains 0 made
+[25Oct2026 12:06:40.824] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   remains 1 made
+[25Oct2026 12:06:40.824] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   remains 2 made
+[25Oct2026 12:06:40.824] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   remains 3 made
+[25Oct2026 12:06:40.833] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   whole finds laid out (3)
+[25Oct2026 12:06:40.834] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   footprint_trail placement is loaded
+[25Oct2026 12:06:40.834] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   cave_footprint_trail placement is loaded
+[25Oct2026 12:06:40.834] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   petrified_tree placement is loaded
+[25Oct2026 12:06:40.834] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   fossil_nest placement is loaded
+[25Oct2026 12:06:40.834] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   dig_site placement is loaded
+[25Oct2026 12:06:40.834] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   amber placement is loaded
+[25Oct2026 12:06:40.834] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   amber_mosquito placement is loaded
+[25Oct2026 12:06:40.834] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   scallop_fossil placement is loaded
+[25Oct2026 12:06:40.834] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   shark_tooth_fossil placement is loaded
+[25Oct2026 12:06:40.834] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   crinoid_fossil placement is loaded
+[25Oct2026 12:06:40.834] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   footprint_trails is added to biomes
+[25Oct2026 12:06:40.834] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   petrified_trees is added to biomes
+[25Oct2026 12:06:40.834] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   fossil_nests is added to biomes
+[25Oct2026 12:06:40.834] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   dig_sites is added to biomes
+[25Oct2026 12:06:40.834] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   amber is added to biomes
+[25Oct2026 12:06:40.942] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   every kind of skeleton goes into the rock whole (18/18)
+[25Oct2026 12:06:40.947] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   fossils take on the rock they're in (222 stone, 1 deepslate)
+[25Oct2026 12:06:40.947] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   one skull to each skeleton, pointing the way the head does (18)
+[25Oct2026 12:06:40.949] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   skeletons come in different lengths and keep their heads
+[25Oct2026 12:06:40.949] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   no fossil skeleton is left hanging in the air
+[25Oct2026 12:06:41.065] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   a bone bed is a jumble of loose bones (60)
+[25Oct2026 12:06:41.066] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   a petrified trunk lies in the rock (8)
+[25Oct2026 12:06:41.066] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   a buried nest holds stone eggs (11 eggs)
+[25Oct2026 12:06:41.067] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   a trail of footprints crosses the rock (7)
+[25Oct2026 12:06:41.080] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   a dig site: pit, ladder, chest and a skeleton in the wall (1 chest, 4 ladder, 12 bones, 9 suspicious)
+[25Oct2026 12:06:41.081] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   mining a fossil block gives the fossil ([1 terracotta_shark_tooth_fossil])
+[25Oct2026 12:06:41.081] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   fossil blocks are mined with a pickaxe
+[25Oct2026 12:06:41.081] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   a clutch of three eggs gives three eggs ([3 fossil_egg])
+[25Oct2026 12:06:41.082] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   lots of kinds of fossil (52)
+[25Oct2026 12:06:41.082] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   cambrian_bed placement is loaded
+[25Oct2026 12:06:41.082] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   opabinia_fossil placement is loaded
+[25Oct2026 12:06:41.082] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   hallucigenia_fossil placement is loaded
+[25Oct2026 12:06:41.082] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   painted_cave placement is loaded
+[25Oct2026 12:06:41.082] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   stone_circle placement is loaded
+[25Oct2026 12:06:41.082] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   dolmen placement is loaded
+[25Oct2026 12:06:41.082] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   barrow placement is loaded
+[25Oct2026 12:06:41.082] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   bone_hut placement is loaded
+[25Oct2026 12:06:41.082] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   cambrian_fossils is added to biomes
+[25Oct2026 12:06:41.082] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   painted_caves is added to biomes
+[25Oct2026 12:06:41.082] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   neolithic_sites is added to biomes
+[25Oct2026 12:06:41.082] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   bone_huts is added to biomes
+[25Oct2026 12:06:41.139] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   a Cambrian bed is crowded with sea creatures (66)
+[25Oct2026 12:06:41.139] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   an anomalocaris lies whole, its tail behind its head
+[25Oct2026 12:06:41.150] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   a cave wall gets painted (3)
+[25Oct2026 12:06:41.153] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   a ring of standing stones (34 stone blocks)
+[25Oct2026 12:06:41.158] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   a barrow: a grassy mound over a chamber with grave goods (1 chest, 2 pots, 80 grass)
+[25Oct2026 12:06:41.158] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   a mammoth-bone hut round a hearth (50 bones)
+[25Oct2026 12:06:41.159] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   a dolmen's capstone stands on its stones
+[25Oct2026 12:06:41.159] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   a flint hand axe is an axe
+[25Oct2026 12:06:41.159] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   flint_hand_axe can be crafted
+[25Oct2026 12:06:41.160] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   bone_flute can be crafted
+[25Oct2026 12:06:41.160] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   red_dye_from_ochre can be crafted
+[25Oct2026 12:06:41.160] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   burgess_shale generates in its biomes
+[25Oct2026 12:06:41.210] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST formation burgess_shale: 2101 rock, 174 fossils, 9 stone left in the middle
+[25Oct2026 12:06:41.210] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   reef_limestone generates in its biomes
+[25Oct2026 12:06:41.261] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST formation reef_limestone: 2118 rock, 249 fossils, 0 stone left in the middle
+[25Oct2026 12:06:41.261] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   coal_measures generates in its biomes
+[25Oct2026 12:06:41.307] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST formation coal_measures: 2106 rock, 132 fossils, 0 stone left in the middle
+[25Oct2026 12:06:41.307] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   red_beds generates in its biomes
+[25Oct2026 12:06:41.353] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST formation red_beds: 2110 rock, 62 fossils, 0 stone left in the middle
+[25Oct2026 12:06:41.353] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   blue_lias generates in its biomes
+[25Oct2026 12:06:41.392] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST formation blue_lias: 2114 rock, 267 fossils, 0 stone left in the middle
+[25Oct2026 12:06:41.393] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   solnhofen generates in its biomes
+[25Oct2026 12:06:41.451] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST formation solnhofen: 2111 rock, 117 fossils, 0 stone left in the middle
+[25Oct2026 12:06:41.451] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   chalk generates in its biomes
+[25Oct2026 12:06:41.493] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST formation chalk: 2102 rock, 188 fossils, 0 stone left in the middle
+[25Oct2026 12:06:41.493] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   hell_creek generates in its biomes
+[25Oct2026 12:06:41.535] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST formation hell_creek: 2113 rock, 100 fossils, 0 stone left in the middle
+[25Oct2026 12:06:41.535] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   flaming_cliffs generates in its biomes
+[25Oct2026 12:06:41.576] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST formation flaming_cliffs: 2108 rock, 61 fossils, 0 stone left in the middle
+[25Oct2026 12:06:41.576] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   ash_beds generates in its biomes
+[25Oct2026 12:06:41.614] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST formation ash_beds: 2109 rock, 56 fossils, 0 stone left in the middle
+[25Oct2026 12:06:41.614] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   permafrost generates in its biomes
+[25Oct2026 12:06:41.663] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST formation permafrost: 2110 rock, 74 fossils, 0 stone left in the middle
+[25Oct2026 12:06:41.667] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   every formation lays down its layers and fossils (11/11)
+[25Oct2026 12:06:41.667] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   each rock holds the fossils of its time
+[25Oct2026 12:06:41.667] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   chalk gives up its flint ([1 flint])
+[25Oct2026 12:06:41.668] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   coal seams give coal ([2 coal])
+[25Oct2026 12:06:41.668] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   lignite burns
+[25Oct2026 12:06:41.669] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   a tar pit with animals caught in it (2)
+[25Oct2026 12:06:41.669] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   ten Cambrian fossils and seven cave paintings
+[25Oct2026 12:06:43.822] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   remains stay put (4)
+[25Oct2026 12:06:43.823] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   remains lie still
+[25Oct2026 12:06:43.823] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   remains can lie half buried
+[25Oct2026 12:06:43.823] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   remains carry growths and old arrows
+[25Oct2026 12:06:43.824] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   an adventurer's sword can be taken off its remains
+[25Oct2026 12:06:43.824] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   breaking remains gives bones
+[25Oct2026 12:06:43.825] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   bog_body placement is loaded
+[25Oct2026 12:06:43.825] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   ice_mummy placement is loaded
+[25Oct2026 12:06:43.825] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   whale_fall placement is loaded
+[25Oct2026 12:06:43.825] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   desert_whales placement is loaded
+[25Oct2026 12:06:43.825] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   bog_bodies is added to biomes
+[25Oct2026 12:06:43.825] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   ice_mummies is added to biomes
+[25Oct2026 12:06:43.825] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   whale_falls is added to biomes
+[25Oct2026 12:06:43.825] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   desert_whales is added to biomes
+[25Oct2026 12:06:43.834] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   the test strip is swamp now
+[25Oct2026 12:06:43.836] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.cow died at (11.5, -57.0, -43.5)
+[25Oct2026 12:06:43.837] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.cow died at (16.5, -57.0, -43.5)
+[25Oct2026 12:06:43.839] [Server thread/INFO] [net.minecraft.world.entity.npc.Villager/]: Villager Villager['Villager'/76, l='ServerLevel[world]', x=27.50, y=-57.00, z=-43.50] died, message: 'Villager died'
+[25Oct2026 12:06:43.839] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.villager died at (27.5, -57.0, -43.5)
+[25Oct2026 12:06:43.840] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.skeleton died at (32.5, -57.0, -43.5)
+[25Oct2026 12:06:43.840] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.cow died at (0.5, -57.0, -43.5)
+[25Oct2026 12:06:43.841] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.squid died at (-29.5, -57.0, -29.5)
+[25Oct2026 12:06:43.842] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.spider died at (-33.5, -57.0, -29.5)
+[25Oct2026 12:06:43.843] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   a bog body lies in the mud
+[25Oct2026 12:06:43.845] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   a frozen mummy is melting out of the ice (31 ice)
+[25Oct2026 12:06:43.847] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   breaking up a mummy gives its dried skin as leather
+[25Oct2026 12:06:43.853] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   whale skeletons lie on the sea floor, full size
+[25Oct2026 12:06:43.854] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   a whale skeleton stays put until broken up for bones
+[25Oct2026 12:06:43.854] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   a whale skeleton saves and loads
+[25Oct2026 12:06:43.855] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   a beaked whale, still with flesh on it
+[25Oct2026 12:06:43.890] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   a stone whale lies half buried in the sand (47 bones showing)
+[25Oct2026 12:06:43.905] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   whale gatherings are rare (2740 of 90000 stretches of sea)
+[25Oct2026 12:06:43.914] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:cow at (11.5, -56.30000001192093, -43.5) added=true
+[25Oct2026 12:06:43.914] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:cow at (0.5, -56.30000001192093, -43.5) added=true
+[25Oct2026 12:06:43.915] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:skeleton at (32.5, -56.00499999523163, -43.5) added=true
+[25Oct2026 12:06:43.915] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:spider at (-33.5, -56.55000001192093, -29.5) added=true
+[25Oct2026 12:06:43.915] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:cow at (16.5, -56.30000001192093, -43.5) added=true
+[25Oct2026 12:06:43.915] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:villager at (27.5, -56.02499997615814, -43.5) added=true
+[25Oct2026 12:06:43.915] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:squid at (-29.5, -56.599999994039536, -29.5) added=true
+[25Oct2026 12:06:43.974] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   a cow that dies in a swamp turns into a bog body
+[25Oct2026 12:06:43.974] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   but not if it burnt
+[25Oct2026 12:06:43.974] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   a villager that dies in the snow freeze-dries
+[25Oct2026 12:06:43.974] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   a skeleton has no skin to mummify
+[25Oct2026 12:06:43.974] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   a cow that dies on the plains rots as usual
+[25Oct2026 12:06:43.974] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   a squid rots with no bones but leaves a beak and a pen
+[25Oct2026 12:06:43.974] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   a spider leaves nothing
+[25Oct2026 12:06:46.222] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   a mummy keeps long after a skeleton would have crumbled
+[25Oct2026 12:06:46.223] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   while an ordinary skeleton of the same age has crumbled
+[25Oct2026 12:06:46.223] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   a squid's beak and pen stay when the rest has rotted away
+[25Oct2026 12:06:46.223] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   while a spider fades to nothing
+[25Oct2026 12:06:46.223] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   pirate_crew placement is loaded
+[25Oct2026 12:06:46.223] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   pirate_crews is added to biomes
+[25Oct2026 12:06:46.223] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   both kinds of shipwreck count as ships
+[25Oct2026 12:06:46.223] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   villages, ocean ruins and mineshafts don't
+[25Oct2026 12:06:46.225] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   a crew lies on the deck (5 of 5 bodies)
+[25Oct2026 12:06:46.225] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   they lie on the planks as old remains
+[25Oct2026 12:06:46.225] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   some of them still have their clothes or a weapon
+[25Oct2026 12:06:46.226] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   asked a chunk at a time the same crew turns up, no more, no fewer (5 vs 5)
+[25Oct2026 12:06:46.226] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   the captain has a hat, a coat and a cutlass
+[25Oct2026 12:06:46.226] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   ghost ships sail the frozen oceans
+[25Oct2026 12:06:46.377] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST sloop: 294 hull, 54 sail, 308 ice, 8 crew (6 standing)
+[25Oct2026 12:06:46.378] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   a sloop, whole, under sail, locked in the ice
+[25Oct2026 12:06:46.378] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   her crew frozen at their posts (8, 6 standing)
+[25Oct2026 12:06:46.378] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   the sloop's log lies on the chart table
+[25Oct2026 12:06:46.545] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST brigantine: 407 hull, 87 sail, 374 ice, 9 crew (6 standing)
+[25Oct2026 12:06:46.545] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   a brigantine, whole, under sail, locked in the ice
+[25Oct2026 12:06:46.545] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   her crew frozen at their posts (9, 6 standing)
+[25Oct2026 12:06:46.545] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   the brigantine's log lies on the chart table
+[25Oct2026 12:06:46.640] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST merchantman: 567 hull, 127 sail, 404 ice, 13 crew (9 standing)
+[25Oct2026 12:06:46.640] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   a merchantman, whole, under sail, locked in the ice
+[25Oct2026 12:06:46.640] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   her crew frozen at their posts (13, 9 standing)
+[25Oct2026 12:06:46.640] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   the merchantman's log lies on the chart table
+[25Oct2026 12:06:46.711] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST frigate: 651 hull, 184 sail, 464 ice, 14 crew (10 standing)
+[25Oct2026 12:06:46.711] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   a frigate, whole, under sail, locked in the ice
+[25Oct2026 12:06:46.711] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   her crew frozen at their posts (14, 10 standing)
+[25Oct2026 12:06:46.711] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   the frigate's log lies on the chart table
+[25Oct2026 12:06:46.711] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   a frigate has guns on deck and her gunports (8 guns, 28 ports)
+[25Oct2026 12:06:46.905] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST galleon: 703 hull, 152 sail, 433 ice, 13 crew (9 standing)
+[25Oct2026 12:06:46.906] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   a galleon, whole, under sail, locked in the ice
+[25Oct2026 12:06:46.906] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   her crew frozen at their posts (13, 9 standing)
+[25Oct2026 12:06:46.906] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   the galleon's log lies on the chart table
+[25Oct2026 12:06:46.906] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   a galleon has a two-storey stern castle
+[25Oct2026 12:06:46.906] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   but not on dry land
+[25Oct2026 12:06:46.906] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   a frozen figure keeps its pose when saved
+[25Oct2026 12:06:46.906] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   the captain still has his hat on
+[25Oct2026 12:06:46.907] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (30.5, -57.0, 30.5)
+[25Oct2026 12:06:46.909] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (32.5, -57.0, 30.5)
+[25Oct2026 12:06:46.909] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (34.5, -57.0, 30.5)
+[25Oct2026 12:06:46.910] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (36.5, -57.0, 30.5)
+[25Oct2026 12:06:46.911] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (38.5, -57.0, 30.5)
+[25Oct2026 12:06:46.911] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (40.5, -57.0, 30.5)
+[25Oct2026 12:06:46.912] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (42.5, -57.0, 30.5)
+[25Oct2026 12:06:46.913] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (44.5, -57.0, 30.5)
+[25Oct2026 12:06:46.913] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (46.5, -57.0, 30.5)
+[25Oct2026 12:06:46.914] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (48.5, -57.0, 30.5)
+[25Oct2026 12:06:46.915] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (30.5, -57.0, 32.5)
+[25Oct2026 12:06:46.916] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (32.5, -57.0, 32.5)
+[25Oct2026 12:06:46.916] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (34.5, -57.0, 32.5)
+[25Oct2026 12:06:46.917] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (36.5, -57.0, 32.5)
+[25Oct2026 12:06:46.918] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (38.5, -57.0, 32.5)
+[25Oct2026 12:06:46.918] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (40.5, -57.0, 32.5)
+[25Oct2026 12:06:46.919] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (42.5, -57.0, 32.5)
+[25Oct2026 12:06:46.919] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (44.5, -57.0, 32.5)
+[25Oct2026 12:06:46.920] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (46.5, -57.0, 32.5)
+[25Oct2026 12:06:46.921] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (48.5, -57.0, 32.5)
+[25Oct2026 12:06:46.921] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (30.5, -57.0, 34.5)
+[25Oct2026 12:06:46.922] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (32.5, -57.0, 34.5)
+[25Oct2026 12:06:46.923] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (34.5, -57.0, 34.5)
+[25Oct2026 12:06:46.924] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (36.5, -57.0, 34.5)
+[25Oct2026 12:06:46.924] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (38.5, -57.0, 34.5)
+[25Oct2026 12:06:46.925] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (40.5, -57.0, 34.5)
+[25Oct2026 12:06:46.926] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (42.5, -57.0, 34.5)
+[25Oct2026 12:06:46.927] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (44.5, -57.0, 34.5)
+[25Oct2026 12:06:46.928] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (46.5, -57.0, 34.5)
+[25Oct2026 12:06:46.928] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (48.5, -57.0, 34.5)
+[25Oct2026 12:06:46.929] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (30.5, -57.0, 36.5)
+[25Oct2026 12:06:46.930] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (32.5, -57.0, 36.5)
+[25Oct2026 12:06:46.931] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (34.5, -57.0, 36.5)
+[25Oct2026 12:06:46.932] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (36.5, -57.0, 36.5)
+[25Oct2026 12:06:46.932] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (38.5, -57.0, 36.5)
+[25Oct2026 12:06:46.933] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (40.5, -57.0, 36.5)
+[25Oct2026 12:06:46.934] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (42.5, -57.0, 36.5)
+[25Oct2026 12:06:46.934] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (44.5, -57.0, 36.5)
+[25Oct2026 12:06:46.935] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (46.5, -57.0, 36.5)
+[25Oct2026 12:06:46.936] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (48.5, -57.0, 36.5)
+[25Oct2026 12:06:46.936] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (30.5, -57.0, 38.5)
+[25Oct2026 12:06:46.937] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (32.5, -57.0, 38.5)
+[25Oct2026 12:06:46.938] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (34.5, -57.0, 38.5)
+[25Oct2026 12:06:46.939] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (36.5, -57.0, 38.5)
+[25Oct2026 12:06:46.939] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (38.5, -57.0, 38.5)
+[25Oct2026 12:06:46.940] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (40.5, -57.0, 38.5)
+[25Oct2026 12:06:46.941] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (42.5, -57.0, 38.5)
+[25Oct2026 12:06:46.941] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (44.5, -57.0, 38.5)
+[25Oct2026 12:06:46.942] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (46.5, -57.0, 38.5)
+[25Oct2026 12:06:46.943] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (48.5, -57.0, 38.5)
+[25Oct2026 12:06:46.944] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (30.5, -57.0, 40.5)
+[25Oct2026 12:06:46.944] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (32.5, -57.0, 40.5)
+[25Oct2026 12:06:46.945] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (34.5, -57.0, 40.5)
+[25Oct2026 12:06:46.945] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (36.5, -57.0, 40.5)
+[25Oct2026 12:06:46.946] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (38.5, -57.0, 40.5)
+[25Oct2026 12:06:46.946] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (40.5, -57.0, 40.5)
+[25Oct2026 12:06:46.947] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (42.5, -57.0, 40.5)
+[25Oct2026 12:06:46.947] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (44.5, -57.0, 40.5)
+[25Oct2026 12:06:46.948] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (46.5, -57.0, 40.5)
+[25Oct2026 12:06:46.948] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (48.5, -57.0, 40.5)
+[25Oct2026 12:06:46.949] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (30.5, -57.0, 42.5)
+[25Oct2026 12:06:46.950] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (32.5, -57.0, 42.5)
+[25Oct2026 12:06:46.950] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (34.5, -57.0, 42.5)
+[25Oct2026 12:06:46.951] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (36.5, -57.0, 42.5)
+[25Oct2026 12:06:46.951] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (38.5, -57.0, 42.5)
+[25Oct2026 12:06:46.952] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (40.5, -57.0, 42.5)
+[25Oct2026 12:06:46.952] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (42.5, -57.0, 42.5)
+[25Oct2026 12:06:46.953] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: entity.minecraft.chicken died at (44.5, -57.0, 42.5)
+[25Oct2026 12:06:46.963] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (36.5, -56.650000005960464, 34.5) added=true
+[25Oct2026 12:06:46.964] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (38.5, -56.650000005960464, 40.5) added=true
+[25Oct2026 12:06:46.964] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (30.5, -56.650000005960464, 34.5) added=true
+[25Oct2026 12:06:46.964] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (40.5, -56.650000005960464, 34.5) added=true
+[25Oct2026 12:06:46.964] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (46.5, -56.650000005960464, 34.5) added=true
+[25Oct2026 12:06:46.965] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (34.5, -56.650000005960464, 30.5) added=true
+[25Oct2026 12:06:46.965] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (38.5, -56.650000005960464, 30.5) added=true
+[25Oct2026 12:06:46.965] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (42.5, -56.650000005960464, 36.5) added=true
+[25Oct2026 12:06:46.965] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (36.5, -56.650000005960464, 38.5) added=true
+[25Oct2026 12:06:46.965] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (32.5, -56.650000005960464, 36.5) added=true
+[25Oct2026 12:06:46.966] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (34.5, -56.650000005960464, 36.5) added=true
+[25Oct2026 12:06:46.966] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (42.5, -56.650000005960464, 38.5) added=true
+[25Oct2026 12:06:46.966] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (48.5, -56.650000005960464, 38.5) added=true
+[25Oct2026 12:06:46.966] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (38.5, -56.650000005960464, 42.5) added=true
+[25Oct2026 12:06:46.966] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (32.5, -56.650000005960464, 30.5) added=true
+[25Oct2026 12:06:46.967] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (44.5, -56.650000005960464, 32.5) added=true
+[25Oct2026 12:06:46.967] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (30.5, -56.650000005960464, 36.5) added=true
+[25Oct2026 12:06:46.968] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (48.5, -56.650000005960464, 32.5) added=true
+[25Oct2026 12:06:46.968] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (36.5, -56.650000005960464, 30.5) added=true
+[25Oct2026 12:06:46.969] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (46.5, -56.650000005960464, 36.5) added=true
+[25Oct2026 12:06:46.969] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (44.5, -56.650000005960464, 36.5) added=true
+[25Oct2026 12:06:46.969] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (40.5, -56.650000005960464, 38.5) added=true
+[25Oct2026 12:06:46.969] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (44.5, -56.650000005960464, 34.5) added=true
+[25Oct2026 12:06:46.970] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (44.5, -56.650000005960464, 42.5) added=true
+[25Oct2026 12:06:46.970] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (40.5, -56.650000005960464, 32.5) added=true
+[25Oct2026 12:06:46.970] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (40.5, -56.650000005960464, 42.5) added=true
+[25Oct2026 12:06:46.971] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (38.5, -56.650000005960464, 36.5) added=true
+[25Oct2026 12:06:46.971] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (46.5, -56.650000005960464, 30.5) added=true
+[25Oct2026 12:06:46.971] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (32.5, -56.650000005960464, 42.5) added=true
+[25Oct2026 12:06:46.971] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (46.5, -56.650000005960464, 40.5) added=true
+[25Oct2026 12:06:46.972] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (44.5, -56.650000005960464, 30.5) added=true
+[25Oct2026 12:06:46.972] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (40.5, -56.650000005960464, 30.5) added=true
+[25Oct2026 12:06:46.972] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (38.5, -56.650000005960464, 34.5) added=true
+[25Oct2026 12:06:46.973] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (42.5, -56.650000005960464, 42.5) added=true
+[25Oct2026 12:06:46.973] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (36.5, -56.650000005960464, 42.5) added=true
+[25Oct2026 12:06:46.973] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (34.5, -56.650000005960464, 42.5) added=true
+[25Oct2026 12:06:46.973] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (42.5, -56.650000005960464, 34.5) added=true
+[25Oct2026 12:06:46.973] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (46.5, -56.650000005960464, 32.5) added=true
+[25Oct2026 12:06:46.973] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (34.5, -56.650000005960464, 34.5) added=true
+[25Oct2026 12:06:46.974] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (38.5, -56.650000005960464, 38.5) added=true
+[25Oct2026 12:06:46.974] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (36.5, -56.650000005960464, 36.5) added=true
+[25Oct2026 12:06:46.974] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (48.5, -56.650000005960464, 34.5) added=true
+[25Oct2026 12:06:46.974] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (42.5, -56.650000005960464, 30.5) added=true
+[25Oct2026 12:06:46.974] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (40.5, -56.650000005960464, 36.5) added=true
+[25Oct2026 12:06:46.974] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (32.5, -56.650000005960464, 38.5) added=true
+[25Oct2026 12:06:46.975] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (30.5, -56.650000005960464, 38.5) added=true
+[25Oct2026 12:06:46.975] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (44.5, -56.650000005960464, 40.5) added=true
+[25Oct2026 12:06:46.975] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (48.5, -56.650000005960464, 36.5) added=true
+[25Oct2026 12:06:46.975] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (30.5, -56.650000005960464, 30.5) added=true
+[25Oct2026 12:06:46.976] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (30.5, -56.650000005960464, 32.5) added=true
+[25Oct2026 12:06:46.976] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (30.5, -56.650000005960464, 40.5) added=true
+[25Oct2026 12:06:46.976] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (40.5, -56.650000005960464, 40.5) added=true
+[25Oct2026 12:06:46.977] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (42.5, -56.650000005960464, 32.5) added=true
+[25Oct2026 12:06:46.977] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (32.5, -56.650000005960464, 32.5) added=true
+[25Oct2026 12:06:46.977] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (48.5, -56.650000005960464, 40.5) added=true
+[25Oct2026 12:06:46.978] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (32.5, -56.650000005960464, 40.5) added=true
+[25Oct2026 12:06:46.978] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (42.5, -56.650000005960464, 40.5) added=true
+[25Oct2026 12:06:46.978] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (30.5, -56.650000005960464, 42.5) added=true
+[25Oct2026 12:06:46.978] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (32.5, -56.650000005960464, 34.5) added=true
+[25Oct2026 12:06:46.979] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (48.5, -56.650000005960464, 30.5) added=true
+[25Oct2026 12:06:46.979] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (44.5, -56.650000005960464, 38.5) added=true
+[25Oct2026 12:06:46.979] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (36.5, -56.650000005960464, 32.5) added=true
+[25Oct2026 12:06:46.979] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (34.5, -56.650000005960464, 38.5) added=true
+[25Oct2026 12:06:46.980] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (38.5, -56.650000005960464, 32.5) added=true
+[25Oct2026 12:06:46.980] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (34.5, -56.650000005960464, 40.5) added=true
+[25Oct2026 12:06:46.980] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (36.5, -56.650000005960464, 40.5) added=true
+[25Oct2026 12:06:46.980] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (34.5, -56.650000005960464, 32.5) added=true
+[25Oct2026 12:06:46.980] [Server thread/INFO] [com.harold.corpsedecay.DeathHandler/]: corpsedecay: corpse of minecraft:chicken at (46.5, -56.650000005960464, 38.5) added=true
+[25Oct2026 12:06:46.999] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   no more than 60 corpses at once (60)
+[25Oct2026 12:06:46.999] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST ok   remains don't count towards the limit and never crumble (12 left of 12)
+[25Oct2026 12:06:47.000] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST 212 passed, 0 failed
+[25Oct2026 12:06:47.000] [Server thread/INFO] [com.harold.corpsedecay.test.SelfTest/]: SELFTEST PASS
+[25Oct2026 12:06:47.000] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Stopping server
+[25Oct2026 12:06:47.001] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving players
+[25Oct2026 12:06:47.001] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving worlds
+[25Oct2026 12:06:47.624] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[world]'/minecraft:overworld
+[25Oct2026 12:06:48.534] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[world]'/minecraft:the_nether
+[25Oct2026 12:06:48.534] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[world]'/minecraft:the_end
+[25Oct2026 12:06:48.555] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (world): All chunks are saved
+[25Oct2026 12:06:48.555] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[25Oct2026 12:06:48.555] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[25Oct2026 12:06:48.555] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage: All dimensions are saved
