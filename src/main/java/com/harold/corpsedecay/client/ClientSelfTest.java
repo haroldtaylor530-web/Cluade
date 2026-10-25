@@ -319,13 +319,13 @@ public final class ClientSelfTest {
             });
             at(t + 70 + i * 30, () -> shot(names[tab - 1]));
         }
-        at(t + 140, () -> {
+        at(t + 170, () -> {
             if (Minecraft.getInstance().screen instanceof com.harold.corpsedecay.client.config.CorpseConfigScreen s) s.selectTab(1);
         });
-        at(t + 190, () -> shot("D4_config_decay_later"));
-        at(t + 240, () -> shot("D5_config_decay_later"));
-        at(t + 245, () -> Minecraft.getInstance().setScreen(null));
-        t += 250;
+        at(t + 210, () -> shot("D4_config_decay_later"));
+        at(t + 260, () -> shot("D5_config_decay_later"));
+        at(t + 265, () -> Minecraft.getInstance().setScreen(null));
+        t += 270;
         at(t + 5, () -> {
             LOG.info("CLIENTTEST DONE");
             Minecraft.getInstance().stop();

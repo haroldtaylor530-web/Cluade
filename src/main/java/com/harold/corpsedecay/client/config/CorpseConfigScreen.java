@@ -35,7 +35,7 @@ import net.minecraftforge.fml.ModList;
 /** Corpse Decay's settings screen, opened from the Mods list. */
 public class CorpseConfigScreen extends Screen {
     static final int BONE = 0xFFEDE6D3, DIM = 0xFF9C948A, ACCENT = 0xFFB8D47A, AMBER = 0xFFE0A84A,
-            PANEL = 0xC8110E16, EDGE = 0xFF3A3240, EDGE_LIT = 0xFF5A4E60;
+            PANEL = 0xB4110E16, EDGE = 0xFF3A3240, EDGE_LIT = 0xFF5A4E60;
 
     private final Screen parent;
     private final Scene scene = new Scene();
