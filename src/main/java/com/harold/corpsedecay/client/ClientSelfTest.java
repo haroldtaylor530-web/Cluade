@@ -308,6 +308,24 @@ public final class ClientSelfTest {
         at(t + 270, () -> shot("C5_hold"));
         at(t + 275, () -> server(() -> player().removeEffect(net.minecraft.world.effect.MobEffects.NIGHT_VISION)));
         t += 280;
+        // the settings screen
+        at(t + 5, () -> Minecraft.getInstance().setScreen(new com.harold.corpsedecay.client.config.CorpseConfigScreen(null)));
+        at(t + 45, () -> shot("D0_config_corpses"));
+        String[] names = { "D1_config_decay", "D2_config_world", "D3_config_exclusions" };
+        for (int i = 1; i <= 3; i++) {
+            final int tab = i;
+            at(t + 45 + i * 30, () -> {
+                if (Minecraft.getInstance().screen instanceof com.harold.corpsedecay.client.config.CorpseConfigScreen s) s.selectTab(tab);
+            });
+            at(t + 70 + i * 30, () -> shot(names[tab - 1]));
+        }
+        at(t + 140, () -> {
+            if (Minecraft.getInstance().screen instanceof com.harold.corpsedecay.client.config.CorpseConfigScreen s) s.selectTab(1);
+        });
+        at(t + 190, () -> shot("D4_config_decay_later"));
+        at(t + 240, () -> shot("D5_config_decay_later"));
+        at(t + 245, () -> Minecraft.getInstance().setScreen(null));
+        t += 250;
         at(t + 5, () -> {
             LOG.info("CLIENTTEST DONE");
             Minecraft.getInstance().stop();

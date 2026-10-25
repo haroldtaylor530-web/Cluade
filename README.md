@@ -182,7 +182,7 @@ These are entity type tags (`#corpsedecay:no_corpse`, `already_bones`, `no_skele
 
 ## Settings
 
-`config/corpsedecay-common.toml`:
+Open **Mods → Corpse Decay → Config** for the settings screen: a moonlit graveyard drifts by behind it, and the Decay tab shows a body rotting away on a loop at the speed you set. The same settings live in `config/corpsedecay-common.toml`:
 
 | Setting | Default | |
 |---|---|---|
