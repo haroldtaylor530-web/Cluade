@@ -65,7 +65,10 @@ jobs:
         continue-on-error: true
         run: |
           mkdir -p run-test && cd run-test
-          curl -sSL -o installer.jar https://maven.minecraftforge.net/net/minecraftforge/forge/1.20.1-47.3.0/forge-1.20.1-47.3.0-installer.jar
+          # newer Forge: CBC: Warium Projectiles uses the mod-constructor arguments added in 47.4
+          for v in 47.4.10 47.4.9 47.4.8 47.4.6 47.4.4 47.4.0; do
+            curl -fsSL -o installer.jar https://maven.minecraftforge.net/net/minecraftforge/forge/1.20.1-$v/forge-1.20.1-$v-installer.jar && { echo "Forge $v"; break; }
+          done
           java -jar installer.jar --installServer . > install.log 2>&1 || (tail -30 install.log; exit 1)
           echo "eula=true" > eula.txt
           printf 'online-mode=false\nlevel-type=flat\ngenerate-structures=false\nspawn-monsters=false\nview-distance=4\n' > server.properties
