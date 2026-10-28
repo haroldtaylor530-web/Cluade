@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "fieldkit",
+  "version": "${version}",
+  "name": "Fieldkit",
+  "description": "Press M for a biome and structure map of your world and a seed finder that understands modded worlds. Plus a biome minimap, warnings when mobs or players close in, a combat HUD with target info and a fight log, and a console tab that reads the game log and tells you what's wrong.",
+  "authors": ["haroldtaylor530-web"],
+  "license": "MIT",
+  "icon": "fieldkit_logo.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": ["com.harold.fieldkit.fabric.FieldkitFabric"]
+  },
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "fabric-api": "*",
+    "minecraft": "~1.21.1",
+    "java": ">=21"
+  }
+}

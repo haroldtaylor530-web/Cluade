@@ -1,0 +1,85 @@
+name: Build Fieldkit
+
+on:
+  push:
+    branches: [fieldkit]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: fieldkit-build
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          java-version: |
+            17
+            21
+          distribution: 'temurin'
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Build Forge 1.20.1
+        id: forge
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          cd forge && chmod +x gradlew
+          JAVA_HOME=$JAVA_HOME_17_X64 ./gradlew build --stacktrace 2>&1 | tee ../forge-build.log
+
+      - name: Build Fabric 1.21.1
+        id: fabric
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          cd fabric && chmod +x gradlew
+          JAVA_HOME=$JAVA_HOME_21_X64 ./gradlew build --stacktrace 2>&1 | tee ../fabric-build.log
+
+      - name: Screen setup
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq xvfb mesa-utils libgl1-mesa-dri libglx-mesa0 > /dev/null
+
+      - name: Forge client test
+        id: forgetest
+        if: steps.forge.outcome == 'success'
+        continue-on-error: true
+        run: |
+          cd forge && mkdir -p run
+          printf 'onboardAccessibility:false\nskipMultiplayerWarning:true\njoinedFirstServer:true\ntutorialStep:none\nrenderDistance:6\nsimulationDistance:5\npauseOnLostFocus:false\nfullscreen:false\nsoundCategory_master:0.0\nguiScale:2\n' > run/options.txt
+          export LIBGL_ALWAYS_SOFTWARE=1 MESA_GL_VERSION_OVERRIDE=4.5 MESA_GLSL_VERSION_OVERRIDE=450
+          JAVA_HOME=$JAVA_HOME_17_X64 timeout 1500 xvfb-run -a -s "-screen 0 1280x720x24 +extension GLX +render -noreset" ./gradlew runClient -Pclienttest 2>&1 | tee ../forge-client.log || true
+          grep -q "CLIENTTEST DONE" ../forge-client.log
+
+      - name: Fabric client test
+        id: fabrictest
+        if: steps.fabric.outcome == 'success'
+        continue-on-error: true
+        run: |
+          cd fabric && mkdir -p run
+          printf 'onboardAccessibility:false\nskipMultiplayerWarning:true\njoinedFirstServer:true\ntutorialStep:none\nrenderDistance:6\nsimulationDistance:5\npauseOnLostFocus:false\nfullscreen:false\nsoundCategory_master:0.0\nguiScale:2\n' > run/options.txt
+          export LIBGL_ALWAYS_SOFTWARE=1 MESA_GL_VERSION_OVERRIDE=4.5 MESA_GLSL_VERSION_OVERRIDE=450
+          JAVA_HOME=$JAVA_HOME_21_X64 timeout 1500 xvfb-run -a -s "-screen 0 1280x720x24 +extension GLX +render -noreset" ./gradlew runClient -Pclienttest 2>&1 | tee ../fabric-client.log || true
+          grep -q "CLIENTTEST DONE" ../fabric-client.log
+
+      - name: Publish result
+        if: always()
+        run: |
+          mkdir -p /tmp/out/forge /tmp/out/fabric
+          cp *.log /tmp/out/ 2>/dev/null || true
+          cp forge/run/screenshots/*.png /tmp/out/forge/ 2>/dev/null || true
+          cp fabric/run/screenshots/*.png /tmp/out/fabric/ 2>/dev/null || true
+          cp forge/run/logs/latest.log /tmp/out/forge-latest.log 2>/dev/null || true
+          cp fabric/run/logs/latest.log /tmp/out/fabric-latest.log 2>/dev/null || true
+          cp $(ls forge/build/libs/*.jar | grep -v sources) /tmp/out/ 2>/dev/null || true
+          cp $(ls fabric/build/libs/*.jar | grep -v sources) /tmp/out/ 2>/dev/null || true
+          echo "forge=${{ steps.forge.outcome }} fabric=${{ steps.fabric.outcome }} forgetest=${{ steps.forgetest.outcome }} fabrictest=${{ steps.fabrictest.outcome }} $GITHUB_SHA" > /tmp/out/STATUS
+          cd /tmp/out && git init -q && git add -A && git -c user.name=ci -c user.email=ci@example.com commit -qm "build $GITHUB_SHA"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" HEAD:refs/heads/ci-fieldkit
