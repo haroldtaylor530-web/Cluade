@@ -51,7 +51,6 @@ public final class SelfTest {
         ticks++;
         try {
             if (ticks == 60) fire(level);
-            if (ticks == 66) checkBlasts(level);
             if (ticks == 700) checkCraters(level, server);
         } catch (Throwable t) {
             LOG.error("HBMTEST crashed", t);
@@ -100,7 +99,7 @@ public final class SelfTest {
             m.setAccessible(true);
             m.invoke(shell, (Position) at);
             Bomb bomb = ShellConfig.bombFor(id);
-            if (NukeShells.FIRED.getOrDefault(id, 0) > 0) {
+            if (NukeShells.FIRED.getOrDefault(id, 0) > 0 && blastStarted(level, g, bomb)) {
                 LOG.info("HBMTEST FIRED {} -> {}", id, bomb);
                 sites.add(new Site(id, g, bomb.radius() > 0));
             } else {
@@ -113,6 +112,7 @@ public final class SelfTest {
             x += 100;
             BlockPos g = pad(level, x, 0);
             bomb.detonate(level, x + 0.5, g.getY() + 1.0, 0.5, null);
+            if (!blastStarted(level, g, bomb)) failures++;
             sites.add(new Site("bomb " + bomb, g, bomb.radius() > 0));
         }
     }
@@ -127,16 +127,13 @@ public final class SelfTest {
         return null;
     }
 
-    private static void checkBlasts(ServerLevel level) {
-        for (Site s : sites) {
-            if (!s.big()) continue;
-            int n = level.getEntitiesOfClass(EntityNukeExplosionMK5.class, new AABB(s.ground()).inflate(4)).size();
-            if (n > 0) LOG.info("HBMTEST BLAST {}: HBM nuke explosion running", s.what());
-            else {
-                LOG.error("HBMTEST FAIL {}: no HBM nuke explosion entity", s.what());
-                failures++;
-            }
-        }
+    /** Right after a big bomb goes off, HBM's MK5 blast entity must be in the world. */
+    private static boolean blastStarted(ServerLevel level, BlockPos g, Bomb bomb) {
+        if (bomb.radius() <= 0) return true;
+        int n = level.getEntitiesOfClass(EntityNukeExplosionMK5.class, new AABB(g).inflate(4)).size();
+        if (n > 0) LOG.info("HBMTEST BLAST {}: HBM nuke explosion entity spawned", bomb);
+        else LOG.error("HBMTEST FAIL {}: no HBM nuke explosion entity", bomb);
+        return n > 0;
     }
 
     private static void checkCraters(ServerLevel level, MinecraftServer server) {
