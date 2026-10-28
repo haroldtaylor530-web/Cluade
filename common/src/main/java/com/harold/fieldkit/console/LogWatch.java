@@ -38,9 +38,9 @@ public final class LogWatch {
     }
 
     private static final int KEEP = 4000;
-    // [12:34:56] [Render thread/WARN] [mixin/]: text   (Forge)   or   [12:34:56] [Render thread/WARN] (Minecraft) text (Fabric)
+    // [28Oct2026 12:34:56.789] [Render thread/WARN] [mixin/]: text   (Forge)   or   [12:34:56] [Render thread/WARN] (Minecraft) text (Fabric)
     private static final Pattern LINE = Pattern.compile(
-            "^\\[(\\d\\d:\\d\\d:\\d\\d)(?:\\.\\d+)?\\] \\[([^\\]]*?)/(INFO|WARN|ERROR|FATAL|DEBUG|TRACE)\\]\\s*(?:\\[([^\\]]*)\\]|\\(([^)]*)\\))?:?\\s?(.*)$");
+            "^\\[(?:\\d{1,2}[A-Za-z]{3}\\d{4} )?(\\d\\d:\\d\\d:\\d\\d)(?:\\.\\d+)?\\] \\[([^\\]]*?)/(INFO|WARN|ERROR|FATAL|DEBUG|TRACE)\\]\\s*(?:\\[([^\\]]*)\\]|\\(([^)]*)\\))?:?\\s?(.*)$");
     private static final List<Line> LINES = new ArrayList<>();
     private static final Map<String, int[]> BY_SOURCE = new LinkedHashMap<>();
     private static final Map<String, int[]> FINDINGS = new LinkedHashMap<>();

@@ -156,6 +156,9 @@ public final class ClientTest {
             }
             case 1370 -> shot("L_hud_again");
             case 1380 -> {
+                if (com.harold.fieldkit.console.LogWatch.errorCount() == 0) problems.add("log watcher saw no errors");
+                if (com.harold.fieldkit.console.LogWatch.lines().size() < 50) problems.add("log watcher read only "
+                        + com.harold.fieldkit.console.LogWatch.lines().size() + " lines");
                 Fieldkit.LOG.info("CLIENTTEST seeds checked {} found {}", SeedTab.search == null ? 0 : SeedTab.search.checked.get(),
                         SeedTab.search == null ? 0 : SeedTab.search.results.size());
                 Fieldkit.LOG.info(problems.isEmpty() ? "CLIENTTEST DONE ok" : "CLIENTTEST DONE problems: " + problems);
