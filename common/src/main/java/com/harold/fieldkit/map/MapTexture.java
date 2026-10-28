@@ -30,6 +30,7 @@ public final class MapTexture {
     }
 
     public void draw(GuiGraphics g, int x, int y, int dw, int dh) {
+        com.mojang.blaze3d.systems.RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
         g.blit(id, x, y, dw, dh, 0, 0, w, h, w, h);
     }
 

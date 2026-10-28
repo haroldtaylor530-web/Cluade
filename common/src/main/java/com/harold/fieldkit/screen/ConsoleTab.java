@@ -41,11 +41,11 @@ class ConsoleTab extends Tab {
                 filter = f;
                 scroll = 0;
                 screen.rebuild();
-            }).bounds(bx, y + 2, font.width(FILTERS[i]) + 12, 16).build());
+            }).bounds(bx, y + 2, font.width(FILTERS[i]) + 8, 16).build());
             b.active = filter != i;
-            bx += font.width(FILTERS[i]) + 14;
+            bx += font.width(FILTERS[i]) + 10;
         }
-        EditBox search = screen.add(new EditBox(font, bx + 4, y + 2, Math.max(60, x + w - bx - 100), 16, Component.literal("search")));
+        EditBox search = screen.add(new EditBox(font, bx + 4, y + 2, Math.max(50, x + w - bx - 6), 16, Component.literal("search")));
         search.setHint(Component.literal("search"));
         search.setValue(query);
         search.setResponder(s -> {
@@ -53,14 +53,14 @@ class ConsoleTab extends Tab {
             scroll = 0;
         });
         screen.add(Button.builder(Component.literal("Open logs"), b -> Util.getPlatform().openFile(
-                Fieldkit.platform.gameDir().resolve("logs").toFile())).bounds(x + w - 88, y + 2, 86, 16).build());
+                Fieldkit.platform.gameDir().resolve("logs").toFile())).bounds(x + 6, y + h - 22, 80, 16).build());
     }
 
     @Override
     void render(GuiGraphics g, int mx, int my, float pt) {
         int lw = leftW();
         panel(g, x, y, x + lw, y + h);
-        analysis(g, x + 6, y + 6, lw - 12, h - 12);
+        analysis(g, x + 6, y + 6, lw - 12, h - 34);
         int lx = x + lw + 6, ly = y + 22, lwid = w - lw - 6, lh = h - 22;
         panel(g, lx, ly, lx + lwid, ly + lh);
         List<LogWatch.Line> all = LogWatch.lines();

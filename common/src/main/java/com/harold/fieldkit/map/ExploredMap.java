@@ -40,13 +40,18 @@ public final class ExploredMap {
                 for (int cz = at.z - d; cz <= at.z + d && done < 48; cz++) {
                     if (Math.max(Math.abs(cx - at.x), Math.abs(cz - at.z)) != d) continue;
                     long key = ChunkPos.asLong(cx, cz);
-                    if (CHUNKS.containsKey(key) || !level.hasChunk(cx, cz)) continue;
+                    if (CHUNKS.containsKey(key) || !loaded(level, cx, cz)) continue;
                     CHUNKS.put(key, sample(level, cx, cz));
                     done++;
                 }
             }
         }
         if (CHUNKS.size() > 60000) CHUNKS.clear();
+    }
+
+    /** A real chunk with data (on 1.21 an unloaded chunk can still answer as an empty one). */
+    public static boolean loaded(ClientLevel level, int cx, int cz) {
+        return level.hasChunk(cx, cz) && !(level.getChunk(cx, cz) instanceof net.minecraft.world.level.chunk.EmptyLevelChunk);
     }
 
     /** [0..15] biome colours of the 4x4 quarts, [16..31] surface heights. */

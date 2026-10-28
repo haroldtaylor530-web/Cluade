@@ -49,7 +49,12 @@ class SeedTab extends Tab {
     }
 
     private int leftW() {
-        return Math.min(330, w / 2);
+        return Math.min(330, Math.max(230, w / 2));
+    }
+
+    /** Width of the biome/structure picker buttons. */
+    private int pickW() {
+        return leftW() - 6 - 3 - 42 - 3 - 60 - 3 - 18 - 4;
     }
 
     @Override
@@ -66,18 +71,19 @@ class SeedTab extends Tab {
             final int idx = i;
             int ry = ly + i * 22;
             screen.add(Button.builder(Component.literal(r.biome == null ? "Pick a biome…" : BiomeColors.pretty(r.biome)),
-                    b -> openPicker(1, idx)).bounds(lx, ry, 130, 20).build());
-            EditBox rad = screen.add(new EditBox(font, lx + 134, ry + 1, 46, 18, Component.literal("radius")));
+                    b -> openPicker(1, idx)).bounds(lx, ry, pickW(), 20).build());
+            int ex = lx + pickW() + 3;
+            EditBox rad = screen.add(new EditBox(font, ex, ry + 1, 42, 18, Component.literal("radius")));
             rad.setValue(String.valueOf(r.radius));
             rad.setResponder(s -> r.radius = clampInt(s, 16, 8000, r.radius));
-            screen.add(Button.builder(Component.literal(r.must ? "Must have" : "Avoid"), b -> {
+            screen.add(Button.builder(Component.literal(r.must ? "Must" : "Avoid"), b -> {
                 r.must = !r.must;
-                b.setMessage(Component.literal(r.must ? "Must have" : "Avoid"));
-            }).bounds(lx + 184, ry, 66, 20).build());
+                b.setMessage(Component.literal(r.must ? "Must" : "Avoid"));
+            }).bounds(ex + 45, ry, 60, 20).build());
             screen.add(Button.builder(Component.literal("×"), b -> {
                 CRITERIA.biomes.remove(idx);
                 screen.rebuild();
-            }).bounds(lx + 254, ry, 18, 20).build());
+            }).bounds(ex + 108, ry, 18, 20).build());
         }
         int sy = ly + CRITERIA.biomes.size() * 22 + 20;
         screen.add(Button.builder(Component.literal("+ Structure"), b -> {
@@ -89,32 +95,33 @@ class SeedTab extends Tab {
             final int idx = i;
             int ry = sy + i * 22;
             screen.add(Button.builder(Component.literal(r.structure == null ? "Pick a structure…" : BiomeColors.pretty(r.structure)),
-                    b -> openPicker(2, idx)).bounds(lx, ry, 130, 20).build());
-            EditBox rad = screen.add(new EditBox(font, lx + 134, ry + 1, 46, 18, Component.literal("radius")));
+                    b -> openPicker(2, idx)).bounds(lx, ry, pickW(), 20).build());
+            int ex = lx + pickW() + 3;
+            EditBox rad = screen.add(new EditBox(font, ex, ry + 1, 42, 18, Component.literal("radius")));
             rad.setValue(String.valueOf(r.radius));
             rad.setResponder(s -> r.radius = clampInt(s, 16, 8000, r.radius));
-            EditBox cnt = screen.add(new EditBox(font, lx + 184, ry + 1, 30, 18, Component.literal("count")));
+            EditBox cnt = screen.add(new EditBox(font, ex + 45, ry + 1, 26, 18, Component.literal("count")));
             cnt.setValue(String.valueOf(r.count));
             cnt.setResponder(s -> r.count = clampInt(s, 1, 20, r.count));
             screen.add(Button.builder(Component.literal("×"), b -> {
                 CRITERIA.structs.remove(idx);
                 screen.rebuild();
-            }).bounds(lx + 254, ry, 18, 20).build());
+            }).bounds(ex + 108, ry, 18, 20).build());
         }
         int by = sy + CRITERIA.structs.size() * 22 + 18;
-        EditBox start = screen.add(new EditBox(font, lx + 64, by, 120, 18, Component.literal("start seed")));
+        EditBox start = screen.add(new EditBox(font, lx + 58, by, leftW() - 70, 18, Component.literal("start seed")));
         start.setValue(CRITERIA.start);
         start.setHint(Component.literal("random"));
         start.setMaxLength(40);
         start.setResponder(s -> CRITERIA.start = s);
-        EditBox limit = screen.add(new EditBox(font, lx + 250, by, 30, 18, Component.literal("stop after")));
+        EditBox limit = screen.add(new EditBox(font, lx + 152, by + 25, 26, 18, Component.literal("stop after")));
         limit.setValue(String.valueOf(CRITERIA.limit));
         limit.setResponder(s -> CRITERIA.limit = clampInt(s, 1, 50, CRITERIA.limit));
         searchButton = screen.add(Button.builder(Component.literal(searching() ? "Stop" : "Search"), b -> {
             if (searching()) search.stop();
             else startSearch(gen);
             b.setMessage(Component.literal(searching() ? "Stop" : "Search"));
-        }).bounds(lx, by + 24, 90, 20).build());
+        }).bounds(lx, by + 24, 80, 20).build());
         if (picker != 0) {
             pickerFilter = screen.add(new EditBox(font, x + w / 2 - 110, y + 24, 220, 18, Component.literal("filter")));
             pickerFilter.setHint(Component.literal("type to filter"));
@@ -196,22 +203,22 @@ class SeedTab extends Tab {
         g.drawString(font, "Biomes near spawn (0, 0)", lx, y + 5, 0xFFFFFFFF, false);
         int sy = y + 18 + CRITERIA.biomes.size() * 22 + 20;
         g.drawString(font, "Structures", lx, sy - 13, 0xFFFFFFFF, false);
-        if (!CRITERIA.structs.isEmpty()) g.drawString(font, "within · at least", lx + 136, sy - 13, 0xFF8A867E, false);
+        if (!CRITERIA.structs.isEmpty()) g.drawString(font, "within · count", lx + pickW() + 3, sy - 13, 0xFF8A867E, false);
         int by = sy + CRITERIA.structs.size() * 22 + 18;
         g.drawString(font, "Start seed", lx, by + 5, 0xFFB0ACA4, false);
-        g.drawString(font, "Stop after", lx + 192, by + 5, 0xFFB0ACA4, false);
+        g.drawString(font, "Stop after", lx + 98, by + 30, 0xFFB0ACA4, false);
         String status;
         if (search == null) status = CRITERIA.biomes.isEmpty() && CRITERIA.structs.isEmpty() ? "Add a biome or structure, then Search" : "Ready";
         else {
             status = String.format("%s · %,d seeds · %,.0f/s · %d found", searching() ? "Searching" : "Done", search.checked.get(),
                     search.rate(), search.results.size());
         }
-        g.drawString(font, status, lx + 96, by + 30, searching() ? 0xFFB8D47A : 0xFFB0ACA4, false);
-        if (search != null && search.error != null) g.drawString(font, "Error: " + search.error, lx, by + 48, 0xFFFF6050, false);
-        int ny = by + 62;
-        String[] notes = { "Uses this world's generator settings with each seed.", "Structure spots are exact; biome checks",
-                "sample the surface near the origin.", "Distances are blocks from 0, 0." };
-        for (String n : notes) {
+        g.drawString(font, font.plainSubstrByWidth(status, lw), lx, by + 50, searching() ? 0xFFB8D47A : 0xFFB0ACA4, false);
+        if (search != null && search.error != null) g.drawString(font, "Error: " + search.error, lx, by + 62, 0xFFFF6050, false);
+        int ny = by + 76;
+        String note = "Uses this world's generator settings (modded biomes too) with each seed. Structure spots are exact; "
+                + "biome checks sample the surface. Distances are blocks from 0, 0.";
+        for (net.minecraft.util.FormattedCharSequence n : font.split(Component.literal(note), lw)) {
             if (ny > y + h - 10) break;
             g.drawString(font, n, lx, ny, 0xFF6A6660, false);
             ny += 10;
@@ -260,11 +267,12 @@ class SeedTab extends Tab {
                 }
                 for (Map.Entry<String, int[]> e : groups.entrySet()) {
                     if (ty > cy + 44) break;
-                    g.drawString(font, e.getKey() + " ×" + e.getValue()[0] + "  (" + e.getValue()[1] + " m)", rx + 72, ty, 0xFFB0ACA4, false);
+                    g.drawString(font, font.plainSubstrByWidth(e.getKey() + " ×" + e.getValue()[0] + " · " + e.getValue()[1] + " m", rw - 76),
+                            rx + 72, ty, 0xFFB0ACA4, false);
                     ty += 10;
                 }
-                button(g, mx, my, rx + 72, cy + 54, "Copy seed");
-                button(g, mx, my, rx + 136, cy + 54, "Show on map");
+                button(g, mx, my, rx + 72, cy + 54, "Copy");
+                button(g, mx, my, rx + 72 + font.width("Copy") + 12, cy + 54, "Map");
             }
             cy += ch;
         }
@@ -346,8 +354,8 @@ class SeedTab extends Tab {
             for (SeedSearch.Result r : res) {
                 int by = cy + 54;
                 if (my >= by && my < by + 13 && my >= ry && my < y + h) {
-                    int b1 = rx + 72, b1w = font.width("Copy seed") + 8;
-                    int b2 = rx + 136, b2w = font.width("Show on map") + 8;
+                    int b1 = rx + 72, b1w = font.width("Copy") + 8;
+                    int b2 = rx + 72 + font.width("Copy") + 12, b2w = font.width("Map") + 8;
                     if (mx >= b1 && mx < b1 + b1w) {
                         mc.keyboardHandler.setClipboard(String.valueOf(r.seed()));
                         com.harold.fieldkit.hud.Notifications.info("Copied seed " + r.seed());

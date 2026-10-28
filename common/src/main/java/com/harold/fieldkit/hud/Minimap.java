@@ -58,7 +58,7 @@ public final class Minimap {
                 int x = cx + (px - RES / 2) * zoom, z = cz + (py - RES / 2) * zoom;
                 int col;
                 int h;
-                if (mc.level.hasChunk(x >> 4, z >> 4)) {
+                if (ExploredMap.loaded(mc.level, x >> 4, z >> 4)) {
                     h = mc.level.getHeight(Heightmap.Types.WORLD_SURFACE, x, z);
                     long q = ChunkPos.asLong(x >> 2, z >> 2);
                     Integer c = GEN_CACHE.get(q ^ 0x5DEECE66DL);
@@ -109,6 +109,7 @@ public final class Minimap {
         int zoom = Math.max(1, lastZoom);
         g.fill(x - 2, y - 2, x + size + 2, y + size + 2, 0xC0101014);
         g.enableScissor(x, y, x + size, y + size);
+        com.mojang.blaze3d.systems.RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
         // keep the map steady while the texture catches up with the player
         double ox = (mc.player.getX() - lastCx) / zoom * size / RES, oz = (mc.player.getZ() - lastCz) / zoom * size / RES;
         g.pose().pushPose();

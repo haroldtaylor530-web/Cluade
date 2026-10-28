@@ -69,7 +69,7 @@ class SettingsTab extends Tab {
         toggle(2, colX, colY, colW, new Toggle("Load times", () -> c.loadInfo, v -> c.loadInfo = v));
         toggle(2, colX, colY, colW, new Toggle("Server messages", () -> c.serverMessages, v -> c.serverMessages = v));
         toggle(2, colX, colY, colW, new Toggle("Chat mentions", () -> c.chatMentions, v -> c.chatMentions = v));
-        headers.add("Chat keywords (comma separated)");
+        headers.add("Chat keywords");
         headerPos.add(new int[] { colX[2], colY[2] + 4 });
         colY[2] += 16;
         EditBox kw = screen.add(new EditBox(font, colX[2], colY[2], colW, 18, Component.literal("keywords")));
