@@ -38,6 +38,16 @@ jobs:
               echo "NOT ON MODRINTH: $name"
             fi
           done < mods.sha1
+          # same mod, Modrinth's build, when the exact file isn't there
+          pick() { # project version-substring name
+            [ -f "dl/$3" ] && return
+            url=$(curl -s "https://api.modrinth.com/v2/project/$1/version?game_versions=%5B%221.20.1%22%5D&loaders=%5B%22forge%22%5D" \
+              | jq -r '[.[] | select(.version_number | contains("'$2'"))][0].files[0].url // empty')
+            [ -z "$url" ] && url=$(curl -s "https://api.modrinth.com/v2/project/$1/version?game_versions=%5B%221.20.1%22%5D&loaders=%5B%22forge%22%5D" | jq -r '.[0].files[0].url // empty')
+            if [ -n "$url" ]; then curl -sSL -o "dl/$3" "$url" && echo "got $3 from $url"; else echo "NOT FOUND: $3"; fi
+          }
+          pick Gwl4VXlb 1.1.3 cbc_enhanced_shells.jar
+          pick geckolib 4.8.4 geckolib.jar
           ls -la dl
           [ -f dl/hbm.jar ] && cp dl/hbm.jar libs/hbm.jar || true
           [ -f dl/golemcore.jar ] && cp dl/golemcore.jar libs/golemcore.jar || true

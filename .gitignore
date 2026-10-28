@@ -4,3 +4,5 @@ run/
 run-test/
 dl/
 libs/*.jar
+!libs/hbm.jar
+!libs/golemcore.jar
