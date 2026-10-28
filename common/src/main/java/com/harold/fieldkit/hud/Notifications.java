@@ -86,7 +86,7 @@ public final class Notifications {
         Font font = mc.font;
         int sw = g.guiWidth(), sh = g.guiHeight();
         int w = Math.min(200, sw / 3);
-        int y = sh - 34;
+        int y = Math.max(40, sh * 2 / 5);
         long now = Util.getMillis();
         for (Note n : NOTES) {
             List<FormattedCharSequence> lines = font.split(Component.literal(n.text), w - 22);
@@ -97,7 +97,7 @@ public final class Notifications {
             float a = Math.max(0, Math.min(in, out));
             int slide = (int) ((1 - in) * (w + 8));
             int x = sw - w - 6 + slide;
-            y -= h + 4;
+            if (y + h > sh - 30) break;
             g.fill(x, y, x + w, y + h, alpha(0xE0101016, a));
             g.fill(x, y, x + 2, y + h, alpha(n.kind.color, a));
             if (a > 0.1F) {
@@ -108,6 +108,7 @@ public final class Notifications {
                     ly += 10;
                 }
             }
+            y += h + 4;
         }
     }
 

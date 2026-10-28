@@ -35,7 +35,7 @@ public final class Hud {
         Config c = Config.INSTANCE;
         int y = Minimap.render(g, mc, partial, 6, 6);
         if (c.coordsLine) y = infoLines(g, mc, 6, y);
-        if (c.combatHud) combatPanel(g, mc, 6, Math.max(y + 4, g.guiHeight() / 2 - 40));
+        if (c.combatHud) combatPanel(g, mc, 6, y + 2);
         if (c.targetInfo) target(g, mc);
         Warnings.render(g, mc, partial);
     }
@@ -124,6 +124,10 @@ public final class Hud {
                     CombatTracker.playerKills > 0 ? " (" + CombatTracker.playerKills + "p)" : "", CombatTracker.deaths,
                     CombatTracker.dealt, CombatTracker.taken));
         }
+        // stay above the chat area
+        int room = (g.guiHeight() - 64 - rowY) / 10;
+        if (room < lines.size()) lines = lines.subList(0, Math.max(0, room));
+        if (lines.isEmpty()) return;
         int w = 0;
         for (String l : lines) w = Math.max(w, font.width(l));
         g.fill(x - 2, rowY - 2, x + w + 4, rowY + lines.size() * 10, 0x90101014);

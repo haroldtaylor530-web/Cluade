@@ -220,7 +220,7 @@ class MapTab extends Tab {
                 List<Gen.Found> f = new ArrayList<>();
                 String note = "";
                 if (structs) {
-                    if (b <= 24) {
+                    if (b <= 8) {
                         double half = RES * step / 2;
                         f = g.structures((int) Math.floor((ccx - half) / 16), (int) Math.floor((ccz - half) / 16),
                                 (int) Math.floor((ccx + half) / 16), (int) Math.floor((ccz + half) / 16), null, 1500);
@@ -269,8 +269,9 @@ class MapTab extends Tab {
             int px = sx(f.x()), py = sy(f.z());
             if (px < x0 - 4 || py < y0 - 4 || px > x0 + mw + 4 || py > y0 + mh + 4) continue;
             int col = structColor(f.structure());
-            g.fill(px - 3, py - 3, px + 4, py + 4, 0xFF000000);
-            g.fill(px - 2, py - 2, px + 3, py + 3, col);
+            int r = bpp >= 8 ? 2 : 3;
+            g.fill(px - r, py - r, px + r + 1, py + r + 1, 0xFF000000);
+            g.fill(px - r + 1, py - r + 1, px + r, py + r, col);
             if (Math.abs(mx - px) <= 4 && Math.abs(my - py) <= 4) hoverF = f;
         }
         // spawn and you

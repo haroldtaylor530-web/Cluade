@@ -42,6 +42,9 @@ public final class Gen {
         }
     }
 
+    /** Underground or tiny things that would bury the map in markers (still searchable in the seed finder). */
+    private static final java.util.Set<String> HIDDEN = java.util.Set.of("mineshafts", "buried_treasures", "nether_fossils");
+
     private static Gen current;
     private static Object currentFor;
 
@@ -97,7 +100,22 @@ public final class Gen {
 
     /** The surface-level biome at a block position. */
     public Holder<Biome> biome(int x, int z) {
-        return source.getNoiseBiome(QuartPos.fromBlock(x), QuartPos.fromBlock(64), QuartPos.fromBlock(z), state.sampler());
+        int qx = QuartPos.fromBlock(x), qz = QuartPos.fromBlock(z);
+        Holder<Biome> b = source.getNoiseBiome(qx, QuartPos.fromBlock(64), qz, state.sampler());
+        // hills and mountains rise above y 64, where the "biome" there is a cave biome: look higher up
+        if (underground(b)) b = source.getNoiseBiome(qx, QuartPos.fromBlock(160), qz, state.sampler());
+        if (underground(b)) b = source.getNoiseBiome(qx, QuartPos.fromBlock(256), qz, state.sampler());
+        return b;
+    }
+
+    private static final java.util.Map<Holder<Biome>, Boolean> UNDERGROUND = new java.util.concurrent.ConcurrentHashMap<>();
+
+    private static boolean underground(Holder<Biome> b) {
+        return UNDERGROUND.computeIfAbsent(b, h -> h.unwrapKey().map(k -> {
+            String p = k.location().getPath();
+            return p.contains("cave") || p.contains("cavern") || p.equals("deep_dark") || p.contains("underground")
+                    || p.contains("subterranean") || p.contains("grotto");
+        }).orElse(false));
     }
 
     /** Structures whose chunk lies in [cx0..cx1] x [cz0..cz1] (chunk coordinates). */
@@ -105,6 +123,7 @@ public final class Gen {
         List<Found> out = new ArrayList<>();
         for (Holder<StructureSet> set : sets) {
             StructureSet s = set.value();
+            if (only == null && set.unwrapKey().map(k -> HIDDEN.contains(k.location().getPath())).orElse(false)) continue;
             if (only != null && s.structures().stream().noneMatch(e -> e.structure().is(only))) continue;
             StructurePlacement p = s.placement();
             if (p instanceof RandomSpreadStructurePlacement rs) {

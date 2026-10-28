@@ -105,7 +105,7 @@ public final class Minimap {
 
     static int render(GuiGraphics g, Minecraft mc, float partial, int x, int y) {
         if (!Config.INSTANCE.minimap || !FairPlay.minimap() || tex == null) return y;
-        int size = Math.max(48, Math.min(200, Config.INSTANCE.minimapSize));
+        int size = Math.max(48, Math.min(Math.min(200, g.guiHeight() / 3), Config.INSTANCE.minimapSize));
         int zoom = Math.max(1, lastZoom);
         g.fill(x - 2, y - 2, x + size + 2, y + size + 2, 0xC0101014);
         g.enableScissor(x, y, x + size, y + size);

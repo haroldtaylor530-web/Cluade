@@ -105,6 +105,16 @@ public final class ClientTest {
                 Fieldkit.LOG.error("Test error from the Fieldkit client test (this is expected)");
             }
             case 200 -> shot("C_notifications");
+            case 202 -> server(p -> {
+                p.getAbilities().invulnerable = true;
+                p.onUpdateAbilities();
+                p.setHealth(p.getMaxHealth());
+                p.clearFire();
+                for (var e : p.serverLevel().getEntitiesOfClass(net.minecraft.world.entity.Mob.class, p.getBoundingBox().inflate(64))) {
+                    if (e instanceof net.minecraft.world.entity.monster.Enemy) e.discard();
+                }
+                p.serverLevel().setDayTime(6000);
+            });
             case 205 -> {
                 FieldkitScreen.openTab(0);
                 mc.setScreen(new FieldkitScreen());
