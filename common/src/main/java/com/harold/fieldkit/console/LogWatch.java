@@ -108,7 +108,7 @@ public final class LogWatch {
                     Line prev = LINES.get(LINES.size() - 1);
                     if (prev.level == Level.ERROR || prev.level == Level.WARN) {
                         add(new Line(prev.time, prev.level, prev.source, "    " + raw.trim()));
-                        analyse(prev.level, prev.source, raw);
+                        analyse(Level.INFO, prev.source, raw); // known patterns only, not "other errors" again
                     }
                 }
                 return;
@@ -144,7 +144,9 @@ public final class LogWatch {
     }
 
     private static String shortSource(String s) {
-        if (s.length() > 40) s = s.substring(s.length() - 40);
+        // net.minecraft.client.gui.components.ChatComponent -> ChatComponent
+        if (s.contains(".") && !s.contains(" ")) s = s.substring(s.lastIndexOf('.') + 1);
+        if (s.length() > 32) s = s.substring(s.length() - 32);
         return s;
     }
 
