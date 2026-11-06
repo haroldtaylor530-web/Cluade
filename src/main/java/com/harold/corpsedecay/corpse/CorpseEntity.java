@@ -672,11 +672,20 @@ public class CorpseEntity extends Entity {
         return new Vector3f(0, 0, (state() == HANGING ? -1 : 1) * bodyDepth() * 0.45F);
     }
 
+    /** The player dragging it (kept directly, so it works for any player the server knows about). */
+    private Player holderPlayer;
+
+    private Entity holderEntity() {
+        if (holderPlayer != null && holderPlayer.getId() == holder() && !holderPlayer.isRemoved()) return holderPlayer;
+        return level().getEntity(holder());
+    }
+
     /** Starts dragging: by hand (sneak + right click) or on a lead. */
     public void startDrag(Player player, boolean rope) {
         if (state() != FREE) unfix(false);
         if (rope) entityData.set(ROPED, true);
         entityData.set(HOLDER, player.getId());
+        holderPlayer = player;
         wake();
         var speed = player.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED);
         if (speed != null && speed.getModifier(DRAG_SLOW) == null) {
@@ -688,7 +697,8 @@ public class CorpseEntity extends Entity {
 
     /** Lets go. A lead comes off and drops unless {@code keepRope}. */
     public void stopDrag(boolean keepRope) {
-        Entity h = level().getEntity(holder());
+        Entity h = holderEntity();
+        holderPlayer = null;
         if (h instanceof Player p) {
             var speed = p.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED);
             if (speed != null) speed.removeModifier(DRAG_SLOW);
@@ -704,7 +714,7 @@ public class CorpseEntity extends Entity {
         Vec3 target;
         double slack;
         if (holder() != -1) {
-            Entity h = level().getEntity(holder());
+            Entity h = holderEntity();
             if (!(h instanceof Player p) || !p.isAlive() || p.isSpectator() || p.level() != level() || p.distanceToSqr(this) > 10 * 10) {
                 stopDrag(false);
                 return;

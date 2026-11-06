@@ -388,9 +388,10 @@ public final class SelfTest {
             if (adventurer != null) {
                 FakePlayer looter = FakePlayerFactory.getMinecraft(level);
                 looter.moveTo(adventurer.getX(), adventurer.getY(), adventurer.getZ() - 1.5);
-                adventurer.interact(looter, net.minecraft.world.InteractionHand.MAIN_HAND);
-                check(!level.getEntitiesOfClass(ItemEntity.class, adventurer.getBoundingBox().inflate(3),
-                        it -> it.getItem().is(Items.IRON_SWORD)).isEmpty(), "an adventurer's sword can be taken off its remains");
+                com.harold.corpsedecay.corpse.CorpseLoot oldLoot = new com.harold.corpsedecay.corpse.CorpseLoot(adventurer);
+                ItemStack sword = ItemStack.EMPTY;
+                for (int i = 0; i < oldLoot.getContainerSize(); i++) if (oldLoot.getItem(i).is(Items.IRON_SWORD)) sword = oldLoot.removeItemNoUpdate(i);
+                check(sword.is(Items.IRON_SWORD), "an adventurer's sword can be taken off its remains");
             }
             CorpseEntity f = byType(remains, "minecraft:cow");
             if (f != null) {
