@@ -1,0 +1,1496 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.8/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Configure project :
+MixinGradle did not locate the diffplug APT plugin, skipping eclipse task configuration
+
+> Task :downloadMcpConfig
+> Task :extractSrg UP-TO-DATE
+> Task :createMcpToSrg UP-TO-DATE
+> Task :compileJava UP-TO-DATE
+> Task :processResources UP-TO-DATE
+> Task :classes UP-TO-DATE
+> Task :createSrgToMcp UP-TO-DATE
+> Task :downloadMCMeta UP-TO-DATE
+> Task :downloadAssets UP-TO-DATE
+> Task :extractNatives UP-TO-DATE
+> Task :makeSrcDirs
+> Task :prepareRuns
+> Task :prepareRunServer
+> Task :prepareRunServerCompile UP-TO-DATE
+
+> Task :runServer
+2026-11-06 03:36:35,700 main WARN Advanced terminal features are not available in this environment
+[03:36:35] [main/INFO] [cp.mo.mo.Launcher/MODLAUNCHER]: ModLauncher running: args [--launchTarget, forgeserveruserdev, --gameDir, ., --fml.forgeVersion, 47.3.0, --fml.mcVersion, 1.20.1, --fml.forgeGroup, net.minecraftforge, --fml.mcpVersion, 20230612.114412, --nogui, --mixin.config, corpsedecay.mixins.json]
+[03:36:35] [main/INFO] [cp.mo.mo.Launcher/MODLAUNCHER]: ModLauncher 10.0.9+10.0.9+main.dcd20f30 starting: java version 17.0.21 by Eclipse Adoptium; OS Linux arch amd64 version 7.0.0-1017-azure
+[03:36:35] [main/WARN] [ne.mi.fm.lo.FMLConfig/CORE]: Configuration file /home/runner/work/Cluade/Cluade/run-gentest/config/fml.toml is not correct. Correcting
+[03:36:35] [main/INFO] [ne.mi.fm.lo.FMLConfig/CORE]: Incorrect key [earlyWindowSkipGLVersions] was corrected from null to []
+[03:36:35] [main/INFO] [ne.mi.fm.lo.FMLConfig/CORE]: Incorrect key [earlyWindowSquir] was corrected from null to false
+[03:36:35] [main/INFO] [ne.mi.fm.lo.FMLConfig/CORE]: Incorrect key [earlyWindowShowCPU] was corrected from null to false
+[03:36:35] [main/INFO] [ne.mi.fm.lo.ImmediateWindowHandler/]: ImmediateWindowProvider not loading because launch target is forgeserveruserdev
+[03:36:35] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.5 Source=union:/home/runner/.gradle/caches/modules-2/files-2.1/org.spongepowered/mixin/0.8.5/9d1c0c3a304ae6697ecd477218fa61b850bf57fc/mixin-0.8.5.jar%23116!/ Service=ModLauncher Env=SERVER
+[03:36:36] [main/WARN] [ne.mi.fm.lo.mo.ModFileParser/LOADING]: Mod file /home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/javafmllanguage/1.20.1-47.3.0/d7ebc62120f202109e300e084ca1a31a7b946a62/javafmllanguage-1.20.1-47.3.0.jar is missing mods.toml file
+[03:36:36] [main/WARN] [ne.mi.fm.lo.mo.ModFileParser/LOADING]: Mod file /home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/lowcodelanguage/1.20.1-47.3.0/1bf3e845ea0ce750096da8c71c8364b188ab74d4/lowcodelanguage-1.20.1-47.3.0.jar is missing mods.toml file
+[03:36:36] [main/WARN] [ne.mi.fm.lo.mo.ModFileParser/LOADING]: Mod file /home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/mclanguage/1.20.1-47.3.0/6093682e943ddccbabf70539319d7f2fe64db2e7/mclanguage-1.20.1-47.3.0.jar is missing mods.toml file
+[03:36:36] [main/WARN] [ne.mi.fm.lo.mo.ModFileParser/LOADING]: Mod file /home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/fmlcore/1.20.1-47.3.0/3b6be96aba3e323f3c918e8ef6a96312d82d76ad/fmlcore-1.20.1-47.3.0.jar is missing mods.toml file
+[03:36:36] [main/INFO] [ne.mi.fm.lo.mo.JarInJarDependencyLocator/]: No dependencies to load found. Skipping!
+[03:36:38] [main/INFO] [mixin/]: Compatibility level set to JAVA_17
+[03:36:38] [main/INFO] [cp.mo.mo.LaunchServiceHandler/MODLAUNCHER]: Launching target 'forgeserveruserdev' with arguments [--gameDir, ., --nogui]
+[03:36:38] [main/WARN] [mixin/]: Reference map 'corpsedecay.refmap.json' for corpsedecay.mixins.json could not be read. If this is a development environment you can ignore this message
+[03:36:43] [modloading-worker-0/INFO] [ne.mi.co.ForgeMod/FORGEMOD]: Forge mod loading, version 47.3.0, for MC 1.20.1 with MCP 20230612.114412
+[03:36:43] [modloading-worker-0/INFO] [ne.mi.co.MinecraftForge/FORGE]: MinecraftForge v47.3.0 Initialized
+[03:36:44] [main/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Configuration file /home/runner/work/Cluade/Cluade/run-gentest/config/corpsedecay-common.toml is not correct. Correcting
+[03:36:44] [main/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key enabled was corrected from null to its default, true. 
+[03:36:44] [main/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key onlyPlayerKills was corrected from null to its default, false. 
+[03:36:44] [main/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key minutesToSkeleton was corrected from null to its default, 20.0. 
+[03:36:44] [main/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key skeletonMinutes was corrected from null to its default, 60.0. 
+[03:36:44] [main/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key maxCorpses was corrected from null to its default, 60. 
+[03:36:44] [main/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key ragdollForce was corrected from null to its default, 1.0. 
+[03:36:44] [main/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key lootAllEquipment was corrected from null to its default, false. 
+[03:36:44] [main/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key keepDropsInBody was corrected from null to its default, true. 
+[03:36:44] [main/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key pinToWalls was corrected from null to its default, true. 
+[03:36:44] [main/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key flies was corrected from null to its default, true. 
+[03:36:44] [main/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key mummify was corrected from null to its default, true. 
+[03:36:44] [main/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key remains was corrected from null to its default, true. 
+[03:36:44] [main/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key fossils was corrected from null to its default, true. 
+[03:36:44] [main/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key ancientSites was corrected from null to its default, true. 
+[03:36:44] [main/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key excludedMobs was corrected from null to its default, []. 
+[03:36:44] [Forge Version Check/INFO] [ne.mi.fm.VersionChecker/]: [forge] Starting version check at https://files.minecraftforge.net/net/minecraftforge/forge/promotions_slim.json
+[03:36:45] [Forge Version Check/INFO] [ne.mi.fm.VersionChecker/]: [forge] Found status: OUTDATED Current: 47.3.0 Target: 47.4.28
+[03:36:46] [main/INFO] [mojang/YggdrasilAuthenticationService]: Environment: authHost='https://authserver.mojang.com', accountsHost='https://api.mojang.com', sessionHost='https://sessionserver.mojang.com', servicesHost='https://api.minecraftservices.com', name='PROD'
+[03:36:46] [main/WARN] [minecraft/VanillaPackResourcesBuilder]: Assets URL 'union:/home/runner/work/Cluade/Cluade/build/fg_cache/net/minecraftforge/forge/1.20.1-47.3.0_mapped_official_1.20.1/forge-1.20.1-47.3.0_mapped_official_1.20.1.jar%23181!/assets/.mcassetsroot' uses unexpected schema
+[03:36:46] [main/WARN] [minecraft/VanillaPackResourcesBuilder]: Assets URL 'union:/home/runner/work/Cluade/Cluade/build/fg_cache/net/minecraftforge/forge/1.20.1-47.3.0_mapped_official_1.20.1/forge-1.20.1-47.3.0_mapped_official_1.20.1.jar%23181!/data/.mcassetsroot' uses unexpected schema
+[03:36:46] [main/INFO] [minecraft/MinecraftServer]: Found new data pack file/latetest, loading it automatically
+[03:36:48] [main/INFO] [minecraft/RecipeManager]: Loaded 7 recipes
+[03:36:48] [main/INFO] [minecraft/AdvancementList]: Loaded 1271 advancements
+[03:36:48] [Server thread/INFO] [minecraft/DedicatedServer]: Starting minecraft server version 1.20.1
+[03:36:48] [Server thread/INFO] [minecraft/DedicatedServer]: Loading properties
+[03:36:48] [Server thread/INFO] [minecraft/DedicatedServer]: Default game type: SURVIVAL
+[03:36:48] [Server thread/INFO] [minecraft/MinecraftServer]: Generating keypair
+[03:36:49] [Server thread/INFO] [minecraft/DedicatedServer]: Starting Minecraft server on *:25565
+[03:36:49] [Server thread/INFO] [minecraft/ServerConnectionListener]: Using epoll channel type
+[03:36:49] [Server thread/WARN] [minecraft/DedicatedServer]: **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!
+[03:36:49] [Server thread/WARN] [minecraft/DedicatedServer]: The server will make no attempt to authenticate usernames. Beware.
+[03:36:49] [Server thread/WARN] [minecraft/DedicatedServer]: While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.
+[03:36:49] [Server thread/WARN] [minecraft/DedicatedServer]: To change this, set "online-mode" to "true" in the server.properties file.
+[03:36:49] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Configuration file ./world/serverconfig/forge-server.toml is not correct. Correcting
+[03:36:49] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key server was corrected from null to its default, SimpleCommentedConfig:{}. 
+[03:36:49] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key server.removeErroringBlockEntities was corrected from null to its default, false. 
+[03:36:49] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key server.removeErroringEntities was corrected from null to its default, false. 
+[03:36:49] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key server.fullBoundingBoxLadders was corrected from null to its default, false. 
+[03:36:49] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key server.zombieBaseSummonChance was corrected from null to its default, 0.1. 
+[03:36:49] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key server.zombieBabyChance was corrected from null to its default, 0.05. 
+[03:36:49] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key server.permissionHandler was corrected from null to its default, forge:default_handler. 
+[03:36:49] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key server.advertiseDedicatedServerToLan was corrected from null to its default, true. 
+[03:36:49] [Server thread/INFO] [minecraft/DedicatedServer]: Preparing level "world"
+[03:36:55] [Server thread/INFO] [minecraft/MinecraftServer]: Preparing start region for dimension minecraft:overworld
+[03:36:56] [Worker-Main-3/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 0%
+[03:36:56] [Worker-Main-3/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 0%
+[03:36:56] [Worker-Main-2/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 0%
+[03:36:56] [Worker-Main-3/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 0%
+[03:36:57] [Worker-Main-2/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 0%
+[03:36:57] [Worker-Main-1/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 0%
+[03:36:58] [Worker-Main-3/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 1%
+[03:36:58] [Worker-Main-3/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 1%
+[03:36:59] [Worker-Main-2/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 2%
+[03:36:59] [Worker-Main-2/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 3%
+[03:37:00] [Worker-Main-2/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 4%
+[03:37:00] [Worker-Main-2/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 4%
+[03:37:01] [Worker-Main-3/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 6%
+[03:37:01] [Worker-Main-1/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 7%
+[03:37:02] [Worker-Main-1/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 9%
+[03:37:02] [Worker-Main-1/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 10%
+[03:37:03] [Worker-Main-2/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 12%
+[03:37:03] [Worker-Main-2/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 14%
+[03:37:04] [Worker-Main-2/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 15%
+[03:37:04] [Worker-Main-1/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 17%
+[03:37:05] [Worker-Main-1/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 19%
+[03:37:05] [Worker-Main-1/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 22%
+[03:37:06] [Worker-Main-3/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 23%
+[03:37:06] [Worker-Main-3/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 24%
+[03:37:07] [Worker-Main-3/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 28%
+[03:37:07] [Worker-Main-2/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 31%
+[03:37:08] [Worker-Main-1/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 33%
+[03:37:08] [Worker-Main-1/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 35%
+[03:37:09] [Worker-Main-2/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 38%
+[03:37:09] [Worker-Main-1/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 40%
+[03:37:10] [Worker-Main-2/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 43%
+[03:37:10] [Worker-Main-1/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 44%
+[03:37:11] [Worker-Main-1/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 48%
+[03:37:11] [Worker-Main-1/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 50%
+[03:37:12] [Worker-Main-3/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 53%
+[03:37:12] [Worker-Main-1/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 55%
+[03:37:13] [Worker-Main-3/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 57%
+[03:37:13] [Worker-Main-2/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 60%
+[03:37:14] [Worker-Main-2/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 63%
+[03:37:14] [Worker-Main-1/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 66%
+[03:37:15] [Worker-Main-3/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 68%
+[03:37:15] [Worker-Main-2/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 71%
+[03:37:16] [Worker-Main-3/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 73%
+[03:37:16] [Worker-Main-2/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 76%
+[03:37:17] [Worker-Main-3/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 79%
+[03:37:17] [Worker-Main-2/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 82%
+[03:37:18] [Worker-Main-2/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 84%
+[03:37:18] [Worker-Main-1/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 86%
+[03:37:19] [Worker-Main-2/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 89%
+[03:37:19] [Worker-Main-3/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 93%
+[03:37:20] [Worker-Main-1/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 96%
+[03:37:20] [Worker-Main-3/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 99%
+[03:37:20] [Server thread/INFO] [minecraft/LoggerChunkProgressListener]: Time elapsed: 25547 ms
+[03:37:20] [Server thread/INFO] [minecraft/DedicatedServer]: Done (31.704s)! For help, type "help"
+[03:37:20] [Server thread/INFO] [ne.mi.ga.ForgeGameTestHooks/]: Enabled Gametest Namespaces: []
+[03:37:20] [Server thread/INFO] [ne.mi.se.pe.PermissionAPI/]: Successfully initialized permission handler forge:default_handler
+[03:37:22] [Server thread/INFO] [co.ha.co.te.GenTest/]: GENTEST looking from [0, 0]: BlockPos{x=-352, y=0, z=624}
+[03:37:23] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-25, 36]
+[03:37:23] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-26, 35]
+[03:37:23] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-25, 35]
+[03:37:23] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-24, 35]
+[03:37:23] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-24, 36]
+[03:37:23] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-26, 36]
+[03:37:23] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-26, 37]
+[03:37:23] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-25, 37]
+[03:37:24] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-24, 37]
+[03:37:24] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-24, 34]
+[03:37:24] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-25, 34]
+[03:37:24] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-26, 34]
+[03:37:24] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-27, 34]
+[03:37:24] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-27, 35]
+[03:37:24] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-27, 36]
+[03:37:24] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-27, 37]
+[03:37:24] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-27, 38]
+[03:37:24] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-25, 38]
+[03:37:24] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-26, 38]
+[03:37:24] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-24, 38]
+[03:37:24] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-23, 34]
+[03:37:24] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-23, 36]
+[03:37:24] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-23, 35]
+[03:37:24] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-23, 38]
+[03:37:24] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-23, 37]
+[03:37:24] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-27, 39]
+[03:37:24] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-26, 39]
+[03:37:24] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-25, 39]
+[03:37:24] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-23, 39]
+[03:37:24] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE chunk [-23, 39] sees ship started in [-22, 39] with 1 pieces, box BoundingBox{minX=-363, minY=51, minZ=635, maxX=-348, maxY=59, maxZ=643}
+[03:37:24] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 1 home [-23, 39] in box BoundingBox{minX=-363, minY=51, minZ=635, maxX=-348, maxY=59, maxZ=643}
+[03:37:24] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 1 at BlockPos{x=-359, y=54, z=638}
+[03:37:24] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-24, 39]
+[03:37:25] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-23, 33]
+[03:37:25] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-24, 33]
+[03:37:25] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-25, 33]
+[03:37:25] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-23, 40]
+[03:37:25] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE chunk [-23, 40] sees ship started in [-22, 39] with 1 pieces, box BoundingBox{minX=-363, minY=51, minZ=635, maxX=-348, maxY=59, maxZ=643}
+[03:37:25] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-24, 40]
+[03:37:25] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-25, 40]
+[03:37:25] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-26, 40]
+[03:37:25] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-27, 40]
+[03:37:25] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-26, 33]
+[03:37:25] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-27, 33]
+[03:37:25] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-23, 41]
+[03:37:25] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-24, 41]
+[03:37:25] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-25, 41]
+[03:37:25] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-26, 41]
+[03:37:25] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-27, 41]
+[03:37:25] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-27, 42]
+[03:37:25] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-26, 42]
+[03:37:25] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-25, 42]
+[03:37:25] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-23, 42]
+[03:37:25] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-24, 42]
+[03:37:25] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-28, 33]
+[03:37:25] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-28, 35]
+[03:37:25] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-28, 34]
+[03:37:25] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-23, 43]
+[03:37:25] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-24, 43]
+[03:37:25] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-25, 43]
+[03:37:25] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-26, 43]
+[03:37:26] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-27, 43]
+[03:37:26] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-23, 44]
+[03:37:26] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-24, 44]
+[03:37:26] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-25, 44]
+[03:37:26] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-26, 44]
+[03:37:26] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-27, 44]
+[03:37:26] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-28, 37]
+[03:37:26] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-28, 36]
+[03:37:26] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-22, 44]
+[03:37:26] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-22, 43]
+[03:37:26] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-22, 42]
+[03:37:26] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-22, 41]
+[03:37:26] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-22, 40]
+[03:37:26] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE chunk [-22, 40] sees ship started in [-22, 39] with 1 pieces, box BoundingBox{minX=-363, minY=51, minZ=635, maxX=-348, maxY=59, maxZ=643}
+[03:37:26] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-22, 39]
+[03:37:26] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE chunk [-22, 39] sees ship started in [-22, 39] with 1 pieces, box BoundingBox{minX=-363, minY=51, minZ=635, maxX=-348, maxY=59, maxZ=643}
+[03:37:26] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 0 home [-22, 39] in box BoundingBox{minX=-363, minY=51, minZ=635, maxX=-348, maxY=59, maxZ=643}
+[03:37:26] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 0 at BlockPos{x=-349, y=58, z=639}
+[03:37:26] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 2 home [-22, 39] in box BoundingBox{minX=-363, minY=51, minZ=635, maxX=-348, maxY=59, maxZ=643}
+[03:37:26] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 2 at BlockPos{x=-351, y=54, z=639}
+[03:37:26] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-22, 38]
+[03:37:26] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-22, 37]
+[03:37:26] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-22, 36]
+[03:37:26] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-22, 35]
+[03:37:26] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-22, 34]
+[03:37:26] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-22, 33]
+[03:37:26] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-28, 38]
+[03:37:26] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-21, 44]
+[03:37:26] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-21, 43]
+[03:37:26] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-21, 42]
+[03:37:26] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-21, 41]
+[03:37:26] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-21, 40]
+[03:37:27] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-21, 39]
+[03:37:27] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-21, 37]
+[03:37:27] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-21, 38]
+[03:37:27] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-28, 39]
+[03:37:27] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-28, 40]
+[03:37:27] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-21, 36]
+[03:37:27] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-21, 35]
+[03:37:27] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-21, 34]
+[03:37:27] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-21, 33]
+[03:37:27] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-28, 42]
+[03:37:27] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-28, 41]
+[03:37:27] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-20, 35]
+[03:37:27] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-20, 34]
+[03:37:27] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-20, 36]
+[03:37:27] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-20, 44]
+[03:37:27] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-20, 43]
+[03:37:27] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-20, 42]
+[03:37:27] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-20, 41]
+[03:37:27] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-20, 37]
+[03:37:27] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-20, 40]
+[03:37:27] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-20, 39]
+[03:37:27] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-20, 38]
+[03:37:27] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-19, 34]
+[03:37:27] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-19, 35]
+[03:37:27] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-20, 33]
+[03:37:27] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-19, 36]
+[03:37:27] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-19, 37]
+[03:37:27] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-19, 38]
+[03:37:27] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-19, 44]
+[03:37:27] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-19, 39]
+[03:37:27] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-19, 40]
+[03:37:27] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-19, 43]
+[03:37:27] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-19, 42]
+[03:37:27] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-19, 41]
+[03:37:28] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-18, 38]
+[03:37:28] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-18, 37]
+[03:37:28] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-18, 36]
+[03:37:28] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-18, 35]
+[03:37:28] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-19, 33]
+[03:37:28] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-18, 34]
+[03:37:28] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-18, 39]
+[03:37:28] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-18, 33]
+[03:37:28] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-18, 40]
+[03:37:28] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-18, 42]
+[03:37:28] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-18, 41]
+[03:37:28] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-18, 43]
+[03:37:28] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-18, 44]
+[03:37:28] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-17, 39]
+[03:37:28] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-17, 38]
+[03:37:28] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-17, 37]
+[03:37:28] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-17, 36]
+[03:37:28] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-17, 40]
+[03:37:28] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-17, 35]
+[03:37:28] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-17, 34]
+[03:37:28] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-17, 33]
+[03:37:28] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-17, 41]
+[03:37:28] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-17, 42]
+[03:37:28] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-17, 43]
+[03:37:28] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-17, 44]
+[03:37:28] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-28, 43]
+[03:37:28] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-28, 44]
+[03:37:28] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-27, 45]
+[03:37:28] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-26, 45]
+[03:37:28] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-25, 45]
+[03:37:28] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-28, 45]
+[03:37:28] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-24, 45]
+[03:37:28] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-23, 45]
+[03:37:29] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-21, 45]
+[03:37:29] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-22, 45]
+[03:37:29] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-20, 45]
+[03:37:29] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-19, 45]
+[03:37:29] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-18, 45]
+[03:37:29] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-17, 45]
+[03:37:29] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-16, 37]
+[03:37:29] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-16, 36]
+[03:37:29] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-16, 35]
+[03:37:29] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-16, 34]
+[03:37:29] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-16, 33]
+[03:37:29] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-16, 38]
+[03:37:29] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-16, 39]
+[03:37:29] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-16, 40]
+[03:37:29] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-16, 41]
+[03:37:29] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-16, 42]
+[03:37:29] [Server thread/INFO] [co.ha.co.te.GenTest/]: GENTEST looking from [3000, 0]: BlockPos{x=2864, y=0, z=144}
+[03:37:29] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-16, 43]
+[03:37:29] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-16, 45]
+[03:37:29] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-16, 44]
+[03:37:29] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [176, 6]
+[03:37:29] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [176, 5]
+[03:37:30] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [175, 6]
+[03:37:30] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [175, 5]
+[03:37:30] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [177, 5]
+[03:37:30] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [177, 6]
+[03:37:30] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [175, 7]
+[03:37:30] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [176, 7]
+[03:37:30] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [177, 7]
+[03:37:30] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [175, 4]
+[03:37:30] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [174, 4]
+[03:37:30] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [174, 5]
+[03:37:30] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [178, 7]
+[03:37:30] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [176, 8]
+[03:37:30] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [178, 8]
+[03:37:30] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [177, 8]
+[03:37:30] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [174, 6]
+[03:37:30] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [175, 8]
+[03:37:30] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [174, 7]
+[03:37:30] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [174, 8]
+[03:37:30] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [176, 4]
+[03:37:30] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [178, 6]
+[03:37:30] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [178, 5]
+[03:37:30] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [177, 4]
+[03:37:30] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [178, 4]
+[03:37:30] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [175, 9]
+[03:37:30] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [176, 9]
+[03:37:31] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [178, 9]
+[03:37:31] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [177, 9]
+[03:37:31] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [174, 9]
+[03:37:31] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [178, 10]
+[03:37:31] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [177, 10]
+[03:37:31] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [176, 10]
+[03:37:31] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [175, 10]
+[03:37:31] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [174, 10]
+[03:37:31] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [178, 11]
+[03:37:31] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [177, 11]
+[03:37:31] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [176, 11]
+[03:37:31] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [175, 11]
+[03:37:31] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [174, 11]
+[03:37:31] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [173, 3]
+[03:37:31] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [174, 3]
+[03:37:31] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [175, 3]
+[03:37:31] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [175, 12]
+[03:37:31] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [176, 12]
+[03:37:31] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [174, 12]
+[03:37:31] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [177, 12]
+[03:37:31] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [178, 12]
+[03:37:31] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [173, 4]
+[03:37:31] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [173, 5]
+[03:37:31] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [178, 13]
+[03:37:32] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [177, 13]
+[03:37:32] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [176, 13]
+[03:37:32] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [175, 13]
+[03:37:32] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [174, 13]
+[03:37:32] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [179, 5]
+[03:37:32] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [179, 7]
+[03:37:32] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [179, 6]
+[03:37:32] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [179, 9]
+[03:37:32] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE chunk [179, 9] sees ship started in [179, 9] with 1 pieces, box BoundingBox{minX=2868, minY=47, minZ=155, maxX=2883, maxY=55, maxZ=163}
+[03:37:32] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 0 home [179, 9] in box BoundingBox{minX=2868, minY=47, minZ=155, maxX=2883, maxY=55, maxZ=163}
+[03:37:32] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 0 at BlockPos{x=2870, y=48, z=159}
+[03:37:32] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [179, 8]
+[03:37:32] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [179, 10]
+[03:37:32] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE chunk [179, 10] sees ship started in [179, 9] with 1 pieces, box BoundingBox{minX=2868, minY=47, minZ=155, maxX=2883, maxY=55, maxZ=163}
+[03:37:32] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [179, 13]
+[03:37:32] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [179, 12]
+[03:37:32] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [179, 11]
+[03:37:32] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [179, 4]
+[03:37:32] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [179, 14]
+[03:37:32] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [178, 14]
+[03:37:32] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [176, 14]
+[03:37:32] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [174, 14]
+[03:37:32] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [180, 8]
+[03:37:32] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [180, 7]
+[03:37:32] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [180, 6]
+[03:37:32] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [180, 5]
+[03:37:32] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [180, 9]
+[03:37:32] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE chunk [180, 9] sees ship started in [179, 9] with 1 pieces, box BoundingBox{minX=2868, minY=47, minZ=155, maxX=2883, maxY=55, maxZ=163}
+[03:37:32] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [180, 4]
+[03:37:32] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [180, 10]
+[03:37:32] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE chunk [180, 10] sees ship started in [179, 9] with 1 pieces, box BoundingBox{minX=2868, minY=47, minZ=155, maxX=2883, maxY=55, maxZ=163}
+[03:37:32] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 1 home [180, 10] in box BoundingBox{minX=2868, minY=47, minZ=155, maxX=2883, maxY=55, maxZ=163}
+[03:37:32] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 1 at BlockPos{x=2882, y=51, z=162}
+[03:37:32] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 2 home [180, 10] in box BoundingBox{minX=2868, minY=47, minZ=155, maxX=2883, maxY=55, maxZ=163}
+[03:37:32] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 2 at BlockPos{x=2880, y=51, z=162}
+[03:37:32] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [180, 11]
+[03:37:32] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [180, 12]
+[03:37:32] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [181, 9]
+[03:37:33] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [181, 8]
+[03:37:33] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [181, 7]
+[03:37:33] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [181, 6]
+[03:37:33] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [181, 4]
+[03:37:33] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [181, 5]
+[03:37:33] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [181, 10]
+[03:37:33] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [181, 12]
+[03:37:33] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [181, 11]
+[03:37:33] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [181, 13]
+[03:37:33] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [181, 14]
+[03:37:33] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [182, 10]
+[03:37:33] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [182, 9]
+[03:37:33] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [182, 8]
+[03:37:33] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [182, 7]
+[03:37:33] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [182, 6]
+[03:37:33] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [182, 5]
+[03:37:33] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [182, 11]
+[03:37:33] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [182, 4]
+[03:37:33] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [182, 12]
+[03:37:33] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [182, 13]
+[03:37:33] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [183, 11]
+[03:37:33] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [183, 10]
+[03:37:33] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [183, 9]
+[03:37:33] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [183, 8]
+[03:37:33] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [183, 7]
+[03:37:33] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [183, 6]
+[03:37:33] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [183, 5]
+[03:37:33] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [183, 4]
+[03:37:33] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [173, 6]
+[03:37:34] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [184, 12]
+[03:37:34] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [184, 11]
+[03:37:34] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [184, 10]
+[03:37:34] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [184, 9]
+[03:37:34] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [184, 4]
+[03:37:34] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [184, 5]
+[03:37:34] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [184, 8]
+[03:37:34] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [184, 7]
+[03:37:34] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [184, 6]
+[03:37:34] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [184, 13]
+[03:37:34] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [173, 7]
+[03:37:34] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [173, 8]
+[03:37:34] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [173, 9]
+[03:37:34] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [177, 3]
+[03:37:34] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [176, 3]
+[03:37:34] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [179, 3]
+[03:37:34] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [178, 3]
+[03:37:34] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [173, 10]
+[03:37:34] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [173, 11]
+[03:37:34] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [173, 12]
+[03:37:34] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [173, 13]
+[03:37:34] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [173, 14]
+[03:37:34] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [173, 15]
+[03:37:34] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [174, 15]
+[03:37:34] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [181, 3]
+[03:37:34] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [180, 3]
+[03:37:34] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [183, 3]
+[03:37:34] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [182, 3]
+[03:37:35] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [184, 3]
+[03:37:35] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [185, 5]
+[03:37:35] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [185, 6]
+[03:37:35] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [185, 8]
+[03:37:35] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [185, 7]
+[03:37:35] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [185, 9]
+[03:37:35] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [185, 10]
+[03:37:35] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [185, 4]
+[03:37:35] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [185, 3]
+[03:37:35] [Server thread/INFO] [co.ha.co.te.GenTest/]: GENTEST looking from [0, 3000]: BlockPos{x=-272, y=0, z=2944}
+[03:37:35] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-20, 181]
+[03:37:35] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-21, 180]
+[03:37:36] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-20, 180]
+[03:37:36] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-19, 180]
+[03:37:36] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-19, 181]
+[03:37:36] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-20, 182]
+[03:37:36] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-19, 182]
+[03:37:36] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-21, 179]
+[03:37:36] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-20, 179]
+[03:37:36] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-19, 179]
+[03:37:36] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-18, 179]
+[03:37:36] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-18, 181]
+[03:37:36] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-18, 180]
+[03:37:36] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-18, 182]
+[03:37:36] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-19, 183]
+[03:37:36] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-20, 183]
+[03:37:36] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-18, 183]
+[03:37:36] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-18, 184]
+[03:37:36] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-19, 184]
+[03:37:37] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-18, 186]
+[03:37:37] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-18, 187]
+[03:37:37] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-21, 178]
+[03:37:37] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-20, 178]
+[03:37:38] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-17, 186]
+[03:37:38] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-17, 185]
+[03:37:38] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-17, 184]
+[03:37:38] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE chunk [-17, 184] sees ship started in [-17, 184] with 1 pieces, box BoundingBox{minX=-272, minY=52, minZ=2944, maxX=-264, maxY=60, maxZ=2959}
+[03:37:38] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 0 home [-17, 184] in box BoundingBox{minX=-272, minY=52, minZ=2944, maxX=-264, maxY=60, maxZ=2959}
+[03:37:38] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 0 at BlockPos{x=-267, y=60, z=2953}
+[03:37:38] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 1 home [-17, 184] in box BoundingBox{minX=-272, minY=52, minZ=2944, maxX=-264, maxY=60, maxZ=2959}
+[03:37:38] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 1 at BlockPos{x=-269, y=59, z=2954}
+[03:37:38] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 2 home [-17, 184] in box BoundingBox{minX=-272, minY=52, minZ=2944, maxX=-264, maxY=60, maxZ=2959}
+[03:37:38] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 2 at BlockPos{x=-266, y=60, z=2958}
+[03:37:38] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 3 home [-17, 184] in box BoundingBox{minX=-272, minY=52, minZ=2944, maxX=-264, maxY=60, maxZ=2959}
+[03:37:38] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 3 at BlockPos{x=-270, y=60, z=2958}
+[03:37:38] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 4 home [-17, 184] in box BoundingBox{minX=-272, minY=52, minZ=2944, maxX=-264, maxY=60, maxZ=2959}
+[03:37:38] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 4 at BlockPos{x=-265, y=56, z=2948}
+[03:37:38] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-17, 179]
+[03:37:38] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-17, 180]
+[03:37:38] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-17, 183]
+[03:37:38] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-17, 182]
+[03:37:38] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-17, 181]
+[03:37:38] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-16, 183]
+[03:37:38] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-16, 182]
+[03:37:38] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-16, 181]
+[03:37:38] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-16, 179]
+[03:37:38] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-16, 180]
+[03:37:38] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-16, 185]
+[03:37:38] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-16, 184]
+[03:37:38] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-16, 186]
+[03:37:38] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-16, 187]
+[03:37:38] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-15, 184]
+[03:37:38] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-15, 183]
+[03:37:39] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-15, 182]
+[03:37:39] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-15, 181]
+[03:37:39] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-15, 180]
+[03:37:39] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-15, 179]
+[03:37:39] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-15, 185]
+[03:37:39] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-15, 186]
+[03:37:39] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-15, 188]
+[03:37:39] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-15, 187]
+[03:37:39] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-14, 179]
+[03:37:39] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-14, 185]
+[03:37:39] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-14, 180]
+[03:37:39] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-14, 184]
+[03:37:39] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-14, 183]
+[03:37:39] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-14, 182]
+[03:37:39] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-14, 181]
+[03:37:39] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-14, 186]
+[03:37:39] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-14, 187]
+[03:37:39] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-14, 188]
+[03:37:39] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-14, 189]
+[03:37:39] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-13, 179]
+[03:37:39] [Worker-Main-3/ERROR] [minecraft/Util]: Detected setBlock in a far chunk [-15, 187], pos: BlockPos{x=-225, y=63, z=2994}, status: minecraft:features, currently generating: ResourceKey[minecraft:worldgen/placed_feature / corpsedecay:footprint_trail]
+[03:37:39] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-13, 186]
+[03:37:39] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-13, 185]
+[03:37:39] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-13, 184]
+[03:37:39] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-13, 180]
+[03:37:39] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-13, 182]
+[03:37:39] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-13, 181]
+[03:37:39] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-13, 183]
+[03:37:39] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-19, 178]
+[03:37:39] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-13, 188]
+[03:37:39] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-13, 187]
+[03:37:39] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-13, 189]
+[03:37:39] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-12, 183]
+[03:37:39] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-12, 182]
+[03:37:40] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-12, 181]
+[03:37:40] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-12, 180]
+[03:37:40] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-12, 179]
+[03:37:40] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-12, 184]
+[03:37:40] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-12, 186]
+[03:37:40] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-12, 185]
+[03:37:40] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-18, 178]
+[03:37:40] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-17, 178]
+[03:37:40] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-16, 178]
+[03:37:40] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-14, 178]
+[03:37:40] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-15, 178]
+[03:37:40] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-13, 178]
+[03:37:40] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-13, 190]
+[03:37:40] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-14, 190]
+[03:37:41] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-12, 178]
+[03:37:41] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-11, 178]
+[03:37:41] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-11, 180]
+[03:37:41] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-11, 179]
+[03:37:41] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-11, 181]
+[03:37:41] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-11, 182]
+[03:37:41] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-11, 184]
+[03:37:41] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-11, 183]
+[03:37:41] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-11, 185]
+[03:37:41] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-11, 186]
+[03:37:41] [Server thread/INFO] [co.ha.co.te.GenTest/]: GENTEST looking from [-3000, 0]: BlockPos{x=-3296, y=0, z=-112}
+[03:37:41] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-209, -10]
+[03:37:41] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-209, -11]
+[03:37:41] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-210, -11]
+[03:37:41] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-210, -10]
+[03:37:41] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-208, -10]
+[03:37:41] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-208, -11]
+[03:37:42] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-210, -9]
+[03:37:42] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-209, -9]
+[03:37:42] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-208, -9]
+[03:37:42] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-211, -10]
+[03:37:42] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-211, -9]
+[03:37:42] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-210, -8]
+[03:37:42] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-211, -8]
+[03:37:42] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-209, -8]
+[03:37:42] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-211, -11]
+[03:37:42] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-208, -8]
+[03:37:42] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-211, -12]
+[03:37:42] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-210, -12]
+[03:37:42] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-209, -12]
+[03:37:42] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-208, -12]
+[03:37:42] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-207, -12]
+[03:37:42] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-207, -11]
+[03:37:42] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-207, -9]
+[03:37:42] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-207, -10]
+[03:37:42] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-207, -8]
+[03:37:42] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-207, -7]
+[03:37:42] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE chunk [-207, -7] sees ship started in [-206, -7] with 1 pieces, box BoundingBox{minX=-3304, minY=45, minZ=-101, maxX=-3277, maxY=53, maxZ=-93}
+[03:37:42] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 1 home [-207, -7] in box BoundingBox{minX=-3304, minY=45, minZ=-101, maxX=-3277, maxY=53, maxZ=-93}
+[03:37:42] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 1 at BlockPos{x=-3297, y=48, z=-98}
+[03:37:42] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 4 home [-207, -7] in box BoundingBox{minX=-3304, minY=45, minZ=-101, maxX=-3277, maxY=53, maxZ=-93}
+[03:37:42] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 4 at BlockPos{x=-3299, y=48, z=-99}
+[03:37:42] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-211, -7]
+[03:37:42] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-208, -7]
+[03:37:42] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-209, -7]
+[03:37:42] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-210, -7]
+[03:37:42] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-212, -11]
+[03:37:42] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-207, -6]
+[03:37:42] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE chunk [-207, -6] sees ship started in [-206, -7] with 1 pieces, box BoundingBox{minX=-3304, minY=45, minZ=-101, maxX=-3277, maxY=53, maxZ=-93}
+[03:37:43] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-208, -6]
+[03:37:43] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-209, -6]
+[03:37:43] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-210, -6]
+[03:37:43] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-212, -10]
+[03:37:43] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-212, -9]
+[03:37:43] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-212, -8]
+[03:37:43] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-207, -5]
+[03:37:43] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-208, -5]
+[03:37:43] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-212, -7]
+[03:37:43] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-212, -12]
+[03:37:43] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-207, -4]
+[03:37:43] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-206, -12]
+[03:37:43] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-206, -11]
+[03:37:43] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-206, -10]
+[03:37:43] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-206, -8]
+[03:37:43] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-206, -9]
+[03:37:43] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-206, -6]
+[03:37:43] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE chunk [-206, -6] sees ship started in [-206, -7] with 1 pieces, box BoundingBox{minX=-3304, minY=45, minZ=-101, maxX=-3277, maxY=53, maxZ=-93}
+[03:37:43] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-206, -7]
+[03:37:43] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE chunk [-206, -7] sees ship started in [-206, -7] with 1 pieces, box BoundingBox{minX=-3304, minY=45, minZ=-101, maxX=-3277, maxY=53, maxZ=-93}
+[03:37:43] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 0 home [-206, -7] in box BoundingBox{minX=-3304, minY=45, minZ=-101, maxX=-3277, maxY=53, maxZ=-93}
+[03:37:43] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 0 at BlockPos{x=-3294, y=49, z=-100}
+[03:37:44] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-206, -5]
+[03:37:44] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-205, -10]
+[03:37:44] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-205, -11]
+[03:37:44] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-205, -12]
+[03:37:44] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-205, -9]
+[03:37:44] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-205, -8]
+[03:37:44] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-205, -7]
+[03:37:44] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE chunk [-205, -7] sees ship started in [-206, -7] with 1 pieces, box BoundingBox{minX=-3304, minY=45, minZ=-101, maxX=-3277, maxY=53, maxZ=-93}
+[03:37:44] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 2 home [-205, -7] in box BoundingBox{minX=-3304, minY=45, minZ=-101, maxX=-3277, maxY=53, maxZ=-93}
+[03:37:44] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-205, -6]
+[03:37:44] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE chunk [-205, -6] sees ship started in [-206, -7] with 1 pieces, box BoundingBox{minX=-3304, minY=45, minZ=-101, maxX=-3277, maxY=53, maxZ=-93}
+[03:37:44] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 3 home [-205, -6] in box BoundingBox{minX=-3304, minY=45, minZ=-101, maxX=-3277, maxY=53, maxZ=-93}
+[03:37:44] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-205, -5]
+[03:37:44] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-205, -4]
+[03:37:44] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-204, -12]
+[03:37:44] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-204, -11]
+[03:37:44] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-204, -10]
+[03:37:44] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-204, -9]
+[03:37:44] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-204, -8]
+[03:37:44] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-204, -7]
+[03:37:44] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-204, -6]
+[03:37:44] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-204, -5]
+[03:37:45] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-203, -8]
+[03:37:45] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-203, -9]
+[03:37:45] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-203, -10]
+[03:37:45] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-203, -11]
+[03:37:45] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-203, -6]
+[03:37:45] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-203, -7]
+[03:37:45] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-203, -12]
+[03:37:45] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-203, -5]
+[03:37:45] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-203, -4]
+[03:37:45] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-202, -12]
+[03:37:45] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-202, -11]
+[03:37:45] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-202, -10]
+[03:37:45] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-202, -7]
+[03:37:45] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-202, -8]
+[03:37:45] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-202, -9]
+[03:37:45] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-202, -4]
+[03:37:45] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-202, -5]
+[03:37:45] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-202, -6]
+[03:37:45] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-202, -3]
+[03:37:45] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-202, -2]
+[03:37:45] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-201, -7]
+[03:37:45] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-201, -8]
+[03:37:45] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-201, -9]
+[03:37:45] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-201, -10]
+[03:37:45] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-201, -11]
+[03:37:45] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-201, -12]
+[03:37:46] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-201, -6]
+[03:37:46] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-201, -4]
+[03:37:46] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-201, -5]
+[03:37:46] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-201, -2]
+[03:37:46] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-201, -3]
+[03:37:46] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-212, -13]
+[03:37:46] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-211, -13]
+[03:37:46] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-210, -13]
+[03:37:46] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-209, -13]
+[03:37:46] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-208, -13]
+[03:37:46] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-206, -13]
+[03:37:46] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-207, -13]
+[03:37:46] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-205, -13]
+[03:37:46] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-204, -13]
+[03:37:46] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-202, -13]
+[03:37:46] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-203, -13]
+[03:37:46] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-201, -13]
+[03:37:46] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-202, -1]
+[03:37:46] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-201, -1]
+[03:37:46] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-200, -12]
+[03:37:46] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-200, -11]
+[03:37:47] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-200, -9]
+[03:37:47] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-200, -10]
+[03:37:47] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-200, -8]
+[03:37:47] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-200, -13]
+[03:37:47] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-200, -7]
+[03:37:47] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-200, -6]
+[03:37:47] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-200, -5]
+[03:37:47] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-200, -4]
+[03:37:47] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-200, -2]
+[03:37:47] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-200, -3]
+[03:37:47] [Server thread/INFO] [co.ha.co.te.GenTest/]: GENTEST looking from [0, -3000]: BlockPos{x=240, y=0, z=-2496}
+[03:37:47] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-200, -1]
+[03:37:48] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [14, -158]
+[03:37:48] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [14, -157]
+[03:37:48] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [14, -156]
+[03:37:48] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE chunk [14, -156] sees ship started in [15, -156] with 1 pieces, box BoundingBox{minX=229, minY=49, minZ=-2485, maxX=256, maxY=57, maxZ=-2477}
+[03:37:48] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 3 home [14, -156] in box BoundingBox{minX=229, minY=49, minZ=-2485, maxX=256, maxY=57, maxZ=-2477}
+[03:37:48] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 3 at BlockPos{x=235, y=54, z=-2481}
+[03:37:48] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 5 home [14, -156] in box BoundingBox{minX=229, minY=49, minZ=-2485, maxX=256, maxY=57, maxZ=-2477}
+[03:37:48] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 5 at BlockPos{x=239, y=54, z=-2485}
+[03:37:48] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [10, -156]
+[03:37:49] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [14, -155]
+[03:37:49] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE chunk [14, -155] sees ship started in [15, -156] with 1 pieces, box BoundingBox{minX=229, minY=49, minZ=-2485, maxX=256, maxY=57, maxZ=-2477}
+[03:37:49] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 0 home [14, -155] in box BoundingBox{minX=229, minY=49, minZ=-2485, maxX=256, maxY=57, maxZ=-2477}
+[03:37:49] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 0 at BlockPos{x=238, y=50, z=-2480}
+[03:37:49] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 2 home [14, -155] in box BoundingBox{minX=229, minY=49, minZ=-2485, maxX=256, maxY=57, maxZ=-2477}
+[03:37:49] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 2 at BlockPos{x=237, y=55, z=-2477}
+[03:37:49] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 4 home [14, -155] in box BoundingBox{minX=229, minY=49, minZ=-2485, maxX=256, maxY=57, maxZ=-2477}
+[03:37:49] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 4 at BlockPos{x=234, y=55, z=-2479}
+[03:37:49] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [13, -155]
+[03:37:49] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [12, -155]
+[03:37:49] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [11, -155]
+[03:37:49] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [14, -154]
+[03:37:49] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [13, -154]
+[03:37:49] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [12, -154]
+[03:37:49] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [11, -154]
+[03:37:49] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [10, -154]
+[03:37:49] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [14, -153]
+[03:37:49] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [13, -153]
+[03:37:49] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [12, -153]
+[03:37:49] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [11, -153]
+[03:37:49] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [10, -153]
+[03:37:49] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [11, -152]
+[03:37:49] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [14, -152]
+[03:37:49] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [13, -152]
+[03:37:49] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [12, -152]
+[03:37:49] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [15, -160]
+[03:37:49] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [15, -158]
+[03:37:49] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [15, -157]
+[03:37:50] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [15, -156]
+[03:37:50] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE chunk [15, -156] sees ship started in [15, -156] with 1 pieces, box BoundingBox{minX=229, minY=49, minZ=-2485, maxX=256, maxY=57, maxZ=-2477}
+[03:37:50] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 1 home [15, -156] in box BoundingBox{minX=229, minY=49, minZ=-2485, maxX=256, maxY=57, maxZ=-2477}
+[03:37:50] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 1 at BlockPos{x=253, y=52, z=-2482}
+[03:37:50] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [15, -155]
+[03:37:50] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE chunk [15, -155] sees ship started in [15, -156] with 1 pieces, box BoundingBox{minX=229, minY=49, minZ=-2485, maxX=256, maxY=57, maxZ=-2477}
+[03:37:50] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [15, -154]
+[03:37:50] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [15, -152]
+[03:37:50] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [15, -153]
+[03:37:50] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [14, -151]
+[03:37:50] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [13, -151]
+[03:37:50] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [12, -151]
+[03:37:50] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [11, -151]
+[03:37:50] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [15, -151]
+[03:37:50] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [16, -158]
+[03:37:50] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [16, -157]
+[03:37:50] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [16, -159]
+[03:37:50] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [16, -160]
+[03:37:50] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [16, -161]
+[03:37:50] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [16, -156]
+[03:37:50] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE chunk [16, -156] sees ship started in [15, -156] with 1 pieces, box BoundingBox{minX=229, minY=49, minZ=-2485, maxX=256, maxY=57, maxZ=-2477}
+[03:37:50] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [16, -155]
+[03:37:50] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE chunk [16, -155] sees ship started in [15, -156] with 1 pieces, box BoundingBox{minX=229, minY=49, minZ=-2485, maxX=256, maxY=57, maxZ=-2477}
+[03:37:50] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [16, -154]
+[03:37:50] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [16, -153]
+[03:37:50] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [16, -152]
+[03:37:50] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [16, -151]
+[03:37:50] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [17, -156]
+[03:37:50] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [17, -157]
+[03:37:50] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [17, -158]
+[03:37:50] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [17, -159]
+[03:37:50] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [17, -160]
+[03:37:50] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [17, -161]
+[03:37:50] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [17, -154]
+[03:37:50] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [17, -155]
+[03:37:50] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [17, -153]
+[03:37:50] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [17, -152]
+[03:37:50] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [17, -151]
+[03:37:51] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [18, -155]
+[03:37:51] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [18, -156]
+[03:37:51] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [18, -157]
+[03:37:51] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [18, -158]
+[03:37:51] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [18, -159]
+[03:37:51] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [18, -160]
+[03:37:51] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [18, -161]
+[03:37:51] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [18, -154]
+[03:37:51] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [18, -153]
+[03:37:51] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [18, -152]
+[03:37:51] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [18, -151]
+[03:37:51] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [19, -154]
+[03:37:51] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [19, -155]
+[03:37:51] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [19, -156]
+[03:37:51] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [19, -157]
+[03:37:51] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [19, -158]
+[03:37:51] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [19, -159]
+[03:37:51] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [19, -160]
+[03:37:51] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [19, -161]
+[03:37:51] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [19, -151]
+[03:37:51] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [19, -152]
+[03:37:51] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [19, -153]
+[03:37:51] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [20, -153]
+[03:37:51] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [20, -154]
+[03:37:51] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [20, -155]
+[03:37:51] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [20, -156]
+[03:37:51] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [20, -157]
+[03:37:51] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [20, -158]
+[03:37:51] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [20, -159]
+[03:37:52] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [20, -161]
+[03:37:52] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [20, -160]
+[03:37:52] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [20, -152]
+[03:37:52] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [20, -151]
+[03:37:52] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [9, -155]
+[03:37:52] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [9, -156]
+[03:37:52] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [13, -150]
+[03:37:52] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [14, -150]
+[03:37:52] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [16, -150]
+[03:37:52] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [15, -150]
+[03:37:52] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [17, -150]
+[03:37:52] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [18, -150]
+[03:37:52] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [19, -150]
+[03:37:52] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [19, -162]
+[03:37:52] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [20, -162]
+[03:37:52] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [20, -150]
+[03:37:52] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [21, -161]
+[03:37:52] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [21, -159]
+[03:37:52] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [21, -160]
+[03:37:52] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [21, -158]
+[03:37:52] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [21, -157]
+[03:37:53] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [21, -155]
+[03:37:53] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [21, -156]
+[03:37:53] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [21, -154]
+[03:37:53] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [21, -153]
+[03:37:53] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [21, -162]
+[03:37:53] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [21, -152]
+[03:37:53] [Server thread/INFO] [co.ha.co.te.GenTest/]: GENTEST looking from [3000, 3000]: BlockPos{x=2736, y=0, z=2704}
+[03:37:53] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [21, -151]
+[03:37:53] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [21, -150]
+[03:37:53] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [168, 166]
+[03:37:53] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [168, 165]
+[03:37:53] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [167, 165]
+[03:37:53] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [169, 165]
+[03:37:53] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [169, 166]
+[03:37:53] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [167, 166]
+[03:37:53] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [167, 167]
+[03:37:53] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [168, 167]
+[03:37:53] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [169, 167]
+[03:37:53] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [167, 164]
+[03:37:54] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [168, 164]
+[03:37:54] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [169, 164]
+[03:37:54] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [166, 164]
+[03:37:54] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [166, 165]
+[03:37:54] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [166, 166]
+[03:37:54] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [170, 164]
+[03:37:54] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [170, 165]
+[03:37:54] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [170, 167]
+[03:37:54] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [170, 166]
+[03:37:54] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [166, 167]
+[03:37:54] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [166, 168]
+[03:37:54] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [167, 168]
+[03:37:54] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [170, 168]
+[03:37:54] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [169, 168]
+[03:37:54] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [168, 168]
+[03:37:54] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [166, 163]
+[03:37:54] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [169, 169]
+[03:37:54] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [168, 169]
+[03:37:54] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [167, 169]
+[03:37:54] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [166, 169]
+[03:37:54] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [170, 169]
+[03:37:54] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [167, 163]
+[03:37:54] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [168, 163]
+[03:37:54] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [170, 170]
+[03:37:54] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [169, 170]
+[03:37:54] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [168, 170]
+[03:37:54] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [167, 170]
+[03:37:54] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [166, 170]
+[03:37:54] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [169, 163]
+[03:37:54] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [170, 163]
+[03:37:55] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [169, 171]
+[03:37:55] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [168, 171]
+[03:37:55] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [167, 171]
+[03:37:55] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [166, 171]
+[03:37:55] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [170, 171]
+[03:37:55] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [170, 172]
+[03:37:55] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [169, 172]
+[03:37:55] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [168, 172]
+[03:37:55] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [167, 172]
+[03:37:55] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [166, 172]
+[03:37:55] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [171, 163]
+[03:37:55] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [171, 164]
+[03:37:55] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [167, 173]
+[03:37:55] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [166, 173]
+[03:37:55] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [168, 173]
+[03:37:55] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [170, 173]
+[03:37:55] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [169, 173]
+[03:37:55] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [171, 165]
+[03:37:55] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [171, 167]
+[03:37:55] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [171, 166]
+[03:37:55] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [170, 174]
+[03:37:55] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [169, 174]
+[03:37:55] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [168, 174]
+[03:37:55] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [167, 174]
+[03:37:55] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [166, 174]
+[03:37:55] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [171, 173]
+[03:37:55] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [171, 172]
+[03:37:55] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [171, 171]
+[03:37:55] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [171, 170]
+[03:37:55] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE chunk [171, 170] sees ship started in [171, 169] with 1 pieces, box BoundingBox{minX=2736, minY=47, minZ=2704, maxX=2744, maxY=55, maxZ=2727}
+[03:37:55] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 1 home [171, 170] in box BoundingBox{minX=2736, minY=47, minZ=2704, maxX=2744, maxY=55, maxZ=2727}
+[03:37:55] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 1 at BlockPos{x=2741, y=49, z=2725}
+[03:37:55] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [171, 169]
+[03:37:55] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE chunk [171, 169] sees ship started in [171, 169] with 1 pieces, box BoundingBox{minX=2736, minY=47, minZ=2704, maxX=2744, maxY=55, maxZ=2727}
+[03:37:55] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 0 home [171, 169] in box BoundingBox{minX=2736, minY=47, minZ=2704, maxX=2744, maxY=55, maxZ=2727}
+[03:37:55] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 0 at BlockPos{x=2739, y=55, z=2714}
+[03:37:55] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 2 home [171, 169] in box BoundingBox{minX=2736, minY=47, minZ=2704, maxX=2744, maxY=55, maxZ=2727}
+[03:37:55] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 2 at BlockPos{x=2742, y=49, z=2713}
+[03:37:55] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 3 home [171, 169] in box BoundingBox{minX=2736, minY=47, minZ=2704, maxX=2744, maxY=55, maxZ=2727}
+[03:37:55] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 3 at BlockPos{x=2744, y=51, z=2714}
+[03:37:55] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 4 home [171, 169] in box BoundingBox{minX=2736, minY=47, minZ=2704, maxX=2744, maxY=55, maxZ=2727}
+[03:37:55] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 4 at BlockPos{x=2741, y=54, z=2714}
+[03:37:55] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 5 home [171, 169] in box BoundingBox{minX=2736, minY=47, minZ=2704, maxX=2744, maxY=55, maxZ=2727}
+[03:37:55] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 5 at BlockPos{x=2739, y=54, z=2711}
+[03:37:55] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [171, 168]
+[03:37:55] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [171, 174]
+[03:37:56] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [172, 168]
+[03:37:56] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [172, 164]
+[03:37:56] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [172, 167]
+[03:37:56] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [172, 166]
+[03:37:56] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [172, 165]
+[03:37:56] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [172, 169]
+[03:37:56] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [172, 170]
+[03:37:56] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [172, 171]
+[03:37:56] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [172, 172]
+[03:37:56] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [172, 174]
+[03:37:56] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [172, 173]
+[03:37:56] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [173, 169]
+[03:37:56] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [173, 168]
+[03:37:56] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [173, 167]
+[03:37:56] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [173, 170]
+[03:37:56] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [173, 166]
+[03:37:56] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [173, 165]
+[03:37:56] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [173, 164]
+[03:37:56] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [173, 171]
+[03:37:56] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [173, 172]
+[03:37:56] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [173, 173]
+[03:37:56] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [173, 174]
+[03:37:56] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [174, 171]
+[03:37:56] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [174, 170]
+[03:37:56] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [174, 169]
+[03:37:56] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [174, 168]
+[03:37:56] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [174, 167]
+[03:37:56] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [174, 166]
+[03:37:56] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [174, 165]
+[03:37:56] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [174, 164]
+[03:37:56] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [174, 172]
+[03:37:56] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [174, 174]
+[03:37:56] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [174, 173]
+[03:37:57] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [175, 169]
+[03:37:57] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [175, 168]
+[03:37:57] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [175, 167]
+[03:37:57] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [175, 166]
+[03:37:57] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [175, 165]
+[03:37:57] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [175, 164]
+[03:37:57] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [175, 171]
+[03:37:57] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [175, 170]
+[03:37:57] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [175, 173]
+[03:37:57] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [175, 172]
+[03:37:57] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [175, 174]
+[03:37:57] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [176, 170]
+[03:37:57] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [176, 169]
+[03:37:57] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [176, 168]
+[03:37:57] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [176, 167]
+[03:37:57] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [176, 166]
+[03:37:57] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [176, 165]
+[03:37:57] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [176, 164]
+[03:37:57] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [176, 171]
+[03:37:57] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [176, 172]
+[03:37:57] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [176, 173]
+[03:37:57] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [176, 174]
+[03:37:57] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [165, 165]
+[03:37:57] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [165, 166]
+[03:37:57] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [165, 167]
+[03:37:57] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [165, 168]
+[03:37:57] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [165, 169]
+[03:37:57] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [165, 164]
+[03:37:57] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [165, 170]
+[03:37:57] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [165, 163]
+[03:37:57] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [165, 171]
+[03:37:57] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [165, 172]
+[03:37:57] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [165, 174]
+[03:37:57] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [165, 173]
+[03:37:57] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [168, 175]
+[03:37:58] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [169, 175]
+[03:37:58] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [170, 175]
+[03:37:58] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [172, 163]
+[03:37:58] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [167, 175]
+[03:37:58] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [165, 175]
+[03:37:58] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [166, 175]
+[03:37:58] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [171, 175]
+[03:37:58] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [173, 163]
+[03:37:58] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [173, 175]
+[03:37:58] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [172, 175]
+[03:37:58] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [174, 163]
+[03:37:58] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [175, 163]
+[03:37:58] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [174, 175]
+[03:37:58] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [176, 175]
+[03:37:58] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [175, 175]
+[03:37:58] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [176, 163]
+[03:37:58] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [177, 168]
+[03:37:58] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [177, 169]
+[03:37:58] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [177, 167]
+[03:37:58] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [177, 170]
+[03:37:58] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [177, 166]
+[03:37:58] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [177, 165]
+[03:37:58] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [177, 164]
+[03:37:58] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [177, 163]
+[03:37:58] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [177, 172]
+[03:37:58] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [177, 171]
+[03:37:58] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [177, 173]
+[03:37:58] [Server thread/INFO] [co.ha.co.te.GenTest/]: GENTEST looking from [-3000, -3000]: BlockPos{x=-3264, y=0, z=-3408}
+[03:37:58] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [177, 174]
+[03:37:58] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [177, 175]
+[03:37:59] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-207, -216]
+[03:37:59] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-208, -217]
+[03:37:59] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-207, -217]
+[03:37:59] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-206, -217]
+[03:37:59] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-208, -216]
+[03:37:59] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-206, -216]
+[03:37:59] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-208, -215]
+[03:37:59] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-207, -215]
+[03:37:59] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-206, -215]
+[03:37:59] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-208, -214]
+[03:37:59] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-207, -214]
+[03:37:59] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-206, -214]
+[03:37:59] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-205, -217]
+[03:37:59] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-205, -216]
+[03:37:59] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-205, -215]
+[03:38:00] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-208, -218]
+[03:38:00] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-209, -218]
+[03:38:00] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-207, -218]
+[03:38:00] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-209, -217]
+[03:38:00] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-209, -216]
+[03:38:00] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-206, -218]
+[03:38:00] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-209, -215]
+[03:38:00] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-205, -218]
+[03:38:00] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-209, -214]
+[03:38:00] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-205, -214]
+[03:38:00] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-206, -213]
+[03:38:00] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-205, -213]
+[03:38:00] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE chunk [-205, -213] sees ship started in [-204, -213] with 1 pieces, box BoundingBox{minX=-3275, minY=51, minZ=-3397, maxX=-3254, maxY=59, maxZ=-3389}
+[03:38:00] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 1 home [-205, -213] in box BoundingBox{minX=-3275, minY=51, minZ=-3397, maxX=-3254, maxY=59, maxZ=-3389}
+[03:38:00] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 1 at BlockPos{x=-3268, y=58, z=-3393}
+[03:38:00] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-207, -213]
+[03:38:00] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-209, -213]
+[03:38:00] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-208, -213]
+[03:38:00] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-204, -217]
+[03:38:00] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-204, -216]
+[03:38:00] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-205, -212]
+[03:38:00] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE chunk [-205, -212] sees ship started in [-204, -213] with 1 pieces, box BoundingBox{minX=-3275, minY=51, minZ=-3397, maxX=-3254, maxY=59, maxZ=-3389}
+[03:38:00] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 3 home [-205, -212] in box BoundingBox{minX=-3275, minY=51, minZ=-3397, maxX=-3254, maxY=59, maxZ=-3389}
+[03:38:00] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 3 at BlockPos{x=-3266, y=58, z=-3392}
+[03:38:00] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 5 home [-205, -212] in box BoundingBox{minX=-3275, minY=51, minZ=-3397, maxX=-3254, maxY=59, maxZ=-3389}
+[03:38:00] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-206, -212]
+[03:38:00] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-207, -212]
+[03:38:00] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-208, -212]
+[03:38:00] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-209, -212]
+[03:38:00] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-204, -215]
+[03:38:00] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-205, -211]
+[03:38:00] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-206, -211]
+[03:38:00] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-207, -211]
+[03:38:00] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-208, -211]
+[03:38:00] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-209, -211]
+[03:38:01] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-205, -210]
+[03:38:01] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-206, -210]
+[03:38:01] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-207, -210]
+[03:38:01] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-208, -210]
+[03:38:01] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-209, -210]
+[03:38:01] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-210, -219]
+[03:38:01] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-205, -209]
+[03:38:01] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-206, -209]
+[03:38:01] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-207, -209]
+[03:38:01] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-208, -209]
+[03:38:01] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-209, -209]
+[03:38:01] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-209, -219]
+[03:38:01] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-204, -214]
+[03:38:01] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-204, -213]
+[03:38:01] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE chunk [-204, -213] sees ship started in [-204, -213] with 1 pieces, box BoundingBox{minX=-3275, minY=51, minZ=-3397, maxX=-3254, maxY=59, maxZ=-3389}
+[03:38:01] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 0 home [-204, -213] in box BoundingBox{minX=-3275, minY=51, minZ=-3397, maxX=-3254, maxY=59, maxZ=-3389}
+[03:38:01] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 0 at BlockPos{x=-3263, y=55, z=-3396}
+[03:38:01] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-205, -208]
+[03:38:01] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-206, -208]
+[03:38:01] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-207, -208]
+[03:38:01] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-208, -208]
+[03:38:01] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-209, -208]
+[03:38:01] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-204, -218]
+[03:38:01] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-204, -212]
+[03:38:01] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE chunk [-204, -212] sees ship started in [-204, -213] with 1 pieces, box BoundingBox{minX=-3275, minY=51, minZ=-3397, maxX=-3254, maxY=59, maxZ=-3389}
+[03:38:01] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 2 home [-204, -212] in box BoundingBox{minX=-3275, minY=51, minZ=-3397, maxX=-3254, maxY=59, maxZ=-3389}
+[03:38:01] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 2 at BlockPos{x=-3257, y=58, z=-3392}
+[03:38:01] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 4 home [-204, -212] in box BoundingBox{minX=-3275, minY=51, minZ=-3397, maxX=-3254, maxY=59, maxZ=-3389}
+[03:38:01] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 4 at BlockPos{x=-3259, y=58, z=-3392}
+[03:38:01] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-204, -211]
+[03:38:01] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-204, -210]
+[03:38:01] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-204, -208]
+[03:38:01] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-204, -209]
+[03:38:01] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-203, -214]
+[03:38:01] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-203, -215]
+[03:38:01] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-203, -216]
+[03:38:01] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-203, -217]
+[03:38:01] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-203, -218]
+[03:38:01] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-203, -213]
+[03:38:01] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-203, -212]
+[03:38:01] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-203, -210]
+[03:38:01] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-203, -211]
+[03:38:01] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-203, -209]
+[03:38:02] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-203, -208]
+[03:38:02] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-202, -213]
+[03:38:02] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-202, -214]
+[03:38:02] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-202, -215]
+[03:38:02] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-202, -216]
+[03:38:02] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-202, -212]
+[03:38:02] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-202, -211]
+[03:38:02] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-202, -217]
+[03:38:02] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-202, -218]
+[03:38:02] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-202, -210]
+[03:38:02] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-202, -209]
+[03:38:02] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-202, -208]
+[03:38:02] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-201, -210]
+[03:38:02] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-201, -211]
+[03:38:02] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-201, -212]
+[03:38:02] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-201, -213]
+[03:38:02] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-201, -214]
+[03:38:02] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-201, -215]
+[03:38:02] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-201, -216]
+[03:38:02] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-201, -217]
+[03:38:02] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-201, -218]
+[03:38:02] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-208, -219]
+[03:38:02] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-201, -209]
+[03:38:02] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-201, -208]
+[03:38:02] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-200, -209]
+[03:38:02] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-200, -210]
+[03:38:02] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-200, -211]
+[03:38:02] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-200, -212]
+[03:38:02] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-200, -213]
+[03:38:03] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-200, -214]
+[03:38:03] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-200, -215]
+[03:38:03] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-200, -216]
+[03:38:03] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-200, -217]
+[03:38:03] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-200, -218]
+[03:38:03] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-200, -208]
+[03:38:03] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-210, -217]
+[03:38:03] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-210, -218]
+[03:38:03] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-206, -219]
+[03:38:03] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-207, -219]
+[03:38:03] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-205, -219]
+[03:38:03] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-199, -208]
+[03:38:03] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-199, -209]
+[03:38:03] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-199, -210]
+[03:38:03] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-199, -211]
+[03:38:03] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-199, -212]
+[03:38:03] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-199, -213]
+[03:38:03] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-199, -214]
+[03:38:03] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-199, -215]
+[03:38:03] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-199, -216]
+[03:38:03] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-199, -217]
+[03:38:03] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-199, -218]
+[03:38:03] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-210, -216]
+[03:38:03] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-204, -219]
+[03:38:03] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-210, -215]
+[03:38:03] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-210, -214]
+[03:38:03] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-210, -212]
+[03:38:03] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-210, -213]
+[03:38:03] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-210, -211]
+[03:38:03] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-210, -210]
+[03:38:03] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-210, -209]
+[03:38:03] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-210, -208]
+[03:38:04] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-208, -207]
+[03:38:04] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-207, -207]
+[03:38:04] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-203, -219]
+[03:38:04] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-206, -207]
+[03:38:04] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-202, -219]
+[03:38:04] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-203, -207]
+[03:38:04] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-204, -207]
+[03:38:04] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-205, -207]
+[03:38:04] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-209, -207]
+[03:38:04] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-210, -207]
+[03:38:04] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-202, -207]
+[03:38:04] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-201, -219]
+[03:38:04] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-200, -207]
+[03:38:04] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-201, -207]
+[03:38:04] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-200, -219]
+[03:38:04] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-199, -219]
+[03:38:04] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-199, -207]
+[03:38:04] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-198, -214]
+[03:38:04] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-198, -213]
+[03:38:04] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-198, -212]
+[03:38:04] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-198, -210]
+[03:38:04] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-198, -211]
+[03:38:04] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-198, -209]
+[03:38:04] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-198, -208]
+[03:38:04] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-198, -215]
+[03:38:04] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-198, -207]
+[03:38:04] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-198, -216]
+[03:38:04] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-198, -217]
+[03:38:04] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-198, -218]
+[03:38:04] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [-198, -219]
+[03:38:04] [Server thread/INFO] [co.ha.co.te.GenTest/]: GENTEST looking from [3000, -3000]: BlockPos{x=2192, y=0, z=-3024}
+[03:38:05] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [134, -192]
+[03:38:05] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [133, -193]
+[03:38:05] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [134, -193]
+[03:38:05] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [135, -193]
+[03:38:05] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [133, -192]
+[03:38:05] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [135, -192]
+[03:38:05] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [133, -191]
+[03:38:05] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [134, -191]
+[03:38:05] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [135, -191]
+[03:38:05] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [134, -194]
+[03:38:05] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [135, -194]
+[03:38:05] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [136, -193]
+[03:38:05] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [136, -194]
+[03:38:05] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [136, -192]
+[03:38:05] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [133, -194]
+[03:38:05] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [136, -191]
+[03:38:06] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [132, -193]
+[03:38:06] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [132, -191]
+[03:38:06] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [132, -192]
+[03:38:06] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [132, -190]
+[03:38:06] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [133, -190]
+[03:38:06] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [136, -190]
+[03:38:06] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [135, -190]
+[03:38:06] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [134, -190]
+[03:38:06] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [136, -189]
+[03:38:06] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE chunk [136, -189] sees ship started in [137, -189] with 1 pieces, box BoundingBox{minX=2181, minY=48, minZ=-3013, maxX=2202, maxY=56, maxZ=-3005}
+[03:38:06] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 0 home [136, -189] in box BoundingBox{minX=2181, minY=48, minZ=-3013, maxX=2202, maxY=56, maxZ=-3005}
+[03:38:06] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 0 at BlockPos{x=2190, y=55, z=-3010}
+[03:38:06] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [135, -189]
+[03:38:06] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [134, -189]
+[03:38:06] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [133, -189]
+[03:38:06] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [132, -189]
+[03:38:06] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [135, -188]
+[03:38:06] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [134, -188]
+[03:38:06] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [133, -188]
+[03:38:06] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [132, -188]
+[03:38:06] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [136, -195]
+[03:38:06] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [136, -188]
+[03:38:06] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE chunk [136, -188] sees ship started in [137, -189] with 1 pieces, box BoundingBox{minX=2181, minY=48, minZ=-3013, maxX=2202, maxY=56, maxZ=-3005}
+[03:38:06] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [132, -187]
+[03:38:06] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [133, -187]
+[03:38:06] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [134, -187]
+[03:38:06] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [136, -187]
+[03:38:06] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [135, -187]
+[03:38:06] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [136, -186]
+[03:38:07] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [135, -186]
+[03:38:07] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [134, -186]
+[03:38:07] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [133, -186]
+[03:38:07] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [132, -186]
+[03:38:07] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [137, -194]
+[03:38:07] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [137, -193]
+[03:38:07] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [137, -192]
+[03:38:07] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [137, -191]
+[03:38:07] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [136, -185]
+[03:38:07] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [135, -185]
+[03:38:07] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [134, -185]
+[03:38:07] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [132, -185]
+[03:38:07] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [133, -185]
+[03:38:07] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [137, -185]
+[03:38:07] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [137, -186]
+[03:38:07] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [137, -187]
+[03:38:07] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [137, -188]
+[03:38:07] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE chunk [137, -188] sees ship started in [137, -189] with 1 pieces, box BoundingBox{minX=2181, minY=48, minZ=-3013, maxX=2202, maxY=56, maxZ=-3005}
+[03:38:07] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 2 home [137, -188] in box BoundingBox{minX=2181, minY=48, minZ=-3013, maxX=2202, maxY=56, maxZ=-3005}
+[03:38:07] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 2 at BlockPos{x=2192, y=55, z=-3008}
+[03:38:07] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [137, -189]
+[03:38:07] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE chunk [137, -189] sees ship started in [137, -189] with 1 pieces, box BoundingBox{minX=2181, minY=48, minZ=-3013, maxX=2202, maxY=56, maxZ=-3005}
+[03:38:07] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 1 home [137, -189] in box BoundingBox{minX=2181, minY=48, minZ=-3013, maxX=2202, maxY=56, maxZ=-3005}
+[03:38:07] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 1 at BlockPos{x=2198, y=55, z=-3010}
+[03:38:07] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [137, -190]
+[03:38:07] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [137, -184]
+[03:38:07] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [136, -184]
+[03:38:07] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [135, -184]
+[03:38:07] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [134, -184]
+[03:38:07] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [133, -184]
+[03:38:07] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [132, -184]
+[03:38:07] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [138, -191]
+[03:38:07] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [138, -190]
+[03:38:07] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [138, -192]
+[03:38:07] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [138, -193]
+[03:38:07] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [138, -189]
+[03:38:07] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [138, -194]
+[03:38:07] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [138, -188]
+[03:38:08] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [138, -186]
+[03:38:08] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [138, -187]
+[03:38:08] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [138, -185]
+[03:38:08] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [138, -184]
+[03:38:08] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [139, -191]
+[03:38:08] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [139, -190]
+[03:38:08] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [139, -189]
+[03:38:08] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [139, -188]
+[03:38:08] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [139, -187]
+[03:38:08] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [139, -186]
+[03:38:08] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [139, -185]
+[03:38:08] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [139, -184]
+[03:38:08] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [140, -190]
+[03:38:08] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [140, -189]
+[03:38:08] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [140, -187]
+[03:38:08] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [140, -188]
+[03:38:08] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [140, -186]
+[03:38:08] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [140, -184]
+[03:38:08] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [140, -185]
+[03:38:08] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [141, -189]
+[03:38:08] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [141, -190]
+[03:38:08] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [141, -187]
+[03:38:09] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [141, -188]
+[03:38:09] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [141, -186]
+[03:38:09] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [141, -184]
+[03:38:09] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [141, -185]
+[03:38:09] [Server thread/WARN] [minecraft/MinecraftServer]: Can't keep up! Is the server overloaded? Running 46189ms or 923 ticks behind
+[03:38:09] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [142, -188]
+[03:38:09] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [142, -189]
+[03:38:09] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [142, -185]
+[03:38:09] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [142, -186]
+[03:38:09] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [142, -187]
+[03:38:09] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [142, -184]
+[03:38:09] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [131, -192]
+[03:38:09] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [131, -193]
+[03:38:09] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [131, -191]
+[03:38:09] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [131, -190]
+[03:38:09] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [131, -189]
+[03:38:10] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [131, -187]
+[03:38:10] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [131, -188]
+[03:38:10] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [131, -186]
+[03:38:10] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [131, -185]
+[03:38:10] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [131, -184]
+[03:38:10] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [131, -183]
+[03:38:10] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [133, -183]
+[03:38:10] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [132, -183]
+[03:38:10] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [135, -183]
+[03:38:10] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [134, -183]
+[03:38:10] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [137, -183]
+[03:38:10] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [136, -183]
+[03:38:10] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [138, -183]
+[03:38:10] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [139, -183]
+[03:38:10] [Worker-Main-2/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [140, -183]
+[03:38:11] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [141, -183]
+[03:38:11] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [142, -183]
+[03:38:11] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [143, -188]
+[03:38:11] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [143, -189]
+[03:38:11] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [143, -187]
+[03:38:11] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [143, -186]
+[03:38:11] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [143, -184]
+[03:38:11] [Worker-Main-1/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [143, -185]
+[03:38:11] [Worker-Main-3/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE feature runs in chunk [143, -183]
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 0 home [-23, 40] in box BoundingBox{minX=-363, minY=51, minZ=635, maxX=-348, maxY=59, maxZ=643}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 0 at BlockPos{x=-356, y=57, z=638}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 1 home [-22, 39] in box BoundingBox{minX=-363, minY=51, minZ=635, maxX=-348, maxY=59, maxZ=643}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 1 at BlockPos{x=-359, y=55, z=641}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 2 home [-22, 39] in box BoundingBox{minX=-363, minY=51, minZ=635, maxX=-348, maxY=59, maxZ=643}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 2 at BlockPos{x=-361, y=52, z=639}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 3 home [-23, 40] in box BoundingBox{minX=-363, minY=51, minZ=635, maxX=-348, maxY=59, maxZ=643}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 3 at BlockPos{x=-354, y=59, z=639}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 4 home [-23, 39] in box BoundingBox{minX=-363, minY=51, minZ=635, maxX=-348, maxY=59, maxZ=643}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 4 at BlockPos{x=-349, y=58, z=639}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 5 home [-23, 40] in box BoundingBox{minX=-363, minY=51, minZ=635, maxX=-348, maxY=59, maxZ=643}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 5 at BlockPos{x=-362, y=53, z=637}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.LateCrews/]: corpsedecay: 6 crew aboard the wreck at [-22, 39] (minecraft:overworld|minecraft:shipwreck|-22,39)
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 0 home [179, 10] in box BoundingBox{minX=2868, minY=47, minZ=155, maxX=2883, maxY=55, maxZ=163}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 0 at BlockPos{x=2880, y=51, z=162}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 1 home [179, 9] in box BoundingBox{minX=2868, minY=47, minZ=155, maxX=2883, maxY=55, maxZ=163}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 1 at BlockPos{x=2877, y=54, z=160}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 2 home [179, 9] in box BoundingBox{minX=2868, minY=47, minZ=155, maxX=2883, maxY=55, maxZ=163}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 2 at BlockPos{x=2873, y=53, z=159}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 3 home [179, 10] in box BoundingBox{minX=2868, minY=47, minZ=155, maxX=2883, maxY=55, maxZ=163}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 3 at BlockPos{x=2881, y=55, z=159}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 4 home [179, 10] in box BoundingBox{minX=2868, minY=47, minZ=155, maxX=2883, maxY=55, maxZ=163}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 4 at BlockPos{x=2878, y=53, z=157}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.LateCrews/]: corpsedecay: 5 crew aboard the wreck at [179, 9] (minecraft:overworld|minecraft:shipwreck|179,9)
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 0 home [-17, 184] in box BoundingBox{minX=-272, minY=52, minZ=2944, maxX=-264, maxY=60, maxZ=2959}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 0 at BlockPos{x=-265, y=58, z=2952}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 1 home [-17, 184] in box BoundingBox{minX=-272, minY=52, minZ=2944, maxX=-264, maxY=60, maxZ=2959}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 1 at BlockPos{x=-270, y=56, z=2949}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 2 home [-17, 184] in box BoundingBox{minX=-272, minY=52, minZ=2944, maxX=-264, maxY=60, maxZ=2959}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 2 at BlockPos{x=-267, y=56, z=2949}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 3 home [-17, 184] in box BoundingBox{minX=-272, minY=52, minZ=2944, maxX=-264, maxY=60, maxZ=2959}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 3 at BlockPos{x=-267, y=58, z=2951}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.LateCrews/]: corpsedecay: 4 crew aboard the wreck at [-17, 184] (minecraft:overworld|minecraft:shipwreck|-17,184)
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 0 home [-207, -6] in box BoundingBox{minX=-3304, minY=45, minZ=-101, maxX=-3277, maxY=53, maxZ=-93}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 0 at BlockPos{x=-3292, y=46, z=-98}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 1 home [-207, -7] in box BoundingBox{minX=-3304, minY=45, minZ=-101, maxX=-3277, maxY=53, maxZ=-93}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 1 at BlockPos{x=-3295, y=49, z=-99}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 2 home [-207, -7] in box BoundingBox{minX=-3304, minY=45, minZ=-101, maxX=-3277, maxY=53, maxZ=-93}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 2 at BlockPos{x=-3294, y=49, z=-95}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 3 home [-206, -7] in box BoundingBox{minX=-3304, minY=45, minZ=-101, maxX=-3277, maxY=53, maxZ=-93}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 3 at BlockPos{x=-3294, y=49, z=-97}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.LateCrews/]: corpsedecay: 4 crew aboard the wreck at [-206, -7] (minecraft:overworld|minecraft:shipwreck|-206,-7)
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 0 home [15, -156] in box BoundingBox{minX=229, minY=49, minZ=-2485, maxX=256, maxY=57, maxZ=-2477}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 0 at BlockPos{x=237, y=53, z=-2481}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 1 home [15, -155] in box BoundingBox{minX=229, minY=49, minZ=-2485, maxX=256, maxY=57, maxZ=-2477}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 1 at BlockPos{x=246, y=53, z=-2481}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 2 home [14, -156] in box BoundingBox{minX=229, minY=49, minZ=-2485, maxX=256, maxY=57, maxZ=-2477}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 2 at BlockPos{x=236, y=55, z=-2478}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 3 home [14, -156] in box BoundingBox{minX=229, minY=49, minZ=-2485, maxX=256, maxY=57, maxZ=-2477}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 3 at BlockPos{x=247, y=53, z=-2480}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 4 home [14, -155] in box BoundingBox{minX=229, minY=49, minZ=-2485, maxX=256, maxY=57, maxZ=-2477}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 4 at BlockPos{x=234, y=54, z=-2481}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 5 home [15, -156] in box BoundingBox{minX=229, minY=49, minZ=-2485, maxX=256, maxY=57, maxZ=-2477}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 5 at BlockPos{x=239, y=50, z=-2480}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.LateCrews/]: corpsedecay: 6 crew aboard the wreck at [15, -156] (minecraft:overworld|minecraft:shipwreck|15,-156)
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 0 home [171, 169] in box BoundingBox{minX=2736, minY=47, minZ=2704, maxX=2744, maxY=55, maxZ=2727}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 0 at BlockPos{x=2743, y=51, z=2722}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 1 home [171, 169] in box BoundingBox{minX=2736, minY=47, minZ=2704, maxX=2744, maxY=55, maxZ=2727}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 1 at BlockPos{x=2738, y=55, z=2712}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 2 home [171, 169] in box BoundingBox{minX=2736, minY=47, minZ=2704, maxX=2744, maxY=55, maxZ=2727}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 2 at BlockPos{x=2738, y=53, z=2709}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 3 home [171, 169] in box BoundingBox{minX=2736, minY=47, minZ=2704, maxX=2744, maxY=55, maxZ=2727}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 3 at BlockPos{x=2742, y=51, z=2710}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.LateCrews/]: corpsedecay: 4 crew aboard the wreck at [171, 169] (minecraft:overworld|minecraft:shipwreck|171,169)
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 0 home [-205, -213] in box BoundingBox{minX=-3275, minY=51, minZ=-3397, maxX=-3254, maxY=59, maxZ=-3389}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 0 at BlockPos{x=-3256, y=58, z=-3394}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 1 home [-205, -213] in box BoundingBox{minX=-3275, minY=51, minZ=-3397, maxX=-3254, maxY=59, maxZ=-3389}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 1 at BlockPos{x=-3255, y=59, z=-3393}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 2 home [-205, -212] in box BoundingBox{minX=-3275, minY=51, minZ=-3397, maxX=-3254, maxY=59, maxZ=-3389}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 2 at BlockPos{x=-3257, y=58, z=-3392}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 3 home [-204, -212] in box BoundingBox{minX=-3275, minY=51, minZ=-3397, maxX=-3254, maxY=59, maxZ=-3389}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 3 at BlockPos{x=-3263, y=55, z=-3390}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 4 home [-205, -212] in box BoundingBox{minX=-3275, minY=51, minZ=-3397, maxX=-3254, maxY=59, maxZ=-3389}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 4 at BlockPos{x=-3262, y=58, z=-3394}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 5 home [-205, -212] in box BoundingBox{minX=-3275, minY=51, minZ=-3397, maxX=-3254, maxY=59, maxZ=-3389}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 5 at BlockPos{x=-3258, y=58, z=-3394}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.LateCrews/]: corpsedecay: 6 crew aboard the wreck at [-204, -213] (minecraft:overworld|minecraft:shipwreck|-204,-213)
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 0 home [137, -189] in box BoundingBox{minX=2181, minY=48, minZ=-3013, maxX=2202, maxY=56, maxZ=-3005}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 0 at BlockPos{x=2201, y=55, z=-3010}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 1 home [136, -189] in box BoundingBox{minX=2181, minY=48, minZ=-3013, maxX=2202, maxY=56, maxZ=-3005}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 1 at BlockPos{x=2200, y=55, z=-3008}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 2 home [136, -188] in box BoundingBox{minX=2181, minY=48, minZ=-3013, maxX=2202, maxY=56, maxZ=-3005}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 2 at BlockPos{x=2193, y=52, z=-3006}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 3 home [136, -189] in box BoundingBox{minX=2181, minY=48, minZ=-3013, maxX=2202, maxY=56, maxZ=-3005}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.PirateFeature/]: PIRATE member 3 at BlockPos{x=2190, y=55, z=-3010}
+[03:38:12] [Server thread/INFO] [co.ha.co.wo.LateCrews/]: corpsedecay: 4 crew aboard the wreck at [137, -189] (minecraft:overworld|minecraft:shipwreck|137,-189)
+[03:38:52] [Server thread/INFO] [co.ha.co.te.GenTest/]: GENTEST shipwreck near BlockPos{x=-352, y=0, z=624} has 9 bodies
+[03:38:52] [Server thread/INFO] [co.ha.co.te.GenTest/]: GENTEST shipwreck near BlockPos{x=2864, y=0, z=144} has 8 bodies
+[03:38:52] [Server thread/INFO] [co.ha.co.te.GenTest/]: GENTEST shipwreck near BlockPos{x=-272, y=0, z=2944} has 9 bodies
+[03:38:52] [Server thread/INFO] [co.ha.co.te.GenTest/]: GENTEST shipwreck near BlockPos{x=-3296, y=0, z=-112} has 7 bodies
+[03:38:52] [Server thread/INFO] [co.ha.co.te.GenTest/]: GENTEST shipwreck near BlockPos{x=240, y=0, z=-2496} has 12 bodies
+[03:38:52] [Server thread/INFO] [co.ha.co.te.GenTest/]: GENTEST shipwreck near BlockPos{x=2736, y=0, z=2704} has 10 bodies
+[03:38:52] [Server thread/INFO] [co.ha.co.te.GenTest/]: GENTEST shipwreck near BlockPos{x=-3264, y=0, z=-3408} has 11 bodies
+[03:38:52] [Server thread/INFO] [co.ha.co.te.GenTest/]: GENTEST shipwreck near BlockPos{x=2192, y=0, z=-3024} has 7 bodies
+[03:38:52] [Server thread/INFO] [co.ha.co.te.GenTest/]: GENTEST 8 shipwrecks, 8 with a crew, 73 bodies, 71 dressed, 8 late crews
+[03:38:52] [Server thread/INFO] [co.ha.co.te.GenTest/]: GENTEST PASS
+[03:38:52] [Server thread/INFO] [minecraft/MinecraftServer]: Stopping server
+[03:38:52] [Server thread/INFO] [minecraft/MinecraftServer]: Saving players
+[03:38:52] [Server thread/INFO] [minecraft/MinecraftServer]: Saving worlds
+[03:38:56] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[world]'/minecraft:overworld
+[03:39:00] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[world]'/minecraft:the_nether
+[03:39:00] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[world]'/minecraft:the_end
+[03:39:00] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (world): All chunks are saved
+[03:39:00] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[03:39:00] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[03:39:00] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage: All dimensions are saved
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/gentest-1793936187413.json
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.8/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 2m 37s
+11 actionable tasks: 3 executed, 8 up-to-date
