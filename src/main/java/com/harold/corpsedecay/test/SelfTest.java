@@ -898,7 +898,8 @@ public final class SelfTest {
         chicken.hurt(level.damageSources().playerAttack(p), 1000F);
         // pinned to a wall: a stone wall at z = bz + 13, a zombie just in front, shot from the front
         for (int y = 0; y < 4; y++) for (int dx = -2; dx <= 2; dx++) level.setBlockAndUpdate(new BlockPos(bx + dx, groundY + y, bz + 13), Blocks.STONE.defaultBlockState());
-        Mob pinned = spawn(EntityType.ZOMBIE, bx, bz + 12.15);
+        net.minecraft.world.entity.monster.Zombie pinned = spawn(EntityType.ZOMBIE, bx, bz + 12.15);
+        pinned.setBaby(false); // a baby is too short for the arrow
         pinned.setNoAi(true);
         pinned.setHealth(1F);
         Arrow arrow = new Arrow(level, bx + 0.5, groundY + 1.3, bz + 8);

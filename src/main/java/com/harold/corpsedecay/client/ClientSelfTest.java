@@ -105,6 +105,7 @@ public final class ClientSelfTest {
             net.minecraft.world.entity.monster.Zombie pz = net.minecraft.world.entity.EntityType.ZOMBIE.create(l);
             pz.moveTo(ex + 0.5, g, ez + 3.65, 180F, 0F);
             pz.setNoAi(true);
+            pz.setBaby(false);
             pz.setItemSlot(net.minecraft.world.entity.EquipmentSlot.HEAD, new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.IRON_HELMET));
             l.addFreshEntity(pz);
             net.minecraft.world.entity.projectile.Arrow arrow = new net.minecraft.world.entity.projectile.Arrow(l, ex + 0.5, g + 1.3, ez + 3.2);
@@ -122,6 +123,7 @@ public final class ClientSelfTest {
             net.minecraft.world.entity.monster.Zombie lz = net.minecraft.world.entity.EntityType.ZOMBIE.create(l);
             lz.moveTo(ex + 3.5, g, ez - 5.5, 0F, 0F);
             lz.setNoAi(true);
+            lz.setBaby(false);
             lz.setItemSlot(net.minecraft.world.entity.EquipmentSlot.CHEST, new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.IRON_CHESTPLATE));
             lz.setDropChance(net.minecraft.world.entity.EquipmentSlot.CHEST, 2F);
             lz.setItemSlot(net.minecraft.world.entity.EquipmentSlot.MAINHAND, new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.IRON_SHOVEL));
