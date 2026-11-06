@@ -52,6 +52,8 @@ public final class CorpseClient {
     private Vector3f[] limbVel = new Vector3f[0];
     private int quiet;
     private boolean warmed;
+    /** limbs held in place while the rest swing (a body tied up), or null */
+    private CompoundTag held;
 
     public net.minecraft.world.entity.projectile.Arrow arrow;
     public net.minecraft.world.entity.projectile.SpectralArrow spectral;
@@ -68,6 +70,13 @@ public final class CorpseClient {
         CorpseClient c = of(corpse);
         c.prevBody.set(c.curBody);
         c.curBody.set(corpse.orientation());
+        if (corpse.state() == CorpseEntity.HANGING) {
+            // turning slowly on the rope, swinging a little
+            float t = (corpse.level().getGameTime() + (corpse.getId() % 97)) * 0.05F;
+            c.curBody.set(new Quaternionf().rotationY(0.12F * (float) Math.sin(t * 0.37F))
+                    .mul(new Quaternionf(corpse.orientation()))
+                    .premul(new Quaternionf().rotationX(0.035F * (float) Math.sin(t)).rotateZ(0.03F * (float) Math.sin(t * 0.71F + 1F))));
+        }
         if (!c.bodyInit) {
             c.prevBody.set(c.curBody);
             c.bodyInit = true;
@@ -157,7 +166,8 @@ public final class CorpseClient {
     private void tickLimbs(CorpseEntity corpse) {
         if (info == null || info.limbs.isEmpty()) return;
         CompoundTag figure = corpse.figurePose();
-        if (!figure.isEmpty()) {
+        held = figure.getBoolean("_sim") ? figure : null;
+        if (!figure.isEmpty() && held == null) {
             // frozen where it stood: every limb held just so, the rest as at rest
             for (int i = 0; i < limbCur.length; i++) {
                 ModelInfo.Part l = info.limbs.get(i);
@@ -173,7 +183,7 @@ public final class CorpseClient {
             return;
         }
         if (corpse.cause() == com.harold.corpsedecay.DeathCause.CRUSHED) return; // squashed flat as it stood
-        boolean bodyMoving = !corpse.settled() || prevBody.dot(curBody) < 0.99999F;
+        boolean bodyMoving = !corpse.settled() || prevBody.dot(curBody) < 0.99999F || corpse.state() == CorpseEntity.HANGING;
         if (!warmed && corpse.settled()) {
             // a body that was already lying here when it came into view: settle its limbs at once
             for (int i = 0; i < 160; i++) step(corpse);
@@ -204,6 +214,13 @@ public final class CorpseClient {
         List<ModelInfo.Part> limbs = info.limbs;
         for (int i = 0; i < limbs.size(); i++) {
             ModelInfo.Part l = limbs.get(i);
+            if (held != null && l.name != null && held.contains(l.name)) {
+                // tied: this limb is held just so
+                net.minecraft.nbt.ListTag a = held.getList(l.name, net.minecraft.nbt.Tag.TAG_FLOAT);
+                limbCur[i].rotationZYX(a.getFloat(2), a.getFloat(1), a.getFloat(0));
+                limbVel[i].set(0);
+                continue;
+            }
             Quaternionf parentInv = new Quaternionf(l.parentRot).conjugate();
             Vector3f g = parentInv.transform(new Vector3f(gModel));
             Quaternionf rest = l.restRotation();

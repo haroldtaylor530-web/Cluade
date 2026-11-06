@@ -18,6 +18,9 @@ public final class ModRegistry {
     private static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, CorpseDecay.MODID);
     private static final DeferredRegister<net.minecraft.world.level.levelgen.feature.Feature<?>> FEATURES =
             DeferredRegister.create(ForgeRegistries.FEATURES, CorpseDecay.MODID);
+    private static final DeferredRegister<net.minecraft.world.item.Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, CorpseDecay.MODID);
+    public static final RegistryObject<com.harold.corpsedecay.item.BodyBagItem> BODY_BAG = ITEMS.register("body_bag",
+            () -> new com.harold.corpsedecay.item.BodyBagItem(new net.minecraft.world.item.Item.Properties().stacksTo(1)));
     private static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, CorpseDecay.MODID);
 
     public static final RegistryObject<EntityType<CorpseEntity>> CORPSE = ENTITIES.register("corpse",
@@ -87,6 +90,10 @@ public final class ModRegistry {
 
     static void register(IEventBus bus) {
         ENTITIES.register(bus);
+        ITEMS.register(bus);
+        bus.addListener((net.minecraftforge.event.BuildCreativeModeTabContentsEvent e) -> {
+            if (e.getTabKey() == net.minecraft.world.item.CreativeModeTabs.TOOLS_AND_UTILITIES) e.accept(BODY_BAG);
+        });
         PARTICLES.register(bus);
         FEATURES.register(bus);
         com.harold.corpsedecay.block.FossilBlocks.register(bus);

@@ -161,8 +161,21 @@ there, rotting through stages down to a bare skeleton, still wearing whatever it
   ends up wearing them.
 - **Arrows stay in.** Every arrow that hit the mob stays stuck in the body at the exact spot and
   angle it went in. Arrows shot into a corpse stick too.
-- **Looting.** Right-click a body to take off whatever the mob would normally have dropped, and
-  pull out arrows you can pick back up. Gear the mob wouldn't have dropped stays on it.
+- **Belongings.** What a mob drops stays inside its body instead of spilling everywhere (great
+  for big battles). Right-click a body to look through it: the gear it would have dropped (taking
+  it out takes it off the model), arrows you can pull back out, and everything else it carried.
+  Gear the mob wouldn't have dropped stays on it. Whatever's left falls out when the body crumbles.
+- **Pinned by arrows.** Shoot a mob dead with a wall right behind it and the arrow pins it to the
+  wall, upright and slumped. Hit it or pull the arrow out and it drops.
+- **Dragging.** Sneak and right-click a body with an empty hand to grab it and drag it along
+  behind you (you walk slower); do it again to let go. Right-click it with a lead to lead it on a
+  rope instead.
+- **Tying up and hanging.** Leading a body on a lead, right-click a fence: if there's room under
+  the fence the body hangs from it, by the wrists (animals by their hind legs, like game in a
+  hunting camp), turning slowly on the rope; otherwise it's tied standing against the post. Sneak
+  + right-click or use shears to cut it down; break the fence and it falls.
+- **Body bag.** Leather and string make a body bag that holds five bodies: right-click a body to
+  bag it, right-click the ground to lay it down again. Bodies don't rot in the bag.
 - **Clearing up.** Sneak and hit a body to break it up. Skeletons crumble away after an hour
   (configurable, or never).
 
@@ -193,6 +206,8 @@ Open **Mods → Corpse Decay → Config** for the settings screen: a moonlit gra
 | `maxCorpses` | 60 | Most corpses per dimension; the oldest crumble first (stops mob farms lagging) |
 | `ragdollForce` | 1.0 | How hard killing blows throw bodies |
 | `lootAllEquipment` | false | Let players take everything off a body, not just what would have dropped |
+| `keepDropsInBody` | true | A mob's drops stay inside its body (turn off for mob farms) |
+| `pinToWalls` | true | Arrow kills against a wall pin the body to it |
 | `flies` | true | Flies around rotting bodies |
 | `mummify` | true | Bodies in swamps and frozen biomes mummify instead of rotting to bones |
 | `remains` | true | Old remains, mummies, whale falls, shipwreck crews and ghost ships in newly generated chunks |

@@ -15,6 +15,8 @@ public final class Config {
     public static final ForgeConfigSpec.IntValue MAX_CORPSES;
     public static final ForgeConfigSpec.DoubleValue RAGDOLL_FORCE;
     public static final ForgeConfigSpec.BooleanValue LOOT_ALL_EQUIPMENT;
+    public static final ForgeConfigSpec.BooleanValue KEEP_DROPS;
+    public static final ForgeConfigSpec.BooleanValue PIN_TO_WALLS;
     public static final ForgeConfigSpec.BooleanValue FLIES;
     public static final ForgeConfigSpec.BooleanValue MUMMIFY;
     public static final ForgeConfigSpec.BooleanValue REMAINS;
@@ -37,6 +39,10 @@ public final class Config {
                 .defineInRange("ragdollForce", 1.0, 0.0, 10.0);
         LOOT_ALL_EQUIPMENT = b.comment("Let players take every piece of armour and held item off a corpse, not only what the mob would normally drop.")
                 .define("lootAllEquipment", false);
+        KEEP_DROPS = b.comment("Items a mob drops stay inside its body instead of spilling on the ground: right-click the body to look through them. Whatever's left falls out when the body crumbles.")
+                .define("keepDropsInBody", true);
+        PIN_TO_WALLS = b.comment("A mob killed by an arrow with a wall right behind it is pinned to the wall by the arrow.")
+                .define("pinToWalls", true);
         FLIES = b.comment("Flies buzz around rotting bodies.").define("flies", true);
         MUMMIFY = b.comment("Bodies left in swamps turn into dark leathery bog bodies, and bodies left in frozen places freeze-dry, instead of rotting to bones.")
                 .define("mummify", true);

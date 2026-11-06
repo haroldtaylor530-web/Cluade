@@ -11,6 +11,8 @@ import com.harold.corpsedecay.corpse.CorpseEntity;
 import com.mojang.logging.LogUtils;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -205,12 +207,18 @@ public final class SelfTest {
         check(copy.settled() && copy.equipment(EquipmentSlot.CHEST).is(Items.DIAMOND_CHESTPLATE) && copy.arrows().size() == 1
                 && copy.lootable(EquipmentSlot.CHEST) && copy.deathTime() == zombieCorpse.deathTime(), "corpse saves and loads");
 
-        // looting
+        // looting: the body's belongings
         FakePlayer player = FakePlayerFactory.getMinecraft(level);
         player.moveTo(zombieCorpse.getX(), zombieCorpse.getY(), zombieCorpse.getZ() - 1.5);
-        zombieCorpse.interact(player, InteractionHand.MAIN_HAND);
-        check(!items(Items.DIAMOND_CHESTPLATE).isEmpty(), "right click takes the chestplate off");
-        check(!items(Items.ARROW).isEmpty(), "right click pulls the arrow out");
+        com.harold.corpsedecay.corpse.CorpseLoot loot = new com.harold.corpsedecay.corpse.CorpseLoot(zombieCorpse);
+        ItemStack tookChest = ItemStack.EMPTY, tookArrow = ItemStack.EMPTY;
+        for (int i = 0; i < loot.getContainerSize(); i++) {
+            if (loot.getItem(i).is(Items.DIAMOND_CHESTPLATE)) tookChest = loot.removeItemNoUpdate(i);
+            else if (loot.getItem(i).is(Items.ARROW)) tookArrow = loot.removeItemNoUpdate(i);
+        }
+        check(tookChest.is(Items.DIAMOND_CHESTPLATE), "the chestplate can be taken out of the body's belongings");
+        check(tookArrow.is(Items.ARROW), "the arrow can be pulled out from the belongings");
+        check(!loot.canPlaceItem(0, new ItemStack(Items.DIRT)), "nothing can be put into a body");
         check(zombieCorpse.equipment(EquipmentSlot.CHEST).isEmpty(), "chestplate is gone from the body");
         check(zombieCorpse.equipment(EquipmentSlot.HEAD).is(Items.IRON_HELMET), "helmet stays on");
         check(zombieCorpse.arrows().isEmpty(), "arrow is gone from the body");
@@ -396,7 +404,7 @@ public final class SelfTest {
             }
             mummyAndWhaleTest(server, () -> {
                 remainsLeft = 3 + extra + diggers + extraRemains;
-                limitTest(server);
+                handlingTest(server, () -> limitTest(server));
             });
         });
     }
@@ -877,6 +885,114 @@ public final class SelfTest {
         check(com.harold.corpsedecay.block.FossilBlocks.pieces(com.harold.corpsedecay.block.FossilBlocks.CAMBRIAN).size() == 10
                 && com.harold.corpsedecay.block.FossilBlocks.pieces(com.harold.corpsedecay.block.FossilBlocks.PAINTING).size() == 7,
                 "ten Cambrian fossils and seven cave paintings");
+    }
+
+    /** 0.9: drops kept in the body, pinned by an arrow, dragged, led, tied, hung, bagged. */
+    private static void handlingTest(MinecraftServer server, Runnable then) {
+        int bx = 70, bz = 70;
+        FakePlayer p = FakePlayerFactory.getMinecraft(level);
+        // drops stay in the body
+        Mob chicken = spawn(EntityType.CHICKEN, bx, bz);
+        p.moveTo(bx, groundY, bz - 2);
+        chicken.hurt(level.damageSources().playerAttack(p), 1000F);
+        // pinned to a wall: a stone wall at z = bz + 13, a zombie just in front, shot from the front
+        for (int y = 0; y < 4; y++) for (int dx = -2; dx <= 2; dx++) level.setBlockAndUpdate(new BlockPos(bx + dx, groundY + y, bz + 13), Blocks.STONE.defaultBlockState());
+        Mob pinned = spawn(EntityType.ZOMBIE, bx, bz + 12.15);
+        pinned.setNoAi(true);
+        pinned.setHealth(1F);
+        Arrow arrow = new Arrow(level, bx + 0.5, groundY + 1.3, bz + 8);
+        arrow.shoot(0, 0, 1, 3F, 0F);
+        arrow.setBaseDamage(20);
+        level.addFreshEntity(arrow);
+        later(server, 30, () -> {
+            List<CorpseEntity> near = corpses(new AABB(bx - 8, groundY - 3, bz - 8, bx + 8, groundY + 6, bz + 20));
+            CorpseEntity chickenBody = byType(near, "minecraft:chicken");
+            boolean kept = chickenBody != null && chickenBody.stored().stream().anyMatch(st -> st.is(Items.CHICKEN));
+            check(kept, "a chicken's raw chicken stays inside its body");
+            check(level.getEntitiesOfClass(ItemEntity.class, new AABB(bx - 3, groundY - 2, bz - 3, bx + 3, groundY + 3, bz + 3),
+                    it -> it.getItem().is(Items.CHICKEN)).isEmpty(), "nothing spills on the ground");
+            CorpseEntity pin = byType(near, "minecraft:zombie");
+            check(pin != null && pin.state() == CorpseEntity.PINNED, "a zombie shot against a wall is pinned to it ("
+                    + (pin == null ? "no body" : "state " + pin.state()) + ")");
+            if (pin != null) {
+                org.joml.Vector3f up = pin.orientation().transform(new org.joml.Vector3f(0, 1, 0));
+                check(up.y > 0.9F && pin.getZ() > bz + 12 && pin.getY() > groundY + 0.8, "the pinned body hangs upright against the wall");
+                pin.hurt(level.damageSources().playerAttack(p), 2F);
+                check(pin.state() == CorpseEntity.FREE && !pin.settled(), "hitting it pulls it off the wall and it falls");
+            }
+            // dragging by hand: the body follows the player
+            Mob z2 = spawn(EntityType.ZOMBIE, bx + 6, bz);
+            z2.hurt(level.damageSources().generic(), 1000F);
+            later(server, 60, () -> {
+                CorpseEntity body = nearest(corpses(new AABB(bx + 2, groundY - 3, bz - 4, bx + 10, groundY + 4, bz + 4)), bx + 6, bz);
+                check(body != null, "a body to drag");
+                if (body == null) {
+                    then.run();
+                    return;
+                }
+                p.moveTo(bx + 6, groundY, bz - 1);
+                body.startDrag(p, false);
+                check(body.holder() == p.getId() && !body.settled(), "sneak + right click grabs the body");
+                Vec3 start = body.position();
+                for (int i = 0; i < 40; i++) {
+                    p.moveTo(bx + 6, groundY, bz - 1 - i * 0.15);
+                    body.tick();
+                }
+                double moved = start.distanceTo(body.position());
+                check(moved > 3.0, String.format("the body is dragged along (%.1f blocks)", moved));
+                body.stopDrag(false);
+                check(body.holder() == -1, "letting go");
+                // on a lead, then tied to a fence that has room below it: it hangs
+                BlockPos post = new BlockPos(bx + 10, groundY + 3, bz - 6);
+                level.setBlockAndUpdate(post.east(), Blocks.STONE.defaultBlockState());
+                level.setBlockAndUpdate(post, Blocks.OAK_FENCE.defaultBlockState());
+                body.startDrag(p, true);
+                check(body.roped(), "a lead ties onto the body");
+                p.moveTo(bx + 9, groundY, bz - 4);
+                for (int i = 0; i < 20; i++) body.tick();
+                check(body.tieTo(post, p) && body.state() == CorpseEntity.HANGING, "tied to a high fence, the body hangs from it");
+                check(body.getY() < post.getY() && Math.abs(body.getX() - (post.getX() + 0.5)) < 0.1 && body.figurePose().contains("right_arm"),
+                        "it hangs under the knot by its wrists");
+                // a fence on the ground: tied standing against the post
+                Mob z3 = spawn(EntityType.ZOMBIE, bx + 14, bz);
+                z3.hurt(level.damageSources().generic(), 1000F);
+                BlockPos low = new BlockPos(bx + 14, groundY, bz - 3);
+                level.setBlockAndUpdate(low, Blocks.OAK_FENCE.defaultBlockState());
+                later(server, 60, () -> {
+                    CorpseEntity b3 = nearest(corpses(new AABB(bx + 11, groundY - 3, bz - 4, bx + 17, groundY + 4, bz + 4)), bx + 14, bz);
+                    if (b3 != null) {
+                        p.moveTo(bx + 14, groundY, bz);
+                        b3.startDrag(p, true);
+                        check(b3.tieTo(low, p) && b3.state() == CorpseEntity.TIED, "tied to a fence post on the ground");
+                        org.joml.Vector3f up = b3.orientation().transform(new org.joml.Vector3f(0, 1, 0));
+                        check(up.y > 0.9F && Math.abs(b3.getY() - b3.bodyHeight() / 2 - groundY) < 0.2, "it stands tied against the post");
+                    } else check(false, "a body to tie to a post");
+                    // break the high fence: the hanging body falls and its lead drops
+                    level.setBlockAndUpdate(post, Blocks.AIR.defaultBlockState());
+                    later(server, 25, () -> {
+                        check(body.state() == CorpseEntity.FREE, "when the fence goes, the body comes down");
+                        check(!level.getEntitiesOfClass(ItemEntity.class, body.getBoundingBox().inflate(4), it -> it.getItem().is(Items.LEAD)).isEmpty(),
+                                "and its lead drops");
+                        // body bag
+                        ItemStack bag = new ItemStack(com.harold.corpsedecay.ModRegistry.BODY_BAG.get());
+                        long died = body.deathTime();
+                        check(com.harold.corpsedecay.item.BodyBagItem.bag(bag, body, p) && body.isRemoved()
+                                && com.harold.corpsedecay.item.BodyBagItem.bodies(bag).size() == 1, "a body goes into the body bag");
+                        later(server, 40, () -> {
+                            p.setItemInHand(InteractionHand.MAIN_HAND, bag);
+                            BlockPos ground = new BlockPos(bx + 4, groundY - 1, bz + 4);
+                            bag.useOn(new net.minecraft.world.item.context.UseOnContext(p, InteractionHand.MAIN_HAND,
+                                    new net.minecraft.world.phys.BlockHitResult(Vec3.atCenterOf(ground).add(0, 0.5, 0), net.minecraft.core.Direction.UP, ground, false)));
+                            CorpseEntity out = nearest(corpses(new AABB(bx, groundY - 2, bz, bx + 8, groundY + 5, bz + 8)), bx + 4, bz + 4);
+                            check(out != null && out.mobType().equals("minecraft:zombie") && com.harold.corpsedecay.item.BodyBagItem.bodies(bag).isEmpty(),
+                                    "it can be laid down again");
+                            check(out != null && out.deathTime() >= died + 39, "it didn't rot while in the bag");
+                            then.run();
+                        });
+                    });
+                });
+            });
+        });
     }
 
     private static void limitTest(MinecraftServer server) {

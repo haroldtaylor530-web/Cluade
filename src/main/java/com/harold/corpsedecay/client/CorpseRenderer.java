@@ -125,7 +125,59 @@ public class CorpseRenderer extends EntityRenderer<CorpseEntity> {
         }
         renderArrows(corpse, cc, ps, buffers, light);
         ps.popPose();
+        renderRope(corpse, cc, partial, ps, buffers);
         super.render(corpse, yaw, partial, ps, buffers, light);
+    }
+
+    /** The lead: from the body to the player leading it, or to the knot on the fence it's tied to. */
+    private static void renderRope(CorpseEntity corpse, CorpseClient cc, float partial, PoseStack ps, MultiBufferSource buffers) {
+        if (!corpse.roped()) return;
+        net.minecraft.world.phys.Vec3 to;
+        int state = corpse.state();
+        if (state == CorpseEntity.TIED || state == CorpseEntity.HANGING) {
+            net.minecraft.core.BlockPos a = corpse.anchor();
+            to = new net.minecraft.world.phys.Vec3(a.getX() + 0.5, a.getY() + 0.4, a.getZ() + 0.5);
+        } else {
+            net.minecraft.world.entity.Entity h = corpse.level().getEntity(corpse.holder());
+            if (h == null) return;
+            to = h.getRopeHoldPosition(partial);
+        }
+        org.joml.Vector3f local = cc.body(partial).transform(corpse.ropePoint());
+        double cx = net.minecraft.util.Mth.lerp(partial, corpse.xo, corpse.getX());
+        double cy = net.minecraft.util.Mth.lerp(partial, corpse.yo, corpse.getY());
+        double cz = net.minecraft.util.Mth.lerp(partial, corpse.zo, corpse.getZ());
+        double fx = cx + local.x, fy = cy + local.y, fz = cz + local.z;
+        float dx = (float) (to.x - fx), dy = (float) (to.y - fy), dz = (float) (to.z - fz);
+        if (dx * dx + dz * dz < 1e-6F) dx = 0.001F;
+        ps.pushPose();
+        ps.translate(local.x, local.y, local.z);
+        com.mojang.blaze3d.vertex.VertexConsumer vc = buffers.getBuffer(RenderType.leash());
+        org.joml.Matrix4f m = ps.last().pose();
+        float k = net.minecraft.util.Mth.invSqrt(dx * dx + dz * dz) * 0.025F / 2.0F;
+        float ox = dz * k, oz = dx * k;
+        net.minecraft.core.BlockPos p0 = net.minecraft.core.BlockPos.containing(fx, fy, fz);
+        net.minecraft.core.BlockPos p1 = net.minecraft.core.BlockPos.containing(to);
+        var level = corpse.level();
+        int b0 = level.getBrightness(net.minecraft.world.level.LightLayer.BLOCK, p0), b1 = level.getBrightness(net.minecraft.world.level.LightLayer.BLOCK, p1);
+        int s0 = level.getBrightness(net.minecraft.world.level.LightLayer.SKY, p0), s1 = level.getBrightness(net.minecraft.world.level.LightLayer.SKY, p1);
+        for (int i = 0; i <= 24; i++) ropePair(vc, m, dx, dy, dz, b0, b1, s0, s1, 0.025F, 0.025F, ox, oz, i, false);
+        for (int i = 24; i >= 0; i--) ropePair(vc, m, dx, dy, dz, b0, b1, s0, s1, 0.025F, 0.0F, ox, oz, i, true);
+        ps.popPose();
+    }
+
+    /** One rung of the rope ribbon (the same shape as a vanilla lead, sagging between its ends). */
+    private static void ropePair(com.mojang.blaze3d.vertex.VertexConsumer vc, org.joml.Matrix4f m, float dx, float dy, float dz,
+                                 int b0, int b1, int s0, int s1, float y0, float y1, float ox, float oz, int i, boolean flip) {
+        float f = i / 24.0F;
+        int light = net.minecraft.client.renderer.LightTexture.pack((int) net.minecraft.util.Mth.lerp(f, b0, b1),
+                (int) net.minecraft.util.Mth.lerp(f, s0, s1));
+        float shade = i % 2 == (flip ? 1 : 0) ? 0.7F : 1.0F;
+        float r = 0.5F * shade, g = 0.4F * shade, b = 0.3F * shade;
+        float x = dx * f;
+        float y = dy > 0.0F ? dy * f * f : dy - dy * (1.0F - f) * (1.0F - f);
+        float z = dz * f;
+        vc.vertex(m, x - ox, y + y1, z + oz).color(r, g, b, 1.0F).uv2(light).endVertex();
+        vc.vertex(m, x + ox, y + y0 - y1, z - oz).color(r, g, b, 1.0F).uv2(light).endVertex();
     }
 
     @SuppressWarnings("rawtypes")

@@ -69,6 +69,14 @@ public class CorpseEntity extends Entity {
     /** limbs held still in a pose (part name -> x, y, z angles) for a body frozen where it stood */
     private static final EntityDataAccessor<CompoundTag> FIGURE = SynchedEntityData.defineId(CorpseEntity.class, EntityDataSerializers.COMPOUND_TAG);
     private static final EntityDataAccessor<Byte> MUMMY = SynchedEntityData.defineId(CorpseEntity.class, EntityDataSerializers.BYTE);
+    /** {@link #FREE}, {@link #PINNED}, {@link #TIED} or {@link #HANGING} */
+    private static final EntityDataAccessor<Byte> STATE = SynchedEntityData.defineId(CorpseEntity.class, EntityDataSerializers.BYTE);
+    /** the wall a pinned body is stuck to, or the fence it's tied to */
+    private static final EntityDataAccessor<net.minecraft.core.BlockPos> ANCHOR = SynchedEntityData.defineId(CorpseEntity.class, EntityDataSerializers.BLOCK_POS);
+    /** the player dragging it (by hand or on a lead), or -1 */
+    private static final EntityDataAccessor<Integer> HOLDER = SynchedEntityData.defineId(CorpseEntity.class, EntityDataSerializers.INT);
+    /** a lead is tied to it (drawn to the holder or the fence) */
+    private static final EntityDataAccessor<Boolean> ROPED = SynchedEntityData.defineId(CorpseEntity.class, EntityDataSerializers.BOOLEAN);
     @SuppressWarnings("unchecked")
     private static final EntityDataAccessor<ItemStack>[] EQUIP = new EntityDataAccessor[6];
 
@@ -79,6 +87,12 @@ public class CorpseEntity extends Entity {
     }
 
     public static final int MAX_ARROWS = 16;
+    /** how many stacks of a mob's drops its body holds */
+    public static final int STORE = CorpseLoot.SIZE;
+    public static final int FREE = 0, PINNED = 1, TIED = 2, HANGING = 3;
+    private static final java.util.UUID DRAG_SLOW = java.util.UUID.fromString("6f1c7e43-2d0a-4b8e-9a51-c0b5d3e1a7f2");
+    /** what the mob dropped, kept inside the body */
+    private final net.minecraft.core.NonNullList<ItemStack> stored = net.minecraft.core.NonNullList.withSize(STORE, ItemStack.EMPTY);
     private static final byte EVENT_CRUMBLE = 61;
 
     /** Set by the client setup; runs the client side of each corpse tick (limbs, flies). */
@@ -125,6 +139,10 @@ public class CorpseEntity extends Entity {
         entityData.define(ARROWS, new CompoundTag());
         entityData.define(DECOR, new CompoundTag());
         entityData.define(MUMMY, (byte) 0);
+        entityData.define(STATE, (byte) FREE);
+        entityData.define(ANCHOR, net.minecraft.core.BlockPos.ZERO);
+        entityData.define(HOLDER, -1);
+        entityData.define(ROPED, false);
         for (EntityDataAccessor<ItemStack> a : EQUIP) entityData.define(a, ItemStack.EMPTY);
     }
 
@@ -225,6 +243,63 @@ public class CorpseEntity extends Entity {
             long target = (long) (WITHERED_DECAY * decayTicks());
             entityData.set(DEATH_TIME, level().getGameTime() - target);
         }
+        for (int i = 0; i < s.stored.size() && i < STORE; i++) stored.set(i, s.stored.get(i).copy());
+        if (s.pinDir != null && upright && cause != DeathCause.CRUSHED && Config.PIN_TO_WALLS.get()) tryPin(s, q);
+    }
+
+    /**
+     * Killed by an arrow with a wall right behind it: the arrow carries on into the wall and pins
+     * the body there, upright and slumped, back to the wall.
+     */
+    private boolean tryPin(DeathSnapshot s, Quaternionf mobFrame) {
+        Vec3 dir = new Vec3(s.pinDir.x, 0, s.pinDir.z);
+        if (dir.lengthSqr() < 0.01) return false;
+        dir = dir.normalize();
+        Vec3 from = new Vec3(s.feet.x, s.feet.y + s.height * 0.62, s.feet.z);
+        double reach = s.width / 2.0 + 1.1;
+        net.minecraft.world.phys.BlockHitResult hit = level().clip(new net.minecraft.world.level.ClipContext(from, from.add(dir.scale(reach)),
+                net.minecraft.world.level.ClipContext.Block.COLLIDER, net.minecraft.world.level.ClipContext.Fluid.NONE, this));
+        if (hit.getType() != net.minecraft.world.phys.HitResult.Type.BLOCK) return false;
+        net.minecraft.core.Direction face = hit.getDirection();
+        if (face.getAxis() == net.minecraft.core.Direction.Axis.Y) return false;
+        net.minecraft.core.BlockPos wall = hit.getBlockPos();
+        if (!level().getBlockState(wall).isFaceSturdy(level(), wall, face)) return false;
+        Vec3 normal = Vec3.atLowerCornerOf(face.getNormal());
+        if (normal.dot(dir) > -0.5) return false;
+        Vec3 back = hit.getLocation();
+        Vec3 center = new Vec3(back.x, s.feet.y + s.height / 2.0 + 0.15, back.z).add(normal.scale(bodyDepth() / 2.0 + 0.03));
+        float yaw = (float) Math.atan2(normal.x, normal.z);
+        Quaternionf q = new Quaternionf().rotationY(yaw).rotateX(0.1F);
+        reorientArrows(mobFrame, new Quaternionf().rotationY(yaw));
+        ragdoll = null;
+        setPos(center);
+        entityData.set(ORIENT, q);
+        entityData.set(SETTLED, true);
+        entityData.set(STATE, (byte) PINNED);
+        entityData.set(ANCHOR, wall);
+        checkedUpright = true;
+        setBoundingBox(makeBoundingBox());
+        return true;
+    }
+
+    /** Arrows are stored in the body's own frame; when the body is turned to face another way, turn them too. */
+    private void reorientArrows(Quaternionf from, Quaternionf to) {
+        ListTag list = arrows().copy();
+        if (list.isEmpty()) return;
+        Quaternionf inv = new Quaternionf(to).conjugate();
+        for (Tag t : list) {
+            CompoundTag a = (CompoundTag) t;
+            Vector3f pos = inv.transform(from.transform(new Vector3f(a.getFloat("X"), 0, a.getFloat("Z"))));
+            Vector3f dir = inv.transform(from.transform(new Vector3f(a.getFloat("DX"), a.getFloat("DY"), a.getFloat("DZ"))));
+            a.putFloat("X", pos.x);
+            a.putFloat("Z", pos.z);
+            a.putFloat("DX", dir.x);
+            a.putFloat("DY", dir.y);
+            a.putFloat("DZ", dir.z);
+        }
+        CompoundTag w = new CompoundTag();
+        w.put("List", list);
+        entityData.set(ARROWS, w);
     }
 
     /** How far through decay a withered body starts: already a shrivelled husk. */
@@ -520,7 +595,9 @@ public class CorpseEntity extends Entity {
             if (clientTick != null) clientTick.accept(this);
             return;
         }
-        if (settled() && !checkedUpright) {
+        if (holder() != -1 || state() == TIED && !uprightBody()) dragTick();
+        if (state() != FREE && tickCount % 20 == 0) checkAnchor();
+        if (settled() && !checkedUpright && state() == FREE) {
             // a body left standing (wedged against something) gets another chance to fall over
             checkedUpright = true;
             Vector3f up = orientation().transform(new Vector3f(0, 1, 0));
@@ -547,7 +624,7 @@ public class CorpseEntity extends Entity {
                 burnUp();
                 return;
             }
-            if (rest) {
+            if (rest && holder() == -1 && !(state() == TIED && !uprightBody())) {
                 entityData.set(SETTLED, true);
             }
         }
@@ -563,11 +640,318 @@ public class CorpseEntity extends Entity {
         }
     }
 
+    // ---- dragging, pinning, tying -------------------------------------------------------------------
+
+    public int state() {
+        return entityData.get(STATE);
+    }
+
+    public net.minecraft.core.BlockPos anchor() {
+        return entityData.get(ANCHOR);
+    }
+
+    /** Entity id of the player dragging this body, or -1. */
+    public int holder() {
+        return entityData.get(HOLDER);
+    }
+
+    public boolean roped() {
+        return entityData.get(ROPED);
+    }
+
+    public boolean uprightBody() {
+        return bodyHeight() > bodyWidth() * 1.9F;
+    }
+
+    /**
+     * Where a lead ties onto the body, in its own frame from its middle: the wrists (top) of an
+     * upright body; the neck of an animal, or its hind legs when it hangs head down.
+     */
+    public Vector3f ropePoint() {
+        if (uprightBody()) return new Vector3f(0, bodyHeight() * squash() * 0.47F, 0);
+        return new Vector3f(0, 0, (state() == HANGING ? -1 : 1) * bodyDepth() * 0.45F);
+    }
+
+    /** Starts dragging: by hand (sneak + right click) or on a lead. */
+    public void startDrag(Player player, boolean rope) {
+        if (state() != FREE) unfix(false);
+        if (rope) entityData.set(ROPED, true);
+        entityData.set(HOLDER, player.getId());
+        wake();
+        var speed = player.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED);
+        if (speed != null && speed.getModifier(DRAG_SLOW) == null) {
+            speed.addTransientModifier(new net.minecraft.world.entity.ai.attributes.AttributeModifier(DRAG_SLOW, "Dragging a body",
+                    rope ? -0.15 : -0.3, net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.MULTIPLY_TOTAL));
+        }
+        playSound(rope ? SoundEvents.LEASH_KNOT_PLACE : SoundEvents.ARMOR_EQUIP_LEATHER, 0.8F, 0.8F);
+    }
+
+    /** Lets go. A lead comes off and drops unless {@code keepRope}. */
+    public void stopDrag(boolean keepRope) {
+        Entity h = level().getEntity(holder());
+        if (h instanceof Player p) {
+            var speed = p.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED);
+            if (speed != null) speed.removeModifier(DRAG_SLOW);
+        }
+        entityData.set(HOLDER, -1);
+        if (roped() && !keepRope) {
+            entityData.set(ROPED, false);
+            if (!level().isClientSide) spawnAtLocation(new ItemStack(Items.LEAD), 0.3F);
+        }
+    }
+
+    private void dragTick() {
+        Vec3 target;
+        double slack;
+        if (holder() != -1) {
+            Entity h = level().getEntity(holder());
+            if (!(h instanceof Player p) || !p.isAlive() || p.isSpectator() || p.level() != level() || p.distanceToSqr(this) > 10 * 10) {
+                stopDrag(false);
+                return;
+            }
+            if (roped()) {
+                target = p.position().add(0, p.getBbHeight() * 0.55, 0);
+                slack = 2.6;
+            } else {
+                Vec3 look = p.getLookAngle();
+                Vec3 flat = new Vec3(look.x, 0, look.z);
+                flat = flat.lengthSqr() < 1e-4 ? Vec3.ZERO : flat.normalize();
+                target = p.position().subtract(flat.scale(0.5)).add(0, 0.35, 0);
+                slack = 0.8;
+            }
+        } else {
+            // an animal tied to a post lies within a lead's length of it
+            target = Vec3.atCenterOf(anchor());
+            slack = 2.2;
+        }
+        if (ragdoll == null || settled()) wake();
+        boolean up = uprightBody();
+        ragdoll.drag(up ? 1 : 2, 1, target, slack, 0.45);
+    }
+
+    /** Pins and knots let go when the wall or fence is gone. */
+    private void checkAnchor() {
+        net.minecraft.core.BlockPos a = anchor();
+        boolean ok = switch (state()) {
+            case PINNED -> !level().getBlockState(a).getCollisionShape(level(), a).isEmpty();
+            case TIED, HANGING -> level().getBlockState(a).is(net.minecraft.tags.BlockTags.FENCES)
+                    || level().getBlockState(a).is(net.minecraft.tags.BlockTags.WALLS);
+            default -> true;
+        };
+        if (!ok) unfix(true);
+    }
+
+    /**
+     * Ties a body that's on a lead to a fence: if there's room under the fence it hangs from it
+     * (by the wrists, or an animal by its hind legs), otherwise it's tied standing against the
+     * post (an animal lies beside it). Returns false if the body isn't on a lead.
+     */
+    public boolean tieTo(net.minecraft.core.BlockPos fence, Player by) {
+        if (!roped() || level().isClientSide) return false;
+        stopDrag(true);
+        boolean up = uprightBody();
+        float tall = up ? bodyHeight() * squash() : bodyDepth();
+        boolean room = true;
+        for (int k = 1; k <= (int) Math.ceil(tall + 0.4); k++) {
+            net.minecraft.core.BlockPos b = fence.below(k);
+            if (!level().getBlockState(b).getCollisionShape(level(), b).isEmpty()) room = false;
+        }
+        Vec3 knot = new Vec3(fence.getX() + 0.5, fence.getY() + 0.4, fence.getZ() + 0.5);
+        Vec3 toward = by.position().subtract(knot);
+        toward = new Vec3(toward.x, 0, toward.z);
+        if (toward.lengthSqr() < 1e-4) toward = new Vec3(0, 0, 1);
+        toward = toward.normalize();
+        float yaw = (float) Math.atan2(toward.x, toward.z);
+        Quaternionf q;
+        Vec3 center;
+        CompoundTag pose = new CompoundTag();
+        if (room) {
+            entityData.set(STATE, (byte) HANGING);
+            if (up) {
+                q = new Quaternionf().rotationY(yaw);
+                center = knot.subtract(0, 0.4 + tall / 2.0, 0);
+                pose = figure("right_arm", -2.95F, 0F, 0.12F, "left_arm", -2.95F, 0F, -0.12F, "head", 0.45F, 0F, 0F);
+            } else {
+                q = new Quaternionf().rotationY(yaw).rotateX(Mth.HALF_PI); // head down
+                center = knot.subtract(0, 0.4 + tall / 2.0, 0);
+                pose = figure();
+            }
+        } else if (up) {
+            entityData.set(STATE, (byte) TIED);
+            net.minecraft.core.BlockPos base = fence;
+            while (level().getBlockState(base.below()).is(net.minecraft.tags.BlockTags.FENCES) && fence.getY() - base.getY() < 3) base = base.below();
+            double out = 0.13 + bodyDepth() / 2.0 + 0.04;
+            center = new Vec3(fence.getX() + 0.5 + toward.x * out, base.getY() + bodyHeight() * squash() / 2.0 + 0.02, fence.getZ() + 0.5 + toward.z * out);
+            q = new Quaternionf().rotationY(yaw).rotateX(0.14F);
+            pose = figure("right_arm", 0.55F, 0F, 0.3F, "left_arm", 0.55F, 0F, -0.3F, "head", 0.55F, 0F, 0F);
+        } else {
+            // an animal: tied to the post on its lead, lying where it falls
+            entityData.set(STATE, (byte) TIED);
+            entityData.set(ANCHOR, fence);
+            entityData.set(ROPED, true);
+            net.minecraft.world.entity.decoration.LeashFenceKnotEntity.getOrCreateKnot(level(), fence);
+            playSound(SoundEvents.LEASH_KNOT_PLACE, 1F, 1F);
+            wake();
+            return true;
+        }
+        ragdoll = null;
+        setPos(center);
+        entityData.set(ORIENT, q);
+        entityData.set(FIGURE, pose);
+        entityData.set(SETTLED, true);
+        entityData.set(ANCHOR, fence);
+        entityData.set(ROPED, true);
+        checkedUpright = true;
+        setBoundingBox(makeBoundingBox());
+        net.minecraft.world.entity.decoration.LeashFenceKnotEntity.getOrCreateKnot(level(), fence);
+        playSound(SoundEvents.LEASH_KNOT_PLACE, 1F, 1F);
+        return true;
+    }
+
+    /** Limb angles to hold (part name, x, y, z, ...); the other limbs still swing freely. */
+    private static CompoundTag figure(Object... kv) {
+        CompoundTag t = new CompoundTag();
+        t.putBoolean("_sim", true);
+        for (int i = 0; i + 3 < kv.length; i += 4) {
+            ListTag l = new ListTag();
+            for (int k = 1; k <= 3; k++) l.add(net.minecraft.nbt.FloatTag.valueOf((Float) kv[i + k]));
+            t.put((String) kv[i], l);
+        }
+        return t;
+    }
+
+    /** Un-pins or unties the body; it falls. The lead drops if {@code dropRope}. */
+    public void unfix(boolean dropRope) {
+        int st = state();
+        if (st == FREE) return;
+        net.minecraft.core.BlockPos a = anchor();
+        entityData.set(STATE, (byte) FREE);
+        entityData.set(ANCHOR, net.minecraft.core.BlockPos.ZERO);
+        if (!figurePose().isEmpty() && figurePose().getBoolean("_sim")) entityData.set(FIGURE, new CompoundTag());
+        if ((st == TIED || st == HANGING) && !level().isClientSide) {
+            // take the knot off the fence too, unless something else is tied there
+            for (var knot : level().getEntitiesOfClass(net.minecraft.world.entity.decoration.LeashFenceKnotEntity.class, new AABB(a))) {
+                boolean used = !level().getEntitiesOfClass(net.minecraft.world.entity.Mob.class, new AABB(a).inflate(10),
+                        m -> m.getLeashHolder() == knot).isEmpty()
+                        || !level().getEntitiesOfClass(CorpseEntity.class, new AABB(a).inflate(10),
+                        c -> c != this && c.state() != FREE && a.equals(c.anchor())).isEmpty();
+                if (!used) knot.discard();
+            }
+            if (roped() && dropRope) {
+                entityData.set(ROPED, false);
+                spawnAtLocation(new ItemStack(Items.LEAD), 0.3F);
+            } else if (!dropRope) {
+                // still on its lead, which now hangs loose
+            }
+        }
+        if (st == PINNED && !level().isClientSide) playSound(SoundEvents.ARROW_HIT, 0.6F, 0.7F);
+        checkedUpright = false;
+        wake();
+        if (ragdoll != null) {
+            ragdoll.push(new Vec3(0, 0.02, 0), false);
+            if (uprightBody()) {
+                double a2 = random.nextDouble() * Math.PI * 2;
+                ragdoll.collapse(Math.cos(a2), Math.sin(a2), 0.05, 8, 60, 0.55);
+            }
+        }
+    }
+
+    // ---- the things it dropped -------------------------------------------------------------------
+
+    public net.minecraft.core.NonNullList<ItemStack> stored() {
+        return stored;
+    }
+
+    public void setStored(int i, ItemStack stack) {
+        if (i >= 0 && i < STORE) stored.set(i, stack);
+    }
+
+    CompoundTag extraLoot() {
+        return extraLoot;
+    }
+
+    void setExtraLoot(String key, ItemStack stack) {
+        if (stack.isEmpty()) {
+            extraLoot.remove(key);
+            CompoundTag render = renderTag().copy();
+            render.remove(key);
+            entityData.set(RENDER_TAG, render);
+        } else {
+            extraLoot.put(key, stack.save(new CompoundTag()));
+        }
+    }
+
+    boolean hasArrow(CompoundTag arrow) {
+        for (Tag t : arrows()) if (t.equals(arrow)) return true;
+        return false;
+    }
+
+    /** Pulls one arrow out; a body pinned up by its arrows comes down once they're all out. */
+    void pullArrow(CompoundTag arrow) {
+        ListTag kept = new ListTag();
+        boolean removed = false;
+        for (Tag t : arrows()) {
+            if (!removed && t.equals(arrow)) {
+                removed = true;
+                continue;
+            }
+            kept.add(t);
+        }
+        CompoundTag w = new CompoundTag();
+        w.put("List", kept);
+        entityData.set(ARROWS, w);
+        if (removed && state() == PINNED) unfix(false);
+    }
+
+    /** A body taken out of a bag: free, with nobody holding it, falling into place. */
+    public void layDown() {
+        entityData.set(STATE, (byte) FREE);
+        entityData.set(HOLDER, -1);
+        entityData.set(ROPED, false);
+        if (!figurePose().isEmpty() && figurePose().getBoolean("_sim")) entityData.set(FIGURE, new CompoundTag());
+        checkedUpright = false;
+        ragdoll = null;
+        entityData.set(SETTLED, false);
+    }
+
+    /** Opens the body's belongings for a player. */
+    public void openLoot(Player player) {
+        CorpseLoot loot = new CorpseLoot(this);
+        net.minecraft.network.chat.Component name = getCustomName() != null ? getCustomName()
+                : EntityType.byString(mobType()).map(EntityType::getDescription).orElse(net.minecraft.network.chat.Component.literal("?"));
+        player.openMenu(new net.minecraft.world.SimpleMenuProvider((id, inv, p) -> {
+            net.minecraft.world.inventory.ChestMenu menu = net.minecraft.world.inventory.ChestMenu.threeRows(id, inv, loot);
+            // things can be taken out of a body, not put in
+            for (int i = 0; i < CorpseLoot.SIZE; i++) {
+                net.minecraft.world.inventory.Slot old = menu.slots.get(i);
+                net.minecraft.world.inventory.Slot slot = new net.minecraft.world.inventory.Slot(loot, i, old.x, old.y) {
+                    @Override
+                    public boolean mayPlace(ItemStack stack) {
+                        return false;
+                    }
+                };
+                slot.index = old.index;
+                menu.slots.set(i, slot);
+            }
+            return menu;
+        }, net.minecraft.network.chat.Component.translatable("container.corpsedecay.belongings", name)));
+        playSound(SoundEvents.ARMOR_EQUIP_LEATHER, 0.6F, 0.8F);
+    }
+
+    private void dropStored() {
+        for (int i = 0; i < STORE; i++) {
+            ItemStack s = stored.get(i);
+            if (!s.isEmpty()) spawnAtLocation(s.copy(), 0.3F);
+            stored.set(i, ItemStack.EMPTY);
+        }
+    }
+
     private void burnUp() {
         if (level() instanceof ServerLevel sl) {
             sl.sendParticles(ParticleTypes.LARGE_SMOKE, getX(), getY() + 0.3, getZ(), 12, bodyWidth() / 2, 0.2, bodyWidth() / 2, 0.02);
             playSound(SoundEvents.GENERIC_BURN, 0.6F, 1.0F);
         }
+        if (holder() != -1) stopDrag(false);
         discard();
     }
 
@@ -575,6 +959,9 @@ public class CorpseEntity extends Entity {
     public void crumble(boolean dropLoot) {
         if (!(level() instanceof ServerLevel sl)) return;
         if (dropLoot) dropAllLoot();
+        dropStored(); // what it was carrying falls out
+        if (state() != FREE) unfix(true);
+        if (holder() != -1) stopDrag(false);
         boolean mummy = mummy() != 0 && (kind() == CorpseKind.REMAINS || decay(0) > 0.5F);
         if (kind() == CorpseKind.REMAINS && dropLoot) {
             spawnAtLocation(new ItemStack(Items.BONE, (mummy ? 1 : 2) + random.nextInt(mummy ? 3 : 4)), 0.3F);
@@ -602,18 +989,57 @@ public class CorpseEntity extends Entity {
 
     // ---- interaction ----------------------------------------------------------------------------
 
-    /** Right click: take whatever gear and arrows can be taken off the body. */
+    /**
+     * Right click: look through the body's belongings. Sneak + right click: grab it and drag it (or
+     * let go; a pinned or tied body is cut down). With a lead: tie the lead on and lead it along;
+     * shears cut a tied body down. A body bag puts the body in the bag.
+     */
     @Override
     public InteractionResult interact(Player player, InteractionHand hand) {
-        if (!hasLoot()) return InteractionResult.PASS;
-        if (!level().isClientSide) {
-            dropAllLoot();
-            playSound(SoundEvents.ARMOR_EQUIP_GENERIC, 0.8F, 0.9F);
+        ItemStack held = player.getItemInHand(hand);
+        boolean client = level().isClientSide;
+        if (held.getItem() instanceof com.harold.corpsedecay.item.BodyBagItem) {
+            if (!client) com.harold.corpsedecay.item.BodyBagItem.bag(held, this, player);
+            return InteractionResult.sidedSuccess(client);
         }
-        return InteractionResult.sidedSuccess(level().isClientSide);
+        if (held.is(Items.LEAD) && holder() != player.getId()) {
+            if (!client) {
+                if (!roped() && !player.getAbilities().instabuild) held.shrink(1);
+                if (holder() != -1) stopDrag(true);
+                startDrag(player, true);
+            }
+            return InteractionResult.sidedSuccess(client);
+        }
+        if (held.is(Items.SHEARS) && (roped() || state() == TIED || state() == HANGING)) {
+            if (!client) {
+                if (holder() != -1) stopDrag(false);
+                else unfix(true);
+                if (roped()) stopDrag(false);
+                playSound(SoundEvents.SHEEP_SHEAR, 0.8F, 1.2F);
+            }
+            return InteractionResult.sidedSuccess(client);
+        }
+        if (!held.isEmpty() && hand == InteractionHand.MAIN_HAND) return InteractionResult.PASS;
+        if (hand == InteractionHand.OFF_HAND && !held.isEmpty()) return InteractionResult.PASS;
+        if (holder() == player.getId()) {
+            if (!client) stopDrag(false);
+            return InteractionResult.sidedSuccess(client);
+        }
+        if (player.isShiftKeyDown()) {
+            if (!client) {
+                if (state() != FREE) unfix(true);
+                else startDrag(player, false);
+            }
+            return InteractionResult.sidedSuccess(client);
+        }
+        if (client) return InteractionResult.SUCCESS;
+        if (!hasLoot()) return InteractionResult.PASS;
+        openLoot(player);
+        return InteractionResult.CONSUME;
     }
 
     public boolean hasLoot() {
+        for (ItemStack s : stored) if (!s.isEmpty()) return true;
         if (entityData.get(LOOT_MASK) != 0 || !extraLoot.isEmpty()) return true;
         for (Tag t : arrows()) {
             if (((CompoundTag) t).getBoolean("Loot")) return true;
@@ -622,6 +1048,7 @@ public class CorpseEntity extends Entity {
     }
 
     private void dropAllLoot() {
+        dropStored();
         int mask = entityData.get(LOOT_MASK);
         for (int i = 0; i < 6; i++) {
             if ((mask & (1 << i)) == 0) continue;
@@ -693,6 +1120,13 @@ public class CorpseEntity extends Entity {
             crumble(true);
             return true;
         }
+        if (state() == TIED || state() == HANGING) {
+            // tied up: arrows still stick in it, but it isn't knocked loose
+            if (direct instanceof AbstractArrow arrow && !(direct instanceof ThrownTrident) && arrow.getPierceLevel() <= 0) stickArrow(arrow);
+            else if (source.is(DamageTypeTags.IS_EXPLOSION)) unfix(true);
+            return true;
+        }
+        if (state() == PINNED) unfix(false);
         Vec3 dir;
         double strength;
         if (direct instanceof AbstractArrow arrow && !(direct instanceof ThrownTrident) && arrow.getPierceLevel() <= 0) {
@@ -811,6 +1245,14 @@ public class CorpseEntity extends Entity {
         entityData.set(MUMMY, tag.getByte("Mummy"));
         entityData.set(FIGURE, tag.getCompound("Figure"));
         extraLoot = tag.getCompound("ExtraLoot");
+        for (int i = 0; i < STORE; i++) stored.set(i, ItemStack.EMPTY);
+        ListTag st = tag.getList("Stored", Tag.TAG_COMPOUND);
+        for (int i = 0; i < st.size() && i < STORE; i++) stored.set(i, ItemStack.of(st.getCompound(i)));
+        entityData.set(STATE, tag.getByte("State"));
+        entityData.set(ANCHOR, net.minecraft.core.BlockPos.of(tag.getLong("Anchor")));
+        entityData.set(ROPED, tag.getBoolean("Roped"));
+        entityData.set(HOLDER, -1); // nobody is dragging it after a reload
+        if (state() != FREE) checkedUpright = true;
         ragdoll = null;
         setBoundingBox(makeBoundingBox());
         lookVersion++;
@@ -848,6 +1290,13 @@ public class CorpseEntity extends Entity {
         tag.put("Growths", growths());
         tag.putByte("Mummy", entityData.get(MUMMY));
         tag.put("ExtraLoot", extraLoot);
+        ListTag st = new ListTag();
+        for (ItemStack s : stored) st.add(s.save(new CompoundTag()));
+        tag.put("Stored", st);
+        tag.putByte("State", (byte) state());
+        tag.putLong("Anchor", anchor().asLong());
+        // a body still on someone's lead when saved keeps the lead on it
+        tag.putBoolean("Roped", roped());
     }
 
     @Override

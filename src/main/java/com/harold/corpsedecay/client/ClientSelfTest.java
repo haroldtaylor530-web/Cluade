@@ -9,6 +9,7 @@ import com.harold.corpsedecay.corpse.CorpseEntity;
 import com.mojang.logging.LogUtils;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
 import net.minecraft.client.Screenshot;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -76,6 +77,98 @@ public final class ClientSelfTest {
                 }
             }
         }
+    }
+
+    /** 0.9: a body pinned to a wall by an arrow, bodies hanging from a gallows, one tied to a post, a body's belongings. */
+    private static int handling(int t) {
+        final int ex = 230, ez = 0;
+        at(t, () -> lookAt(ex + 9, ground + 3, ez - 8, ex + 9, ground + 2, ez));
+        at(t + 30, () -> server(() -> {
+            ServerLevel l = level();
+            int g = ground;
+            net.minecraft.world.level.block.state.BlockState bricks = net.minecraft.world.level.block.Blocks.STONE_BRICKS.defaultBlockState();
+            for (int dx = -3; dx <= 3; dx++) for (int dy = 0; dy < 4; dy++) l.setBlockAndUpdate(new BlockPos(ex + dx, g + dy, ez + 4), bricks);
+            for (int y = 0; y < 5; y++) {
+                l.setBlockAndUpdate(new BlockPos(ex + 6, g + y, ez), net.minecraft.world.level.block.Blocks.DARK_OAK_LOG.defaultBlockState());
+                l.setBlockAndUpdate(new BlockPos(ex + 12, g + y, ez), net.minecraft.world.level.block.Blocks.DARK_OAK_LOG.defaultBlockState());
+            }
+            for (int x = ex + 6; x <= ex + 12; x++) l.setBlockAndUpdate(new BlockPos(x, g + 5, ez), net.minecraft.world.level.block.Blocks.DARK_OAK_PLANKS.defaultBlockState());
+            l.setBlockAndUpdate(new BlockPos(ex + 8, g + 4, ez), net.minecraft.world.level.block.Blocks.DARK_OAK_FENCE.defaultBlockState());
+            l.setBlockAndUpdate(new BlockPos(ex + 10, g + 4, ez), net.minecraft.world.level.block.Blocks.DARK_OAK_FENCE.defaultBlockState());
+            l.setBlockAndUpdate(new BlockPos(ex + 15, g, ez), net.minecraft.world.level.block.Blocks.OAK_FENCE.defaultBlockState());
+            l.setBlockAndUpdate(new BlockPos(ex + 15, g + 1, ez), net.minecraft.world.level.block.Blocks.OAK_FENCE.defaultBlockState());
+            // pinned: shot from the front, the wall right behind
+            net.minecraft.world.entity.monster.Zombie pz = net.minecraft.world.entity.EntityType.ZOMBIE.create(l);
+            pz.moveTo(ex + 0.5, g, ez + 3.65, 180F, 0F);
+            pz.setNoAi(true);
+            pz.setItemSlot(net.minecraft.world.entity.EquipmentSlot.HEAD, new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.IRON_HELMET));
+            l.addFreshEntity(pz);
+            net.minecraft.world.entity.projectile.Arrow arrow = new net.minecraft.world.entity.projectile.Arrow(l, ex + 0.5, g + 1.3, ez + 3.2);
+            arrow.setDeltaMovement(0, 0, 3);
+            pz.hurt(l.damageSources().arrow(arrow, player()), 1000F);
+            for (Object[] m : new Object[][] { { net.minecraft.world.entity.EntityType.ZOMBIE, ex + 8, ez - 2 }, { net.minecraft.world.entity.EntityType.COW, ex + 10, ez - 2 },
+                    { net.minecraft.world.entity.EntityType.VILLAGER, ex + 15, ez - 2 } }) {
+                net.minecraft.world.entity.Mob mob = ((net.minecraft.world.entity.EntityType<? extends net.minecraft.world.entity.Mob>) m[0]).create(l);
+                mob.moveTo((int) m[1] + 0.5, g, (int) m[2] + 0.5, 0F, 0F);
+                mob.setNoAi(true);
+                l.addFreshEntity(mob);
+                mob.hurt(l.damageSources().generic(), 1000F);
+            }
+            // a body with something to loot
+            net.minecraft.world.entity.monster.Zombie lz = net.minecraft.world.entity.EntityType.ZOMBIE.create(l);
+            lz.moveTo(ex + 3.5, g, ez - 5.5, 0F, 0F);
+            lz.setNoAi(true);
+            lz.setItemSlot(net.minecraft.world.entity.EquipmentSlot.CHEST, new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.IRON_CHESTPLATE));
+            lz.setDropChance(net.minecraft.world.entity.EquipmentSlot.CHEST, 2F);
+            lz.setItemSlot(net.minecraft.world.entity.EquipmentSlot.MAINHAND, new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.IRON_SHOVEL));
+            lz.setDropChance(net.minecraft.world.entity.EquipmentSlot.MAINHAND, 2F);
+            l.addFreshEntity(lz);
+            lz.hurt(l.damageSources().playerAttack(player()), 1000F);
+        }));
+        at(t + 110, () -> server(() -> {
+            ServerLevel l = level();
+            int g = ground;
+            ServerPlayer p = player();
+            p.teleportTo(l, ex + 9.5, g + 1, ez - 8, 0F, 0F);
+            Object[][] ties = { { "minecraft:zombie", ex + 8, new BlockPos(ex + 8, g + 4, ez) }, { "minecraft:cow", ex + 10, new BlockPos(ex + 10, g + 4, ez) },
+                    { "minecraft:villager", ex + 15, new BlockPos(ex + 15, g + 1, ez) } };
+            for (Object[] tie : ties) {
+                for (com.harold.corpsedecay.corpse.CorpseEntity c : l.getEntitiesOfClass(com.harold.corpsedecay.corpse.CorpseEntity.class,
+                        new net.minecraft.world.phys.AABB(ex - 10, g - 3, ez - 12, ex + 25, g + 8, ez + 10))) {
+                    if (c.mobType().equals(tie[0]) && Math.abs(c.getX() - ((int) tie[1] + 0.5)) < 1.5 && c.state() == 0) {
+                        c.startDrag(p, true);
+                        boolean ok = c.tieTo((BlockPos) tie[2], p);
+                        LOG.info("CLIENTTEST tied {} -> {} state {}", tie[0], ok, c.state());
+                        break;
+                    }
+                }
+            }
+        }));
+        at(t + 120, () -> lookAt(ex + 10.5, ground + 2.6, ez - 7.5, ex + 10.5, ground + 2.2, ez));
+        at(t + 175, () -> shot("E0_gallows"));
+        at(t + 180, () -> lookAt(ex - 1.2, ground + 2.0, ez + 0.5, ex + 0.5, ground + 1.4, ez + 3.7));
+        at(t + 225, () -> shot("E1_pinned"));
+        at(t + 230, () -> lookAt(ex + 15.5, ground + 1.9, ez - 3.0, ex + 15.5, ground + 1.0, ez + 0.5));
+        at(t + 275, () -> shot("E2_tied_to_post"));
+        at(t + 280, () -> server(() -> {
+            ServerPlayer p = player();
+            p.setGameMode(GameType.SURVIVAL);
+            p.teleportTo(level(), ex + 3.5, ground, ez - 7.5, 0F, 40F);
+            for (com.harold.corpsedecay.corpse.CorpseEntity c : level().getEntitiesOfClass(com.harold.corpsedecay.corpse.CorpseEntity.class,
+                    new net.minecraft.world.phys.AABB(ex + 1, ground - 3, ez - 9, ex + 6, ground + 4, ez - 2))) {
+                if (c.mobType().equals("minecraft:zombie")) {
+                    c.openLoot(p);
+                    break;
+                }
+            }
+        }));
+        at(t + 330, () -> {
+            Minecraft.getInstance().options.hideGui = false;
+            Screenshot.grab(Minecraft.getInstance().gameDirectory, "E3_belongings.png", Minecraft.getInstance().getMainRenderTarget(),
+                    c -> LOG.info("CLIENTTEST screenshot E3_belongings"));
+        });
+        at(t + 335, () -> server(() -> player().closeContainer()));
+        return t + 345;
     }
 
     private static void at(int t, Runnable r) {
@@ -326,6 +419,7 @@ public final class ClientSelfTest {
         at(t + 260, () -> shot("D5_config_decay_later"));
         at(t + 265, () -> Minecraft.getInstance().setScreen(null));
         t += 270;
+        t = handling(t);
         at(t + 5, () -> {
             LOG.info("CLIENTTEST DONE");
             Minecraft.getInstance().stop();

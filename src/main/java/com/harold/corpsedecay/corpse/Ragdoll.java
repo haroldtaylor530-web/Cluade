@@ -118,6 +118,42 @@ public final class Ragdoll {
         stillTicks = 0;
     }
 
+    /**
+     * Pulls one end of the body (the four corners on the + side of {@code bit}: 1 = top, 2 = front)
+     * towards {@code target} once it is more than {@code slack} away, as if held by the hand or a rope.
+     * The rest of the body follows through the constraints and drags along the ground.
+     */
+    public void drag(int bit, int sign, Vec3 target, double slack, double strength) {
+        double gx = 0, gy = 0, gz = 0;
+        for (int i = 0; i < 8; i++) {
+            if (((i >> bit) & 1) != (sign > 0 ? 1 : 0)) continue;
+            gx += p[i][0];
+            gy += p[i][1];
+            gz += p[i][2];
+        }
+        gx /= 4;
+        gy /= 4;
+        gz /= 4;
+        double dx = target.x - gx, dy = target.y - gy, dz = target.z - gz;
+        double len = Math.sqrt(dx * dx + dy * dy + dz * dz);
+        age = 0;
+        stillTicks = 0;
+        if (len <= slack || len < 1e-6) return;
+        double f = Math.min(0.6, (len - slack) * strength) / len;
+        double mx = dx * f, my = dy * f, mz = dz * f;
+        for (int i = 0; i < 8; i++) {
+            boolean held = ((i >> bit) & 1) == (sign > 0 ? 1 : 0);
+            double k = held ? 1.0 : 0.15;
+            p[i][0] += mx * k;
+            p[i][1] += my * k;
+            p[i][2] += mz * k;
+            // mostly moved, not flung: keep only a little of it as speed
+            prev[i][0] += mx * k * 0.75;
+            prev[i][1] += my * k * 0.75;
+            prev[i][2] += mz * k * 0.75;
+        }
+    }
+
     /** One game tick. Returns true once the body has come to rest. */
     public boolean tick(Level level) {
         age++;

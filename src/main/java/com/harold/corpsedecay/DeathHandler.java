@@ -63,6 +63,8 @@ public final class DeathHandler {
         if (s == null) return;
         e.getDrops().removeIf(item -> claim(s, item));
         if (Config.LOOT_ALL_EQUIPMENT.get()) s.lootEverything();
+        // everything else it dropped stays in the body rather than spilling everywhere
+        if (Config.KEEP_DROPS.get()) e.getDrops().removeIf(item -> s.store(item.getItem()));
     }
 
     private static boolean claim(DeathSnapshot s, ItemEntity item) {
@@ -79,6 +81,21 @@ public final class DeathHandler {
         if (direct instanceof AbstractArrow arrow && !(direct instanceof ThrownTrident) && arrow.getPierceLevel() <= 0) {
             StuckArrows.onArrowHit(mob, arrow);
         }
+    }
+
+    /** Right-clicking a fence while leading a body on a lead ties the body to it. */
+    @SubscribeEvent
+    public static void onClickBlock(net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock e) {
+        Player p = e.getEntity();
+        var state = e.getLevel().getBlockState(e.getPos());
+        if (!state.is(net.minecraft.tags.BlockTags.FENCES) && !state.is(net.minecraft.tags.BlockTags.WALLS)) return;
+        if (p.getItemInHand(e.getHand()).getItem() instanceof com.harold.corpsedecay.item.BodyBagItem) return;
+        List<CorpseEntity> led = e.getLevel().getEntitiesOfClass(CorpseEntity.class, p.getBoundingBox().inflate(12),
+                c -> c.holder() == p.getId() && c.roped());
+        if (led.isEmpty()) return;
+        if (!e.getLevel().isClientSide) for (CorpseEntity c : led) c.tieTo(e.getPos(), p);
+        e.setCanceled(true);
+        e.setCancellationResult(net.minecraft.world.InteractionResult.sidedSuccess(e.getLevel().isClientSide));
     }
 
     @SubscribeEvent

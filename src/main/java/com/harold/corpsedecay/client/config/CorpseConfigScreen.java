@@ -65,6 +65,9 @@ public class CorpseConfigScreen extends Screen {
                 new Toggle("Only player kills", "Only mobs killed by a player leave a body.", Config.ONLY_PLAYER_KILLS),
                 new Slider("Ragdoll force", "How hard killing blows throw the body.", Config.RAGDOLL_FORCE, false,
                         v -> v / 5.0, p -> Math.round(p * 50) / 10.0, v -> String.format(Locale.ROOT, "%.1f×", v)),
+                new Toggle("Keep drops in the body", "What a mob drops stays inside its body: right-click the body to look through it. Turn off for mob farms.",
+                        Config.KEEP_DROPS),
+                new Toggle("Pinned by arrows", "A mob shot dead against a wall is pinned to it by the arrow.", Config.PIN_TO_WALLS),
                 new Toggle("Loot everything", "Take every piece of armour and held item off a corpse, not just its normal drops.",
                         Config.LOOT_ALL_EQUIPMENT),
                 new Slider("Most corpses", "Bodies allowed at once in a dimension; the oldest crumble first, so mob farms don't lag.",
@@ -96,7 +99,7 @@ public class CorpseConfigScreen extends Screen {
 
     private void load() {
         for (ForgeConfigSpec.ConfigValue<?> v : List.of(Config.ENABLED, Config.ONLY_PLAYER_KILLS, Config.RAGDOLL_FORCE,
-                Config.LOOT_ALL_EQUIPMENT, Config.MAX_CORPSES, Config.MINUTES_TO_SKELETON, Config.SKELETON_MINUTES,
+                Config.LOOT_ALL_EQUIPMENT, Config.KEEP_DROPS, Config.PIN_TO_WALLS, Config.MAX_CORPSES, Config.MINUTES_TO_SKELETON, Config.SKELETON_MINUTES,
                 Config.FLIES, Config.MUMMIFY, Config.REMAINS, Config.FOSSILS, Config.ANCIENT_SITES)) {
             pending.put(v, saved(v));
         }

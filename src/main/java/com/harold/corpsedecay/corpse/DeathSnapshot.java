@@ -44,6 +44,10 @@ public final class DeathSnapshot {
     public com.harold.corpsedecay.DeathCause cause = com.harold.corpsedecay.DeathCause.NORMAL;
     /** whether the body will mummify where it lies: {@link CorpseEntity#BOG}, {@link CorpseEntity#ICE} or 0 */
     public int mummy;
+    /** what the mob dropped, kept inside the body */
+    public final java.util.List<ItemStack> stored = new java.util.ArrayList<>();
+    /** the way the killing arrow was flying, or null if it wasn't an arrow */
+    public Vec3 pinDir;
 
     public static DeathSnapshot of(LivingEntity mob, DamageSource source) {
         DeathSnapshot s = new DeathSnapshot();
@@ -75,6 +79,10 @@ public final class DeathSnapshot {
         s.cause = com.harold.corpsedecay.DeathCause.of(mob, source);
         s.burning = s.cause == com.harold.corpsedecay.DeathCause.BURNT;
         s.mummy = CorpseEntity.mummyFor(mob.level(), mob.blockPosition(), s.kind, s.cause);
+        if (source.getDirectEntity() instanceof net.minecraft.world.entity.projectile.AbstractArrow arrow
+                && arrow.getDeltaMovement().lengthSqr() > 0.04) {
+            s.pinDir = arrow.getDeltaMovement().normalize();
+        }
         return s;
     }
 
@@ -119,6 +127,23 @@ public final class DeathSnapshot {
             }
         }
         return false;
+    }
+
+    /** Keeps a dropped stack inside the body; false if the body is full (it drops as normal). */
+    public boolean store(ItemStack stack) {
+        ItemStack left = stack.copy();
+        for (ItemStack s : stored) {
+            if (left.isEmpty()) break;
+            if (ItemStack.isSameItemSameTags(s, left) && s.getCount() < s.getMaxStackSize()) {
+                int move = Math.min(left.getCount(), s.getMaxStackSize() - s.getCount());
+                s.grow(move);
+                left.shrink(move);
+            }
+        }
+        if (left.isEmpty()) return true;
+        if (stored.size() >= CorpseEntity.STORE) return false;
+        stored.add(left);
+        return true;
     }
 
     /** With lootAllEquipment on, anything still worn becomes lootable too. */
