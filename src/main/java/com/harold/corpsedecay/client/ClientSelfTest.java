@@ -80,12 +80,16 @@ public final class ClientSelfTest {
     }
 
     /** 0.9: a body pinned to a wall by an arrow, bodies hanging from a gallows, one tied to a post, a body's belongings. */
+    /** ground height at the 0.9 handling scene */
+    private static int hg;
+
     private static int handling(int t) {
         final int ex = 230, ez = 0;
         at(t, () -> lookAt(ex + 9, ground + 3, ez - 8, ex + 9, ground + 2, ez));
         at(t + 30, () -> server(() -> {
             ServerLevel l = level();
-            int g = ground;
+            hg = groundAt(l, ex, ez);
+            int g = hg;
             net.minecraft.world.level.block.state.BlockState bricks = net.minecraft.world.level.block.Blocks.STONE_BRICKS.defaultBlockState();
             for (int dx = -3; dx <= 3; dx++) for (int dy = 0; dy < 4; dy++) l.setBlockAndUpdate(new BlockPos(ex + dx, g + dy, ez + 4), bricks);
             for (int y = 0; y < 5; y++) {
@@ -127,7 +131,7 @@ public final class ClientSelfTest {
         }));
         at(t + 110, () -> server(() -> {
             ServerLevel l = level();
-            int g = ground;
+            int g = hg;
             ServerPlayer p = player();
             p.teleportTo(l, ex + 9.5, g + 1, ez - 8, 0F, 0F);
             Object[][] ties = { { "minecraft:zombie", ex + 8, new BlockPos(ex + 8, g + 4, ez) }, { "minecraft:cow", ex + 10, new BlockPos(ex + 10, g + 4, ez) },
@@ -144,18 +148,18 @@ public final class ClientSelfTest {
                 }
             }
         }));
-        at(t + 120, () -> lookAt(ex + 10.5, ground + 2.6, ez - 7.5, ex + 10.5, ground + 2.2, ez));
+        at(t + 120, () -> lookAt(ex + 10.5, hg + 2.6, ez - 7.5, ex + 10.5, hg + 2.2, ez));
         at(t + 175, () -> shot("E0_gallows"));
-        at(t + 180, () -> lookAt(ex - 1.2, ground + 2.0, ez + 0.5, ex + 0.5, ground + 1.4, ez + 3.7));
+        at(t + 180, () -> lookAt(ex - 1.2, hg + 2.0, ez + 0.5, ex + 0.5, hg + 1.4, ez + 3.7));
         at(t + 225, () -> shot("E1_pinned"));
-        at(t + 230, () -> lookAt(ex + 15.5, ground + 1.9, ez - 3.0, ex + 15.5, ground + 1.0, ez + 0.5));
+        at(t + 230, () -> lookAt(ex + 15.5, hg + 1.9, ez - 3.0, ex + 15.5, hg + 1.0, ez + 0.5));
         at(t + 275, () -> shot("E2_tied_to_post"));
         at(t + 280, () -> server(() -> {
             ServerPlayer p = player();
             p.setGameMode(GameType.SURVIVAL);
-            p.teleportTo(level(), ex + 3.5, ground, ez - 7.5, 0F, 40F);
+            p.teleportTo(level(), ex + 3.5, hg, ez - 7.5, 0F, 40F);
             for (com.harold.corpsedecay.corpse.CorpseEntity c : level().getEntitiesOfClass(com.harold.corpsedecay.corpse.CorpseEntity.class,
-                    new net.minecraft.world.phys.AABB(ex + 1, ground - 3, ez - 9, ex + 6, ground + 4, ez - 2))) {
+                    new net.minecraft.world.phys.AABB(ex + 1, hg - 3, ez - 9, ex + 6, hg + 4, ez - 2))) {
                 if (c.mobType().equals("minecraft:zombie")) {
                     c.openLoot(p);
                     break;
