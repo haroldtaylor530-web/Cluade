@@ -139,15 +139,21 @@ public final class ClientSelfTest {
             Object[][] ties = { { "minecraft:zombie", ex + 8, new BlockPos(ex + 8, g + 4, ez) }, { "minecraft:cow", ex + 10, new BlockPos(ex + 10, g + 4, ez) },
                     { "minecraft:villager", ex + 15, new BlockPos(ex + 15, g + 1, ez) } };
             for (Object[] tie : ties) {
+                com.harold.corpsedecay.corpse.CorpseEntity best = null;
+                double bd = Double.MAX_VALUE;
                 for (com.harold.corpsedecay.corpse.CorpseEntity c : l.getEntitiesOfClass(com.harold.corpsedecay.corpse.CorpseEntity.class,
                         new net.minecraft.world.phys.AABB(ex - 10, g - 3, ez - 12, ex + 25, g + 8, ez + 10))) {
-                    if (c.mobType().equals(tie[0]) && Math.abs(c.getX() - ((int) tie[1] + 0.5)) < 1.5 && c.state() == 0) {
-                        c.startDrag(p, true);
-                        boolean ok = c.tieTo((BlockPos) tie[2], p);
-                        LOG.info("CLIENTTEST tied {} -> {} state {}", tie[0], ok, c.state());
-                        break;
+                    double d = Math.abs(c.getX() - ((int) tie[1] + 0.5));
+                    if (c.mobType().equals(tie[0]) && c.state() == 0 && c.figurePose().isEmpty() && d < bd) {
+                        best = c;
+                        bd = d;
                     }
                 }
+                if (best != null) {
+                    best.startDrag(p, true);
+                    boolean ok = best.tieTo((BlockPos) tie[2], p);
+                    LOG.info("CLIENTTEST tied {} -> {} state {}", tie[0], ok, best.state());
+                } else LOG.info("CLIENTTEST tied {} -> no body found", tie[0]);
             }
         }));
         at(t + 120, () -> lookAt(ex + 10.5, hg + 2.6, ez - 7.5, ex + 10.5, hg + 2.2, ez));
